@@ -4,11 +4,11 @@ This module set will optimize your work for deploy Commands or files to remote s
 
 
 # Special Thanks
-Valentia inspired from Capistrano ( a Ruby deployment tool for Linux) and psake ( a PowerShell build tool).
+Valentia inspired from capistrano ( a Ruby deployment tool for Linux) and psake ( a PowerShell build tool).
 They are fantastic and awesome tools for automation and DevOps.
 Especially psake showed cool way of coding and valentia followed in many points.
 
-Also psasync(http://newsqlblog.com/category/powershell/powershell-concurrency/) and Get-NetworkInfo(http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/) give me inspire to do asynchronous execution.
+Also [psasync](http://newsqlblog.com/category/powershell/powershell-concurrency/) and [Get-NetworkInfo](http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/) give me inspire to do asynchronous execution.
 
 
 # Latest Change
