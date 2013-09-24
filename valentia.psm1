@@ -4403,7 +4403,13 @@ read production-hoge.ps1 from c:\test.
         [parameter(
             HelpMessage = "Input Trusted Hosts you want to enable. Default : ""*"" ")]
         [string]
-        $TrustedHosts = "*"
+        $TrustedHosts = "*",
+
+        [parameter(
+        HelpMessage = "Select this switch If you want to skip setup PSRemoting.")]
+        [switch]
+        $SkipEnablePSRemoting = $false
+
         )
 
     begin
@@ -4422,7 +4428,7 @@ read production-hoge.ps1 from c:\test.
         Write-Verbose "Command : Test-ValentiaPowerShellElevated"
         if(-not(Test-ValentiaPowerShellElevated))
         {
-	        Write-Warning "To run this Cmdlet on UAC 'Windows Vista, 7, 8, Windows Server 2008, 2008 R2, 2012 and later versions of Windows' must start an elevated PowerShell console."
+	        throw "To run this Cmdlet on UAC 'Windows Vista, 7, 8, Windows Server 2008, 2008 R2, 2012 and later versions of Windows' must start an elevated PowerShell console."
         }
         else
         {
@@ -4435,20 +4441,23 @@ read production-hoge.ps1 from c:\test.
     {
         # setup ScriptFile Reading
         Write-Verbose "Command : Set-ExecutionPolicy RemoteSigned -Force"
-        Set-ExecutionPolicy RemoteSigned -Force
+        Set-ExecutionPolicy RemoteSigned -Force -ErrorAction Stop
 
-        # setup PSRemoting
-        Write-Verbose "Command : Enable-PSRemoting -Force"
-        Enable-PSRemoting -Force
+        if (-not($SkipEnablePSRemoting))
+        {
+            # setup PSRemoting
+            Write-Verbose "Command : Enable-PSRemoting -Force"
+            Enable-PSRemoting -Force -ErrorAction Stop
+        }
 
         # Add $TrustedHosts hosts to trustedhosts
         Write-Verbose "Command : Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts"
-        Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts
+        Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts -ErrorAction Stop
 
         # Configure WSMan MaxShellsPerUser to prevent error "The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded."
         # default 25 change to 100
         Write-Verbose "Command : Set-WsManMaxShellsPerUser -ShellsPerUser 100"
-        Set-WsManMaxShellsPerUser -ShellsPerUser 100
+        Set-WsManMaxShellsPerUser -ShellsPerUser 100 -ErrorAction Stop
 
         # Enble WindowsPowerShell Remoting Firewall Rule
         Write-Verbose "Command : New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985"
