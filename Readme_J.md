@@ -1,115 +1,76 @@
 # Read Me Fast
-Valentia is PowerShell deployment tool for Server-Client model.
-This module set will optimize your work for deploy Commands or files to remote servers.
+valentia は PowerShell を用いた Windows におけるdeploymentツールです。
+valentia を用いることで遠隔サーバー操作が格段に容易になり、日頃の業務が大きく簡便化されます。
 
 
 # Special Thanks
-Valentia inspired from Capistrano ( a Ruby deployment tool for Linux) and psake ( a PowerShell build tool).
-They are fantastic and awesome tools for automation and DevOps.
-Especially psake showed cool way of coding and valentia followed in many points.
+valentia は、 Capistrano ( LinuxにおけるRuby 製のデプロイツール) と psake ( PowerShell製のビルドツール ) の影響を大きく受けています。.
+これらは突出した素晴らしいツールであり、 DevOpsといった自動化に大きく寄与してくれます。
+特に psake は参考になるコーディング例を示し valentia も参考にしています。
 
-Also psasync(http://newsqlblog.com/category/powershell/powershell-concurrency/) and Get-NetworkInfo(http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/) give me inspire to do asynchronous execution.
-
-
-# Latest Change
-
-## Version 0.3.x
-
-- version : 0.3.0
-	
-	[ author : guitarrapc ]
-	
-	[ Sep 24, 2013 ]
-	
-	* Open to public
-	* Get-ValentiaGroup now supports multiple input, previously only 1 input was allowed. Now you can type like valea 192.168.0.1,192.168.0.2 {hostname}
-	* Now Invoke-ValentiaDownload had added to copy item from clients to server
-	* Minor Change valep error variable from array to list (will do for valea and vale)
-	
-# Valid OS and PowerShell Verstion
-
-valentia works with PowerShell Version 3.0 and higher.
-I'm developing with Windows 8, Windows 8.1 and Windows 2012.
-Supporting Operating System are...
-
-- Windows 7 (with PowerShell V3.0 and higher)
-- Windows 8 (with PowerShell V3.0 and higher)
-- Windows 8.1 (with PowerShell V3.0 and higher)
-- Windows 2012 (with PowerShell V3.0 and higher)
-- Windows 2012 R2 (with PowerShell V3.0 and higher)
-
-note : all functions are confirmed with Windows Server 2012 x64 English environment.
+他には psasync(http://newsqlblog.com/category/powershell/powershell-concurrency/) と Get-NetworkInfo(http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/) も、非同期実行に関して参考にさせてもらっています。
 
 
-# Prerequisite
+# 対象OS PowerShell バージョン
 
-You need to install followings to use valentia file transfer.
+valentia は PowerShell Version 3.0 以降で動作します。
+サポートしているOSは、以下の通りです。
 
-1. Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"
-2. Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy") [Download FastCopy? click here to go HP.](Link : http://ipmsg.org/tools/fastcopy.html )
+- Windows 7 ( PowerShell V3.0 以降)
+- Windows 8 ( PowerShell V3.0 以降)
+- Windows 2012 ( PowerShell V3.0 以降)
+
+ノート : 全ファンクションは Windows Server 2012 E / J で確認しています。
 
 
-# Set valentia module
+# 事前準備
 
-To use valentia module, please set valentia folder to 
+valentiaにおけるファイル転送のため、valentiaは 以下が準備されている必要があります。
+
+1. 単独/複数ファイル転送のために、BITS Transferを利用しています。 "Windows の機能" から "IIS BITs Transfer" を有効にしてください。
+2. "FastCopy" を フォルダ同期に利用しています。( FastCopyx64 を "C:\Program Files\FastCopy" にインストールしてください。) (Link : http://ipmsg.org/tools/fastcopy.html )
+
+
+# valentia モジュールを設置する
+
+valentiaを利用するにあたり、以下のパスにvalentiaモジュールフォルダ毎を設置してください。
 
 ```
 %homepath%\documents\WindowsPowerShell\Module\
 ```
 
 
-# Install valentia
+# valentia Module のインポート
 
-Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.
-
-You can copy valentia to module path with run install.bat
-```
-$env:USERPROFILE\Documents\WindowsPowerShell\Modules
-```
-
-Or if you want to use valentia with all user, then set valentia module folder to:
-```
-C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
-```
-
-Else place anywhere you want.
-
-# Import valentia module
-
-In PowerShell V3.0, all modules located in default psmodulepath will be automatically loaded.
-if you sat module in custom path, then use Import-Module Commandlet.
+PowerShell 3.0においては、デフォルトの psmoduleパスに設置されたモジュールは自動的に読み込まれます。
+しかし、自分の好きなパスにモジュールを置いた場合は、Import-Module コマンドレットでモジュールをインポートしてください。
 
 ```PowerShell
-cd "move to custom path you sat valentia"
+cd "valentiaを設置したパス"
 Import-Module valentia
 ```
 
-If you sat valentia in standard psmodule path described in "Install valentia", you don't need manually import module, but you can do it.
+もし valentia を psmodule パスに設置した場合、手動でImport-Module をする必要はありません。
+もしやるとしても以下で大丈夫です。
 
 ```PowerShell
 Import-Module valentia
 ```
 
-or check detail with following.
-
-```PowerShell
-Import-Module valentia -Verbose
-```
 
 # valentia Cmdlets
 
-You can see valentia Cmdlets by following command.
+インポート後は、以下のコマンドでvalentia Cmdletを確認できます。
 
 ```PowerShell
 Get-command -module valentia
 ```
 
-Following Cmdlets will be shown.
+これらのCmdletが表示されるはずです。
 
 ```PowerShell
 CommandType     Name                                               ModuleName
 -----------     ----                                               ----------
-Function        Get-ValentiaCredential                             valentia
 Function        Get-ValentiaGroup                                  valentia
 Function        Get-ValentiaModuleReload                           valentia
 Function        Get-ValentiaRebootRequiredStatus                   valentia
@@ -119,7 +80,6 @@ Function        Invoke-Valentia                                    valentia
 Function        Invoke-ValentiaAsync                               valentia
 Function        Invoke-ValentiaClean                               valentia
 Function        Invoke-ValentiaCommand                             valentia
-Function        Invoke-ValentiaDownload                            valentia
 Function        Invoke-ValentiaParallel                            valentia
 Function        Invoke-ValentiaSync                                valentia
 Function        Invoke-ValentiaUpload                              valentia
@@ -128,19 +88,19 @@ Function        New-ValentiaCredential                             valentia
 Function        New-ValentiaFolder                                 valentia
 Function        New-ValentiaGroup                                  valentia
 Function        Set-ValentiaHostName                               valentia
-Function        Set-ValentiaLocation                               valentia
+Function        Set-valentiaLocation                               valentia
 Workflow        Invoke-ValentiaCommandParallel                     valentia
 ```
 
-All Cmdlets have alias to lket you use easily.
-You can find them as like this.
+各モジュールには利用しやすいようにAliasが設定されています。
+Aliasは以下のコマンドで確認できます。
 
 
 ```PowerShell
 Get-Alias | where ModuleName -eq "valentia"
 ```
 
-This show alias defined in valentia
+これによりvalentiaで定義されているalias一覧が表示されます。
 
 ```PowerShell
 CommandType     Name                                               ModuleName
@@ -148,14 +108,9 @@ CommandType     Name                                               ModuleName
 Alias           Clean -> Invoke-ValentiaClean                      valentia
 Alias           Command -> Invoke-ValentiaCommand                  valentia
 Alias           CommandP -> Invoke-ValentiaCommandParallel         valentia
-Alias           Cred -> Get-ValentiaCredential                     valentia
-Alias           Download -> Invoke-ValentiaDownload                valentia
-Alias           Go -> Set-ValentiaLocation                         valentia
-Alias           Initial -> Initialize-valentiaEnvironment          valentia
+Alias           Go -> Set-valentiaLocation                         valentia
 Alias           Reload -> Get-ValentiaModuleReload                 valentia
-Alias           Rename -> Set-ValentiaHostName                     valentia
 Alias           Sync -> Invoke-ValentiaSync                        valentia
-Alias           Target -> Get-ValentiaGroup                        valentia
 Alias           Task -> Get-ValentiaTask                           valentia
 Alias           Upload -> Invoke-ValentiaUpload                    valentia
 Alias           UploadL -> Invoke-ValentiaUploadList               valentia
@@ -165,13 +120,13 @@ Alias           Valep -> Invoke-ValentiaParallel                   valentia
 ```
 
 
-# Environment Setup Commands
+# 環境設定コマンド
 
-Before you start valentia deployment, you should setup both Server and Clients to work PSRemote Connection.
+valentiaによるdeploymentを実行するまえに、サーバーとクラインとで PSRemoting が動作するように設定する必要があります。
 
-### 1. ```Initialize-ValentiaEnvironment``` : Setup Server
+### 1. ```Initialize-ValentiaEnvironment``` : サーバーセットアップ
 
-This command will let your Server for valentia remoting.
+このコマンドは、対象のサーバーをデプロイサーバーとして動作するように環境構成します。
 
 	1. Set-ExecutionPolicy (Default : RemoteSigned)
 	2. Enable-PSRemoting
