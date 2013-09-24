@@ -1447,7 +1447,7 @@ You can prepare script file to run, and specify path.
         # hide progress or not
         if (!$quiet)
         {
-            Write-Warning ("{0}" -f $(&$ReceiveAsyncStatus).Name)
+            Write-Warning -Message "$((&$ReceiveAsyncStatus).Name)"
         }
 
         
@@ -1471,7 +1471,7 @@ You can prepare script file to run, and specify path.
                 if ($count % 100 -eq 0)
                 {
                     # Show Current Status
-                    Write-Warning ("{0}" -f $(&$ReceiveAsyncStatus).Name)
+                    Write-Warning -Message "$((&$ReceiveAsyncStatus).Name)"
                 }
             }
 
