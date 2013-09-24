@@ -2949,6 +2949,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             {
                 try
                 {
+                    Write-Warning ("running command to DeployMember: {0}" -f $DeployMember)
                     Write-Verbose 'Command : Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -ErrorAction Stop -PassThru -Credential $Credential'
                     $Result = Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -ErrorAction Stop -PassThru -Credential $Credential
                 }
@@ -4168,7 +4169,7 @@ read production-hoge.ps1 from c:\test.
 
         [Parameter(
             Position = 1,
-            Mandatory,
+            Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]
         $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup)
