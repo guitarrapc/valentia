@@ -7,4 +7,4 @@ Set Deployment folder into C:\.
 All default configuration were sat to create and see this directory.
 
 
-c‚è‚Í‚Ü‚½¡“x‚©‚­
+Will be write least of readme:(
