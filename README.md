@@ -46,7 +46,7 @@ note : all functions are confirmed with Windows Server 2012 x64 English environm
 You need to install followings to use valentia file transfer.
 
 1. Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"
-2. Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy") [Download FastCopy? click here to go HP.](Link : http://ipmsg.org/tools/fastcopy.html )
+2. Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy") [Download FastCopy? click here to go HP.](http://ipmsg.org/tools/fastcopy.html)
 
 
 # Set valentia module
