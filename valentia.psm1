@@ -221,6 +221,13 @@ You can prepare script file to run, and specify path.
         [Parameter(
             Position = 3, 
             Mandatory = 0,
+            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [string[]]
+        $TaskParameter,
+
+        [Parameter(
+            Position = 4,
+            Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [switch]
         $quiet
@@ -361,8 +368,13 @@ You can prepare script file to run, and specify path.
             # Flag for WSManInstance restart detection
             $WSManInstanceflag = $true
 
+            # Check parameter for Invoke-Command
+            Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
+            Write-Verbose ("wsmanSessionlimit..... {0}" -f $($valentia.wsmanSessionlimit))
+            Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
+
             # execute workflow
-            Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -PSCredential $Credential -ErrorAction Stop | %{
+            Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -ErrorAction Stop | %{
                 $result = @{}
             
             }{
@@ -389,7 +401,7 @@ You can prepare script file to run, and specify path.
                 Write-Warning "Restart Complete, trying remote session again."
 
                 # if hit then automatically rerun workflow
-                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -PSCredential $Credential -ErrorAction Stop | %{
+                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -ErrorAction Stop | %{
                     $result = @{}
             
                 }{
@@ -525,7 +537,14 @@ Created: 20/June/2013
             Mandatory =$true,
             HelpMessage = "Input wsmanSession Threshold number to restart wsman")]
         [int]
-        $wsmanSessionlimit
+        $wsmanSessionlimit,
+
+        [Parameter(
+            Position = 2,
+            Mandatory = 0,
+            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [string[]]
+        $TaskParameter
     )
 
     foreach -Parallel ($DeployMember in $PSComputerName){
@@ -544,14 +563,12 @@ Created: 20/June/2013
             # Executing query
             try
             {
-                "`n"
                 # Create ScriptBlock
                 $WorkflowScript = [ScriptBlock]::Create($using:ScriptToRun)
 
                 # Run ScriptBlock
-                $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ErrorAction Stop
+                $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ErrorAction Stop -ArgumentList $TaskParameter
                 $task.WSManInstanceflag = $false
-
             }
             catch 
             {
@@ -672,9 +689,6 @@ You can prepare script file to run, and specify path.
 
 #>
 
-
-
-
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
     param(
         [Parameter(
@@ -711,6 +725,13 @@ You can prepare script file to run, and specify path.
 
         [Parameter(
             Position = 3, 
+            Mandatory = 0,
+            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [string[]]
+        $TaskParameter,
+
+        [Parameter(
+            Position = 4,
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [switch]
@@ -897,7 +918,7 @@ You can prepare script file to run, and specify path.
         $WSManInstanceflag = $true
 
         # Executing job
-        Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit | %{
+        Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter | %{
             $result = @{}
             
         }{
@@ -924,7 +945,7 @@ You can prepare script file to run, and specify path.
             Write-Warning "Restart Complete, trying remote session again."
 
             # if hit then automatically rerun command
-            Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit | %{
+            Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter | %{
                 $result = @{}
             
             }{
@@ -935,7 +956,6 @@ You can prepare script file to run, and specify path.
                 # Output to host
                 if(!$quiet)
                 {
-                    # Output to host
                     $_.result
                 }
 
@@ -1073,6 +1093,7 @@ Created: 20/June/2013
             ValueFromPipelineByPropertyName =$True,
             Mandatory =$true,
             HelpMessage = "Input Session")]
+        [System.Management.Automation.Runspaces.PSSession]
         $Sessions,
 
         [Parameter(
@@ -1090,7 +1111,14 @@ Created: 20/June/2013
             Mandatory =$true,
             HelpMessage = "Input wsmanSession Threshold number to restart wsman")]
         [int]
-        $wsmanSessionlimit
+        $wsmanSessionlimit,
+
+        [Parameter(
+            Position = 3, 
+            Mandatory = 0,
+            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [string[]]
+        $TaskParameter
     )
 
 
@@ -1108,10 +1136,15 @@ Created: 20/June/2013
         # Get Host
         $task.host = $session.ComputerName
 
+        # Check parameter for Invoke-Command
+        Write-Verbose ("Session..... {0}" -f $($Sessions))
+        Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
+        Write-Verbose ("wsmanSessionlimit..... {0}" -f $($wsmanSessionlimit))
+        Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
 
         # Run ScriptBlock in Job
         Write-Verbose ("Running ScriptBlock to {0} as Job" -f $session)
-        $job = Invoke-Command -Session $session -ScriptBlock $ScriptToRun -AsJob
+        $job = Invoke-Command -Session $session -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -AsJob
 
         try
         {
@@ -1286,6 +1319,13 @@ You can prepare script file to run, and specify path.
         [Parameter(
             Position = 3, 
             Mandatory = 0,
+            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [string[]]
+        $TaskParameter,
+
+        [Parameter(
+            Position = 4, 
+            Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [switch]
         $quiet
@@ -1424,6 +1464,7 @@ You can prepare script file to run, and specify path.
         # Create HashTable for Runspace
         $ScriptToRunHash = @{ScriptBlock = $ScriptToRun}
         $credentialHash = @{Credential = $Credential} 
+        $TaskParameterHash = @{TaskParameter = $TaskParameter} 
 
         # Create a pool of 100 runspaces
         $pool = New-ValentiaRunSpacePool -PoolSize 10
@@ -1438,7 +1479,7 @@ You can prepare script file to run, and specify path.
         # Execute Async Job
         foreach ($DeployMember in $DeployMembers)
         {
-            $AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $pool -ScriptToRunHash $ScriptToRunHash -Deploymember $DeployMember -CredentialHash $credentialHash
+            $AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $pool -ScriptToRunHash $ScriptToRunHash -Deploymember $DeployMember -CredentialHash $credentialHash -TaskParameterHash $TaskParameterHash
         }
 
         # Create ScriptBlock to obtain AsyncStatus
@@ -1607,6 +1648,7 @@ You can prepare script file to run, and specify path.
 #-- Private Module Function for Async execution --#
 
 function Invoke-ValentiaAsyncCommand{
+
 <#
 .SYNOPSIS 
 Creating a PowerShell pipeline then executes a ScriptBlock Asynchronous with Remote Host.
@@ -1660,7 +1702,14 @@ Above example will concurrently running with 10 processes for each Computers.
             Mandatory,
             HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
         [HashTable]
-        $CredentialHash
+        $CredentialHash,
+
+        [Parameter(
+            Position=4,
+            Mandatory,
+            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [HashTable]
+        $TaskParameterHash
     )
 
 
@@ -1671,10 +1720,11 @@ Above example will concurrently running with 10 processes for each Computers.
             param(
                 $ScriptToRunHash,
                 $ComputerName,
-                $CredentialHash
+                $CredentialHash,
+                $TaskParameterHash
             )
         
-            Invoke-Command -ScriptBlock $($ScriptToRunHash.Values) -ComputerName $($ComputerName.Values) -Credential $($CredentialHash.Values)
+            Invoke-Command -ScriptBlock $($ScriptToRunHash.Values) -ComputerName $($ComputerName.Values) -Credential $($CredentialHash.Values) -ArgumentList $($TaskParameterHash.Values)
         }
 
         # Create Hashtable for ComputerName passed to Pipeline
@@ -1686,11 +1736,12 @@ Above example will concurrently running with 10 processes for each Computers.
 
         # Add Script and Parameter arguments from Hashtables
         Write-Verbose "Adding Script and Arguments Hastables to PowerShell Instance"
-        Write-Verbose ('Add Script : {0}' -f $InvokeCommand)
-        Write-Verbose ('Add Argument : {0}' -f $ScriptToRunHash)
-        Write-Verbose ('Add Argument : {0}' -f $ComputerName)
-        Write-Verbose ('Add Argument : {0}' -f $CredentialHash)
-        $Pipeline.AddScript($InvokeCommand).AddArgument($ScriptToRunHash).AddArgument($ComputerName).AddArgument($CredentialHash) > $null
+        Write-Verbose ('Add InvokeCommand Script : {0}' -f $InvokeCommand)
+        Write-Verbose ("Add ScriptBlock Argument..... Keys : {0}, Values : {1}" -f $($ScriptToRunHash.Keys), $($ScriptToRunHash.Values))
+        Write-Verbose ("Add ComputerName Argument..... Keys : {0}, Values : {1}" -f $($ComputerName.Keys), $($ComputerName.Values))
+        Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}" -f $($CredentialHash.Keys), $($CredentialHash.Values))
+        Write-Verbose ("Add ArgumentList Argument..... Keys : {0}, Values : {1}" -f $($TaskParameterHash.Keys), $($TaskParameterHash.Values))
+        $Pipeline.AddScript($InvokeCommand).AddArgument($ScriptToRunHash).AddArgument($ComputerName).AddArgument($CredentialHash).AddArgument($TaskParameterHash) > $null
 
         # Add RunSpacePool to PowerShell Instance
 	    Write-Verbose ("Adding Runspaces {0}" -f $RunspacePool)
