@@ -5672,7 +5672,7 @@ New-Alias -Name Valep -Value Invoke-ValentiaParallel
 New-Alias -Name CommandP -Value Invoke-ValentiaCommandParallel
 New-Alias -Name Vale -Value Invoke-Valentia
 New-Alias -Name Command -Value Invoke-ValentiaCommand
-New-Alias -Name ValeA -Value Invoke-ValentiaAsync
+New-Alias -Name Valea -Value Invoke-ValentiaAsync
 New-Alias -Name Upload -Value Invoke-ValentiaUpload
 New-Alias -Name UploadL -Value Invoke-ValentiaUploadList
 New-Alias -Name Sync -Value Invoke-ValentiaSync
