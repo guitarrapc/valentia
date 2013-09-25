@@ -24,7 +24,7 @@ $valentia.wsmanSessionlimit = 22 # Set PSRemoting WSman limit prvention threshol
 
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
-    hostName = "white"
+    hostName = "web"
     ipstring = "ip"
 }
 
