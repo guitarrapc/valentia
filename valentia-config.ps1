@@ -66,8 +66,8 @@ $valentia.context.push(
         originalDirectory = Get-Location;
         originalErrorActionPreference = $global:ErrorActionPreference;
         name = $valentia.name
-        alias = $valentia.alias
         version = $valentia.version
+        supportWindows = $valentia.supportWindows
         tasks = @{}
         includes = New-Object System.Collections.Queue;
     }
