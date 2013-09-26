@@ -1093,7 +1093,7 @@ Created: 20/June/2013
             ValueFromPipelineByPropertyName =$True,
             Mandatory =$true,
             HelpMessage = "Input Session")]
-        [System.Management.Automation.Runspaces.PSSession]
+        [System.Management.Automation.Runspaces.PSSession[]]
         $Sessions,
 
         [Parameter(
