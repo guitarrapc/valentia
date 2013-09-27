@@ -4372,7 +4372,7 @@ Set MaxShellsPerUser from 25 to 100
 Add PowerShell Remoting Inbound rule to Firewall (Default : TCP 5985)
 Disable Enhanced Security for Internet Explorer (Default : True)
 Create OS user for Deploy connection. (Default : ec2-user)
-Create Windows PowerShell Module Folder for DeployUser (Default : C:\Users\$ec2-user\Documents\WindowsPowerShell\Modules)
+Create Windows PowerShell Module Folder for DeployUser (Default : $home\Documents\WindowsPowerShell\Modules)
 Create/Revise Deploy user credential secure file. (Server Only / Default : True)
 Create Deploy Folders (Server Only / Default : True)
 Set HostName as format (white-$HostUsage-IP)
@@ -4437,7 +4437,6 @@ read production-hoge.ps1 from c:\test.
 
         [Parameter(
             HelpMessage = "set usage for the host.")]
-        [ValidateSet("web","ci")]
         [string]
         $HostUsage,
 
