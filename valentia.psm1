@@ -1182,7 +1182,7 @@ Created: 20/June/2013
 
         # Get Current host WSManInstance (No need set Connection URI as it were already connecting
         $WSManInstance = Get-WSManInstance shell -Enumerate
-        $WSManInstance.count
+
         # Close Remote Connection existing by restart wsman if current wsmanInstance count greater than $valentia.wsmanSessionlimit
         # Remove or Restart session will cause error but already session is over and usually session terminated in 90 seconds
         if ($WSManInstance.count -ge $valentia.wsmanSessionlimit)
