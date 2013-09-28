@@ -2246,7 +2246,7 @@ upload files in target to Directory as Background Async job for hosts written in
 
 
             # Show Start-BitsTransfer Parameter
-            Write-Verbose ("Uploading {0} to {1}." -f $SourceFile, $Destination)
+            Write-Verbose ("Uploading {0} to {1}." -f "$($SourceFiles.Name)", $Destination)
             Write-Verbose ("SourcePath : {0}" -f $SourcePath)
             Write-Verbose ("DeployMember : {0}" -f $DeployMembers)
             Write-Verbose ("DestinationDeployFolder : {0}" -f $DeployFolder)
@@ -2337,7 +2337,7 @@ upload files in target to Directory as Background Async job for hosts written in
                                     #Only start upload for file.
                                     if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                                     {
-                                        Write-Warning ("Uploading {0} to {1}'s {2}" -f ($SourceFile).fullname, $DeployMember, $Destination)
+                                        Write-Warning ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination)
                                         Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -ErrorAction Stop
                                     }
                                 }
@@ -2648,10 +2648,10 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
             try
             {
                 # Run Start-BitsTransfer
-                Write-Verbose ("Uploading {0} to {1} ." -f $NewList.Source, $NewList.Destination)
+                Write-Verbose ("Uploading {0} to {1} ." -f "$($NewList.Source)", "$($NewList.Destination)")
                 Write-Verbose ("ListFile : {0}" -f $SourcePath)
-                Write-Verbose ("SourcePath : {0}" -f $NewList.Source)
-                Write-Verbose ("DestinationPath : {0}" -f $List.Destination)
+                Write-Verbose ("SourcePath : {0}" -f "$($NewList.Source)")
+                Write-Verbose ("DestinationPath : {0}" -f "$($List.Destination)")
                 Write-Verbose ("DeployMember : {0}" -f $DeployMember)
                 Write-Verbose ("Aysnc : {0}" -f $Async)
 
