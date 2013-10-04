@@ -5801,7 +5801,7 @@ ConvertFrom-StringData @'
 $Script:valentia = @{}
 $valentia.name = "valentia" # contains the Name of Module
 $valentia.defaultconfigurationfile = "valentia-config.ps1" # default configuration file name within valentia.psm1
-$valentia.version = "0.3.0" # contains the current version of valentia
+$valentia.version = "0.3.1" # contains the current version of valentia
 $valentia.supportWindows = @(6,1) # higher than windows 7 or windows 2008 R2
 $valentia.context = New-Object System.Collections.Stack # holds onto the current state of all variables
 
