@@ -9,6 +9,21 @@ This indicate Version History for valentia.
 ## Version 0.3.x
 
 
+- version : 0.3.1
+	
+	[ author : guitarrapc ]
+	
+	[ Oct 4, 2013 ]
+	
+	* Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to paa variables to task when execute valentia command. 
+	* Added Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark to ease you remark, mark deploy group ipaddresses in one command.
+	* Exmaple for Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark is added to README.
+	* fix link to fastcopy.
+	* fix Get-ValentiaGroup parameter of deployfolder was mandatory. It supposed to be not mandatory.
+	* fix some messages on Write-Verbose and Write-Warning. 
+	* little configuration for valentia-config.ps1
+
+
 - version : 0.3.0
 	
 	[ author : guitarrapc ]

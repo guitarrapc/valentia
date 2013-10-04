@@ -15,16 +15,20 @@ Also [psasync](http://newsqlblog.com/category/powershell/powershell-concurrency/
 
 ## Version 0.3.x
 
-- version : 0.3.0
+- version : 0.3.1
 	
 	[ author : guitarrapc ]
 	
-	[ Sep 24, 2013 ]
+	[ Oct 4, 2013 ]
 	
-	* Open to public
-	* Get-ValentiaGroup now supports multiple input, previously only 1 input was allowed. Now you can type like valea 192.168.0.1,192.168.0.2 {hostname}
-	* Now Invoke-ValentiaDownload had added to copy item from clients to server
-	* Minor Change valep error variable from array to list (will do for valea and vale)
+	* Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to paa variables to task when execute valentia command. 
+	* Added Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark to ease you remark, mark deploy group ipaddresses in one command.
+	* Exmaple for Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark is added to README.
+	* fix link to fastcopy.
+	* fix Get-ValentiaGroup parameter of deployfolder was mandatory. It supposed to be not mandatory.
+	* fix some messages on Write-Verbose and Write-Warning. 
+	* little configuration for valentia-config.ps1
+
 	
 # Valid OS and PowerShell Verstion
 
@@ -34,9 +38,9 @@ Supporting Operating System are...
 
 - Windows 7 (with PowerShell V3.0 and higher)
 - Windows 8 (with PowerShell V3.0 and higher)
-- Windows 8.1 (with PowerShell V3.0 and higher)
+- Windows 8.1 (with PowerShell V4.0 and higher)
 - Windows 2012 (with PowerShell V3.0 and higher)
-- Windows 2012 R2 (with PowerShell V3.0 and higher)
+- Windows 2012 R2 (with PowerShell V4.0 and higher)
 
 note : all functions are confirmed with Windows Server 2012 x64 English environment.
 
@@ -62,10 +66,7 @@ To use valentia module, please set valentia folder to
 
 Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.
 
-You can copy valentia to module path with run install.bat
-```
-$env:USERPROFILE\Documents\WindowsPowerShell\Modules
-```
+You can install valentia with ```run install.bat```. This bat file will copy valentia to module path ```env:USERPROFILE\Documents\WindowsPowerShell\Modules```
 
 Or if you want to use valentia with all user, then set valentia module folder to:
 ```
@@ -119,6 +120,8 @@ Function        Invoke-Valentia                                    valentia
 Function        Invoke-ValentiaAsync                               valentia
 Function        Invoke-ValentiaClean                               valentia
 Function        Invoke-ValentiaCommand                             valentia
+Function        Invoke-valentiaDeployGroupRemark                   valentia
+Function        Invoke-valentiaDeployGroupUnremark                 valentia
 Function        Invoke-ValentiaDownload                            valentia
 Function        Invoke-ValentiaParallel                            valentia
 Function        Invoke-ValentiaSync                                valentia
@@ -152,6 +155,8 @@ Alias           Cred -> Get-ValentiaCredential                     valentia
 Alias           Download -> Invoke-ValentiaDownload                valentia
 Alias           Go -> Set-ValentiaLocation                         valentia
 Alias           Initial -> Initialize-valentiaEnvironment          valentia
+Alias           ipremark -> Invoke-valentiaDeployGroupRemark       valentia
+Alias           ipunremark -> Invoke-valentiaDeployGroupUnremark   valentia
 Alias           Reload -> Get-ValentiaModuleReload                 valentia
 Alias           Rename -> Set-ValentiaHostName                     valentia
 Alias           Sync -> Invoke-ValentiaSync                        valentia
@@ -160,7 +165,7 @@ Alias           Task -> Get-ValentiaTask                           valentia
 Alias           Upload -> Invoke-ValentiaUpload                    valentia
 Alias           UploadL -> Invoke-ValentiaUploadList               valentia
 Alias           Vale -> Invoke-Valentia                            valentia
-Alias           ValeA -> Invoke-ValentiaAsync                      valentia
+Alias           Valea -> Invoke-ValentiaAsync                      valentia
 Alias           Valep -> Invoke-ValentiaParallel                   valentia
 ```
 
@@ -289,7 +294,7 @@ Just list them up in file.
 
 The file you specified will be output in following path.
 ```
-C:\Deployment\Deploy_group\ *****.ps1
+C:\Deployment\Deploygroup\ *****.ps1
 ```
 
 Deploy Group file just required to be split by `r`n.
@@ -318,6 +323,86 @@ this will make sample.ps1 in C:\Deployment\Deploy_group\ with 2 hosts ("10.0.0.1
 
 When using DeployGroup, just set file name without Extensions.
 ex) if you sat file name as "new.ps1" then use it by "new".
+
+### 5. ```Invoke-valentiaDeployGroupRemark``` : Remark ipaddress for deploygroup file inside deploygroup
+
+There would be many time to remark some deploy target inside deploygroup file.
+This is easy work but boring to check which file contains target deploy ip.
+
+This cmdlet will ease you remark target ipaddresses and check how change.
+
+
+The cmdlet will search recursible inside deploygroup.
+
+```
+C:\Deployment\Deploygroup\**\**\.....*****.ps1
+```
+
+SAMPLE deployGroup input
+```
+10.0.0.100
+10.0.0.101
+10.0.0.102 <= if you want to remark this line for all the files inside deploygroup folder.
+```
+
+Just type as like this.
+
+```PowerShell
+Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.102 -overWrite -Verbose
+```
+
+This will change PowerShell
+```
+10.0.0.100
+10.0.0.101
+#10.0.0.102
+```
+
+if you just want to check how affect and don't want to replace file, then remove -overwrite switch.
+
+```PowerShell
+Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.102 -Verbose
+```
+ 
+
+### 6. ```Invoke-valentiaDeployGroupUnremark``` : Unremark ipaddress for deploygroup file inside deploygroup
+
+if you remark ipaddresses in deploygroup file, then you want to unremark it:)
+This cmdlet will ease you unremark target ipaddresses and check how change.
+
+
+The cmdlet will search recursible inside deploygroup.
+
+```
+C:\Deployment\Deploygroup\**\**\.....*****.ps1
+```
+
+SAMPLE deployGroup input
+```
+10.0.0.100
+10.0.0.101
+#10.0.0.102 <= if you want to unremark this line for all the files inside deploygroup folder.
+```
+
+Just type as like this.
+
+```PowerShell
+Invoke-valentiaDeployGroupUnremark -remarkIPAddresses 10.0.0.102 -overWrite -Verbose
+```
+
+This will change PowerShell
+```
+10.0.0.100
+10.0.0.101
+10.0.0.102
+```
+
+if you just want to check how affect and don't want to replace file, then remove -overwrite switch.
+
+```PowerShell
+Invoke-valentiaDeployGroupUnremark -remarkIPAddresses 10.0.0.102 -Verbose
+```
+
 
 # Task for Commandset
 

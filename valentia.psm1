@@ -4312,6 +4312,228 @@ read production-hoge.ps1 from c:\test.
 
 
 
+
+function Invoke-Sed{
+
+<#
+
+.SYNOPSIS 
+PowerShell Sed alternate function
+
+.DESCRIPTION
+This cmdlet replace string in the file as like as sed on linux
+
+.NOTES
+Author: guitarrapc
+Created: 04/Oct/2013
+
+.EXAMPLE
+Invoke-Sed -path D:\Deploygroup\*.ps1 -searchPattern "^10.0.0.10$" -replaceWith "#10.0.0.10" -overwrite
+--------------------------------------------
+replace regex ^10.0.0.10$ with # 10.0.0.10 and replace file. (like sed -f "s/^10.0.0.10$/#10.0.0.10" -i)
+
+.EXAMPLE
+Invoke-Sed -path D:\Deploygroup\*.ps1 -searchPattern "^#10.0.0.10$" -replaceWith "10.0.0.10"
+--------------------------------------------
+replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
+
+#>
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            position = 0,
+            mandatory = 1,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
+        [string]
+        $path,
+
+        [parameter(
+            position = 1,
+            mandatory = 1,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
+        [string]
+        $searchPattern,
+
+        [parameter(
+            position = 2,
+            mandatory = 1,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
+        [string]
+        $replaceWith,
+
+        [parameter(
+            position = 3,
+            mandatory = 0)]
+        [switch]$overWrite
+    )
+
+    $read = Select-String -Path $path -Pattern $searchPattern
+
+    $read.path `
+        | sort -Unique `
+        | %{
+            Write-Warning ("Executing string replace for {0}" -f $path)
+                
+            Write-Verbose "Get file information"
+            $path = $_
+            $extention = [System.IO.Path]::GetExtension($path)
+
+            Write-Verbose "define tmp file"
+            $tmpextension = "$extention" + "_"
+            $tmppath = [System.IO.Path]::ChangeExtension($path,$tmpextension)
+                               
+            if ($overWrite)
+            {
+                Write-Verbose ("execute replace string {0} with {1} for file {2} and output to {3}" -f $searchPattern, $replaceWith, $path, $tmppath)
+                Get-Content -Path $path `
+                    | %{$_ -replace $searchPattern,$replaceWith} `
+                    | Out-File -FilePath $tmppath -Encoding utf8 -Force -Append
+
+                Write-Verbose ("remove original file {0}" -f $path, $tmppath)
+                Remove-Item -Path $path -Force
+
+                Write-Verbose ("rename tmp file {0} to original file {1}" -f $tmppath, $path)
+                Rename-Item -Path $tmppath -NewName ([System.IO.Path]::ChangeExtension($tmppath,$extention))
+            }
+            else
+            {
+                Write-Verbose ("execute replace string {0} with {1} for file {2}" -f $searchPattern, $replaceWith, $path)
+                Get-Content -Path $path `
+                    | %{$_ -replace $searchPattern,$replaceWith}
+            }    
+        }
+}
+
+
+
+# ipremark
+function Invoke-valentiaDeployGroupRemark{
+
+<#
+
+.SYNOPSIS 
+Remark Deploy ip from deploygroup file
+
+.DESCRIPTION
+This cmdlet remark deploygroup ipaddresses from $valentia.root\$valentia.branch.deploygroup not to refer the ipaddress
+
+.NOTES
+Author: guitarrapc
+Created: 04/Oct/2013
+
+.EXAMPLE
+Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.10,10.0.0.11 -overWrite -Verbose
+--------------------------------------------
+replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 then replace file. (like sed -f "s/^10.0.0.10$/#10.0.0.10" -i)
+
+Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.10,10.0.0.11 -Verbose
+--------------------------------------------
+replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^10.0.0.10$/#10.0.0.10")
+
+#>
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            position = 0,
+            mandatory = 1,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
+        [string[]]
+        $remarkIPAddresses,
+
+        [parameter(
+            position = 1,
+            mandatory = 0)]
+        [switch]
+        $overWrite
+    )
+
+    Get-ChildItem -Path (Join-Path $valentia.RootPath $valentia.BranchFolder.Deploygroup) -Recurse `
+        | where {!$_.PSISContainer } `
+        | %{
+            foreach ($remarkIPAddress in $remarkIPAddresses)
+            {
+                if ($overWrite)
+                {
+                    Invoke-Sed -path $_.FullName -searchPattern "^$remarkIPAddress$" -replaceWith "#$remarkIPAddress" -overWrite -Verbose
+                }
+                else
+                {
+                    Invoke-Sed -path $_.FullName -searchPattern "^$remarkIPAddress$" -replaceWith "#$remarkIPAddress" -Verbose
+                }
+            }
+        }
+}
+
+
+
+# ipunremark
+function Invoke-valentiaDeployGroupUnremark{
+
+<#
+
+.SYNOPSIS 
+Unremark Deploy ip from deploygroup file
+
+.DESCRIPTION
+This cmdlet unremark deploygroup ipaddresses from $valentia.root\$valentia.branch.deploygroup to refer the ipaddress.
+
+.NOTES
+Author: guitarrapc
+Created: 04/Oct/2013
+
+.EXAMPLE
+Invoke-valentiaDeployGroupUnremark -unremarkIPAddresses 10.0.0.10,10.0.0.11 -overWrite -Verbose
+--------------------------------------------
+replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 then replace file (like sed -f "s/^#10.0.0.10$/10.0.0.10" -i)
+
+Invoke-valentiaDeployGroupUnremark -unremarkIPAddresses 10.0.0.10,10.0.0.11 -Verbose
+--------------------------------------------
+replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^#10.0.0.10$/10.0.0.10")
+
+#>
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            position = 0,
+            mandatory = 1,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
+        [string[]]
+        $unremarkIPAddresses,
+
+        [parameter(
+            position = 1,
+            mandatory = 0)]
+        [switch]
+        $overWrite
+    )
+
+    Get-ChildItem -Path (Join-Path $valentia.RootPath $valentia.BranchFolder.Deploygroup) -Recurse `
+        | where {!$_.PSISContainer } `
+        | %{
+            foreach ($unremarkIPAddress in $unremarkIPAddresses)
+            {
+                if ($overWrite)
+                {
+                    Invoke-Sed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -overWrite -Verbose
+                }
+                else
+                {
+                    Invoke-Sed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -Verbose
+                }
+            }
+        }
+}
+
+
+
 #-- Running prerequisite Initialize OS Setting Module Functions --#
 
 
@@ -5680,6 +5902,8 @@ New-Alias -Name Go -Value Set-ValentiaLocation
 New-Alias -Name Clean -Value Invoke-ValentiaClean
 New-Alias -Name Reload -Value Get-ValentiaModuleReload
 New-Alias -Name Target -Value Get-ValentiaGroup
+New-Alias -Name ipremark -Value Invoke-valentiaDeployGroupRemark
+New-Alias -Name ipunremark -Value Invoke-valentiaDeployGroupUnremark
 New-Alias -Name Cred -Value Get-ValentiaCredential
 New-Alias -Name Rename -Value Set-ValentiaHostName
 New-Alias -Name Initial -Value Initialize-valentiaEnvironment
@@ -5707,15 +5931,17 @@ Export-ModuleMember `
         Invoke-ValentiaUploadList, 
         Invoke-ValentiaSync,
         Invoke-ValentiaDownload,
+        New-ValentiaGroup,
         Get-ValentiaGroup, 
+        Invoke-valentiaDeployGroupRemark,
+        Invoke-valentiaDeployGroupUnremark,
+        New-ValentiaCredential, 
         Get-ValentiaCredential,
         Set-ValentiaLocation, 
         Invoke-ValentiaClean,
-        New-ValentiaCredential, 
         New-ValentiaFolder,
-        New-ValentiaGroup,
-        Get-ValentiaModuleReload, 
         Initialize-valentiaEnvironment,
+        Get-ValentiaModuleReload, 
         Set-ValentiaHostName,
         Get-ValentiaRebootRequiredStatus `
     -Variable valentia `
