@@ -4890,8 +4890,8 @@ create as default
             Position = 1,
             Mandatory = 0,
             HelpMessage = "Branch Folder path.")]
-        [string]
-        $BranchFolder = $valentia.BranchFolder,
+        [string[]]
+        $BranchFolder,
 
         [Parameter(
             Position = 2,
@@ -4903,8 +4903,17 @@ create as default
     begin
     {
         # Create Fullpath String
-        $pname = $BranchFolder | Get-Member -MemberType Properties | ForEach-Object{ $_.Name }
-        $DeployFolders = $pname | %{Join-Path $RootPath $_}
+        if ($BranchFolder.Length -eq 0)
+        {
+            Write-Verbose "BranchFolder detected as empty. using $($valentia.BranchFolder) for BranchFolder name"
+            $pname = $valentia.BranchFolder | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name
+            $DeployFolders = $pname | %{Join-Path $RootPath $_}
+        }
+        else
+        {
+            Write-Verbose ("BranchFolder detected as {0}" -f $BranchFolder)
+            $DeployFolders = $BranchFolder | %{Join-Path $RootPath $_}
+        }
     }
 
     process
