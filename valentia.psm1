@@ -5185,17 +5185,14 @@ Disable IEEnhanced security.
         $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
     )
 
-    # get os name like "Microsoft Windows Server 2012 Standard"
-    $osname = (Get-WmiObject -class Win32_OperatingSystem).Caption
-
     # get os version, Windows 7 will be "6 1 0 0"
     $osversion = [Environment]::OSVersion.Version
 
     # Higher than $valentia.supportWindows
     $minimumversion = (New-Object 'Version' $valentia.supportWindows)
 
-    # check osname include server and higher than valentia support version
-    if (($osname -like "*Server*") -and ($osversion -ge $minimumversion))
+    # check osversion higher than valentia support version
+    if ($osversion -ge $minimumversion)
     {
         if (Test-Path $AdminKey)
         {
@@ -5238,7 +5235,7 @@ Disable IEEnhanced security.
     }
     else
     {
-        Write-Warning -Message ("OS Name:{0}, Version:{1}, invalid as 'server' not found or '{2}'" -f $osname, [Environment]::OSVersion.Version, $minimumversion)
+        Write-Warning -Message ("OS Name:{0}, Version:{1}, invalid as '{1}' version lower than '{2}'" -f (Get-WmiObject -class Win32_OperatingSystem).Caption, [Environment]::OSVersion.Version, $minimumversion)
     }
 }
 
