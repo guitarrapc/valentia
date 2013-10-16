@@ -1467,7 +1467,7 @@ You can prepare script file to run, and specify path.
         $TaskParameterHash = @{TaskParameter = $TaskParameter} 
 
         # Create a pool of 100 runspaces
-        $pool = New-ValentiaRunSpacePool -PoolSize 10
+        $pool = New-ValentiaRunSpacePool -PoolSize 50
 
         #Initialize AsyncPipelines
         $AsyncPipelines = @() 
@@ -1815,7 +1815,7 @@ Above will creates a pool of 10 runspaces
         # RunspaceFactory.CreateRunspacePool (Int32, Int32, InitialSessionState, PSHost)
         #   - Creates a runspace pool that specifies minimum and maximum number of opened runspaces, 
         #     and a custom host and initial session state information that is used by each runspace in the pool.
-        $pool = [runspacefactory]::CreateRunspacePool(10, $PoolSize,  $sessionstate, $Host)	
+        $pool = [runspacefactory]::CreateRunspacePool(20, $PoolSize,  $sessionstate, $Host)	
     
         # Only support STA mode. No MTA mode.
         $pool.ApartmentState = "STA"
