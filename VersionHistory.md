@@ -15,7 +15,7 @@ This indicate Version History for valentia.
 	
 	[ Oct 4, 2013 ]
 	
-	* Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to paa variables to task when execute valentia command. 
+	* Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to pass variables into task when execute valentia command. 
 	* Added Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark to ease you remark, mark deploy group ipaddresses in one command.
 	* Exmaple for Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark is added to README.
 	* fix link to fastcopy.

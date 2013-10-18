@@ -1,132 +1,184 @@
 # Read Me Fast
-valentia �� PowerShell ��p���� Windows �ɂ�����deployment�c�[���ł��B
-valentia ��p���邱�Ƃŉ��u�T�[�o�[���삪�i�i�ɗe�ՂɂȂ�A�����̋Ɩ����傫���ȕ։�����܂��B
+valentia は PowerShell を用いた Windows におけるdeploymentツールです。
+valentia を用いることで遠隔サーバー操作が格段に容易になり、日頃の業務が大きく簡便化されます。
 
 
 # Special Thanks
-valentia �́A Capistrano ( Linux�ɂ�����Ruby ���̃f�v���C�c�[��) �� psake ( PowerShell���̃r���h�c�[�� ) �̉e����傫���󂯂Ă��܂��B.
-�����͓ˏo�����f���炵���c�[���ł���A DevOps�Ƃ������������ɑ傫����^���Ă���܂��B
-���� psake �͎Q�l�ɂȂ�R�[�f�B���O������� valentia ���Q�l�ɂ��Ă��܂��B
+valentia は、 Capistrano ( LinuxにおけるRuby 製のデプロイツール) と psake ( PowerShell製のビルドツール ) の影響を大きく受けています。.
+これらは突出した素晴らしいツールであり、 DevOpsといった自動化に大きく寄与してくれます。
+特に psake は参考になるコーディング例を示し valentia も参考にしています。
 
-���ɂ� psasync(http://newsqlblog.com/category/powershell/powershell-concurrency/) �� Get-NetworkInfo(http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/) ���A�񓯊����s�Ɋւ��ĎQ�l�ɂ����Ă�����Ă��܂��B
-
-
-# �Ώ�OS PowerShell �o�[�W����
-
-valentia �� PowerShell Version 3.0 �ȍ~�œ��삵�܂��B
-�T�|�[�g���Ă���OS�́A�ȉ��̒ʂ�ł��B
-
-- Windows 7 ( PowerShell V3.0 �ȍ~)
-- Windows 8 ( PowerShell V3.0 �ȍ~)
-- Windows 2012 ( PowerShell V3.0 �ȍ~)
-
-�m�[�g : �S�t�@���N�V������ Windows Server 2012 E / J �Ŋm�F���Ă��܂��B
+他には [psasync](http://newsqlblog.com/category/powershell/powershell-concurrency/) と Get-NetworkInfo[Get-NetworkInfo](http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/)も、非同期実行に関して参考にさせてもらっています。
 
 
-# ���O����
 
-valentia�ɂ�����t�@�C���]���̂��߁Avalentia�� �ȉ�����������Ă���K�v������܂��B
+# Latest Change
 
-1. �P��/�����t�@�C���]���̂��߂ɁABITS Transfer�𗘗p���Ă��܂��B "Windows �̋@�\" ���� "IIS BITs Transfer" ��L���ɂ��Ă��������B
-2. "FastCopy" �� �t�H���_�����ɗ��p���Ă��܂��B( FastCopyx64 �� "C:\Program Files\FastCopy" �ɃC���X�g�[�����Ă��������B) (Link : http://ipmsg.org/tools/fastcopy.html )
+## Version 0.3.x
+
+- version : 0.3.1
+	
+	[ author : guitarrapc ]
+	
+	[ Oct 4, 2013 ]
+	
+	* TaskParameter パラメータを Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync に追加。 これにより、 task内部で $args[0] ...[x] を使うことによって、valentia コマンド実行時に TaskParameter で指定したパラメータが渡されます。
+	* Invoke-valentiaDeployGroupRemark と Invoke-valentiaDeployGroupUnremark を追加。 これにより　deploy groupに記述したip addressesを容易にリマーク、アンリマーク可能です。
+	* READMEに Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark を追加。
+	* fastcopy へのリンクを修正。
+	* Get-ValentiaGroup にて、deployfolder のパラメータが mandatory に意図せずなっていたため修正しました。
+	* Write-Verbose と Write-Warningに関して、一部メッセージを修正しました。 
+	* valentia-config.ps1 についてコンフィグを一部追加しました。
 
 
-# valentia ���W���[����ݒu����
+# 対象OS PowerShell バージョン
 
-valentia�𗘗p����ɂ�����A�ȉ��̃p�X��valentia���W���[���t�H���_����ݒu���Ă��������B
+valentia は PowerShell Version 3.0 以降で動作します。
+開発は、 Windows 8, Windows 8.1, Windows 2012 で行っています。
+サポートしているOSは、以下の通りです。
+
+- Windows 7 ( PowerShell V3.0 以降)
+- Windows 8 ( PowerShell V3.0 以降)
+- Windows 8.1 (PowerShell V4.0 以降)
+- Windows 2012 ( PowerShell V3.0 以降)
+- Windows 2012 R2 (PowerShell V4.0 以降)
+- 
+ノート : 全ファンクションは Windows Server 2012 x64 English で確認しています。
+
+
+# 事前準備
+
+valentiaにおけるファイル転送のため、valentiaは 以下が準備されている必要があります。
+
+1. 単独/複数ファイル転送のために、BITS Transferを利用しています。 "Windows の機能" から "IIS BITs Transfer" を有効にしてください。
+2. "FastCopy" を フォルダ同期に利用しています。( FastCopyx64 を "C:\Program Files\FastCopy" にインストールしてください。) 
+	- [FastCopy をダウンロードしますか? ここをクリックへ HP に移動します。](http://ipmsg.org/tools/fastcopy.html)
+3. PowerShell スクリプトが実行できるポリシーになっていることを確認してください。 実行できるポリシーに変更するには以下のコマンドをPowerShellで管理者として実行します。
+	- ```Set-ExecutionPolicy RemoteSigned```
+
+
+# valentia をインストールする
+
+valentiaを利用するにあたり、valentiaモジュールを既定のモジュールパスか任意のパスに設置してください。
 
 ```
 %homepath%\documents\WindowsPowerShell\Module\
 ```
 
+valentia は ```run install.bat```　を実行することでインストール可能です。 このバッチファイルは valentia をモジュールパス ```env:USERPROFILE\Documents\WindowsPowerShell\Modules```にインストールします。
 
-# valentia Module �̃C���|�[�g
-
-PowerShell 3.0�ɂ����ẮA�f�t�H���g�� psmodule�p�X�ɐݒu���ꂽ���W���[���͎����I�ɓǂݍ��܂�܂��B
-�������A�����̍D���ȃp�X�Ƀ��W���[����u�����ꍇ�́AImport-Module �R�}���h���b�g�Ń��W���[�����C���|�[�g���Ă��������B
+もし、valentia を全ユーザーにインストールする場合は、valentiaモジュールフォルダーを以下のパスに配置します。
 
 ```PowerShell
-cd "valentia��ݒu�����p�X"
+C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
+```
+
+あるいは、自分の好きなパスに配置してください。
+
+
+# valentia Module のインポート
+
+PowerShell 3.0においては、デフォルトの psmoduleパスに設置されたモジュールは自動的に読み込まれます。
+
+しかし、自分の好きなパスにモジュールを置いた場合は、Import-Module コマンドレットでモジュールをインポートしてください。
+
+```PowerShell
+cd "valentiaを設置したパス"
 Import-Module valentia
 ```
 
-���� valentia �� psmodule �p�X�ɐݒu�����ꍇ�A�蓮��Import-Module ������K�v�͂���܂���B
-�������Ƃ��Ă��ȉ��ő��v�ł��B
+もし"valentia をインストールする"で紹介した既定のモジュールパスに配置した場合は、手動でモジュールをインポートする必要はありません。が、明示的に読み込むこともできます。
 
 ```PowerShell
 Import-Module valentia
 ```
 
+あるいは、さらにインポート詳細を確認することもできます。
+
+```PowerShell
+Import-Module valentia -Verbose
+```
 
 # valentia Cmdlets
 
-�C���|�[�g��́A�ȉ��̃R�}���h��valentia Cmdlet���m�F�ł��܂��B
+インポート後は、以下のコマンドでvalentia Cmdletを確認できます。
 
 ```PowerShell
 Get-command -module valentia
 ```
 
-������Cmdlet���\�������͂��ł��B
+これらのCmdletが表示されるはずです。
 
 ```PowerShell
-CommandType     Name                                               ModuleName
------------     ----                                               ----------
-Function        Get-ValentiaGroup                                  valentia
-Function        Get-ValentiaModuleReload                           valentia
-Function        Get-ValentiaRebootRequiredStatus                   valentia
-Function        Get-ValentiaTask                                   valentia
-Function        Initialize-valentiaEnvironment                     valentia
-Function        Invoke-Valentia                                    valentia
-Function        Invoke-ValentiaAsync                               valentia
-Function        Invoke-ValentiaClean                               valentia
-Function        Invoke-ValentiaCommand                             valentia
-Function        Invoke-ValentiaParallel                            valentia
-Function        Invoke-ValentiaSync                                valentia
-Function        Invoke-ValentiaUpload                              valentia
-Function        Invoke-ValentiaUploadList                          valentia
-Function        New-ValentiaCredential                             valentia
-Function        New-ValentiaFolder                                 valentia
-Function        New-ValentiaGroup                                  valentia
-Function        Set-ValentiaHostName                               valentia
-Function        Set-valentiaLocation                               valentia
-Workflow        Invoke-ValentiaCommandParallel                     valentia
+CommandType Name                               ModuleName
+----------- ----                               ----------
+Function    Get-ValentiaCredential             valentia  
+Function    Get-ValentiaGroup                  valentia  
+Function    Get-ValentiaModuleReload           valentia  
+Function    Get-ValentiaRebootRequiredStatus   valentia  
+Function    Get-ValentiaTask                   valentia  
+Function    Initialize-valentiaEnvironment     valentia  
+Function    Invoke-Valentia                    valentia  
+Function    Invoke-ValentiaAsync               valentia  
+Function    Invoke-ValentiaClean               valentia  
+Function    Invoke-ValentiaCommand             valentia  
+Function    Invoke-valentiaDeployGroupRemark   valentia  
+Function    Invoke-valentiaDeployGroupUnremark valentia  
+Function    Invoke-ValentiaDownload            valentia  
+Function    Invoke-ValentiaParallel            valentia  
+Function    Invoke-ValentiaSync                valentia  
+Function    Invoke-ValentiaUpload              valentia  
+Function    Invoke-ValentiaUploadList          valentia  
+Function    New-ValentiaCredential             valentia  
+Function    New-ValentiaFolder                 valentia  
+Function    New-ValentiaGroup                  valentia  
+Function    Set-ValentiaHostName               valentia  
+Function    Set-ValentiaLocation               valentia  
+Workflow    Invoke-ValentiaCommandParallel     valentia
 ```
 
-�e���W���[���ɂ͗��p���₷���悤��Alias���ݒ肳��Ă��܂��B
-Alias�͈ȉ��̃R�}���h�Ŋm�F�ł��܂��B
+各モジュールには利用しやすいようにAliasが設定されています。
+Aliasは以下のコマンドで確認できます。
 
 
 ```PowerShell
 Get-Alias | where ModuleName -eq "valentia"
 ```
 
-����ɂ��valentia�Œ�`����Ă���alias�ꗗ���\������܂��B
+これによりvalentiaで定義されているalias一覧が表示されます。
 
 ```PowerShell
-CommandType     Name                                               ModuleName
------------     ----                                               ----------
-Alias           Clean -> Invoke-ValentiaClean                      valentia
-Alias           Command -> Invoke-ValentiaCommand                  valentia
-Alias           CommandP -> Invoke-ValentiaCommandParallel         valentia
-Alias           Go -> Set-valentiaLocation                         valentia
-Alias           Reload -> Get-ValentiaModuleReload                 valentia
-Alias           Sync -> Invoke-ValentiaSync                        valentia
-Alias           Task -> Get-ValentiaTask                           valentia
-Alias           Upload -> Invoke-ValentiaUpload                    valentia
-Alias           UploadL -> Invoke-ValentiaUploadList               valentia
-Alias           Vale -> Invoke-Valentia                            valentia
-Alias           ValeA -> Invoke-ValentiaAsync                      valentia
-Alias           Valep -> Invoke-ValentiaParallel                   valentia
+CommandType Name                                             ModuleName
+----------- ----                                             ----------
+Alias       Clean -> Invoke-ValentiaClean                    valentia  
+Alias       Command -> Invoke-ValentiaCommand                valentia  
+Alias       CommandP -> Invoke-ValentiaCommandParallel       valentia  
+Alias       Cred -> Get-ValentiaCredential                   valentia  
+Alias       Download -> Invoke-ValentiaDownload              valentia  
+Alias       Go -> Set-ValentiaLocation                       valentia  
+Alias       Initial -> Initialize-valentiaEnvironment        valentia  
+Alias       ipremark -> Invoke-valentiaDeployGroupRemark     valentia  
+Alias       ipunremark -> Invoke-valentiaDeployGroupUnremark valentia  
+Alias       Reload -> Get-ValentiaModuleReload               valentia  
+Alias       Rename -> Set-ValentiaHostName                   valentia  
+Alias       Sync -> Invoke-ValentiaSync                      valentia  
+Alias       Target -> Get-ValentiaGroup                      valentia  
+Alias       Task -> Get-ValentiaTask                         valentia  
+Alias       Upload -> Invoke-ValentiaUpload                  valentia  
+Alias       UploadL -> Invoke-ValentiaUploadList             valentia  
+Alias       Vale -> Invoke-Valentia                          valentia  
+Alias       Valea -> Invoke-ValentiaAsync                    valentia  
+Alias       Valep -> Invoke-ValentiaParallel                 valentia  
 ```
 
 
-# ���ݒ�R�}���h
+# 環境設定コマンド
 
-valentia�ɂ��deployment�����s����܂��ɁA�T�[�o�[�ƃN���C���Ƃ� PSRemoting �����삷��悤�ɐݒ肷��K�v������܂��B
+valentiaによるdeploymentを実行するまえに、サーバーとクラインとで PSRemoting が動作するように設定する必要があります。
 
-### 1. ```Initialize-ValentiaEnvironment``` : �T�[�o�[�Z�b�g�A�b�v
+### 1. ```Initialize-ValentiaEnvironment``` : サーバーセットアップ
 
-���̃R�}���h�́A�Ώۂ̃T�[�o�[���f�v���C�T�[�o�[�Ƃ��ē��삷��悤�Ɋ��\�����܂��B
+このコマンドは、対象のサーバーをデプロイサーバーとして動作するように環境構成します。
 
 	1. Set-ExecutionPolicy (Default : RemoteSigned)
 	2. Enable-PSRemoting
