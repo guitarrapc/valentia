@@ -6,7 +6,7 @@ task Task-InstallChocolatey -action {
     # Environment Setip
     $envChocolatey = "%systemdrive%\chocolatey\bin;"
     $envChocolateyRoot = Join-Path (Get-Item ([System.Environment]::SystemDirectory)).Root "chocolatey\bin"
-    if (-not($env:Path -match $envChocolatey) -or -not($env:Path -match $envChocolateyRoot))
+    if (-not($env:Path -like "*$envChocolatey*") -or -not($env:Path -like "*$envChocolateyRoot*"))
     {
         $currentEnvPath = $env:Path
         $newEnvPath = $env:Path + "$envChocolatey"
