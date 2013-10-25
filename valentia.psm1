@@ -469,7 +469,7 @@ You can prepare script file to run, and specify path.
         }
         else
         {
-            $CommandResult.Success
+            ([PSCustomObject]$Commandresult).Success
         }
         
         # output result
@@ -1030,7 +1030,7 @@ You can prepare script file to run, and specify path.
         }
         else
         {
-            $CommandResult.success
+            ([PSCustomObject]$Commandresult).Success
         }
 
         # output result
@@ -1632,7 +1632,7 @@ You can prepare script file to run, and specify path.
         }
         else
         {
-            $CommandResult.success
+            ([PSCustomObject]$Commandresult).Success
         }
 
         # output result
