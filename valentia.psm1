@@ -445,7 +445,7 @@ You can prepare script file to run, and specify path.
         $TimeEnd = (Get-Date).DateTime
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = ($SuccessStatus.FindAll({$args[0] -eq $false}).count -eq 0)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -465,11 +465,11 @@ You can prepare script file to run, and specify path.
         # show result
         if (!$quiet)
         {
-            $CommandResult
+            [PSCustomObject]$CommandResult
         }
         else
         {
-            $CommandResult.success
+            $CommandResult.Success
         }
         
         # output result
@@ -1004,7 +1004,7 @@ You can prepare script file to run, and specify path.
         $TimeEnd = (Get-Date).DateTime
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = !($SuccessStatus -contains $false)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -1026,7 +1026,7 @@ You can prepare script file to run, and specify path.
         # show result
         if (!$quiet)
         {
-            $CommandResult
+            [PSCustomObject]$CommandResult
         }
         else
         {
@@ -1607,7 +1607,7 @@ You can prepare script file to run, and specify path.
 
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = !($SuccessStatus -contains $false)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -1628,7 +1628,7 @@ You can prepare script file to run, and specify path.
         # show result
         if (!$quiet)
         {
-            $CommandResult
+            [PSCustomObject]$CommandResult
         }
         else
         {
@@ -1815,7 +1815,7 @@ Above will creates a pool of 10 runspaces
         # RunspaceFactory.CreateRunspacePool (Int32, Int32, InitialSessionState, PSHost)
         #   - Creates a runspace pool that specifies minimum and maximum number of opened runspaces, 
         #     and a custom host and initial session state information that is used by each runspace in the pool.
-        $pool = [runspacefactory]::CreateRunspacePool(20, $PoolSize,  $sessionstate, $Host)	
+        $pool = [runspacefactory]::CreateRunspacePool(50, $PoolSize,  $sessionstate, $Host)	
     
         # Only support STA mode. No MTA mode.
         $pool.ApartmentState = "STA"
@@ -2410,7 +2410,7 @@ upload files in target to Directory as Background Async job for hosts written in
 
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = !($SuccessStatus -contains $false)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -2426,7 +2426,7 @@ upload files in target to Directory as Background Async job for hosts written in
         }
 
         # show result
-        $CommandResult
+        [PSCustomObject]$CommandResult
 
         # output result
         $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048
@@ -2740,7 +2740,7 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
 
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = !($SuccessStatus -contains $false)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -2756,7 +2756,7 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         }
 
         # show result
-        $CommandResult
+        [PSCustomObject]$CommandResult
 
         # output result
         $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048
@@ -3074,7 +3074,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
 
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = !($SuccessStatus -contains $false)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -3091,7 +3091,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
         }
 
         # show result
-        $CommandResult
+        [PSCustomObject]$CommandResult
 
         # output result
         $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048 -Append
@@ -3619,7 +3619,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
 
 
         # obtain Result
-        $CommandResult = [PSCustomObject]@{
+        $CommandResult = [ordered]@{
             Success = !($SuccessStatus -contains $false)
             TimeStart = $TimeStart
             TimeEnd = $TimeEnd
@@ -3635,7 +3635,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
         }
 
         # show result
-        $CommandResult
+        [PSCustomObject]$CommandResult
 
         # output result
         $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048
