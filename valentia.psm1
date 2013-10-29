@@ -40,7 +40,8 @@ public class AsyncPipeline
 #-- Public Module Functions to load Task --#
 
 # Task
-function Get-ValentiaTask{
+function Get-ValentiaTask
+{
 
 <#
 
@@ -68,7 +69,8 @@ Above example will create taskkey as lstest, run "Get-ChildItem c:\" when invoke
 
 
     [CmdletBinding()]  
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 1,
@@ -122,7 +124,8 @@ Above example will create taskkey as lstest, run "Get-ChildItem c:\" when invoke
 
 
 # valep
-function Invoke-ValentiaParallel{
+function Invoke-ValentiaParallel
+{
 
 <#
 
@@ -185,7 +188,8 @@ You can prepare script file to run, and specify path.
 
     [CmdletBinding(
     DefaultParameterSetName = "TaskFileName")]
-    param(
+    param
+    (
         [Parameter(
             Position = 0, 
             Mandatory = 1,
@@ -483,7 +487,8 @@ You can prepare script file to run, and specify path.
 }
 
 
-workflow Invoke-ValentiaCommandParallel{
+workflow Invoke-ValentiaCommandParallel
+{
 
 <#
 
@@ -524,7 +529,8 @@ Created: 20/June/2013
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory =$true,
@@ -631,7 +637,8 @@ Created: 20/June/2013
 
 
 # vale
-function Invoke-Valentia{
+function Invoke-Valentia
+{
 
 <#
 
@@ -690,7 +697,8 @@ You can prepare script file to run, and specify path.
 #>
 
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 1,
@@ -1045,7 +1053,8 @@ You can prepare script file to run, and specify path.
 
 
 
-function Invoke-ValentiaCommand{
+function Invoke-ValentiaCommand
+{
 
 <#
 
@@ -1085,7 +1094,8 @@ Created: 20/June/2013
 #>
 
     [CmdletBinding(DefaultParameterSetName = "All")]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             ParameterSetName = "Default",
@@ -1222,7 +1232,8 @@ Created: 20/June/2013
 
 
 # valea
-function Invoke-ValentiaAsync{
+function Invoke-ValentiaAsync
+{
 
 <#
 
@@ -1283,7 +1294,8 @@ You can prepare script file to run, and specify path.
 
 
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 1,
@@ -1647,7 +1659,8 @@ You can prepare script file to run, and specify path.
 
 #-- Private Module Function for Async execution --#
 
-function Invoke-ValentiaAsyncCommand{
+function Invoke-ValentiaAsyncCommand
+{
 
 <#
 .SYNOPSIS 
@@ -1775,7 +1788,9 @@ Above example will concurrently running with 10 processes for each Computers.
 
 
 
-function New-ValentiaRunSpacePool{
+function New-ValentiaRunSpacePool
+{
+
 <#
 .SYNOPSIS 
 Create a PowerShell Runspace Pool.
@@ -1835,7 +1850,8 @@ Above will creates a pool of 10 runspaces
 
 
 
-function Receive-ValentiaAsyncResults{
+function Receive-ValentiaAsyncResults
+{
 <#
 .SYNOPSIS 
 Receives a results of one or more asynchronous pipelines.
@@ -1946,7 +1962,8 @@ Above will retrieve Async Result
 
 
 
-function Receive-ValentiaAsyncStatus{
+function Receive-ValentiaAsyncStatus
+{
 
 <#
 .SYNOPSIS 
@@ -2001,7 +2018,8 @@ Above will retrieve Async Result
 
 
 # upload
-function Invoke-ValentiaUpload{
+function Invoke-ValentiaUpload
+{
 
 <#
 .SYNOPSIS 
@@ -2042,7 +2060,8 @@ upload files in target to Directory as Background Async job for hosts written in
 #>
 
     [CmdletBinding(DefaultParameterSetName = "File")]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory,
@@ -2441,7 +2460,8 @@ upload files in target to Directory as Background Async job for hosts written in
 
 
 # uploadL
-function Invoke-ValentiaUploadList{
+function Invoke-ValentiaUploadList
+{
 
 <#
 .SYNOPSIS 
@@ -2482,7 +2502,8 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0, 
             Mandatory,
@@ -2770,7 +2791,8 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
 
 
 # Sync
-function Invoke-ValentiaSync{
+function Invoke-ValentiaSync
+{
 
 <#
 .SYNOPSIS 
@@ -2800,7 +2822,8 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory,
@@ -3110,7 +3133,8 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
 
 
 # download
-function Invoke-ValentiaDownload{
+function Invoke-ValentiaDownload
+{
 
 <#
 .SYNOPSIS 
@@ -3143,7 +3167,8 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
 #>
 
     [CmdletBinding(DefaultParameterSetName = "File")]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory,
@@ -3655,7 +3680,8 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
 
 
 # clean
-function Invoke-ValentiaClean{
+function Invoke-ValentiaClean
+{
 
 <#
 .SYNOPSIS 
@@ -3677,7 +3703,8 @@ Clean up valentia variables stacked in the $valentia variables.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
     )
 
     if ($valentia.context.Count -gt 0) 
@@ -3695,7 +3722,8 @@ Clean up valentia variables stacked in the $valentia variables.
 
 
 # go
-function Set-ValentiaLocation{
+function Set-ValentiaLocation
+{
 
 <#
 .SYNOPSIS 
@@ -3727,7 +3755,8 @@ change location to BranchPath c:\deployment\application (in default)
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0,
@@ -3784,7 +3813,8 @@ change location to BranchPath c:\deployment\application (in default)
 #-- Log Settings -- #
 
 
-function New-ValentiaLog{
+function New-ValentiaLog
+{
 
 <#
 
@@ -3811,7 +3841,8 @@ As New-ValentiaLog have default value in parameter, you do not required to speci
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0, 
             Mandatory = 0,
@@ -3854,7 +3885,8 @@ As New-ValentiaLog have default value in parameter, you do not required to speci
 #-- PSRemoting Connect Credential Module Functions --#
 
 
-function New-ValentiaCredential{
+function New-ValentiaCredential
+{
 
 <#
 
@@ -3881,7 +3913,8 @@ You can specify other user credential if required.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0,
@@ -3966,7 +3999,8 @@ You can specify other user credential if required.
 
 
 # cred
-function Get-ValentiaCredential{
+function Get-ValentiaCredential
+{
 
 <#
 
@@ -3988,7 +4022,8 @@ This will get credential with default deploy user specified config as $valentia.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0,
@@ -4048,7 +4083,8 @@ This will get credential with default deploy user specified config as $valentia.
 #-- Deploy Folder/File Module Functions --#
 
 
-function New-ValentiaGroup{
+function New-ValentiaGroup
+{
 
 <#
 
@@ -4070,7 +4106,8 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory,
@@ -4183,7 +4220,8 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
 
 
 # target
-function Get-ValentiaGroup{
+function Get-ValentiaGroup
+{
 
 <#
 
@@ -4210,7 +4248,8 @@ read production-hoge.ps1 from c:\test.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory,
@@ -4311,9 +4350,83 @@ read production-hoge.ps1 from c:\test.
 }
 
 
+function Show-ValentiaGroup
+{
+
+<#
+
+.SYNOPSIS 
+Show valentia deploygroup file (.ps1) list
+
+.DESCRIPTION
+This cmdlet will show files (extension = $valentia.deployextension = default is '.ps1') in $valentia.Root\$valentia.BranchFolder.Deploygroup folder.
+
+.NOTES
+Author: guitarrapc
+Created: 29/Oct/2013
+
+.EXAMPLE
+Show-ValentiaGroup
+--------------------------------------------
+show files in $valentia.Root\$valentia.BranchFolder.Deploygroup folder.
+
+.EXAMPLE
+Show-ValentiaGroup -Branch Application
+--------------------------------------------
+show files in $valentia.Root\$valentia.BranchFolder.Application folder.
+
+#>
+
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(
+            Position = 0,
+            Mandatory = 0,
+            HelpMessage = "Input branch folder to show.")]
+        [string[]]
+        $Branches = $valentia.BranchFolder.Deploygroup
+    )
+ 
+    Write-Debug "Get valentia.deployextension information"
+    Write-Verbose ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension)
+    $DeployExtension = $valentia.deployextension
+    
+    Write-Debug "Get Branch property name"
+    $p = $valentia.BranchFolder | Get-Member -MemberType NoteProperty | select -ExpandProperty Name
+    $valentiaBranchFolders = $p | %{ $valentia.BranchFolder.$_}
+
+    Write-Debug ("processing branches is exist or not for '{0}'" -f $Branches)
+    foreach ($branch in $Branches)
+    {
+        Write-Debug ("Checking '{0}' is include '{1}'" -f $branch, "$valentiaBranchFolders")
+        if ($branch -in $valentiaBranchFolders)
+        {
+            Write-Debug ("Checking '{0}' length" -f $branch)
+            if ($branch.Length -eq 0)
+            {
+                throw '"$Branch" was Null or Empty, input BranchName.'
+            }
+            else
+            {
+                Write-Debug ("Creating full path and resolving with '{0}' and '1'" -f $valentia.RootPath, $valentia.BranchFolder.$Branch)
+                $BranchFolder = Join-Path $valentia.RootPath $valentia.BranchFolder.$Branch -Resolve
+
+                # show items
+                Get-ChildItem -Path $BranchFolder -Recurse | where extension -eq $DeployExtension
+            }
+        }
+        else
+        {
+            Write-Error ("Branch folder '{0}' not found from {1}" -f $branch, "$valentiaBranchFolders")
+        }
+    }
+}
 
 
-function Invoke-Sed{
+
+function Invoke-Sed
+{
 
 <#
 
@@ -4340,7 +4453,8 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [parameter(
             position = 0,
             mandatory = 1,
@@ -4411,7 +4525,8 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
 
 
 # ipremark
-function Invoke-valentiaDeployGroupRemark{
+function Invoke-valentiaDeployGroupRemark
+{
 
 <#
 
@@ -4437,7 +4552,8 @@ replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [parameter(
             position = 0,
             mandatory = 1,
@@ -4473,7 +4589,8 @@ replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^
 
 
 # ipunremark
-function Invoke-valentiaDeployGroupUnremark{
+function Invoke-valentiaDeployGroupUnremark
+{
 
 <#
 
@@ -4499,7 +4616,8 @@ replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [parameter(
             position = 0,
             mandatory = 1,
@@ -4537,7 +4655,8 @@ replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^
 #-- Running prerequisite Initialize OS Setting Module Functions --#
 
 
-function Test-ValentiaPowerShellElevated{
+function Test-ValentiaPowerShellElevated
+{
 
 <#
 .SYNOPSIS
@@ -4567,17 +4686,19 @@ function Test-ValentiaPowerShellElevated{
 
 
     [CmdletBinding()]
-    param(
+    param
+    (
     )
 
 	$user = [Security.Principal.WindowsIdentity]::GetCurrent()
-	(New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+	return (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
 }
 
 
 # Initial
-function Initialize-valentiaEnvironment{
+function Initialize-valentiaEnvironment
+{
 
 <#
 
@@ -4628,7 +4749,8 @@ read production-hoge.ps1 from c:\test.
 #>
 
     [CmdletBinding(DefaultParameterSetName = "Server")]
-    param(
+    param
+    (
         [parameter(
             HelpMessage = "Select this switch If you don't want to initialize Deploy User.")]
         [switch]
@@ -4682,7 +4804,7 @@ read production-hoge.ps1 from c:\test.
         [switch]
         $SkipEnablePSRemoting = $false
 
-        )
+    )
 
     begin
     {
@@ -4856,7 +4978,8 @@ read production-hoge.ps1 from c:\test.
 
 #-- Prerequisite Deploy Setting Module Functions --#
 
-function New-ValentiaFolder{
+function New-ValentiaFolder
+{
 
 <#
 
@@ -4878,7 +5001,8 @@ create as default
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0,
@@ -4963,7 +5087,8 @@ create as default
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Enable-WsManTrustedHosts{
+function Enable-WsManTrustedHosts
+{
 
 <#
 
@@ -4985,7 +5110,8 @@ allow all hosts as *
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 1,
@@ -5015,7 +5141,8 @@ allow all hosts as *
 
 
 
-function Set-WsManMaxShellsPerUser{
+function Set-WsManMaxShellsPerUser
+{
 
 <#
 
@@ -5038,7 +5165,8 @@ set as 100
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 1,
@@ -5067,7 +5195,8 @@ set as 100
 
 
 
-function New-ValentiaPSRemotingFirewallRule{
+function New-ValentiaPSRemotingFirewallRule
+{
 
 <#
 
@@ -5090,7 +5219,8 @@ Add PowerShellRemoting-In accessible rule to Firewall.
 
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0,
@@ -5155,7 +5285,8 @@ Add PowerShellRemoting-In accessible rule to Firewall.
 
 
 
-function Disable-ValentiaEnhancedIESecutiry{
+function Disable-ValentiaEnhancedIESecutiry
+{
 
 <#
 
@@ -5178,7 +5309,8 @@ Disable IEEnhanced security.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0,
@@ -5250,7 +5382,8 @@ Disable IEEnhanced security.
 
 
 
-function New-ValentiaOSUser{
+function New-ValentiaOSUser
+{
 
 <#
 
@@ -5327,9 +5460,9 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
 
 #>
 
-    [CmdletBinding(
-        DefaultParameterSetName = 'Secret')]
-    param(
+    [CmdletBinding(DefaultParameterSetName = 'Secret')]
+    param
+    (
         [parameter(
             mandatory　= 0,
             HelpMessage = "User account Name.")]
@@ -5458,7 +5591,8 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
 
 
 # rename
-function Set-ValentiaHostName{
+function Set-ValentiaHostName
+{
 
 <#
 
@@ -5480,7 +5614,8 @@ Change Hostname as web-$PrefixHostName-$PrefixIpString-Ip1-Ip2-Ip3-Ip4
 #>
 
     [CmdletBinding()]  
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 1,
@@ -5530,7 +5665,8 @@ Change Hostname as web-$PrefixHostName-$PrefixIpString-Ip1-Ip2-Ip3-Ip4
 
 
 
-function Get-ValentiaRebootRequiredStatus{
+function Get-ValentiaRebootRequiredStatus
+{
 
 <#
 
@@ -5553,7 +5689,8 @@ Obtain reboot required status.
 #>
 
     [CmdletBinding()]
-    param(
+    param
+    (
     )
 
     begin
@@ -5598,10 +5735,12 @@ Obtain reboot required status.
 #-- Public Loading Module Functions --#
 
 # reload
-function Get-ValentiaModuleReload{
+function Get-ValentiaModuleReload
+{
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [Parameter(
             Position = 0,
             Mandatory = 0)]
@@ -5624,10 +5763,12 @@ function Get-ValentiaModuleReload{
 
 
 
-function Import-ValentiaModules{
+function Import-ValentiaModules
+{
  
     [CmdletBinding()]
-    param(
+    param
+    (
     )
 
     $currentConfig = $valentia.context.Peek().config
@@ -5643,9 +5784,8 @@ function Import-ValentiaModules{
                 }
             }
         }
-        ""
+        "" # blank line for next entry
     }
-
 }
 
 
@@ -5653,10 +5793,12 @@ function Import-ValentiaModules{
 #-- Public Loading Module Custom Configuration Functions --#
 
 
-function Import-ValentiaConfigration{
+function Import-ValentiaConfigration
+{
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [string]
         $configdir = $PSScriptRoot
     )
@@ -5680,10 +5822,12 @@ function Import-ValentiaConfigration{
 }
 
 
-function Get-CurrentConfigurationOrDefault{
+function Get-CurrentConfigurationOrDefault
+{
 
     [CmdletBinding()]
-    param(
+    param
+    (
     )
 
     if ($valentia.context.count -gt 0) 
@@ -5698,10 +5842,12 @@ function Get-CurrentConfigurationOrDefault{
 
 
 
-function New-ValentiaConfigurationForNewContext{
+function New-ValentiaConfigurationForNewContext
+{
 
     [CmdletBinding()]
-    param(
+    param
+    (
         [string]
         $buildFileName
     )
@@ -5729,7 +5875,8 @@ function New-ValentiaConfigurationForNewContext{
 #-- Private Loading Module Parameters --#
 
 # Setup Messages to be loaded
-DATA valeParamHelpMessages{
+DATA valeParamHelpMessages
+{
 ConvertFrom-StringData @'
     param_Get_ValentiaTask_Name = Input TaskName you want to set and not dupricated.
     param_Action = Write ScriptBlock Action to execute with this task.
@@ -5761,13 +5908,13 @@ ConvertFrom-StringData @'
     param_Invoke-ValentiaDownload_SourcePath = Input Client SourcePath to be downloaded.
     param_Invoke-ValentiaDownload_DestinationFolder = Input Server Destination Folder to save download items.
     param_Invoke-ValentiaDownload_force = Set this switch if you want to Force download. This will smbmap with source folder and Copy-Item -Force. (default is BitTransfer)
-
 '@
 }
 
 
 # will be replace warning messages to StringData
-DATA valeWarningMessages{
+DATA valeWarningMessages
+{
 ConvertFrom-StringData @'
     warn_WinRM_session_exceed_nearly = WinRM session exceeded {0} and neerly limit of 25. Restarted WinRM on Remote Server to reset WinRM session.
     warn_WinRM_session_exceed_restarted = Restart Complete, trying remote session again.
@@ -5785,7 +5932,8 @@ ConvertFrom-StringData @'
 
 
 # will be replace error messages to StringData
-DATA valeErrorMessages{
+DATA valeErrorMessages
+{
 ConvertFrom-StringData @'
     error_invalid_task_name = Task name should not be null or empty string.
     error_task_name_does_not_exist = Task {0} does not exist.
@@ -5939,6 +6087,7 @@ Export-ModuleMember `
         Invoke-ValentiaDownload,
         New-ValentiaGroup,
         Get-ValentiaGroup, 
+        Show-ValentiaGroup, 
         Invoke-valentiaDeployGroupRemark,
         Invoke-valentiaDeployGroupUnremark,
         New-ValentiaCredential, 
