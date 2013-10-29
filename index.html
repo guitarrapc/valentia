@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Valentia : PowerShell Remote deployment library for Windows Servers" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Valentia</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/guitarrapc/valentia">View on GitHub</a>
+
+          <h1 id="project_title">Valentia</h1>
+          <h2 id="project_tagline">PowerShell Remote deployment library for Windows Servers</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/guitarrapc/valentia/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/guitarrapc/valentia/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="read-me-fast" class="anchor" href="#read-me-fast"><span class="octicon octicon-link"></span></a>Read Me Fast</h1>
+
+<p>Valentia is PowerShell deployment tool for Server-Client model.
+This module set will optimize your work for deploy Commands or files to remote servers.</p>
+
+<h1>
+<a name="special-thanks" class="anchor" href="#special-thanks"><span class="octicon octicon-link"></span></a>Special Thanks</h1>
+
+<p>Valentia inspired from capistrano ( a Ruby deployment tool for Linux) and psake ( a PowerShell build tool).
+They are fantastic and awesome tools for automation and DevOps.
+Especially psake showed cool way of coding and valentia followed in many points.</p>
+
+<p>Also <a href="http://newsqlblog.com/category/powershell/powershell-concurrency/">psasync</a> and <a href="http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/">Get-NetworkInfo</a> give me inspire to do asynchronous execution.</p>
+
+<h1>
+<a name="latest-change" class="anchor" href="#latest-change"><span class="octicon octicon-link"></span></a>Latest Change</h1>
+
+<h2>
+<a name="version-03x" class="anchor" href="#version-03x"><span class="octicon octicon-link"></span></a>Version 0.3.x</h2>
+
+<ul>
+<li>
+<p>version : 0.3.1</p>
+
+<p>[ author : guitarrapc ]</p>
+
+<p>[ Oct 4, 2013 ]</p>
+
+<ul>
+<li>Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to pass variables into task when execute valentia command. </li>
+<li>Added Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark to ease you remark, mark deploy group ipaddresses in one command.</li>
+<li>Exmaple for Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark is added to README.</li>
+<li>fix link to fastcopy.</li>
+<li>fix Get-ValentiaGroup parameter of deployfolder was mandatory. It supposed to be not mandatory.</li>
+<li>fix some messages on Write-Verbose and Write-Warning. </li>
+<li>little configuration for valentia-config.ps1</li>
+</ul>
+</li>
+</ul><h1>
+<a name="valid-os-and-powershell-verstion" class="anchor" href="#valid-os-and-powershell-verstion"><span class="octicon octicon-link"></span></a>Valid OS and PowerShell Verstion</h1>
+
+<p>valentia works with PowerShell Version 3.0 and higher.
+I'm developing with Windows 8, Windows 8.1 and Windows 2012.
+Supporting Operating System are...</p>
+
+<ul>
+<li>Windows 7 (with PowerShell V3.0 and higher)</li>
+<li>Windows 8 (with PowerShell V3.0 and higher)</li>
+<li>Windows 8.1 (with PowerShell V4.0 and higher)</li>
+<li>Windows 2012 (with PowerShell V3.0 and higher)</li>
+<li>Windows 2012 R2 (with PowerShell V4.0 and higher)</li>
+</ul><p>note : all functions are confirmed with Windows Server 2012 x64 English environment.</p>
+
+<h1>
+<a name="prerequisite" class="anchor" href="#prerequisite"><span class="octicon octicon-link"></span></a>Prerequisite</h1>
+
+<p>You need to install followings to use valentia file transfer.</p>
+
+<ol>
+<li>Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"</li>
+<li>Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")
+
+<ul>
+<li><a href="http://ipmsg.org/tools/fastcopy.html">Download FastCopy? click here to go HP.</a></li>
+</ul>
+</li>
+<li>Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.
+
+<ul>
+<li><code>Set-ExecutionPolicy RemoteSigned</code></li>
+</ul>
+</li>
+</ol><h1>
+<a name="install-valentia-module" class="anchor" href="#install-valentia-module"><span class="octicon octicon-link"></span></a>Install valentia module</h1>
+
+<p>To use valentia module, please set valentia folder to </p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="k">%</span><span class="n">homepath</span><span class="p">%\</span><span class="n">documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Module</span><span class="p">\</span>
+</pre></div>
+
+<p>Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.</p>
+
+<p>You can install valentia with <code>run install.bat</code>. This bat file will copy valentia to module path <code>env:USERPROFILE\Documents\WindowsPowerShell\Modules</code></p>
+
+<p>Or if you want to use valentia with all user, then set valentia module folder to:</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Windows</span><span class="p">\</span><span class="n">System32</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">v1</span><span class="p">.</span><span class="n">0</span><span class="p">\</span><span class="n">Modules</span><span class="p">\</span><span class="n">valentia</span>
+</pre></div>
+
+<p>Else place anywhere you want.</p>
+
+<h1>
+<a name="import-valentia-module" class="anchor" href="#import-valentia-module"><span class="octicon octicon-link"></span></a>Import valentia module</h1>
+
+<p>In PowerShell V3.0, all modules located in default psmodulepath will be automatically loaded.</p>
+
+<p>if you sat module in custom path, then use Import-Module Cmdlet.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="s2">"move to custom path you sat valentia"</span>
+<span class="nb">Import-Module</span> <span class="n">valentia</span>
+</pre></div>
+
+<p>If you sat valentia in standard psmodule path described in "Install valentia", you don't need manually import module, but you can do it.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span>
+</pre></div>
+
+<p>or check detail with following.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span> <span class="n">-Verbose</span>
+</pre></div>
+
+<h1>
+<a name="valentia-cmdlets" class="anchor" href="#valentia-cmdlets"><span class="octicon octicon-link"></span></a>valentia Cmdlets</h1>
+
+<p>You can see valentia Cmdlets by following command.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-command</span> <span class="n">-module</span> <span class="n">valentia</span>
+</pre></div>
+
+<p>Following Cmdlets will be shown.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">CommandType</span> <span class="n">Name</span>                               <span class="n">ModuleName</span>
+<span class="p">-----------</span> <span class="p">----</span>                               <span class="p">----------</span>
+<span class="k">Function</span>    <span class="nb">Get-ValentiaCredential</span>             <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Get-ValentiaGroup</span>                  <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Get-ValentiaModuleReload</span>           <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Get-ValentiaRebootRequiredStatus</span>   <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Get-ValentiaTask</span>                   <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="n">Initialize-valentiaEnvironment</span>     <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-Valentia</span>                    <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaAsync</span>               <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaClean</span>               <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaCommand</span>             <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-valentiaDeployGroupRemark</span>   <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-valentiaDeployGroupUnremark</span> <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaDownload</span>            <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaParallel</span>            <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaSync</span>                <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaUpload</span>              <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Invoke-ValentiaUploadList</span>          <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">New-ValentiaCredential</span>             <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">New-ValentiaFolder</span>                 <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">New-ValentiaGroup</span>                  <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Set-ValentiaHostName</span>               <span class="n">valentia</span>  
+<span class="k">Function</span>    <span class="nb">Set-ValentiaLocation</span>               <span class="n">valentia</span>  
+<span class="n">Workflow</span>    <span class="nb">Invoke-ValentiaCommandParallel</span>     <span class="n">valentia</span>
+</pre></div>
+
+<p>All Cmdlets have alias to lket you use easily.
+You can find them as like this.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-Alias</span> <span class="p">|</span> <span class="n">where</span> <span class="n">ModuleName</span> <span class="o">-eq</span> <span class="s2">"valentia"</span>
+</pre></div>
+
+<p>This show alias defined in valentia</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">CommandType</span> <span class="n">Name</span>                                             <span class="n">ModuleName</span>
+<span class="p">-----------</span> <span class="p">----</span>                                             <span class="p">----------</span>
+<span class="k">Alias</span>       <span class="n">Clean</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaClean</span>                    <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Command</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaCommand</span>                <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">CommandP</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaCommandParallel</span>       <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Cred</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaCredential</span>                   <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Download</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaDownload</span>              <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Go</span> <span class="p">-&gt;</span> <span class="nb">Set-ValentiaLocation</span>                       <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Initial</span> <span class="p">-&gt;</span> <span class="n">Initialize-valentiaEnvironment</span>        <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">ipremark</span> <span class="p">-&gt;</span> <span class="nb">Invoke-valentiaDeployGroupRemark</span>     <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">ipunremark</span> <span class="p">-&gt;</span> <span class="nb">Invoke-valentiaDeployGroupUnremark</span> <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Reload</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaModuleReload</span>               <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Rename</span> <span class="p">-&gt;</span> <span class="nb">Set-ValentiaHostName</span>                   <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Sync</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaSync</span>                      <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Target</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaGroup</span>                      <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Task</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaTask</span>                         <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Upload</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaUpload</span>                  <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">UploadL</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaUploadList</span>             <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Vale</span> <span class="p">-&gt;</span> <span class="nb">Invoke-Valentia</span>                          <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Valea</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaAsync</span>                    <span class="n">valentia</span>  
+<span class="k">Alias</span>       <span class="n">Valep</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaParallel</span>                 <span class="n">valentia</span>  
+</pre></div>
+
+<h1>
+<a name="environment-setup-commands" class="anchor" href="#environment-setup-commands"><span class="octicon octicon-link"></span></a>Environment Setup Commands</h1>
+
+<p>Before you start valentia deployment, you should setup both Server and Clients to work PSRemote Connection.</p>
+
+<h3>
+<a name="1-initialize-valentiaenvironment--setup-server" class="anchor" href="#1-initialize-valentiaenvironment--setup-server"><span class="octicon octicon-link"></span></a>1. <code>Initialize-ValentiaEnvironment</code> : Setup Server</h3>
+
+<p>This command will let your Server for valentia remoting.</p>
+
+<pre><code>1. Set-ExecutionPolicy (Default : RemoteSigned)
+2. Enable-PSRemoting
+3. Add hosts to trustedHosts  (Default : *)
+4. Set MaxShellsPerUser from 25 to 100
+5. Add PowerShell Remoting Inbound rule to Firewall (Default : TCP 5985)
+6. Disable Enhanced Security for Internet Explorer (Default : True)
+7. Create OS user for Deploy connection. (Default : ec2-user)
+8. Create Windows PowerShell Module Folder for DeployUser (Default : C:\Users\$ec2-user\Documents\WindowsPowerShell\Modules)
+9. Create/Revise Deploy user credential secure file. (Server Only / Default : True)
+10. Create Deploy Folders (Server Only / Default : True)
+11. Set HostName as format (white-$HostUsage-IP)
+12. Get Status for Reboot Status
+
+* Currently remarking Set-NetworkProfile private
+</code></pre>
+
+<p>Once ran this command, You will got prompt for secret password of "OS User" (in default is ec2-user).</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Server</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span>
+</pre></div>
+
+<p>** you can omit <code>-Server</code> and <code>-TrustedHosts "*"</code> as it were default **</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span>
+</pre></div>
+
+<p>When Credential prompt was display input password in masked read line, then OS user (in default ec2-user) will be created and all PSRemote session to all hosts are enabled.
+Also trying to save password in secdure stirng in default, input deploy user password again.</p>
+
+<p>** If you want to restrict Trusted Hosts, you can use -TrustedHosts parameter to select. **</p>
+
+<p>ex) restrict to 10.0.0.0</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaServer</span> <span class="n">-TrustedHosts</span> <span class="s2">"10.0.0.0"</span>
+</pre></div>
+
+<p>** If you want setup without OS User setup? then add -NoOSUser switch. **</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Server</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoOSUser</span>
+</pre></div>
+
+<p>** ServerOnly : If you want setup without OS User setup and Save Credentail? then add -NoPassSave switch. **</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Server</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoPassSave</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="2-initialize-valentiaenvironment--client--setup-clients" class="anchor" href="#2-initialize-valentiaenvironment--client--setup-clients"><span class="octicon octicon-link"></span></a>2. <code>Initialize-ValentiaEnvironment -Client</code> : Setup Clients</h3>
+
+<p>This command will let your Client for valentia remoting.</p>
+
+<pre><code>1. Set-ExecutionPolicy (Default : RemoteSigned)
+2. Enable-PSRemoting
+3. Add hosts to trustedHosts  (Default : *)
+4. Set MaxShellsPerUser from 25 to 100
+5. Add PowerShell Remoting Inbound rule to Firewall (Default : TCP 5985)
+6. Disable Enhanced Security for Internet Explorer (Default : True)
+7. Create OS user for Deploy connection. (Default : ec2-user)
+8. Create Windows PowerShell Module Folder for DeployUser (Default : C:\Users\$ec2-user\Documents\WindowsPowerShell\Modules)
+9. Create Deploy Folders (Server Only / Default : True)
+10. Set HostName as format (white-$HostUsage-IP)
+11. Get Status for Reboot Status
+</code></pre>
+
+<p>Once ran this command, You will got prompt for secret password of "OS User" (in default is ec2-user).</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Client</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span>
+</pre></div>
+
+<p>** you can omit <code>-TrustedHosts "*"</code> as it were default**</p>
+
+<ul>
+<li>NOTE: If you sat Server and Client "SAME USER and SAME PASSWORD" then credential will be escaped.</li>
+<li>This means, if you ran Initialize-ValentiaServer and Initialize-ValentiaClient, then ec2-user will be used and can be escape credential input.</li>
+<li>Because of Parallel commands using workflow, (Domain separation), credential escape was required.</li>
+<li>The other command can retrieve and use Credential, so other user credential will also valid for them.</li>
+</ul><p>Wanna setup without OS User setup? then add -NoOSUser switch.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Client</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoOSUser</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="3-new-valentiacredential--create-new-credential-secure-file" class="anchor" href="#3-new-valentiacredential--create-new-credential-secure-file"><span class="octicon octicon-link"></span></a>3. <code>New-ValentiaCredential</code> : Create New Credential secure file</h3>
+
+<p>Following command will make secure string file to save your credential.
+** If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section. **
+** However if you want to revise saved secure Password, then use this Cmdlet to revise save file. **</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaCredential</span>
+</pre></div>
+
+<p>or you can select user for credential.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaCredential</span> <span class="n">-User</span> <span class="n">hogehoge</span>
+</pre></div>
+
+<ul>
+<li>NOTE: Once you execute command, you will got prompt to save secure strings of user.</li>
+<li>Default user is sat as ec2-user, it will use if no -user had input.</li>
+</ul><h3>
+<a name="4-initialize-valentiagroup--create-new-deploygroup-file" class="anchor" href="#4-initialize-valentiagroup--create-new-deploygroup-file"><span class="octicon octicon-link"></span></a>4. <code>Initialize-ValentiaGroup</code> : Create New deploygroup file</h3>
+
+<p>To execute deployment command to multiple hosts, you don't need to input hosts everytime.
+Just list them up in file.</p>
+
+<p>The file you specified will be output in following path.</p>
+
+<pre><code>C:\Deployment\Deploygroup\ *****.ps1
+</code></pre>
+
+<p>Deploy Group file just required to be split by <code>r</code>n.</p>
+
+<p>SAMPLE deployGroup input</p>
+
+<pre><code>10.0.0.100
+10.0.0.101
+# 10.0.0.101 &lt;= this line will be remarked as not started with decimal
+</code></pre>
+
+<p>You can create deploy group file in only one command.
+Off cource there are several way to create deploygroup file.
+You can make file with excel,notepad or powershell utils here.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaGroup</span> <span class="n">-DeployClients</span> <span class="n">array</span><span class="p">[]</span> <span class="n">-FileName</span> <span class="n">FILENAME</span><span class="p">.</span><span class="n">ps1</span>
+</pre></div>
+
+<p>SAMPLE CODE:</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaGroup</span> <span class="n">-DeployClients</span> <span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="s2">"10.0.0.2"</span> <span class="n">-FileName</span> <span class="n">sample</span><span class="p">.</span><span class="n">ps1</span>
+</pre></div>
+
+<p>this will make sample.ps1 in C:\Deployment\Deploy_group\ with 2 hosts ("10.0.0.1","10.0.0.2") written.</p>
+
+<p>When using DeployGroup, just set file name without Extensions.
+ex) if you sat file name as "new.ps1" then use it by "new".</p>
+
+<h3>
+<a name="5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>5. <code>Invoke-valentiaDeployGroupRemark</code> : Remark ipaddress for deploygroup file inside deploygroup</h3>
+
+<p>There would be many time to remark some deploy target inside deploygroup file.
+This is easy work but boring to check which file contains target deploy ip.</p>
+
+<p>This cmdlet will ease you remark target ipaddresses and check how change.</p>
+
+<p>The cmdlet will search recursible inside deploygroup.</p>
+
+<pre><code>C:\Deployment\Deploygroup\**\**\.....*****.ps1
+</code></pre>
+
+<p>SAMPLE deployGroup input</p>
+
+<pre><code>10.0.0.100
+10.0.0.101
+10.0.0.102 &lt;= if you want to remark this line for all the files inside deploygroup folder.
+</code></pre>
+
+<p>Just type as like this.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Invoke-valentiaDeployGroupRemark</span> <span class="n">-remarkIPAddresses</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">102</span> <span class="n">-overWrite</span> <span class="n">-Verbose</span>
+</pre></div>
+
+<p>This will change PowerShell</p>
+
+<pre><code>10.0.0.100
+10.0.0.101
+#10.0.0.102
+</code></pre>
+
+<p>if you just want to check how affect and don't want to replace file, then remove -overwrite switch.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Invoke-valentiaDeployGroupRemark</span> <span class="n">-remarkIPAddresses</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">102</span> <span class="n">-Verbose</span>
+</pre></div>
+
+<h3>
+<a name="6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>6. <code>Invoke-valentiaDeployGroupUnremark</code> : Unremark ipaddress for deploygroup file inside deploygroup</h3>
+
+<p>if you remark ipaddresses in deploygroup file, then you want to unremark it:)
+This cmdlet will ease you unremark target ipaddresses and check how change.</p>
+
+<p>The cmdlet will search recursible inside deploygroup.</p>
+
+<pre><code>C:\Deployment\Deploygroup\**\**\.....*****.ps1
+</code></pre>
+
+<p>SAMPLE deployGroup input</p>
+
+<pre><code>10.0.0.100
+10.0.0.101
+#10.0.0.102 &lt;= if you want to unremark this line for all the files inside deploygroup folder.
+</code></pre>
+
+<p>Just type as like this.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Invoke-valentiaDeployGroupUnremark</span> <span class="n">-remarkIPAddresses</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">102</span> <span class="n">-overWrite</span> <span class="n">-Verbose</span>
+</pre></div>
+
+<p>This will change PowerShell</p>
+
+<pre><code>10.0.0.100
+10.0.0.101
+10.0.0.102
+</code></pre>
+
+<p>if you just want to check how affect and don't want to replace file, then remove -overwrite switch.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Invoke-valentiaDeployGroupUnremark</span> <span class="n">-remarkIPAddresses</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">102</span> <span class="n">-Verbose</span>
+</pre></div>
+
+<h1>
+<a name="task-for-commandset" class="anchor" href="#task-for-commandset"><span class="octicon octicon-link"></span></a>Task for Commandset</h1>
+
+<h3>
+<a name="summary-of-task" class="anchor" href="#summary-of-task"><span class="octicon octicon-link"></span></a>Summary of Task</h3>
+
+<p>You can make task file To execute many commands.
+Write task in file with below format and save it in BranchFolders you want to work.</p>
+
+<ul>
+<li>Note: BranchFolder will be C:\Deployment "application", "Image", "SWF", "SWF-Image", "Utils". (Created by Initialize-ValentiaServer)</li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>After you made task, you should move to BranchFolder you saved task.</p>
+
+<h3>
+<a name="convert-existing-ps1-to-task-and-setup-task" class="anchor" href="#convert-existing-ps1-to-task-and-setup-task"><span class="octicon octicon-link"></span></a>Convert existing .ps1 to task and setup task.</h3>
+
+<p>It's easy to convert normal .ps1 to task.
+Task file format is as below.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">task</span> <span class="n">taskname</span> <span class="n">-Action</span><span class="p">{</span>
+    <span class="n">PowerShell</span> <span class="n">Commands</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>If you .ps1 have like this code.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-ChildItem</span>
+</pre></div>
+
+<p>Then task will be like this.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">task</span> <span class="n">taskname</span> <span class="n">-Action</span><span class="p">{</span>
+    <span class="nb">Get-ChildItem</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>You can use almost all cmdlets and variables set.
+Please check vale and valep section about a detail of some cmdlets cannot use in task.</p>
+
+<ul>
+<li>Note:
+
+<ul>
+<li>All valentia cmdlets got credential before running task, therefore you don't need to get anymnore credentials in your script.</li>
+<li>In other word, do not try to get another credential in you script. Especially in "valep" .</li>
+</ul>
+</li>
+</ul><h1>
+<a name="execute-deploy-commands" class="anchor" href="#execute-deploy-commands"><span class="octicon octicon-link"></span></a>Execute deploy Commands</h1>
+
+<p>After you satup Server/Clients, Credential amd DeproyGroups you can start execution.</p>
+
+<h3>
+<a name="1-vale--sequential-single-command-execution" class="anchor" href="#1-vale--sequential-single-command-execution"><span class="octicon octicon-link"></span></a>1. <code>vale</code> : Sequential Single Command execution</h3>
+
+<p>This command will execute ScriptBlock to deploy group written in DeployGroup.ps1.
+As sequencially running, many hosts will takes x times to complete job.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
+</pre></div>
+
+<p>SAMPLE:</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">new</span> <span class="p">{</span><span class="nb">Get-ChildItem</span><span class="p">}</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="2-vale--sequential-commandset-execution" class="anchor" href="#2-vale--sequential-commandset-execution"><span class="octicon octicon-link"></span></a>2. <code>vale</code> : Sequential Commandset execution</h3>
+
+<p>Just make task for commandset.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>After you made task, you should move to BranchFolder you saved task.
+"go" command will ease you move to BranchFolder path where you carete task. 
+ex ) application, then</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">go</span> <span class="n">application</span>
+</pre></div>
+
+<p>After you move to BranchFolder run vale command</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="3-valep--parallel-single-command-execution" class="anchor" href="#3-valep--parallel-single-command-execution"><span class="octicon octicon-link"></span></a>3. <code>valep</code> : Parallel Single Command execution</h3>
+
+<p>Almost same as vale command, just change command to valep.
+It will speed up abpit 3-5 times than sequencial command.</p>
+
+<ul>
+<li>Note that this isn't asyncroniuous but only parallel.</li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="n">valep</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="4-valep--parallel-commandset-execution" class="anchor" href="#4-valep--parallel-commandset-execution"><span class="octicon octicon-link"></span></a>4. <code>valep</code> : Parallel Commandset execution</h3>
+
+<p>Almost same as valep command, just change command to valep.
+It will speed up abpit 3-5 times than sequencial command.</p>
+
+<ul>
+<li>Note that this isn't asyncroniuous but only parallel.</li>
+</ul><p>Just make task for commandset.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>After you made task, you should move to BranchFolder you saved task.
+"go" command will ease you move to BranchFolder path where you carete task. 
+ex ) application, then</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">go</span> <span class="n">application</span>
+</pre></div>
+
+<p>After you move to BranchFolder run valep command</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">valep</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="5-valea--asynchronous-single-command-execution" class="anchor" href="#5-valea--asynchronous-single-command-execution"><span class="octicon octicon-link"></span></a>5. <code>valea</code> : Asynchronous Single Command execution</h3>
+
+<p>Not same as vale and valep command. Because valea will execute asynchrously.
+vale is sequential job and will cost host count.
+valep is parallel execution similer to valea but is not asynchronous.
+valea is multithread asynchronous commad and also can call from C# while valep cannot.</p>
+
+<p>It will speed up O(n) times with host count times than sequencial command.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">valea</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="6-valea--asynchronous-commandset-execution" class="anchor" href="#6-valea--asynchronous-commandset-execution"><span class="octicon octicon-link"></span></a>6. <code>valea</code> : Asynchronous Commandset execution</h3>
+
+<p>Not same as vale and valep command. Because valea will execute asynchrously.
+vale is sequential job and will cost host count.
+valep is parallel execution similer to valea but is not asynchronous.
+valea is multithread asynchronous commad and also can call from C# while valep cannot.</p>
+
+<p>Just make task for commandset.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
+    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>After you made task, you should move to BranchFolder you saved task.
+"go" command will ease you move to BranchFolder path where you carete task. 
+ex ) application, then</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">go</span> <span class="n">application</span>
+</pre></div>
+
+<p>After you move to BranchFolder run valea command</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">valea</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h1>
+<a name="execute-file-transfer-commands" class="anchor" href="#execute-file-transfer-commands"><span class="octicon octicon-link"></span></a>Execute File transfer Commands</h1>
+
+<h3>
+<a name="1-upload--single-file-upload-from-server-to-clients" class="anchor" href="#1-upload--single-file-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>1. <code>upload</code> : Single File Upload from Server to Clients</h3>
+
+<p>You can upload file to client with "upload" command.
+This wrapps BITs Transfer inside.</p>
+
+<ul>
+<li>Note: The files using to upload must set in C:\Deployment\Upload at Server side.</li>
+</ul><p>ex ) Upload file c:\deployment\upload\upload.txt to Remote Client C:\ for DeployGroup new is.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="n">upload</span> <span class="n">-SourceFile</span> <span class="s2">"filename in C:\Deployment\Upload\...."</span> <span class="n">-DestinationFolder</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
+</pre></div>
+
+<p>you can omit parameter names like this.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="n">upload</span> <span class="s2">"upload.txt"</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">new</span>
+</pre></div>
+
+<h3>
+<a name="2-uploadl--files-in-list-upload-from-server-to-clients" class="anchor" href="#2-uploadl--files-in-list-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>2. <code>uploadL</code> : Files in List Upload from Server to Clients</h3>
+
+<p>You can upload multiple files listed in file with "uploadL" command.
+This allow you ease select file manytime in command.</p>
+
+<p>This wrapps BITs Transfer inside.</p>
+
+<ul>
+<li>Note: The files using to upload must set in C:\Deployment\Upload at Server side.</li>
+</ul><p>before use ran this command, you should create list file in C:\Deployment\Upload direcoty.
+File format should like this.</p>
+
+<pre><code>Source, Destination
+C:\Deployment\Upload\DownLoad.txt,\\10.0.4.100\C$
+C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
+</code></pre>
+
+<p>A Top line is Source, Destination header.
+After 2nd line is SourceFile fullpath and Destination folder full path to transfer.
+Deleimiter must ",".</p>
+
+<p>Now you are ready to transfer list of files with following command.</p>
+
+<p>ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ for DeployGroup new is.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">-ListFile</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">-DestinationFolder</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
+</pre></div>
+
+<p>Offcource you can omit poarameter names like this.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">new</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+
+<h3>
+<a name="3-sync--sync-server-folder-and-files-with-clients-diff-mode" class="anchor" href="#3-sync--sync-server-folder-and-files-with-clients-diff-mode"><span class="octicon octicon-link"></span></a>3. <code>sync</code> : Sync Server Folder and Files with Clients (DIFF mode)</h3>
+
+<p>You can Synchronise DeployServer folder and Clients Folder.
+Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.</p>
+
+<p>ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for DeployGroup new is.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="n">sync</span> <span class="n">-SourceFolder</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="n">-DestinationFolder</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
+</pre></div>
+
+<p>Offcource you can omit poarameter names like this.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="n">Sync</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">new</span>
+</pre></div>
+
+<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Valentia maintained by <a href="https://github.com/guitarrapc">guitarrapc</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
