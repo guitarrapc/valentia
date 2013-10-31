@@ -308,7 +308,7 @@ SAMPLE deployGroup input
 ```
 
 You can create deploy group file in only one command.
-Off cource there are several way to create deploygroup file.
+Of cource there are several way to create deploygroup file.
 You can make file with excel,notepad or powershell utils here.
 
 ```PowerShell
@@ -644,7 +644,7 @@ ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ f
 UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new
 ```
 
-Offcource you can omit poarameter names like this.
+Of cource you can omit parameter names like this.
 
 ```Powershell
 UploadL list.txt c:\ new
@@ -663,7 +663,7 @@ ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for Depl
 sync -SourceFolder C:\Requirements -DestinationFolder "c:\hoge hoge" -DeployGroup new
 ```
 
-Offcource you can omit poarameter names like this.
+Of cource you can omit parameter names like this.
 
 ```Powershell
 Sync C:\Requirements "c:\hoge hoge" new
