@@ -54,20 +54,19 @@ Especially psake showed cool way of coding and valentia followed in many points.
 
 <ul>
 <li>
-<p>version : 0.3.1</p>
+<p>version : 0.3.2</p>
 
 <p>[ author : guitarrapc ]</p>
 
-<p>[ Oct 4, 2013 ]</p>
+<p>[ Nov 3, 2013 ]</p>
 
 <ul>
-<li>Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to pass variables into task when execute valentia command. </li>
-<li>Added Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark to ease you remark, mark deploy group ipaddresses in one command.</li>
-<li>Exmaple for Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark is added to README.</li>
-<li>fix link to fastcopy.</li>
-<li>fix Get-ValentiaGroup parameter of deployfolder was mandatory. It supposed to be not mandatory.</li>
-<li>fix some messages on Write-Verbose and Write-Warning. </li>
-<li>little configuration for valentia-config.ps1</li>
+<li>Split all valentia functions to each .ps1, now valentia can manage each of function more easier.</li>
+<li>Added function <code>Show-ValentiaGroup</code>. Want to check deploygroup files in deploygroup branch folder</li>
+<li>fix issue 19 : Host message show as object[] when upload, and upload list item was multiple.</li>
+<li>fix issue 20 : Can not execute Initialize-ValentiaEnvironment with not Server OS.</li>
+<li>fix issue 21 : New-ValentiaFolder could not create branch folder as configured.</li>
+<li>fix issue 22 : Result compress result as Format-Table when ScriptBlock or Task output as format-table.</li>
 </ul>
 </li>
 </ul><h1>
@@ -154,31 +153,32 @@ Supporting Operating System are...</p>
 
 <p>Following Cmdlets will be shown.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="n">CommandType</span> <span class="n">Name</span>                               <span class="n">ModuleName</span>
-<span class="p">-----------</span> <span class="p">----</span>                               <span class="p">----------</span>
-<span class="k">Function</span>    <span class="nb">Get-ValentiaCredential</span>             <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Get-ValentiaGroup</span>                  <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Get-ValentiaModuleReload</span>           <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Get-ValentiaRebootRequiredStatus</span>   <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Get-ValentiaTask</span>                   <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="n">Initialize-valentiaEnvironment</span>     <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-Valentia</span>                    <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaAsync</span>               <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaClean</span>               <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaCommand</span>             <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-valentiaDeployGroupRemark</span>   <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-valentiaDeployGroupUnremark</span> <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaDownload</span>            <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaParallel</span>            <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaSync</span>                <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaUpload</span>              <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Invoke-ValentiaUploadList</span>          <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">New-ValentiaCredential</span>             <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">New-ValentiaFolder</span>                 <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">New-ValentiaGroup</span>                  <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Set-ValentiaHostName</span>               <span class="n">valentia</span>  
-<span class="k">Function</span>    <span class="nb">Set-ValentiaLocation</span>               <span class="n">valentia</span>  
-<span class="n">Workflow</span>    <span class="nb">Invoke-ValentiaCommandParallel</span>     <span class="n">valentia</span>
+<div class="highlight highlight-PowerShell"><pre><span class="n">CommandType</span>     <span class="n">Name</span>                                               <span class="n">ModuleName</span>
+<span class="p">-----------</span>     <span class="p">----</span>                                               <span class="p">----------</span>
+<span class="k">Function</span>        <span class="nb">Get-ValentiaCredential</span>                             <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Get-ValentiaGroup</span>                                  <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Get-ValentiaModuleReload</span>                           <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Get-ValentiaRebootRequiredStatus</span>                   <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Get-ValentiaTask</span>                                   <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="n">Initialize-valentiaEnvironment</span>                     <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-Valentia</span>                                    <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaAsync</span>                               <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaClean</span>                               <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaCommand</span>                             <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-valentiaDeployGroupRemark</span>                   <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-valentiaDeployGroupUnremark</span>                 <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaDownload</span>                            <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaParallel</span>                            <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaSync</span>                                <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaUpload</span>                              <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Invoke-ValentiaUploadList</span>                          <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">New-ValentiaCredential</span>                             <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">New-ValentiaFolder</span>                                 <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">New-ValentiaGroup</span>                                  <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Set-ValentiaHostName</span>                               <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Set-ValentiaLocation</span>                               <span class="n">valentia</span>
+<span class="k">Function</span>        <span class="nb">Show-ValentiaGroup</span>                                 <span class="n">valentia</span>
+<span class="n">Workflow</span>        <span class="nb">Invoke-ValentiaCommandParallel</span>                     <span class="n">valentia</span>
 </pre></div>
 
 <p>All Cmdlets have alias to lket you use easily.
@@ -189,27 +189,25 @@ You can find them as like this.</p>
 
 <p>This show alias defined in valentia</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="n">CommandType</span> <span class="n">Name</span>                                             <span class="n">ModuleName</span>
-<span class="p">-----------</span> <span class="p">----</span>                                             <span class="p">----------</span>
-<span class="k">Alias</span>       <span class="n">Clean</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaClean</span>                    <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Command</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaCommand</span>                <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">CommandP</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaCommandParallel</span>       <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Cred</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaCredential</span>                   <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Download</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaDownload</span>              <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Go</span> <span class="p">-&gt;</span> <span class="nb">Set-ValentiaLocation</span>                       <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Initial</span> <span class="p">-&gt;</span> <span class="n">Initialize-valentiaEnvironment</span>        <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">ipremark</span> <span class="p">-&gt;</span> <span class="nb">Invoke-valentiaDeployGroupRemark</span>     <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">ipunremark</span> <span class="p">-&gt;</span> <span class="nb">Invoke-valentiaDeployGroupUnremark</span> <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Reload</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaModuleReload</span>               <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Rename</span> <span class="p">-&gt;</span> <span class="nb">Set-ValentiaHostName</span>                   <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Sync</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaSync</span>                      <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Target</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaGroup</span>                      <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Task</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaTask</span>                         <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Upload</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaUpload</span>                  <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">UploadL</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaUploadList</span>             <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Vale</span> <span class="p">-&gt;</span> <span class="nb">Invoke-Valentia</span>                          <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Valea</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaAsync</span>                    <span class="n">valentia</span>  
-<span class="k">Alias</span>       <span class="n">Valep</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaParallel</span>                 <span class="n">valentia</span>  
+<div class="highlight highlight-PowerShell"><pre><span class="n">CommandType</span>     <span class="n">Name</span>                                               <span class="n">ModuleName</span>
+<span class="p">-----------</span>     <span class="p">----</span>                                               <span class="p">----------</span>
+<span class="k">Alias</span>           <span class="n">Clean</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaClean</span>                      <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Cred</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaCredential</span>                     <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Download</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaDownload</span>                <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Go</span> <span class="p">-&gt;</span> <span class="nb">Set-ValentiaLocation</span>                         <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Initial</span> <span class="p">-&gt;</span> <span class="n">Initialize-valentiaEnvironment</span>          <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">ipremark</span> <span class="p">-&gt;</span> <span class="nb">Invoke-valentiaDeployGroupRemark</span>       <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">ipunremark</span> <span class="p">-&gt;</span> <span class="nb">Invoke-valentiaDeployGroupUnremark</span>   <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Reload</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaModuleReload</span>                 <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Rename</span> <span class="p">-&gt;</span> <span class="nb">Set-ValentiaHostName</span>                     <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Sync</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaSync</span>                        <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Target</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaGroup</span>                        <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Task</span> <span class="p">-&gt;</span> <span class="nb">Get-ValentiaTask</span>                           <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Upload</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaUpload</span>                    <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">UploadL</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaUploadList</span>               <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Vale</span> <span class="p">-&gt;</span> <span class="nb">Invoke-Valentia</span>                            <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Valea</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaAsync</span>                      <span class="n">valentia</span>
+<span class="k">Alias</span>           <span class="n">Valep</span> <span class="p">-&gt;</span> <span class="nb">Invoke-ValentiaParallel</span>                   <span class="n">valentia</span>
 </pre></div>
 
 <h1>
@@ -346,7 +344,7 @@ Just list them up in file.</p>
 </code></pre>
 
 <p>You can create deploy group file in only one command.
-Off cource there are several way to create deploygroup file.
+Of cource there are several way to create deploygroup file.
 You can make file with excel,notepad or powershell utils here.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaGroup</span> <span class="n">-DeployClients</span> <span class="n">array</span><span class="p">[]</span> <span class="n">-FileName</span> <span class="n">FILENAME</span><span class="p">.</span><span class="n">ps1</span>
@@ -671,7 +669,7 @@ Deleimiter must ",".</p>
 <div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">-ListFile</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">-DestinationFolder</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
 </pre></div>
 
-<p>Offcource you can omit poarameter names like this.</p>
+<p>Of cource you can omit parameter names like this.</p>
 
 <div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">new</span>
 </pre></div>
@@ -689,7 +687,7 @@ Parent will be DeployServer, it means clietns folder will be changed to sync as 
 <div class="highlight highlight-Powershell"><pre><span class="n">sync</span> <span class="n">-SourceFolder</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="n">-DestinationFolder</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
 </pre></div>
 
-<p>Offcource you can omit poarameter names like this.</p>
+<p>Of cource you can omit parameter names like this.</p>
 
 <div class="highlight highlight-Powershell"><pre><span class="n">Sync</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">new</span>
 </pre></div>
