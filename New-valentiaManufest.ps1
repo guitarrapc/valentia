@@ -1,7 +1,9 @@
 ﻿$script:module = "valentia"
+$script:moduleVersion = "0.3.2"
+$script:description = "PowerShell Remote deployment library for Windows Servers";
+$script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
 
-$script:moduleVersion = "0.3.2"
 $script:functionToExport = @("Get-ValentiaTask", 
         "Invoke-ValentiaParallel", 
         "Invoke-ValentiaCommandParallel", 
@@ -49,9 +51,9 @@ $script:moduleManufest = @{
     Path = "$module.psd1";
     Author = "guitarrapc";
     CompanyName = "guitarrapc"
-    Copyright = "28/Oct/2013 -"; 
+    Copyright = ""; 
     ModuleVersion = $moduleVersion
-    description = "Create AD Windows user module";
+    Description = $description
     PowerShellVersion = "3.0";
     DotNetFrameworkVersion = "4.0";
     ClrVersion = "4.0.30319.17929";
