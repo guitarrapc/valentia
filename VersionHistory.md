@@ -5,8 +5,21 @@ This indicate Version History for valentia.
 # Update detail
 
 
-
 ## Version 0.3.x
+
+
+- version : 0.3.2
+	
+	[ author : guitarrapc ]
+	
+	[ Nov 3, 2013 ]
+	
+	* Split all valentia functions to each .ps1, now valentia can manage each of function more easier.
+	* Added function ```Show-ValentiaGroup```. Want to check deploygroup files in deploygroup branch folder
+	* fix issue 19 : Host message show as object[] when upload, and upload list item was multiple.
+	* fix issue 20 : Can not execute Initialize-ValentiaEnvironment with not Server OS.
+	* fix issue 21 : New-ValentiaFolder could not create branch folder as configured.
+	* fix issue 22 : Result compress result as Format-Table when ScriptBlock or Task output as format-table.
 
 
 - version : 0.3.1

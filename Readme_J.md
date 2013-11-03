@@ -16,19 +16,18 @@ valentia は、 Capistrano ( LinuxにおけるRuby 製のデプロイツール) 
 
 ## Version 0.3.x
 
-- version : 0.3.1
+- version : 0.3.2
 	
 	[ author : guitarrapc ]
 	
-	[ Oct 4, 2013 ]
+	[ Nov 3, 2013 ]
 	
-	* TaskParameter パラメータを Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync に追加。 これにより、 task内部で $args[0] ...[x] を使うことによって、valentia コマンド実行時に TaskParameter で指定したパラメータが渡されます。
-	* Invoke-valentiaDeployGroupRemark と Invoke-valentiaDeployGroupUnremark を追加。 これにより　deploy groupに記述したip addressesを容易にリマーク、アンリマーク可能です。
-	* READMEに Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark を追加。
-	* fastcopy へのリンクを修正。
-	* Get-ValentiaGroup にて、deployfolder のパラメータが mandatory に意図せずなっていたため修正しました。
-	* Write-Verbose と Write-Warningに関して、一部メッセージを修正しました。 
-	* valentia-config.ps1 についてコンフィグを一部追加しました。
+	* 各種function を .ps1 に分割しました。　以前より valentia Cmdletを簡単にメンテナンスしやすくなっています。
+	* ```Show-ValentiaGroup```　function を追加しました。これにて、Deploy Groupにある .ps1 ファイルの一覧を用意に取得可能としています。
+	* fix issue 19 : ```upload``` ```uploadL```　を利用した際に、対象アイテムが複数の場合に Hostメッセージがobject[] になる問題を修正しました。
+	* fix issue 20 : ```Initialize-ValentiaEnvironment```がサーバーOS以外で実行できない問題を修正しました。これにて、Windows8.1など通常のワークステーション系OSでも利用可能になっています。
+	* fix issue 21 : ```New-ValentiaFolder```がconfig通りにブランチファイルを生成できていなかった問題を修正しました。
+	* fix issue 22 : ScriptBlock や task ファイルで記述したコマンド実施結果が、Format-Tableの場合に、コマンド結果をResultで表示しようとしても、Format-Table形式になってつぶれる問題を修正しました。これにて、常にResultはFormat-List形式で表示されます。
 
 
 # 対象OS PowerShell バージョン
@@ -110,31 +109,32 @@ Get-command -module valentia
 これらのCmdletが表示されるはずです。
 
 ```PowerShell
-CommandType Name                               ModuleName
------------ ----                               ----------
-Function    Get-ValentiaCredential             valentia  
-Function    Get-ValentiaGroup                  valentia  
-Function    Get-ValentiaModuleReload           valentia  
-Function    Get-ValentiaRebootRequiredStatus   valentia  
-Function    Get-ValentiaTask                   valentia  
-Function    Initialize-valentiaEnvironment     valentia  
-Function    Invoke-Valentia                    valentia  
-Function    Invoke-ValentiaAsync               valentia  
-Function    Invoke-ValentiaClean               valentia  
-Function    Invoke-ValentiaCommand             valentia  
-Function    Invoke-valentiaDeployGroupRemark   valentia  
-Function    Invoke-valentiaDeployGroupUnremark valentia  
-Function    Invoke-ValentiaDownload            valentia  
-Function    Invoke-ValentiaParallel            valentia  
-Function    Invoke-ValentiaSync                valentia  
-Function    Invoke-ValentiaUpload              valentia  
-Function    Invoke-ValentiaUploadList          valentia  
-Function    New-ValentiaCredential             valentia  
-Function    New-ValentiaFolder                 valentia  
-Function    New-ValentiaGroup                  valentia  
-Function    Set-ValentiaHostName               valentia  
-Function    Set-ValentiaLocation               valentia  
-Workflow    Invoke-ValentiaCommandParallel     valentia
+CommandType     Name                                               ModuleName
+-----------     ----                                               ----------
+Function        Get-ValentiaCredential                             valentia
+Function        Get-ValentiaGroup                                  valentia
+Function        Get-ValentiaModuleReload                           valentia
+Function        Get-ValentiaRebootRequiredStatus                   valentia
+Function        Get-ValentiaTask                                   valentia
+Function        Initialize-valentiaEnvironment                     valentia
+Function        Invoke-Valentia                                    valentia
+Function        Invoke-ValentiaAsync                               valentia
+Function        Invoke-ValentiaClean                               valentia
+Function        Invoke-ValentiaCommand                             valentia
+Function        Invoke-valentiaDeployGroupRemark                   valentia
+Function        Invoke-valentiaDeployGroupUnremark                 valentia
+Function        Invoke-ValentiaDownload                            valentia
+Function        Invoke-ValentiaParallel                            valentia
+Function        Invoke-ValentiaSync                                valentia
+Function        Invoke-ValentiaUpload                              valentia
+Function        Invoke-ValentiaUploadList                          valentia
+Function        New-ValentiaCredential                             valentia
+Function        New-ValentiaFolder                                 valentia
+Function        New-ValentiaGroup                                  valentia
+Function        Set-ValentiaHostName                               valentia
+Function        Set-ValentiaLocation                               valentia
+Function        Show-ValentiaGroup                                 valentia
+Workflow        Invoke-ValentiaCommandParallel                     valentia
 ```
 
 各モジュールには利用しやすいようにAliasが設定されています。
@@ -148,27 +148,25 @@ Get-Alias | where ModuleName -eq "valentia"
 これによりvalentiaで定義されているalias一覧が表示されます。
 
 ```PowerShell
-CommandType Name                                             ModuleName
------------ ----                                             ----------
-Alias       Clean -> Invoke-ValentiaClean                    valentia  
-Alias       Command -> Invoke-ValentiaCommand                valentia  
-Alias       CommandP -> Invoke-ValentiaCommandParallel       valentia  
-Alias       Cred -> Get-ValentiaCredential                   valentia  
-Alias       Download -> Invoke-ValentiaDownload              valentia  
-Alias       Go -> Set-ValentiaLocation                       valentia  
-Alias       Initial -> Initialize-valentiaEnvironment        valentia  
-Alias       ipremark -> Invoke-valentiaDeployGroupRemark     valentia  
-Alias       ipunremark -> Invoke-valentiaDeployGroupUnremark valentia  
-Alias       Reload -> Get-ValentiaModuleReload               valentia  
-Alias       Rename -> Set-ValentiaHostName                   valentia  
-Alias       Sync -> Invoke-ValentiaSync                      valentia  
-Alias       Target -> Get-ValentiaGroup                      valentia  
-Alias       Task -> Get-ValentiaTask                         valentia  
-Alias       Upload -> Invoke-ValentiaUpload                  valentia  
-Alias       UploadL -> Invoke-ValentiaUploadList             valentia  
-Alias       Vale -> Invoke-Valentia                          valentia  
-Alias       Valea -> Invoke-ValentiaAsync                    valentia  
-Alias       Valep -> Invoke-ValentiaParallel                 valentia  
+CommandType     Name                                               ModuleName
+-----------     ----                                               ----------
+Alias           Clean -> Invoke-ValentiaClean                      valentia
+Alias           Cred -> Get-ValentiaCredential                     valentia
+Alias           Download -> Invoke-ValentiaDownload                valentia
+Alias           Go -> Set-ValentiaLocation                         valentia
+Alias           Initial -> Initialize-valentiaEnvironment          valentia
+Alias           ipremark -> Invoke-valentiaDeployGroupRemark       valentia
+Alias           ipunremark -> Invoke-valentiaDeployGroupUnremark   valentia
+Alias           Reload -> Get-ValentiaModuleReload                 valentia
+Alias           Rename -> Set-ValentiaHostName                     valentia
+Alias           Sync -> Invoke-ValentiaSync                        valentia
+Alias           Target -> Get-ValentiaGroup                        valentia
+Alias           Task -> Get-ValentiaTask                           valentia
+Alias           Upload -> Invoke-ValentiaUpload                    valentia
+Alias           UploadL -> Invoke-ValentiaUploadList               valentia
+Alias           Vale -> Invoke-Valentia                            valentia
+Alias           Valea -> Invoke-ValentiaAsync                      valentia
+Alias           Valep -> Invoke-ValentiaParallel                   valentia
 ```
 
 

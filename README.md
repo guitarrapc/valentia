@@ -15,19 +15,18 @@ Also [psasync](http://newsqlblog.com/category/powershell/powershell-concurrency/
 
 ## Version 0.3.x
 
-- version : 0.3.1
+- version : 0.3.2
 	
 	[ author : guitarrapc ]
 	
-	[ Oct 4, 2013 ]
+	[ Nov 3, 2013 ]
 	
-	* Added TaskParameter parameter for Invoke-Valentia, Invoke-ValentiaParallel, Invoke-ValentiaAsync. Now you can use $args[0] ...[x] to pass variables into task when execute valentia command. 
-	* Added Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark to ease you remark, mark deploy group ipaddresses in one command.
-	* Exmaple for Invoke-valentiaDeployGroupRemark, Invoke-valentiaDeployGroupUnremark is added to README.
-	* fix link to fastcopy.
-	* fix Get-ValentiaGroup parameter of deployfolder was mandatory. It supposed to be not mandatory.
-	* fix some messages on Write-Verbose and Write-Warning. 
-	* little configuration for valentia-config.ps1
+	* Split all valentia functions to each .ps1, now valentia can manage each of function more easier.
+	* Added function ```Show-ValentiaGroup```. Want to check deploygroup files in deploygroup branch folder
+	* fix issue 19 : Host message show as object[] when upload, and upload list item was multiple.
+	* fix issue 20 : Can not execute Initialize-ValentiaEnvironment with not Server OS.
+	* fix issue 21 : New-ValentiaFolder could not create branch folder as configured.
+	* fix issue 22 : Result compress result as Format-Table when ScriptBlock or Task output as format-table.
 
 	
 # Valid OS and PowerShell Verstion
@@ -109,31 +108,32 @@ Get-command -module valentia
 Following Cmdlets will be shown.
 
 ```PowerShell
-CommandType Name                               ModuleName
------------ ----                               ----------
-Function    Get-ValentiaCredential             valentia  
-Function    Get-ValentiaGroup                  valentia  
-Function    Get-ValentiaModuleReload           valentia  
-Function    Get-ValentiaRebootRequiredStatus   valentia  
-Function    Get-ValentiaTask                   valentia  
-Function    Initialize-valentiaEnvironment     valentia  
-Function    Invoke-Valentia                    valentia  
-Function    Invoke-ValentiaAsync               valentia  
-Function    Invoke-ValentiaClean               valentia  
-Function    Invoke-ValentiaCommand             valentia  
-Function    Invoke-valentiaDeployGroupRemark   valentia  
-Function    Invoke-valentiaDeployGroupUnremark valentia  
-Function    Invoke-ValentiaDownload            valentia  
-Function    Invoke-ValentiaParallel            valentia  
-Function    Invoke-ValentiaSync                valentia  
-Function    Invoke-ValentiaUpload              valentia  
-Function    Invoke-ValentiaUploadList          valentia  
-Function    New-ValentiaCredential             valentia  
-Function    New-ValentiaFolder                 valentia  
-Function    New-ValentiaGroup                  valentia  
-Function    Set-ValentiaHostName               valentia  
-Function    Set-ValentiaLocation               valentia  
-Workflow    Invoke-ValentiaCommandParallel     valentia
+CommandType     Name                                               ModuleName
+-----------     ----                                               ----------
+Function        Get-ValentiaCredential                             valentia
+Function        Get-ValentiaGroup                                  valentia
+Function        Get-ValentiaModuleReload                           valentia
+Function        Get-ValentiaRebootRequiredStatus                   valentia
+Function        Get-ValentiaTask                                   valentia
+Function        Initialize-valentiaEnvironment                     valentia
+Function        Invoke-Valentia                                    valentia
+Function        Invoke-ValentiaAsync                               valentia
+Function        Invoke-ValentiaClean                               valentia
+Function        Invoke-ValentiaCommand                             valentia
+Function        Invoke-valentiaDeployGroupRemark                   valentia
+Function        Invoke-valentiaDeployGroupUnremark                 valentia
+Function        Invoke-ValentiaDownload                            valentia
+Function        Invoke-ValentiaParallel                            valentia
+Function        Invoke-ValentiaSync                                valentia
+Function        Invoke-ValentiaUpload                              valentia
+Function        Invoke-ValentiaUploadList                          valentia
+Function        New-ValentiaCredential                             valentia
+Function        New-ValentiaFolder                                 valentia
+Function        New-ValentiaGroup                                  valentia
+Function        Set-ValentiaHostName                               valentia
+Function        Set-ValentiaLocation                               valentia
+Function        Show-ValentiaGroup                                 valentia
+Workflow        Invoke-ValentiaCommandParallel                     valentia
 ```
 
 All Cmdlets have alias to lket you use easily.
@@ -147,27 +147,25 @@ Get-Alias | where ModuleName -eq "valentia"
 This show alias defined in valentia
 
 ```PowerShell
-CommandType Name                                             ModuleName
------------ ----                                             ----------
-Alias       Clean -> Invoke-ValentiaClean                    valentia  
-Alias       Command -> Invoke-ValentiaCommand                valentia  
-Alias       CommandP -> Invoke-ValentiaCommandParallel       valentia  
-Alias       Cred -> Get-ValentiaCredential                   valentia  
-Alias       Download -> Invoke-ValentiaDownload              valentia  
-Alias       Go -> Set-ValentiaLocation                       valentia  
-Alias       Initial -> Initialize-valentiaEnvironment        valentia  
-Alias       ipremark -> Invoke-valentiaDeployGroupRemark     valentia  
-Alias       ipunremark -> Invoke-valentiaDeployGroupUnremark valentia  
-Alias       Reload -> Get-ValentiaModuleReload               valentia  
-Alias       Rename -> Set-ValentiaHostName                   valentia  
-Alias       Sync -> Invoke-ValentiaSync                      valentia  
-Alias       Target -> Get-ValentiaGroup                      valentia  
-Alias       Task -> Get-ValentiaTask                         valentia  
-Alias       Upload -> Invoke-ValentiaUpload                  valentia  
-Alias       UploadL -> Invoke-ValentiaUploadList             valentia  
-Alias       Vale -> Invoke-Valentia                          valentia  
-Alias       Valea -> Invoke-ValentiaAsync                    valentia  
-Alias       Valep -> Invoke-ValentiaParallel                 valentia  
+CommandType     Name                                               ModuleName
+-----------     ----                                               ----------
+Alias           Clean -> Invoke-ValentiaClean                      valentia
+Alias           Cred -> Get-ValentiaCredential                     valentia
+Alias           Download -> Invoke-ValentiaDownload                valentia
+Alias           Go -> Set-ValentiaLocation                         valentia
+Alias           Initial -> Initialize-valentiaEnvironment          valentia
+Alias           ipremark -> Invoke-valentiaDeployGroupRemark       valentia
+Alias           ipunremark -> Invoke-valentiaDeployGroupUnremark   valentia
+Alias           Reload -> Get-ValentiaModuleReload                 valentia
+Alias           Rename -> Set-ValentiaHostName                     valentia
+Alias           Sync -> Invoke-ValentiaSync                        valentia
+Alias           Target -> Get-ValentiaGroup                        valentia
+Alias           Task -> Get-ValentiaTask                           valentia
+Alias           Upload -> Invoke-ValentiaUpload                    valentia
+Alias           UploadL -> Invoke-ValentiaUploadList               valentia
+Alias           Vale -> Invoke-Valentia                            valentia
+Alias           Valea -> Invoke-ValentiaAsync                      valentia
+Alias           Valep -> Invoke-ValentiaParallel                   valentia
 ```
 
 
