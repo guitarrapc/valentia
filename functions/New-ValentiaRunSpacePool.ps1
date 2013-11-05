@@ -19,7 +19,7 @@ Author: guitarrapc
 Created: 13/July/2013
 
 .EXAMPLE
-$pool = New-ValentiaRunspacePool 10
+$pool = New-ValentiaRunspacePool -minPoolSize 50 -maxPoolSize 50
 
 --------------------------------------------
 Above will creates a pool of 10 runspaces
@@ -32,9 +32,16 @@ Above will creates a pool of 10 runspaces
         [Parameter(
             Position=0,
             Mandatory,
+            HelpMessage = "Defines the minium number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
+        [int]
+        $minPoolSize,
+
+        [Parameter(
+            Position=1,
+            Mandatory,
             HelpMessage = "Defines the maximum number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
         [int]
-        $PoolSize
+        $maxPoolSize
     )
 
     try
@@ -44,7 +51,7 @@ Above will creates a pool of 10 runspaces
         # RunspaceFactory.CreateRunspacePool (Int32, Int32, InitialSessionState, PSHost)
         #   - Creates a runspace pool that specifies minimum and maximum number of opened runspaces, 
         #     and a custom host and initial session state information that is used by each runspace in the pool.
-        $pool = [runspacefactory]::CreateRunspacePool(50, $PoolSize,  $sessionstate, $Host)	
+        $pool = [runspacefactory]::CreateRunspacePool($minPoolSize, $maxPoolSize,  $sessionstate, $Host)	
     
         # Only support STA mode. No MTA mode.
         $pool.ApartmentState = "STA"

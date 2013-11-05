@@ -250,7 +250,7 @@ You can prepare script file to run, and specify path.
         $TaskParameterHash = @{TaskParameter = $TaskParameter} 
 
         # Create a pool of 100 runspaces
-        $pool = New-ValentiaRunSpacePool -PoolSize 50
+        $pool = New-ValentiaRunSpacePool -minPoolSize $valentia.poolSize.minPoolSize -maxPoolSize $valentia.poolSize.maxPoolSize
 
         #Initialize AsyncPipelines
         $AsyncPipelines = @() 
