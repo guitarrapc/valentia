@@ -234,6 +234,31 @@ $valentia.defaultconfigurationfile = "valentia-config.ps1" # default configurati
 $valentia.supportWindows = @(6,1) # higher than windows 7 or windows 2008 R2
 $valentia.context = New-Object System.Collections.Stack # holds onto the current state of all variables
 
+$valentia.originalErrorActionPreference = $ErrorActionPreference
+$valentia.errorPreference = "Stop"
+$valentia.originalDebugPreference = $DebugPreference
+$valentia.debugPreference = "SilentlyContinue"
+
+# contains context for default.
+$valentia.context.push(
+    @{
+        executedTasks = New-Object System.Collections.Stack;
+        callStack = New-Object System.Collections.Stack;
+        originalEnvPath = $env:Path;
+        originalDirectory = Get-Location;
+        originalErrorActionPreference = $valentia.originalErrorActionPreference;
+        ErrorActionPreference = $valentia.errorPreference;
+        originalDebugPreference = $valentia.originalDebugPreference
+        debugPreference = $valentia.debugPreference
+        name = $valentia.name
+        modulePath = $valentia.modulePath
+        helpersPath = Join-Path $valentia.modulePath $valentia.helpersPath
+        supportWindows = $valentia.supportWindows
+        tasks = @{}
+        includes = New-Object System.Collections.Queue;
+    }
+)
+
 
 #-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
 
@@ -263,20 +288,17 @@ $valentia.PSDrive = "V:" # Set Valentia Mapping Drive with SMBMapping
 $valentia.deployextension = ".ps1" # contains default DeployGroup file extension
 $valentia.wsmanSessionlimit = 22 # Set PSRemoting WSman limit prvention threshold
 
-
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
     hostName = "web"
     ipstring = "ip"
 }
 
-
 # Define External program path
 $valentia.fastcopy = New-Object psobject -property @{
     folder = "C:\Program Files\FastCopy"
     exe = "FastCopy.exe"
 }
-
 
 # contains default Path configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.RootPath = "C:\Deployment"
@@ -290,31 +312,12 @@ $valentia.BranchFolder = New-Object psobject -property @{
     Utils = "Utils"
 }
 
-
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
     path = "C:\Logs\Deployment"
     name = "deploy"
     extension = ".log"
 }
-
-
-# contains context for default.
-$valentia.context.push(
-    @{
-        executedTasks = New-Object System.Collections.Stack;
-        callStack = New-Object System.Collections.Stack;
-        originalEnvPath = $env:Path;
-        originalDirectory = Get-Location;
-        originalErrorActionPreference = $global:ErrorActionPreference;
-        name = $valentia.name
-        version = $valentia.version
-        supportWindows = $valentia.supportWindows
-        tasks = @{}
-        includes = New-Object System.Collections.Queue;
-    }
-)
-
 
 
 #-- Set Alias for public valentia commands --#
