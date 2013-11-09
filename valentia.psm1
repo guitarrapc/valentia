@@ -239,6 +239,8 @@ $valentia.errorPreference = "Stop"
 $valentia.originalDebugPreference = $DebugPreference
 $valentia.debugPreference = "SilentlyContinue"
 
+#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
+
 # contains context for default.
 $valentia.context.push(
     @{
@@ -319,6 +321,22 @@ $valentia.log = New-Object psobject -property @{
     extension = ".log"
 }
 
+# contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
+$valentia.config_default = New-Object PSObject -property @{
+    TaskFileName = "default.ps1";
+    TaskFileDir = $valentia.BranchFolder.Application;
+    taskNameFormat = "Executing {0}";
+    verboseError = $false;
+    modules = $null;
+    PSDrive = $valentia.PSDrive;
+    deployextension = $valentia.deployextension;
+    wsmanSessionlimit = $valentia.wsmanSessionlimit;
+    prefix = $valentia.prefix;
+    fastcopy = $valentia.fastcopy;
+    RootPath = $valentia.RootPath;
+    BranchFolder = $valentia.BranchFolder;
+    log = $valentia.log;
+}
 
 #-- Set Alias for public valentia commands --#
 

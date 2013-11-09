@@ -1,5 +1,25 @@
 #-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization)--#
 
+# contains context for default.
+$valentia.context.push(
+    @{
+        executedTasks = New-Object System.Collections.Stack;
+        callStack = New-Object System.Collections.Stack;
+        originalEnvPath = $env:Path;
+        originalDirectory = Get-Location;
+        originalErrorActionPreference = $valentia.originalErrorActionPreference;
+        ErrorActionPreference = $valentia.errorPreference;
+        originalDebugPreference = $valentia.originalDebugPreference
+        debugPreference = $valentia.debugPreference
+        name = $valentia.name
+        modulePath = $valentia.modulePath
+        helpersPath = Join-Path $valentia.modulePath $valentia.helpersPath
+        supportWindows = $valentia.supportWindows
+        tasks = @{}
+        includes = New-Object System.Collections.Queue;
+    }
+)
+
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.config_default = New-Object PSObject -property @{
     TaskFileName = "default.ps1";
