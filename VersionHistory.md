@@ -7,6 +7,18 @@ This indicate Version History for valentia.
 
 ## Version 0.3.x
 
+- version : 0.3.3
+	
+	[ author : guitarrapc ]
+	
+	[ Nov 15, 2013 ]
+	
+	* 
+	* Added function ```Show-ValentiaConfig```. Now you can check valentia-config.ps1 within console.
+	* Added function ```Edit-ValentiaConfig```. Now you can edit valentia-config.ps1 with PowerShell ISE.
+	* fix issue 31 : valentia cmdlet will stop with error when trying to run more then 2 whithin same console
+	* Enhanced issue 32 : Now you can modify Runspace Pool Size within valentia-config.ps1 
+
 
 - version : 0.3.2
 	

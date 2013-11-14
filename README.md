@@ -15,18 +15,17 @@ Also [psasync](http://newsqlblog.com/category/powershell/powershell-concurrency/
 
 ## Version 0.3.x
 
-- version : 0.3.2
+- version : 0.3.3
 	
 	[ author : guitarrapc ]
 	
-	[ Nov 3, 2013 ]
+	[ Nov 15, 2013 ]
 	
-	* Split all valentia functions to each .ps1, now valentia can manage each of function more easier.
-	* Added function ```Show-ValentiaGroup```. Want to check deploygroup files in deploygroup branch folder
-	* fix issue 19 : Host message show as object[] when upload, and upload list item was multiple.
-	* fix issue 20 : Can not execute Initialize-ValentiaEnvironment with not Server OS.
-	* fix issue 21 : New-ValentiaFolder could not create branch folder as configured.
-	* fix issue 22 : Result compress result as Format-Table when ScriptBlock or Task output as format-table.
+	* 
+	* Added function ```Show-ValentiaConfig```. Now you can check valentia-config.ps1 within console.
+	* Added function ```Edit-ValentiaConfig```. Now you can edit valentia-config.ps1 with PowerShell ISE.
+	* fix issue 31 : valentia cmdlet will stop with error when trying to run more then 2 whithin same console
+	* Enhanced issue 32 : Now you can modify Runspace Pool Size within valentia-config.ps1 
 
 	
 # Valid OS and PowerShell Verstion

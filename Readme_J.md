@@ -16,18 +16,16 @@ valentia は、 Capistrano ( LinuxにおけるRuby 製のデプロイツール) 
 
 ## Version 0.3.x
 
-- version : 0.3.2
+- version : 0.3.3
 	
 	[ author : guitarrapc ]
 	
-	[ Nov 3, 2013 ]
+	[ Nov 15, 2013 ]
 	
-	* 各種function を .ps1 に分割しました。　以前より valentia Cmdletを簡単にメンテナンスしやすくなっています。
-	* ```Show-ValentiaGroup```　function を追加しました。これにて、Deploy Groupにある .ps1 ファイルの一覧を用意に取得可能としています。
-	* fix issue 19 : ```upload``` ```uploadL```　を利用した際に、対象アイテムが複数の場合に Hostメッセージがobject[] になる問題を修正しました。
-	* fix issue 20 : ```Initialize-ValentiaEnvironment```がサーバーOS以外で実行できない問題を修正しました。これにて、Windows8.1など通常のワークステーション系OSでも利用可能になっています。
-	* fix issue 21 : ```New-ValentiaFolder```がconfig通りにブランチファイルを生成できていなかった問題を修正しました。
-	* fix issue 22 : ScriptBlock や task ファイルで記述したコマンド実施結果が、Format-Tableの場合に、コマンド結果をResultで表示しようとしても、Format-Table形式になってつぶれる問題を修正しました。これにて、常にResultはFormat-List形式で表示されます。
+	* ```Show-ValentiaConfig``` ファンクションを追加 : これにて PowerShellコンソール内部で valentia-config.ps1 の内容を見れます
+	* ```Edit-ValentiaConfig```　ファンクションを追加 : これにて PowerSheli_iseで valentia-config.ps1 を編集可能です
+	* Issue 31 の修正: 同一コンソールで2回以上のvalentia Cmdlet 実行時に失敗する問題が解決しました
+	* Issue 32 の対応: これにて、valentia-config で Runspace Pool のサイズを指定できるようになりました。 
 
 
 # 対象OS PowerShell バージョン

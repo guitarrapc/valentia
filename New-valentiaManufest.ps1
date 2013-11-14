@@ -1,33 +1,36 @@
 ﻿$script:module = "valentia"
-$script:moduleVersion = "0.3.2"
+$script:moduleVersion = "0.3.3"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
 
-$script:functionToExport = @("Get-ValentiaTask", 
-        "Invoke-ValentiaParallel", 
-        "Invoke-ValentiaCommandParallel", 
+$script:functionToExport = @(
+        "Edit-ValentiaConfig",
+        "Get-ValentiaCredential",
+        "Get-ValentiaGroup", 
+        "Get-ValentiaModuleReload", 
+        "Get-ValentiaRebootRequiredStatus",
+        "Get-ValentiaTask", 
+        "Initialize-ValentiaEnvironment",
         "Invoke-Valentia",
-        "Invoke-ValentiaCommand",
         "Invoke-ValentiaAsync",
+        "Invoke-ValentiaClean",
+        "Invoke-ValentiaCommand",
+        "Invoke-ValentiaCommandParallel", 
+        "Invoke-ValentiaDeployGroupRemark",
+        "Invoke-ValentiaDeployGroupUnremark",
+        "Invoke-ValentiaDownload",
+        "Invoke-ValentiaParallel", 
+        "Invoke-ValentiaSync",
         "Invoke-ValentiaUpload", 
         "Invoke-ValentiaUploadList", 
-        "Invoke-ValentiaSync",
-        "Invoke-ValentiaDownload",
-        "New-ValentiaGroup",
-        "Get-ValentiaGroup", 
-        "Show-ValentiaGroup", 
-        "Invoke-valentiaDeployGroupRemark",
-        "Invoke-valentiaDeployGroupUnremark",
         "New-ValentiaCredential", 
-        "Get-ValentiaCredential",
-        "Set-ValentiaLocation", 
-        "Invoke-ValentiaClean",
+        "New-ValentiaGroup",
         "New-ValentiaFolder",
-        "Initialize-valentiaEnvironment",
-        "Get-ValentiaModuleReload", 
         "Set-ValentiaHostName",
-        "Get-ValentiaRebootRequiredStatus"
+        "Set-ValentiaLocation", 
+        "Show-ValentiaConfig",
+        "Show-ValentiaGroup"
 )
 
 $script:variableToExport = "valentia"
