@@ -226,19 +226,19 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
                     $ScriptToRun = '$NewList | Start-BitsTransfer -Credential $Credential -Async -ErrorAction stop'
 
                     # Run Start-BitsTransfer retrieving files from List csv with Async switch
-                    Write-Warning ("Running Async uploadL to {0}" -f $DeployMember)
+                    Write-Warning ("Running Async uploadL to '{0}'" -f $DeployMember)
                     $BitsJob = $NewList | Start-BitsTransfer -Credential $Credential -Async -ErrorAction stop
 
                     # Monitoring Bits Transfer States complete
                     $Sleepms = 10
                     while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
                     {
-                        Write-Warning ("Current Job States was {0}, waiting for {1} ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
+                        Write-Warning ("Current Job States was '{0}', waiting for '{1}' ms '{2}'" -f "$((Get-BitsTransfer).JobState | sort -Unique)", $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
                         sleep -Milliseconds $Sleepms
                     }
 
                     # Send Complete message to make file from ****.Tmp
-                    Write-Warning ("Completing Async uploadL to {0}" -f $DeployMember)
+                    Write-Warning ("Completing Async uploadL to '{0}'" -f $DeployMember)
                     # Retrieve all files when completed
                     Get-BitsTransfer | Complete-BitsTransfer
 
