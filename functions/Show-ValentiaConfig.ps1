@@ -15,7 +15,7 @@
             mandatory = 0,
             position = 0)]
         [string]
-        $configName = (Join-Path $valentia.modulePath $valentia.defaultconfigurationfile),
+        $configPath = (Join-Path $valentia.modulePath $valentia.defaultconfigurationfile),
 
         [parameter(
             mandatory = 0,
@@ -25,13 +25,13 @@
         $encoding = "default"
     )
 
-    if (Test-Path $configName)
+    if (Test-Path $configPath)
     {
-        Get-Content -Path $configName -Encoding $encoding
+        Get-Content -Path $configPath -Encoding $encoding
     }
     else
     {
-        Write-Verbose ("Could not found configuration file '{0}'.")
+        Write-Verbose ("Could not found configuration file '{0}'." -f $configPath)
     }
 
 }
