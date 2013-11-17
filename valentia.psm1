@@ -226,38 +226,38 @@ ConvertFrom-StringData @'
 #-- Private Loading Module Parameters --#
 
 # contains default base configuration, may not be override without version update.
-$Script:valentia = @{}
-$valentia.name = "valentia" # contains the Name of Module
-$valentia.modulePath = Split-Path -parent $MyInvocation.MyCommand.Definition
-$valentia.helpersPath = "\functions\*.ps1"
-$valentia.defaultconfigurationfile = "valentia-config.ps1" # default configuration file name within valentia.psm1
-$valentia.supportWindows = @(6,1) # higher than windows 7 or windows 2008 R2
-$valentia.context = New-Object System.Collections.Stack # holds onto the current state of all variables
+$Script:valentia                        = @{}
+$valentia.name                          = "valentia"                          # contains the Name of Module
+$valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
+$valentia.helpersPath                   = "\functions\*.ps1"
+$valentia.defaultconfigurationfile      = "valentia-config.ps1"               # default configuration file name within valentia.psm1
+$valentia.supportWindows                = @(6,1)                              # higher than windows 7 or windows 2008 R2
+$valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
 
 $valentia.originalErrorActionPreference = $ErrorActionPreference
-$valentia.errorPreference = "Stop"
-$valentia.originalDebugPreference = $DebugPreference
-$valentia.debugPreference = "SilentlyContinue"
+$valentia.errorPreference               = "Stop"
+$valentia.originalDebugPreference       = $DebugPreference
+$valentia.debugPreference               = "SilentlyContinue"
 
 #-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
 
 # contains context for default.
 $valentia.context.push(
     @{
-        executedTasks = New-Object System.Collections.Stack;
-        callStack = New-Object System.Collections.Stack;
-        originalEnvPath = $env:Path;
-        originalDirectory = Get-Location;
-        originalErrorActionPreference = $valentia.originalErrorActionPreference;
-        ErrorActionPreference = $valentia.errorPreference;
-        originalDebugPreference = $valentia.originalDebugPreference
-        debugPreference = $valentia.debugPreference
-        name = $valentia.name
-        modulePath = $valentia.modulePath
-        helpersPath = Join-Path $valentia.modulePath $valentia.helpersPath
-        supportWindows = $valentia.supportWindows
-        tasks = @{}
-        includes = New-Object System.Collections.Queue;
+        executedTasks                   = New-Object System.Collections.Stack;
+        callStack                       = New-Object System.Collections.Stack;
+        originalEnvPath                 = $env:Path;
+        originalDirectory               = Get-Location;
+        originalErrorActionPreference   = $valentia.originalErrorActionPreference;
+        ErrorActionPreference           = $valentia.errorPreference;
+        originalDebugPreference         = $valentia.originalDebugPreference;
+        debugPreference                 = $valentia.debugPreference;
+        name                            = $valentia.name;
+        modulePath                      = $valentia.modulePath;
+        helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
+        supportWindows                  = $valentia.supportWindows;
+        tasks                           = @{};
+        includes                        = New-Object System.Collections.Queue;
     }
 )
 
@@ -266,99 +266,108 @@ $valentia.context.push(
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.config_default = New-Object PSObject -property @{
-    TaskFileName = "default.ps1";
-    TaskFileDir = $valentia.BranchFolder.Application;
-    taskNameFormat = "Executing {0}";
-    verboseError = $false;
-    modules = $null;
+    TaskFileName                        = "default.ps1";
+    TaskFileDir                         = $valentia.BranchFolder.Application;
+    taskNameFormat                      = "Executing {0}";
+    verboseError                        = $false;
+    modules                             = $null;
 }
 
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
 $valentia.poolSize = New-Object psobject -property @{
-    minPoolSize = 50
-    maxPoolSize = 50
+    minPoolSize                         = 50;
+    maxPoolSize                         = 50;
 }
 
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.users = New-Object psobject -property @{
-    deployUser = "deployment"
+    deployUser                          = "deployment";
 }
-$valentia.group = "Administrators"
+$valentia.group                         = "Administrators"
 
 # contains valentia configuration Information
-$valentia.PSDrive = "V:" # Set Valentia Mapping Drive with SMBMapping
-$valentia.deployextension = ".ps1" # contains default DeployGroup file extension
-$valentia.wsmanSessionlimit = 22 # Set PSRemoting WSman limit prvention threshold
+$valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
+$valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
+$valentia.wsmanSessionlimit             = 22 ;              # Set PSRemoting WSman limit prvention threshold
 
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
-    hostName = "web"
-    ipstring = "ip"
+    hostName                            = "web";
+    ipstring                            = "ip";
 }
 
 # Define External program path
 $valentia.fastcopy = New-Object psobject -property @{
-    folder = "C:\Program Files\FastCopy"
-    exe = "FastCopy.exe"
+    folder                              = "C:\Program Files\FastCopy";
+    exe                                 = "FastCopy.exe";
 }
 
 # contains default Path configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.RootPath = "C:\Deployment"
+$valentia.RootPath                      = "C:\Deployment"
 $valentia.BranchFolder = New-Object psobject -property @{
-    Application = "Application"
-    Bin = "Bin"
-    Deploygroup = "DeployGroup"
-    Download = "Download"
-    Maintenance = "Maintenance"
-    Upload = "Upload"
-    Utils = "Utils"
+    Application                         = "Application";
+    Bin                                 = "Bin";
+    Deploygroup                         = "DeployGroup";
+    Download                            = "Download";
+    Maintenance                         = "Maintenance";
+    Upload                              = "Upload";
+    Utils                               = "Utils";
 }
 
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
-    path = "C:\Logs\Deployment"
-    name = "deploy"
-    extension = ".log"
+    path                                = "C:\Logs\Deployment";
+    name                                = "deploy";
+    extension                           = ".log";
+}
+
+# Set Valentia prompt for choice messages
+$valentia.promptForChoice = New-Object psobject -property @{
+    title                               = "Select from prompt choice";
+    questionHelps                       = @("Yes", "No");
+    message                             = "Type index you want to choose.";
+    additionalMessage                   = $null;
+    defaultIndex                        = 0;
 }
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.config_default = New-Object PSObject -property @{
-    TaskFileName = "default.ps1";
-    TaskFileDir = $valentia.BranchFolder.Application;
-    taskNameFormat = "Executing {0}";
-    verboseError = $false;
-    modules = $null;
-    PSDrive = $valentia.PSDrive;
-    deployextension = $valentia.deployextension;
-    wsmanSessionlimit = $valentia.wsmanSessionlimit;
-    prefix = $valentia.prefix;
-    fastcopy = $valentia.fastcopy;
-    RootPath = $valentia.RootPath;
-    BranchFolder = $valentia.BranchFolder;
-    log = $valentia.log;
+$valentia.config_default                = New-Object PSObject -property @{
+    TaskFileName                        = "default.ps1";
+    TaskFileDir                         = $valentia.BranchFolder.Application;
+    taskNameFormat                      = "Executing {0}";
+    verboseError                        = $false;
+    modules                             = $null;
+    PSDrive                             = $valentia.PSDrive;
+    deployextension                     = $valentia.deployextension;
+    wsmanSessionlimit                   = $valentia.wsmanSessionlimit;
+    prefix                              = $valentia.prefix;
+    fastcopy                            = $valentia.fastcopy;
+    RootPath                            = $valentia.RootPath;
+    BranchFolder                        = $valentia.BranchFolder;
+    log                                 = $valentia.log;
 }
 
 #-- Set Alias for public valentia commands --#
 
 Write-Verbose "Set Alias for valentia Cmdlets."
 
-New-Alias -Name Task -Value Get-ValentiaTask
-New-Alias -Name Valep -Value Invoke-ValentiaParallel
-New-Alias -Name Vale -Value Invoke-Valentia
-New-Alias -Name Valea -Value Invoke-ValentiaAsync
-New-Alias -Name Upload -Value Invoke-ValentiaUpload
-New-Alias -Name UploadL -Value Invoke-ValentiaUploadList
-New-Alias -Name Sync -Value Invoke-ValentiaSync
-New-Alias -Name Download -Value Invoke-ValentiaDownload
-New-Alias -Name Go -Value Set-ValentiaLocation
-New-Alias -Name Clean -Value Invoke-ValentiaClean
-New-Alias -Name Reload -Value Get-ValentiaModuleReload
-New-Alias -Name Target -Value Get-ValentiaGroup
-New-Alias -Name ipremark -Value Invoke-valentiaDeployGroupRemark
+New-Alias -Name Task       -Value Get-ValentiaTask
+New-Alias -Name Valep      -Value Invoke-ValentiaParallel
+New-Alias -Name Vale       -Value Invoke-Valentia
+New-Alias -Name Valea      -Value Invoke-ValentiaAsync
+New-Alias -Name Upload     -Value Invoke-ValentiaUpload
+New-Alias -Name UploadL    -Value Invoke-ValentiaUploadList
+New-Alias -Name Sync       -Value Invoke-ValentiaSync
+New-Alias -Name Download   -Value Invoke-ValentiaDownload
+New-Alias -Name Go         -Value Set-ValentiaLocation
+New-Alias -Name Clean      -Value Invoke-ValentiaClean
+New-Alias -Name Reload     -Value Get-ValentiaModuleReload
+New-Alias -Name Target     -Value Get-ValentiaGroup
+New-Alias -Name ipremark   -Value Invoke-valentiaDeployGroupRemark
 New-Alias -Name ipunremark -Value Invoke-valentiaDeployGroupUnremark
-New-Alias -Name Cred -Value Get-ValentiaCredential
-New-Alias -Name Rename -Value Set-ValentiaHostName
-New-Alias -Name Initial -Value Initialize-valentiaEnvironment
+New-Alias -Name Cred       -Value Get-ValentiaCredential
+New-Alias -Name Rename     -Value Set-ValentiaHostName
+New-Alias -Name Initial    -Value Initialize-valentiaEnvironment
 
 
 # -- Export Modules when loading this module -- #
@@ -372,11 +381,6 @@ Resolve-Path (Join-Path $valentia.modulePath $valentia.helpersPath) |
 
 Import-ValentiaModules
 Import-ValentiaConfigration
-
-#-- Loading external module files --#
-
-Write-Verbose "Loading external modules for valentia."
-# . $PSScriptRoot\*.ps1
 
 #-- Export Modules when loading this module --#
 
