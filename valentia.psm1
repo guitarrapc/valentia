@@ -363,7 +363,6 @@ New-Alias -Name Sync       -Value Invoke-ValentiaSync
 New-Alias -Name Download   -Value Invoke-ValentiaDownload
 New-Alias -Name Go         -Value Set-ValentiaLocation
 New-Alias -Name Clean      -Value Invoke-ValentiaClean
-New-Alias -Name Reload     -Value Get-ValentiaModuleReload
 New-Alias -Name Target     -Value Get-ValentiaGroup
 New-Alias -Name ipremark   -Value Invoke-valentiaDeployGroupRemark
 New-Alias -Name ipunremark -Value Invoke-valentiaDeployGroupUnremark

@@ -9,7 +9,6 @@ $script:functionToExport = @(
         "Edit-ValentiaConfig",
         "Get-ValentiaCredential",
         "Get-ValentiaGroup", 
-        "Get-ValentiaModuleReload", 
         "Get-ValentiaRebootRequiredStatus",
         "Get-ValentiaTask", 
         "Initialize-ValentiaEnvironment",
