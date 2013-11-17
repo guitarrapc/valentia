@@ -77,11 +77,11 @@ read production-hoge.ps1 from c:\test.
             else
             {
                 $errorDetail = [PSCustomObject]@{
-                    ErrorMessageDetail = ("DeployGroup [ {0} ] not found exception!!" -f $DeployGroup)
+                    WarningMessageDetail = ("DeployGroup '{0}' not found in DeployFolder path '{1}'." -f $DeployGroup, $DeployFolder)
                     SuccessStatus = $false
                 }
             
-                Write-Error $errorDetail.ErrorMessageDetail
+                Write-Warning $errorDetail.WarningMessageDetail
             }
 
         }
@@ -91,7 +91,14 @@ read production-hoge.ps1 from c:\test.
         }
         else
         {
-            throw ('"$DeployGroups" was null or empty or could not resolve connection. deploygroups : {0}' -f $DeployGroups)
+            if ([string]::IsNullOrWhiteSpace($DeployGroups))
+            {
+                throw ("DeployGroups '{0}' was white space. Cancel execution." -f $DeployGroups)
+            }
+            else
+            {
+                throw ("Could not resolve connection with DeployGroups '{0}'. Cancel execution." -f $DeployGroups)
+            }
         }
     }
     
