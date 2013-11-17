@@ -3,7 +3,7 @@
 #-- Running prerequisite Initialize OS Setting Module Functions --#
 
 # Initial
-function Initialize-valentiaEnvironment
+function Initialize-ValentiaEnvironment
 {
 
 <#

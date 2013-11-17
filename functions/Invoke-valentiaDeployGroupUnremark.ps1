@@ -44,7 +44,14 @@ replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^
             position = 1,
             mandatory = 0)]
         [switch]
-        $overWrite
+        $overWrite,
+
+        [parameter(
+            position = 2,
+            mandatory = 0)]
+        [ValidateSet("Ascii", "BigEndianUnicode", "Byte", "Default","Oem", "String", "Unicode", "Unknown", "UTF32", "UTF7", "UTF8")]
+        [string]
+        $encoding = $valentia.fileEncode
     )
 
     Get-ChildItem -Path (Join-Path $valentia.RootPath $valentia.BranchFolder.Deploygroup) -Recurse `
@@ -54,11 +61,11 @@ replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^
             {
                 if ($overWrite)
                 {
-                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -overWrite -Verbose
+                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding -overWrite -Verbose
                 }
                 else
                 {
-                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -Verbose
+                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding -Verbose
                 }
             }
         }

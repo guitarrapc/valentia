@@ -232,6 +232,7 @@ $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCom
 $valentia.helpersPath                   = "\functions\*.ps1"
 $valentia.defaultconfigurationfile      = "valentia-config.ps1"               # default configuration file name within valentia.psm1
 $valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
+$valentia.fileEncode                    = "utf8"
 $valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
 
 $valentia.originalErrorActionPreference = $ErrorActionPreference
@@ -256,6 +257,7 @@ $valentia.context.push(
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
         supportWindows                  = $valentia.supportWindows;
+        fileEncode                      = $valentia.fileEncode
         tasks                           = @{};
         includes                        = New-Object System.Collections.Queue;
     }

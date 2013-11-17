@@ -323,7 +323,7 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         [PSCustomObject]$CommandResult
 
         # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048
+        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048
 
 
         # Cleanup valentia Environment

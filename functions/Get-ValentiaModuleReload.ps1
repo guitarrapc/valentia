@@ -24,7 +24,7 @@ function Get-ValentiaModuleReload
 
     
     # '[v]alentia' is the same as 'valentia' but $Error is not polluted
-    Remove-Module [v]alentia
-    Import-Module (Join-Path $scriptPath valentia.psm1)
+    Remove-Module [v]alentia -Force
+    Import-Module (Join-Path $scriptPath valentia.psm1) -Force -Verbose
 
 }

@@ -70,8 +70,8 @@ read production-hoge.ps1 from c:\test.
             {
                 # Obtain IP only by selecting leter start from decimal
                 Write-Verbose ("Read DeployGroupPath {0} where letter not contain # inline." -f $DeployGroupPath)
-                Write-Verbose 'code : Select-String -path $DeployGroupPath -Pattern "".*#.*"" -notmatch -Encoding utf8 | Select-String -Pattern ""\w"" -Encoding utf8 | select -ExpandProperty line'
-                $Readlines = Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding utf8 | Select-String -Pattern "\w" -Encoding utf8 | select -ExpandProperty line
+                Write-Verbose 'code : Select-String -path $DeployGroupPath -Pattern "".*#.*"" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern ""\w"" -Encoding utf8 | select -ExpandProperty line'
+                $Readlines = Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern "\w" -Encoding $valentia.fileEncode | select -ExpandProperty line
                 return $Readlines
             }
             else

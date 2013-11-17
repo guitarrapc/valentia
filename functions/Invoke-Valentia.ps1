@@ -408,7 +408,7 @@ You can prepare script file to run, and specify path.
         }
 
         # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048
+        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean
