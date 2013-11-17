@@ -77,11 +77,11 @@ read production-hoge.ps1 from c:\test.
             else
             {
                 $errorDetail = [PSCustomObject]@{
-                    WarningMessageDetail = ("DeployGroup '{0}' not found in DeployFolder path '{1}'." -f $DeployGroup, $DeployFolder)
+                    ErrorMessageDetail = ("DeployGroup '{0}' not found in DeployFolder path '{1}'." -f $DeployGroup, $DeployFolder)
                     SuccessStatus = $false
                 }
             
-                Write-Warning $errorDetail.WarningMessageDetail
+                throw $errorDetail.ErrorMessageDetail
             }
 
         }
