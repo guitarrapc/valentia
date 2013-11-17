@@ -5,6 +5,7 @@ $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
 
 $script:functionToExport = @(
+        "ConvertTo-ValentiaTask",
         "Edit-ValentiaConfig",
         "Get-ValentiaCredential",
         "Get-ValentiaGroup", 
