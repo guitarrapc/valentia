@@ -66,8 +66,21 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
 
 
     begin
-    {       
-        function Get-WhatifConfirm{
+    {
+        function Get-Force
+        {
+            if($WhatIf)
+            {
+                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -WhatIf -Force
+            }
+            else
+            {
+                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Force
+            }
+        }
+
+        function Get-WhatifConfirm
+        {
             if($WhatIf)
             {
                 $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif -Confirm
@@ -78,7 +91,8 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
             }
         }
 
-        function Get-Whatif{
+        function Get-Whatif
+        {
             if($WhatIf)
             {
                 $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif
@@ -98,7 +112,7 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
             }
             else
             {
-                $DeployPath = Join-Path $DeployGroupsFolder $FileName -Resolve -ErrorAction Stop
+                $DeployPath = Join-Path $DeployGroupsFolder $FileName -ErrorAction Stop
             }
         }
         catch
@@ -109,7 +123,11 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
 
     process
     {
-        if($Confirm)
+        if ($force)
+        {
+            Get-Force
+        }
+        if ($Confirm)
         {
             Get-WhatifConfirm
         }
