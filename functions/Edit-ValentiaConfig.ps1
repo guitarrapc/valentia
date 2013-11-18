@@ -28,11 +28,11 @@
     {
         if ($NoProfile)
         {
-            PowerShell_ise.exe -File $configPath
+            PowerShell_ise.exe -File $configPath -NoProfile
         }
         else
         {
-            PowerShell_ise.exe $configPath
+            PowerShell_ise.exe -File $configPath
         }
     }
     else
