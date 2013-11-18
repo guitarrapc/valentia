@@ -3,6 +3,7 @@ $script:moduleVersion = "0.3.3"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
+$script:clrVersion = "4.0.30319.1008" # .NET4.0 (.NET4.5 = "4.0.30319.17929")
 
 $script:functionToExport = @(
         "Edit-ValentiaConfig",
@@ -60,7 +61,7 @@ $script:moduleManufest = @{
     Description = $description
     PowerShellVersion = "3.0";
     DotNetFrameworkVersion = "4.0";
-    ClrVersion = "4.0.30319.17929";
+    ClrVersion = $clrVersion;
     RequiredModules = $RequiredModules;
     RootModule = "$module.psm1";
     CmdletsToExport = "*";
