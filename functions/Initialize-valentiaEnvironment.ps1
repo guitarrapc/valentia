@@ -164,8 +164,15 @@ read production-hoge.ps1 from c:\test.
         New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985
 
         # Set FireWall Status from Public to Private (not use for a while with EC2 on AWS)
-        Write-Verbose "Command : Set-NetConnectionProfile -NetworkCategory Private"
-        Set-NetConnectionProfile -NetworkCategory Private
+        if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.2.0.0))
+        {
+            Write-Verbose "Command : Set-NetConnectionProfile -NetworkCategory Private"
+            Set-NetConnectionProfile -NetworkCategory Private
+        }
+        else
+        {
+            Write-Warning "Your computer detected as lowere than 'Windows 8' or 'Windows Server 2012'. Skip setting Firewall rule"
+        }
 
         # Disable Enhanced Security for Internet Explorer
         Write-Verbose "Command : Disable-ValentiaEnhancedIESecutiry"
