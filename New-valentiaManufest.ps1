@@ -3,7 +3,7 @@ $script:moduleVersion = "0.3.3"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
-$script:clrVersion = "4.0.30319.1008" # .NET4.0 (.NET4.5 = "4.0.30319.17929")
+$script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1008" or "4.0.30319.1" , "4.0.30319.17929" (Win8/2012)
 
 $script:functionToExport = @(
         "ConvertTo-ValentiaTask",
