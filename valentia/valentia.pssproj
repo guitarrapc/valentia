@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>6CAFC0C6-A428-4d30-A9F9-700E829FEA51</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>
+    <Name>valentia</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="functions\ConvertTo-ValentiaTask.ps1" />
+    <Compile Include="functions\Disable-ValentiaEnhancedIESecutiry.ps1" />
+    <Compile Include="functions\Edit-ValentiaConfig.ps1" />
+    <Compile Include="functions\Enable-WsManTrustedHosts.ps1" />
+    <Compile Include="functions\Get-ValentiaCredential.ps1" />
+    <Compile Include="functions\Get-ValentiaGroup.ps1" />
+    <Compile Include="functions\Get-ValentiaRebootRequiredStatus.ps1" />
+    <Compile Include="functions\Get-ValentiaTask.ps1" />
+    <Compile Include="functions\Initialize-valentiaEnvironment.ps1" />
+    <Compile Include="functions\Invoke-Valentia.ps1" />
+    <Compile Include="functions\Invoke-ValentiaAsync.ps1" />
+    <Compile Include="functions\Invoke-ValentiaAsyncCommand.ps1" />
+    <Compile Include="functions\Invoke-ValentiaClean.ps1" />
+    <Compile Include="functions\Invoke-ValentiaCommand.ps1" />
+    <Compile Include="functions\Invoke-ValentiaCommandParallel.ps1" />
+    <Compile Include="functions\Invoke-valentiaDeployGroupRemark.ps1" />
+    <Compile Include="functions\Invoke-valentiaDeployGroupUnremark.ps1" />
+    <Compile Include="functions\Invoke-ValentiaDownload.ps1" />
+    <Compile Include="functions\Invoke-ValentiaParallel.ps1" />
+    <Compile Include="functions\Invoke-ValentiaSed.ps1" />
+    <Compile Include="functions\Invoke-ValentiaSync.ps1" />
+    <Compile Include="functions\Invoke-ValentiaUpload.ps1" />
+    <Compile Include="functions\Invoke-ValentiaUploadList.ps1" />
+    <Compile Include="functions\New-ValentiaCredential.ps1" />
+    <Compile Include="functions\New-ValentiaFolder.ps1" />
+    <Compile Include="functions\New-ValentiaGroup.ps1" />
+    <Compile Include="functions\New-ValentiaLog.ps1" />
+    <Compile Include="functions\New-ValentiaOSUser.ps1" />
+    <Compile Include="functions\New-ValentiaPSRemotingFirewallRule.ps1" />
+    <Compile Include="functions\New-ValentiaRunSpacePool.ps1" />
+    <Compile Include="functions\readme.md" />
+    <Compile Include="functions\Receive-ValentiaAsyncResults.ps1" />
+    <Compile Include="functions\Receive-ValentiaAsyncStatus.ps1" />
+    <Compile Include="functions\Set-ValentiaHostName.ps1" />
+    <Compile Include="functions\Set-WsManMaxShellsPerUser.ps1" />
+    <Compile Include="functions\Show-ValentiaConfig.ps1" />
+    <Compile Include="functions\Show-ValentiaGroup.ps1" />
+    <Compile Include="functions\Show-ValentiaPromptForChoice.ps1" />
+    <Compile Include="functions\Test-ValentiaPowerShellElevated.ps1" />
+    <Compile Include="functions\Set-ValentiaLocation.ps1" />
+    <Compile Include="example\readme.md" />
+    <Compile Include="example\Deployment\Application\task-GetProcess.bat" />
+    <Compile Include="example\Deployment\Application\task-GetProcess.ps1" />
+    <Compile Include="example\Deployment\Application\Task-InstallChocolatey.ps1" />
+    <Compile Include="example\Deployment\Deploygroup\localhost.ps1" />
+    <Compile Include="example\Deployment\Upload\test.csv" />
+    <Compile Include="example\Deployment\Upload\test.txt" />
+    <Compile Include="valentia-Help\valentia.psm1.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="example\" />
+    <Folder Include="example\Deployment\" />
+    <Folder Include="example\Deployment\Application\" />
+    <Folder Include="example\Deployment\Deploygroup\" />
+    <Folder Include="example\Deployment\Upload\" />
+    <Folder Include="functions\" />
+    <Folder Include="valentia-Help\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="example\Deployment\Application\task-GetProcess.bat" />
+    <Content Include="example\Deployment\Application\task-GetProcess.ps1" />
+    <Content Include="example\Deployment\Application\Task-InstallChocolatey.ps1" />
+    <Content Include="example\Deployment\Deploygroup\localhost.ps1" />
+    <Content Include="example\Deployment\Upload\test.csv" />
+    <Content Include="example\Deployment\Upload\test.txt" />
+    <Content Include="example\readme.md" />
+    <Content Include="install.bat" />
+    <Content Include="install.ps1" />
+    <Content Include="LICENSE" />
+    <Content Include="New-valentiaManufest.ps1" />
+    <Content Include="README.md" />
+    <Content Include="Readme_J.md" />
+    <Content Include="valentia-config.ps1" />
+    <Content Include="valentia.psd1" />
+    <Content Include="valentia.psm1" />
+    <Content Include="VersionHistory.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>
