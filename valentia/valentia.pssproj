@@ -77,6 +77,7 @@
     <Compile Include="valentia-Help\valentia.psm1.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="config\" />
     <Folder Include="example\" />
     <Folder Include="example\Deployment\" />
     <Folder Include="example\Deployment\Application\" />
@@ -86,6 +87,7 @@
     <Folder Include="valentia-Help\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\valentia-config.ps1" />
     <Content Include="example\Deployment\Application\task-GetProcess.bat" />
     <Content Include="example\Deployment\Application\task-GetProcess.ps1" />
     <Content Include="example\Deployment\Application\Task-InstallChocolatey.ps1" />
@@ -93,16 +95,12 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Get-ValentiaFileEncoding.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
-    <Content Include="LICENSE" />
     <Content Include="New-valentiaManufest.ps1" />
-    <Content Include="README.md" />
-    <Content Include="Readme_J.md" />
-    <Content Include="valentia-config.ps1" />
     <Content Include="valentia.psd1" />
     <Content Include="valentia.psm1" />
-    <Content Include="VersionHistory.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

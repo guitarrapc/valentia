@@ -9,6 +9,7 @@ $script:functionToExport = @(
         "ConvertTo-ValentiaTask",
         "Edit-ValentiaConfig",
         "Get-ValentiaCredential",
+		"Get-ValentiaFileEncoding",
         "Get-ValentiaGroup", 
         "Get-ValentiaRebootRequiredStatus",
         "Get-ValentiaTask", 
