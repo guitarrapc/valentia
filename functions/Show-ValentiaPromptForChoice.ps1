@@ -1,5 +1,30 @@
 ﻿function Show-ValentiaPromptForChoice
 {
+<#
+
+.SYNOPSIS 
+Show valentia Prompt For Choice description and will return item you passed.
+
+.DESCRIPTION
+You can show choice Description with your favored items.
+
+.NOTES
+Author: guitarrapc
+Created: 17/Nov/2013
+
+.EXAMPLE
+Show-ValentiaPromptForChoice
+--------------------------------------------
+default will use what you have written in valentia-config.ps1
+
+.EXAMPLE
+Show-ValentiaPromptForChoice -questionHelps $(Show-ValentiaGroup | where {$_.Directory.Fullname -eq (Join-Path $valentia.RootPath $valentia.BranchFolder.Deploygroup)}).Name 
+--------------------------------------------
+Will check valentia deploy folder and get deploygroup files.
+You can see choice description for each deploygroup file, and will get which item was selected.
+
+#>
+
     [CmdletBinding()]
     param
     (
@@ -54,7 +79,7 @@
         # create choice description from dictionary
         foreach ($dict in $dictionary.GetEnumerator())
         {
-            $q = "&{0} : {1}" -f $dict.Key, $dict.Value
+            $private:q = "&{0} : {1}" -f $dict.Key, $dict.Value
             $descriptions.Add((New-Object $CollectionType $q))
         }
 

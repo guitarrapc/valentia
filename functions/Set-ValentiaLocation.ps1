@@ -49,8 +49,7 @@ change location to BranchPath c:\deployment\application (in default)
             "Download",
             "Maintenance",
             "Upload",
-            "Utils"
-        )]
+            "Utils")]
         [string]
         $BranchPath
     )

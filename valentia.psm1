@@ -231,7 +231,8 @@ $valentia.name                          = "valentia"                          # 
 $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
 $valentia.helpersPath                   = "\functions\*.ps1"
 $valentia.defaultconfigurationfile      = "valentia-config.ps1"               # default configuration file name within valentia.psm1
-$valentia.supportWindows                = @(6,1)                              # higher than windows 7 or windows 2008 R2
+$valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
+$valentia.fileEncode                    = "utf8"
 $valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
 
 $valentia.originalErrorActionPreference = $ErrorActionPreference
@@ -256,6 +257,7 @@ $valentia.context.push(
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
         supportWindows                  = $valentia.supportWindows;
+        fileEncode                      = $valentia.fileEncode
         tasks                           = @{};
         includes                        = New-Object System.Collections.Queue;
     }
@@ -361,7 +363,6 @@ New-Alias -Name Sync       -Value Invoke-ValentiaSync
 New-Alias -Name Download   -Value Invoke-ValentiaDownload
 New-Alias -Name Go         -Value Set-ValentiaLocation
 New-Alias -Name Clean      -Value Invoke-ValentiaClean
-New-Alias -Name Reload     -Value Get-ValentiaModuleReload
 New-Alias -Name Target     -Value Get-ValentiaGroup
 New-Alias -Name ipremark   -Value Invoke-valentiaDeployGroupRemark
 New-Alias -Name ipunremark -Value Invoke-valentiaDeployGroupUnremark

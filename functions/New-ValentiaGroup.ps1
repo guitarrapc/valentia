@@ -70,22 +70,22 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
         function Get-WhatifConfirm{
             if($WhatIf)
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding utf8 -Whatif -Confirm
+                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif -Confirm
             }
             else
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding utf8 -Confirm
+                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Confirm
             }
         }
 
         function Get-Whatif{
             if($WhatIf)
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding utf8 -Whatif
+                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif
             }
             else
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding utf8
+                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode
             }
         }
 

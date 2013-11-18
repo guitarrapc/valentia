@@ -6,10 +6,10 @@ $script:RequiredModules = @()
 $script:clrVersion = "4.0.30319.1008" # .NET4.0 (.NET4.5 = "4.0.30319.17929")
 
 $script:functionToExport = @(
+        "ConvertTo-ValentiaTask",
         "Edit-ValentiaConfig",
         "Get-ValentiaCredential",
         "Get-ValentiaGroup", 
-        "Get-ValentiaModuleReload", 
         "Get-ValentiaRebootRequiredStatus",
         "Get-ValentiaTask", 
         "Initialize-ValentiaEnvironment",

@@ -47,16 +47,16 @@ Disable IEEnhanced security.
     $osversion = [Environment]::OSVersion.Version
 
     # Higher than $valentia.supportWindows
-    $minimumversion = (New-Object 'Version' $valentia.supportWindows)
+    $minimumversion = New-Object 'Version' $valentia.supportWindows
 
     # check osversion higher than valentia support version
     if ($osversion -ge $minimumversion)
     {
         if (Test-Path $AdminKey)
         {
-            if ((Get-ItemProperty -Path $AdminKey -Name “IsInstalled”).IsInstalled -eq "1")
+            if ((Get-ItemProperty -Path $AdminKey -Name "IsInstalled").IsInstalled -eq "1")
             {
-                Set-ItemProperty -Path $AdminKey -Name “IsInstalled” -Value 0
+                Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
                 $IsstatusChanged = $true
             }
             else
@@ -67,9 +67,9 @@ Disable IEEnhanced security.
 
         if (Test-Path $UserKey)
         {
-            if ((Get-ItemProperty -Path $UserKey -Name “IsInstalled”).IsInstalled -eq "1")
+            if ((Get-ItemProperty -Path $UserKey -Name "IsInstalled").IsInstalled -eq "1")
             {
-                Set-ItemProperty -Path $UserKey -Name “IsInstalled” -Value 0
+                Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
                 $IsstatusChanged = $true
             }
             else
@@ -84,7 +84,7 @@ Disable IEEnhanced security.
 
             # Stop Internet Exploer if launch
             Write-Verbose "Checking iexplore process status and trying to kill if exist"
-            Get-Process | where Name -eq "iexplore" | Stop-Process
+            Get-Process | where Name -eq "iexplore" | Stop-Process -Confirm
         }
         else
         {
@@ -93,6 +93,9 @@ Disable IEEnhanced security.
     }
     else
     {
-        Write-Warning -Message ("OS Name:{0}, Version:{1}, invalid as '{1}' version lower than '{2}'" -f (Get-WmiObject -class Win32_OperatingSystem).Caption, [Environment]::OSVersion.Version, $minimumversion)
+        Write-Warning -Message ("Your Operating System '{0}', Version:'{1}' was lower than valentia supported version '{2}'." -f `
+            (Get-CimInstance -class Win32_OperatingSystem).Caption,
+            $osversion,
+            $minimumversion)
     }
 }

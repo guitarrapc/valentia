@@ -329,7 +329,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
         [PSCustomObject]$CommandResult
 
         # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding utf8 -Force -Width 1048 -Append
+        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048 -Append
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean
