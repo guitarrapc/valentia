@@ -15,6 +15,7 @@ $valentia.context.push(
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
         supportWindows                  = $valentia.supportWindows;
+        fileEncode                      = $valentia.fileEncode
         tasks                           = @{};
         includes                        = New-Object System.Collections.Queue;
     }
