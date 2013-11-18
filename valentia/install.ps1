@@ -1,104 +1,91 @@
 ﻿#Requires -Version 2.0
 
 [CmdletBinding()]
-Param
-(
+Param(
     [Parameter(
         Position = 0,
-        Mandatory = 0)]
+        Mandatory = 0,
+        ValueFromPipeline,
+        ValueFromPipelineByPropertyName)]
 
     [string]
     $path = $(Split-Path $PSCommandPath -Parent),
 
     [Parameter(
         Position = 1,
-        Mandatory = 0)]
+        Mandatory = 0,
+        ValueFromPipeline,
+        ValueFromPipelineByPropertyName)]
 
     [string]
     $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))})
 )
 
-Function Get-OperatingSystemVersion
-{
-    [System.Environment]::OSVersion.Version
+Function Get-OperatingSystemVersion{
+    (Get-WmiObject -Class Win32_OperatingSystem).Version
 }
 
-Function Test-ModulePath
-{
+Function Test-ModulePath{
 
     [CmdletBinding()]
-    param
-    (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $modulepath        
+    param(
+    [Parameter(
+        Position = 0,
+        Mandatory = 1,
+        ValueFromPipeline,
+        ValueFromPipelineByPropertyName)]
+    [string]
+    $modulepath        
     )
  
     Write-Verbose "Checking Module Home."
-    if ((Get-OperatingSystemVersion) -ge 6.1)
+    if ([int](Get-OperatingSystemVersion).substring(0,1) -ge 6) 
     {
-        Write-Verbose "Your operating system is later then Windows 7 / Windows Server 2008 R2. Continue evaluation."
-        return Test-Path -Path $modulepath
+        Write-Verbose "Your operating system is later then Windows 8 / Windows Server 2012. Continue evaluation."
+        return Test-Path -path $modulepath
     }
 }
 
 Function New-ModulePath{
 
     [CmdletBinding()]
-    param
-    (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $modulepath
+    param(
+    [Parameter(
+        Position = 0,
+        Mandatory = 1,
+        ValueFromPipeline,
+        ValueFromPipelineByPropertyName)]
+    [string]
+    $modulepath
     )
 
-    if ((Get-OperatingSystemVersion) -ge 6.1)
+    if ([int](Get-OperatingSystemVersion).substring(0,1) -ge 6) 
     {         
         Write-Verbose "Creating Module Home at $modulepath"
-        New-Item -Path $modulepath -ItemType directory > $null
+        New-Item -Path $modulepath -itemtype directory > $null
         Write-Verbose "$modulepath already exist. Escape from creating module Directory."
     }
 }
 
-Function Get-ModuleName{
 
+Function Copy-Module{
+    
     [CmdletBinding()]
-    param
-    (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $path
-    )
-
-    if (Test-Path $path)
-    {
-        $moduleName = ((Get-ChildItem $path | where {$_.Extension -eq ".psm1"})).BaseName
-        return $moduleName
-    }
-}
-
-
-Function Copy-Module
-{
-    [CmdletBinding()]
-    param
-    (
+    param(
         [parameter(
             mandatory,
-            position = 0)]
+            position = 0,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName)]
         [validateScript({Test-Path $_})]
         [string]
         $path,
 
         [parameter(
             mandatory,
-            position = 1)]
+            position = 1,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName)]
         [validateScript({(Get-Item $_).PSIsContainer -eq $true})]
         [string]
         $destination
@@ -108,8 +95,7 @@ Function Copy-Module
     {
         $rootpath = Get-Item $path
         
-        Get-ChildItem -Path $path `
-        | %{
+        Get-ChildItem -Path $path -File -Recurse | %{
 
             # Define target directory path for each directory
             if ($_.Directory.Name -ne $rootpath.Name)
@@ -136,10 +122,13 @@ Function Copy-Module
             # Copy Items to target directory
             try
             {
-                $script:dpath = Join-Path $ddirectorypath $_.Name
+                if (-not($_.PSIsContainer))
+                {
+                    $script:dpath = Join-Path $ddirectorypath $_.Name
 
-                Write-Host ("Copying '{0}' to {1}" -f $_.FullName, $dpath) -ForegroundColor Cyan
-                Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse -ErrorAction Stop
+                    Write-Verbose "Copying $($_.name) to $dpath"
+                    Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse -ErrorAction Stop
+                }
             }
             catch
             {
@@ -167,15 +156,7 @@ if(-not(Test-ModulePath -modulepath $modulepath))
     New-ModulePath -modulepath $modulepath
 }
 
-$moduleName = Get-ModuleName -path $path
-if ($moduleName)
-{
-    Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, "$modulepath") -ForegroundColor Green
-}
-else
-{
-    Write-Host ("Copying scripts in '{0}' to Module path '{1}'." -f $path , "$modulepath") -ForegroundColor Green
-}
+Write-Host "Copying Scripts to Module path." -ForegroundColor Green
 $destinationtfolder = Copy-Module -path $path -destination $modulepath
 
 Write-Host "Installation finished. Scripts copied to PowerShell Module path $destinationtfolder" -ForegroundColor Green
