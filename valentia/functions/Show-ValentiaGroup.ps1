@@ -27,6 +27,10 @@ Show-ValentiaGroup -Branch Application
 --------------------------------------------
 show files in $valentia.Root\$valentia.BranchFolder.Application folder.
 
+.EXAMPLE
+Show-ValentiaGroup -Branch Application -Recurse
+--------------------------------------------
+show files in $valentia.Root\$valentia.BranchFolder.Application folder recursibly.
 #>
 
     [CmdletBinding()]
@@ -37,8 +41,15 @@ show files in $valentia.Root\$valentia.BranchFolder.Application folder.
             Mandatory = 0,
             HelpMessage = "Input branch folder to show.")]
         [string[]]
-        $Branches = $valentia.BranchFolder.Deploygroup
-    )
+        $Branches = $valentia.BranchFolder.Deploygroup,
+
+        [Parameter(
+            Position = 1,
+            Mandatory = 0,
+            HelpMessage = "Use if you want to search directory recursibly.")]
+        [string[]]
+        $recurse
+     )
  
     Write-Debug "Get valentia.deployextension information"
     Write-Verbose ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension)
@@ -65,7 +76,14 @@ show files in $valentia.Root\$valentia.BranchFolder.Application folder.
                 $BranchFolder = Join-Path $valentia.RootPath $valentia.BranchFolder.$Branch -Resolve
 
                 # show items
-                Get-ChildItem -Path $BranchFolder -Recurse | where extension -eq $DeployExtension
+                if ($PSBoundParameters.recurse.IsPresent)
+                {
+                    Get-ChildItem -Path $BranchFolder -Recurse | where extension -eq $DeployExtension
+                }
+                else
+                {
+                    Get-ChildItem -Path $BranchFolder | where extension -eq $DeployExtension
+                }
             }
         }
         else
