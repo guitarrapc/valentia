@@ -47,6 +47,7 @@ You can specify other user credential if required.
         $User = $valentia.users.DeployUser
     )
 
+    $ErrorActionPreference = $valentia.errorPreference
 
     $cred = Get-Credential -UserName $User -Message ("Input {0} Password to be save." -f $User)
 
@@ -69,7 +70,7 @@ You can specify other user credential if required.
             # check credentail save path exist or not
             if (-not(Test-Path $CredFolder))
             {
-                New-Item -ItemType Directory -Path $BinFolder -Name $replaceuser -Force -ErrorAction Stop
+                New-Item -ItemType Directory -Path $BinFolder -Name $replaceuser -Force
             }
 
             # Set CredPath with current Username

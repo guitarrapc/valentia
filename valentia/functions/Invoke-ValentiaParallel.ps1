@@ -120,6 +120,8 @@ You can prepare script file to run, and specify path.
 
     try
     {        
+        $ErrorActionPreference = $valentia.errorPreference
+
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
         $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
@@ -257,7 +259,7 @@ You can prepare script file to run, and specify path.
             Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
 
             # execute workflow
-            Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -ErrorAction Stop | %{
+            Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
                 $result = @{}
             
             }{
@@ -284,7 +286,7 @@ You can prepare script file to run, and specify path.
                 Write-Warning "Restart Complete, trying remote session again."
 
                 # if hit then automatically rerun workflow
-                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -ErrorAction Stop | %{
+                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
                     $result = @{}
             
                 }{

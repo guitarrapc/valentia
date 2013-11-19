@@ -67,6 +67,8 @@ Created: 20/June/2013
         [string[]]
         $TaskParameter
     )
+    
+    $ErrorActionPreference = $valentia.errorPreference
 
     foreach -Parallel ($DeployMember in $PSComputerName){
         InlineScript
@@ -88,7 +90,7 @@ Created: 20/June/2013
                 $WorkflowScript = [ScriptBlock]::Create($using:ScriptToRun)
 
                 # Run ScriptBlock
-                $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ErrorAction Stop -ArgumentList $TaskParameter
+                $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ArgumentList $TaskParameter
                 $task.WSManInstanceflag = $false
             }
             catch 
@@ -127,7 +129,7 @@ Created: 20/June/2013
                 try
                 {
                     # if restart WinRM happens, all result in this session will be voided
-                    Restart-Service -Name WinRM -Force -PassThru -ErrorAction Stop
+                    Restart-Service -Name WinRM -Force -PassThru
                 }
                 catch
                 {

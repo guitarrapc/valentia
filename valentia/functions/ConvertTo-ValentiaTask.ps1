@@ -75,6 +75,7 @@ Convert ScriptBlock into valentia Task file.
     begin
     {
         $ErrorActionPreference = $valentia.errorPreference
+
         if ($PSBoundParameters.inputFilePath)
         {
             if (Test-Path $inputFilePath)

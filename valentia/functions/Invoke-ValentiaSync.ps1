@@ -83,6 +83,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
 
     ### Begin
 
+        $ErrorActionPreference = $valentia.errorPreference
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -93,8 +94,6 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
 
         # Get Start Time
         $TimeStart = (Get-Date).DateTime
-
-
 
         # Import default Configurations & Modules
         if ($PSBoundParameters['Verbose'])
@@ -236,8 +235,8 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
                 try
                 {
                     Write-Warning ("running command to DeployMember: {0}" -f $DeployMember)
-                    Write-Verbose 'Command : Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -ErrorAction Stop -PassThru -Credential $Credential'
-                    $Result = Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -ErrorAction Stop -PassThru -Credential $Credential
+                    Write-Verbose 'Command : Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -PassThru -Credential $Credential'
+                    $Result = Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -PassThru -Credential $Credential
                 }
                 catch
                 {

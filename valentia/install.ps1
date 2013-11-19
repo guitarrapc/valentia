@@ -104,6 +104,8 @@ Function Copy-Module
         $destination
     )
 
+    $ErrorActionPreference = "Stop"
+
     if(Test-Path $path)
     {
         $rootpath = Get-Item $path
@@ -139,7 +141,7 @@ Function Copy-Module
                 $script:dpath = Join-Path $ddirectorypath $_.Name
 
                 Write-Host ("Copying '{0}' to {1}" -f $_.FullName, $dpath) -ForegroundColor Cyan
-                Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse -ErrorAction Stop
+                Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse
             }
             catch
             {

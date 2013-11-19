@@ -81,6 +81,8 @@ Created: 20/June/2013
     )
 
 
+    $ErrorActionPreference = $valentia.errorPreference
+
     # Set variable for Stopwatch
     [decimal]$DurationTotal = 0
 
@@ -112,7 +114,7 @@ Created: 20/June/2013
         {
             # Recieve ScriptBlock result from Job
             Write-Verbose "Receiving Job result."
-            $task.result = Receive-Job -Job $job -Wait -ErrorAction Stop
+            $task.result = Receive-Job -Job $job -Wait
             $task.WSManInstanceflag = $false
             
         }
@@ -154,7 +156,7 @@ Created: 20/June/2013
             try
             {
                 # if restart WinRM happens, all result in this session will be voided
-                Restart-Service -Name WinRM -Force -PassThru -ErrorAction Stop 
+                Restart-Service -Name WinRM -Force -PassThru
             }
             catch
             {

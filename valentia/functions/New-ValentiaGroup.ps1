@@ -67,6 +67,8 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
 
     begin
     {
+        $ErrorActionPreference = $valentia.errorPreference
+
         function Get-Force
         {
             if($WhatIf)
@@ -112,7 +114,7 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
             }
             else
             {
-                $DeployPath = Join-Path $DeployGroupsFolder $FileName -ErrorAction Stop
+                $DeployPath = Join-Path $DeployGroupsFolder $FileName
             }
         }
         catch

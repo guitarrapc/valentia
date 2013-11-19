@@ -45,6 +45,8 @@ This will get credential with default deploy user specified config as $valentia.
 
     begin
     {
+        $ErrorActionPreference = $valentia.errorPreference
+
         if([string]::IsNullOrEmpty($User))
         {
             throw '"$User" was "", input User.'
@@ -62,7 +64,7 @@ This will get credential with default deploy user specified config as $valentia.
         # check credential save path exist or not
         if (-not(Test-Path $credFolder))
         {
-            New-Item -ItemType Directory -Path $BinFolder -Name $replaceuser -Force -ErrorAction Stop
+            New-Item -ItemType Directory -Path $BinFolder -Name $replaceuser -Force
         }
 
         # Set CredPath with current Username

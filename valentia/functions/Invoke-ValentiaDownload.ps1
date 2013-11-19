@@ -102,6 +102,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
 
     ### Begin
 
+        $ErrorActionPreference = $valentia.errorPreference
     
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -217,7 +218,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                         }
 
                         # Get File Information - No recurse
-                        $SourceFiles = Get-ChildItem -Path $Source -ErrorAction Stop
+                        $SourceFiles = Get-ChildItem -Path $Source
                     }
                     catch
                     {
@@ -232,7 +233,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                     try
                     {
                         # Get File Information
-                        $SourceFiles = Get-Item -Path $Source -ErrorAction Stop
+                        $SourceFiles = Get-Item -Path $Source
                     
                         if ($SourceFiles.Attributes -eq "Directory")
                         {
@@ -314,11 +315,11 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                         {
                             if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                             {
-                                Write-Verbose 'Command : Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force -ErrorAction Stop'
-                                $ScriptToRun = "Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force -ErrorAction Stop"
+                                Write-Verbose 'Command : Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force '
+                                $ScriptToRun = "Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force"
 
                                 Write-Warning ("Downloading {0} from {1} to {2}" -f ($SourceFile).fullname, $DeployMember, $Destination)
-                                Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force -ErrorAction Stop
+                                Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force
                             }
                         }
                     }
@@ -362,8 +363,8 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                             # Async Transfer
                             $Async {
                     
-                                Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download -ErrorAction Stop'
-                                $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download -ErrorAction Stop"
+                                Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download'
+                                $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download"
 
                                 try
                                 {
@@ -376,7 +377,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                                             {
                                                 # Run Job
                                                 Write-Warning ("Async Downloading {0} from {1} to {2}" -f ($SourceFile).fullname, $DeployMember, $Destination)
-                                                $Job = Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download -ErrorAction Stop
+                                                $Job = Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download
                                         
                                                 # Waiting for complete job
                                                 $Sleepms = 10
@@ -430,8 +431,8 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                             }
                             default {
                                 # NOT Async Transfer
-                                Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download -ErrorAction Stop' 
-                                $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download -ErrorAction Stop"
+                                Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download' 
+                                $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download"
 
                                 # Run Download
                                 try
@@ -442,7 +443,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                                         if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                                         {
                                             Write-Warning ("Downloading {0} from {1} to {2}" -f ($SourceFile).fullname, $DeployMember, $Destination)
-                                            Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -TransferType Download -ErrorAction Stop
+                                            Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -TransferType Download
                                         }
                                     }
                                 }

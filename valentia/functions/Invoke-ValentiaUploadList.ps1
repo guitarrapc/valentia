@@ -81,6 +81,7 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
        
     ### Begin
             
+        $ErrorActionPreference = $valentia.errorPreference
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -167,7 +168,7 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         {
             Write-Verbose "Defining ListFile full path."
             $SourcePath = Join-Path $SourceFolder $ListFile
-            Get-Item $SourcePath -ErrorAction Stop > $null
+            Get-Item $SourcePath > $null
         }
         catch
         {
@@ -222,12 +223,12 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
                 if ($Async)
                 {
                     #Command Detail
-                    Write-Verbose 'Command : $NewList | Start-BitsTransfer -Credential $Credebtial -Async -ErrorAction stop'
-                    $ScriptToRun = '$NewList | Start-BitsTransfer -Credential $Credential -Async -ErrorAction stop'
+                    Write-Verbose 'Command : $NewList | Start-BitsTransfer -Credential $Credebtial -Async'
+                    $ScriptToRun = '$NewList | Start-BitsTransfer -Credential $Credential -Async'
 
                     # Run Start-BitsTransfer retrieving files from List csv with Async switch
                     Write-Warning ("Running Async uploadL to '{0}'" -f $DeployMember)
-                    $BitsJob = $NewList | Start-BitsTransfer -Credential $Credential -Async -ErrorAction stop
+                    $BitsJob = $NewList | Start-BitsTransfer -Credential $Credential -Async
 
                     # Monitoring Bits Transfer States complete
                     $Sleepms = 10
@@ -246,12 +247,12 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
                 else
                 {
                     #Command Detail
-                    Write-Verbose 'Command : $NewList | Start-BitsTransfer -Credential $Credebtial -ErrorAction stop'
-                    $ScriptToRun = "$NewList | Start-BitsTransfer -Credential $Credential  -ErrorAction stop"
+                    Write-Verbose 'Command : $NewList | Start-BitsTransfer -Credential $Credebtial'
+                    $ScriptToRun = "$NewList | Start-BitsTransfer -Credential $Credential"
 
                     # Run Start-BitsTransfer retrieving files from List csv
                     Write-Warning ("Running Sync uploadL to {0}" -f $DeployMember)
-                    $NewList | Start-BitsTransfer -Credential $Credential -ErrorAction stop
+                    $NewList | Start-BitsTransfer -Credential $Credential
                 }
             }
             catch

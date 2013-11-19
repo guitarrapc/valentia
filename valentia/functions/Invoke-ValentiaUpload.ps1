@@ -104,6 +104,7 @@ upload files in target to Directory as Background Async job for hosts written in
 
     ### Begin
 
+        $ErrorActionPreference = $valentia.errorPreference
     
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -210,7 +211,7 @@ upload files in target to Directory as Background Async job for hosts written in
                 try
                 {
                     # No recurse
-                    $SourceFiles = Get-ChildItem -Path $SourcePath -ErrorAction Stop
+                    $SourceFiles = Get-ChildItem -Path $SourcePath
                 }
                 catch
                 {
@@ -225,7 +226,7 @@ upload files in target to Directory as Background Async job for hosts written in
                 try
                 {
                     # No recurse
-                    $SourceFiles = Get-Item -Path $SourcePath -ErrorAction Stop
+                    $SourceFiles = Get-Item -Path $SourcePath
                     
                     if ($SourceFiles.Attributes -eq "Directory")
                     {
@@ -267,8 +268,8 @@ upload files in target to Directory as Background Async job for hosts written in
                         # Async Transfer
                         $Async {
                     
-                            Write-Verbose 'Command : Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload -ErrorAction Stop'
-                            $ScriptToRun = "Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload -ErrorAction Stop"
+                            Write-Verbose 'Command : Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload'
+                            $ScriptToRun = "Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload"
 
                             try
                             {
@@ -278,7 +279,7 @@ upload files in target to Directory as Background Async job for hosts written in
                                     {
                                         # Run Job
                                         Write-Warning ("Running Async Job upload to {0}" -f $DeployMember)
-                                        $Job = Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload -ErrorAction Stop
+                                        $Job = Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload
 
                                         # Waiting for complete job
                                         $Sleepms = 10
@@ -331,8 +332,8 @@ upload files in target to Directory as Background Async job for hosts written in
                         }
                         # NOT Async Transfer
                         default {
-                            Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType -ErrorAction Stop' 
-                            $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType -ErrorAction Stop"
+                            Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType' 
+                            $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType"
 
                             try
                             {
@@ -342,7 +343,7 @@ upload files in target to Directory as Background Async job for hosts written in
                                     if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                                     {
                                         Write-Warning ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination)
-                                        Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -ErrorAction Stop
+                                        Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential
                                     }
                                 }
                             }

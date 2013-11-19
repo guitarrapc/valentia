@@ -114,6 +114,8 @@ read production-hoge.ps1 from c:\test.
 
     begin
     {
+        $ErrorActionPreference = $valentia.errorPreference
+
         # Check -HostUsage parameter is null or emptry
         if ($NoSetHostName -eq $false)
         {
@@ -141,23 +143,23 @@ read production-hoge.ps1 from c:\test.
     {
         # setup ScriptFile Reading
         Write-Verbose "Command : Set-ExecutionPolicy RemoteSigned -Force"
-        Set-ExecutionPolicy RemoteSigned -Force -ErrorAction Stop
+        Set-ExecutionPolicy RemoteSigned -Force
 
         if (-not($SkipEnablePSRemoting))
         {
             # setup PSRemoting
             Write-Verbose "Command : Enable-PSRemoting -Force"
-            Enable-PSRemoting -Force -ErrorAction Stop
+            Enable-PSRemoting -Force
         }
 
         # Add $TrustedHosts hosts to trustedhosts
         Write-Verbose "Command : Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts"
-        Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts -ErrorAction Stop
+        Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts
 
         # Configure WSMan MaxShellsPerUser to prevent error "The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded."
         # default 25 change to 100
         Write-Verbose "Command : Set-WsManMaxShellsPerUser -ShellsPerUser 100"
-        Set-WsManMaxShellsPerUser -ShellsPerUser 100 -ErrorAction Stop
+        Set-WsManMaxShellsPerUser -ShellsPerUser 100
 
         if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.2.0.0))
         {
