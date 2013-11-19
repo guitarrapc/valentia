@@ -112,7 +112,7 @@ You can see choice description for each deploygroup file, and will get which ite
             foreach ($kv in $dict)
             {
                 # create prompt choice item. Currently you could not use help message.
-                $private:choice = (("&{0}:{1}" -f $kv.Value.Key, $kv.Value.Value), ($valentia.promptForChoice.helpMessage -f $MyInvocation.MyCommand))
+                $private:choice = (("&{0}:{1}" -f $kv.Value.Key, $kv.Value.Value), ($valentia.promptForChoice.helpMessage -f $kv.Value.Key))
                 $choices.Add((New-Object $CollectionType $choice))
             }
         }
