@@ -67,20 +67,36 @@ You can see choice description for each deploygroup file, and will get which ite
         $script:collectionType = [System.Management.Automation.Host.ChoiceDescription]
         $script:descriptions = New-Object "System.Collections.ObjectModel.Collection``1[$CollectionType]"
 
-        # create dictionary for prompt item
-        $script:dictionary = New-Object 'System.Collections.Generic.Dictionary``2[int,string]'
-        $script:count = 0
-        foreach ($questionHelp in $questionHelps)
+        # create dictionary include dictionary <int, KV<string, string>> : accessing KV <string, string> with int key return from prompt
+        $script:intAccessDictionary = New-Object 'System.Collections.Generic.Dictionary``2[int, System.Collections.Generic.KeyValuePair`2[string, string]]'
+
+        foreach ($value in $questionHelps)
         {
-            $dictionary.Add($count, $questionHelp)
+            # create key to access value
+            $key = [System.Text.Encoding]::ASCII.GetString($([byte[]][char[]]'a') + $count)
+
+            # create KeyValuePair for prompt item <string, string> : accessing value with 1 letter Alphabet by converting char
+            $script:KeyValuePair = New-Object 'System.Collections.Generic.KeyValuePair`2[string, string]'($key, $value)
+            
+            # add to Dictionary
+            $intAccessDictionary.Add($count, $KeyValuePair)
             $count++
+
+            # prompt limit to max 26 items as using single Alphabet charactors.
+            if ($count -gt 26)
+            {
+                throw ("Not allowed to pass more then '{0}' items for prompt" -f ($dictionary.Keys).count)
+            }
         }
 
-        # create choice description from dictionary
-        foreach ($dict in $dictionary.GetEnumerator())
+        # create choice description from dictionary accessing through <int, KV<string, string>>
+        foreach ($intAccessDict in $intAccessDictionary.GetEnumerator())
         {
-            $private:q = "&{0} : {1}" -f $dict.Key, $dict.Value
-            $descriptions.Add((New-Object $CollectionType $q))
+            foreach ($dict in $intAccessDict)
+            {
+                $private:q = "&{0} : {1}" -f $dict.Value.Key, $dict.Value.Value
+                $descriptions.Add((New-Object $CollectionType $q))
+            }
         }
 
         # create caption Messages
@@ -93,7 +109,7 @@ You can see choice description for each deploygroup file, and will get which ite
         $script:answer = $host.UI.PromptForChoice($title, $message, $descriptions, $defaultIndex)
 
         # return value from key
-        return ($dictionary.GetEnumerator() | where Key -eq $answer).Value
+        return ($intAccessDictionary.GetEnumerator() | where Key -eq $answer).Value.Value
     }
     catch
     {
