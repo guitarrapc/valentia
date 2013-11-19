@@ -80,9 +80,10 @@ $valentia.log = New-Object psobject -property @{
 
 # Set Valentia prompt for choice messages
 $valentia.promptForChoice = New-Object psobject -property @{
-    title                               = "Select from prompt choice";
-    questionHelps                       = @("Yes", "No");
-    message                             = "Type index you want to choose.";
+    title                               = "Select item from prompt choices.";
+    questions                           = @("Yes", "No");
+    helpMessage                         = "'{0}' cmdlet cannot use Help function."
+    message                             = "Type alphabet you want to choose.";
     additionalMessage                   = $null;
     defaultIndex                        = 0;
 }

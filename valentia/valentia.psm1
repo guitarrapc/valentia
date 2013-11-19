@@ -230,7 +230,7 @@ $Script:valentia                        = @{}
 $valentia.name                          = "valentia"                          # contains the Name of Module
 $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
 $valentia.helpersPath                   = "\functions\*.ps1"
-$valentia.defaultconfigurationfile      = "\config\valentia-config.ps1"               # default configuration file name within valentia.psm1
+$valentia.defaultconfigurationfile      = "\config\valentia-config.ps1"       # default configuration file name within valentia.psm1
 $valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
 $valentia.fileEncode                    = "utf8"
 $valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
@@ -325,9 +325,10 @@ $valentia.log = New-Object psobject -property @{
 
 # Set Valentia prompt for choice messages
 $valentia.promptForChoice = New-Object psobject -property @{
-    title                               = "Select from prompt choice";
-    questionHelps                       = @("Yes", "No");
-    message                             = "Type index you want to choose.";
+    title                               = "Select item from prompt choices.";
+    questions                           = @("Yes", "No");
+    helpMessage                         = "'{0}' cmdlet cannot use Help function."
+    message                             = "Type alphabet you want to choose.";
     additionalMessage                   = $null;
     defaultIndex                        = 0;
 }

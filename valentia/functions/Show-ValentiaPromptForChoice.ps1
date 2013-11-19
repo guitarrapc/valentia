@@ -1,4 +1,8 @@
-﻿function Show-ValentiaPromptForChoice
+﻿#Requires -Version 3.0
+
+# -- helper function -- #
+
+function Show-ValentiaPromptForChoice
 {
 <#
 
@@ -18,7 +22,7 @@ Show-ValentiaPromptForChoice
 default will use what you have written in valentia-config.ps1
 
 .EXAMPLE
-Show-ValentiaPromptForChoice -questionHelps $(Show-ValentiaGroup | where {$_.Directory.Fullname -eq (Join-Path $valentia.RootPath $valentia.BranchFolder.Deploygroup)}).Name 
+Show-ValentiaPromptForChoice -questionHelps $(Show-ValentiaGroup).Name 
 --------------------------------------------
 Will check valentia deploy folder and get deploygroup files.
 You can see choice description for each deploygroup file, and will get which item was selected.
@@ -28,30 +32,35 @@ You can see choice description for each deploygroup file, and will get which ite
     [CmdletBinding()]
     param
     (
+        # input prompt items with array. second index is for help message.
         [parameter(
             mandatory = 0,
             position = 0)]
         [string[]]
-        $title = $valentia.promptForChoice.title,
+        $questions = $valentia.promptForChoice.questions,
 
+        # input title message showing when prompt.
         [parameter(
             mandatory = 0,
             position = 1)]
         [string[]]
-        $questionHelps = $valentia.promptForChoice.questionHelps,
+        $title = $valentia.promptForChoice.title,
                 
+        # input message showing when prompt.
         [parameter(
             mandatory = 0,
             position = 2)]
         [string]
         $message = $valentia.promptForChoice.message,
 
+        # input additional message showing under message.
         [parameter(
             mandatory = 0,
             position = 3)]
         [string]
         $additionalMessage = $valentia.promptForChoice.additionalMessage,
         
+        # input Index default selected when prompt.
         [parameter(
             mandatory = 0,
             position = 4)]
@@ -63,23 +72,27 @@ You can see choice description for each deploygroup file, and will get which ite
     
     try
     {
-        # create choice description
-        $script:collectionType = [System.Management.Automation.Host.ChoiceDescription]
-        $script:descriptions = New-Object "System.Collections.ObjectModel.Collection``1[$CollectionType]"
+        # create caption Messages
+        if(-not [string]::IsNullOrEmpty($additionalMessage))
+        {
+            $message += ([System.Environment]::NewLine + $additionalMessage)
+        }
 
         # create dictionary include dictionary <int, KV<string, string>> : accessing KV <string, string> with int key return from prompt
-        $script:intAccessDictionary = New-Object 'System.Collections.Generic.Dictionary``2[int, System.Collections.Generic.KeyValuePair`2[string, string]]'
-
-        foreach ($value in $questionHelps)
+        $script:dictionary = New-Object 'System.Collections.Generic.Dictionary[int, System.Collections.Generic.KeyValuePair[string, string]]'
+		
+        foreach ($question in $questions)
         {
             # create key to access value
-            $key = [System.Text.Encoding]::ASCII.GetString($([byte[]][char[]]'a') + $count)
+            $private:key = [System.Text.Encoding]::ASCII.GetString($([byte[]][char[]]'a') + [int]$private:count)
 
-            # create KeyValuePair for prompt item <string, string> : accessing value with 1 letter Alphabet by converting char
-            $script:KeyValuePair = New-Object 'System.Collections.Generic.KeyValuePair`2[string, string]'($key, $value)
+            # create KeyValuePair<string, string> for prompt item : accessing value with 1 letter Alphabet by converting char
+            $script:keyValuePair = New-Object 'System.Collections.Generic.KeyValuePair[string, string]'($key, $question)
             
             # add to Dictionary
-            $intAccessDictionary.Add($count, $KeyValuePair)
+            $dictionary.Add($count, $keyValuePair)
+
+			# increment to next char
             $count++
 
             # prompt limit to max 26 items as using single Alphabet charactors.
@@ -89,27 +102,26 @@ You can see choice description for each deploygroup file, and will get which ite
             }
         }
 
-        # create choice description from dictionary accessing through <int, KV<string, string>>
-        foreach ($intAccessDict in $intAccessDictionary.GetEnumerator())
+        # create choices Collection
+        $script:collectionType = [System.Management.Automation.Host.ChoiceDescription]
+        $script:choices = New-Object "System.Collections.ObjectModel.Collection[$CollectionType]"
+
+        # create choice description from dictionary<int, KV<string, string>>
+        foreach ($dict in $dictionary.GetEnumerator())
         {
-            foreach ($dict in $intAccessDict)
+            foreach ($kv in $dict)
             {
-                $private:q = "&{0} : {1}" -f $dict.Value.Key, $dict.Value.Value
-                $descriptions.Add((New-Object $CollectionType $q))
+                # create prompt choice item. Currently you could not use help message.
+                $private:choice = (("&{0}:{1}" -f $kv.Value.Key, $kv.Value.Value), ($valentia.promptForChoice.helpMessage -f $MyInvocation.MyCommand))
+                $choices.Add((New-Object $CollectionType $choice))
             }
         }
 
-        # create caption Messages
-        if(-not [string]::IsNullOrEmpty($additionalMessage))
-        {
-            $message += ([System.Environment]::NewLine + $additionalMessage)
-        }
-
-        # show prompt message and copnfirm
-        $script:answer = $host.UI.PromptForChoice($title, $message, $descriptions, $defaultIndex)
+        # show choices on host
+        $script:answer = $host.UI.PromptForChoice($title, $message, $choices, $defaultIndex)
 
         # return value from key
-        return ($intAccessDictionary.GetEnumerator() | where Key -eq $answer).Value.Value
+        return ($dictionary.GetEnumerator() | where Key -eq $answer).Value.Value
     }
     catch
     {
