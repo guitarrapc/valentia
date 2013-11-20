@@ -83,8 +83,24 @@ You can see choice description for each deploygroup file, and will get which ite
 		
         foreach ($question in $questions)
         {
-            # create key to access value
-            $private:key = [System.Text.Encoding]::ASCII.GetString($([byte[]][char[]]'a') + [int]$private:count)
+            if ("$questions" -eq "$($valentia.promptForChoice.questions)")
+            {
+                if ($private:count -eq 1)
+                {
+                    # create key to access value
+                    $private:key = $valentia.promptForChoice.defaultChoiceNo
+                }
+                else
+                {
+                    # create key to access value
+                    $private:key = $valentia.promptForChoice.defaultChoiceYes
+                }
+            }
+            else
+            {
+                # create key to access value
+                $private:key = [System.Text.Encoding]::ASCII.GetString($([byte[]][char[]]'a') + [int]$private:count)
+            }
 
             # create KeyValuePair<string, string> for prompt item : accessing value with 1 letter Alphabet by converting char
             $script:keyValuePair = New-Object 'System.Collections.Generic.KeyValuePair[string, string]'($key, $question)
@@ -112,7 +128,7 @@ You can see choice description for each deploygroup file, and will get which ite
             foreach ($kv in $dict)
             {
                 # create prompt choice item. Currently you could not use help message.
-                $private:choice = (("&{0}:{1}" -f $kv.Value.Key, $kv.Value.Value), ($valentia.promptForChoice.helpMessage -f $kv.Value.Key))
+                $private:choice = (("&{0}:{1}" -f $kv.Value.Key, $kv.Value.Value), ($valentia.promptForChoice.helpMessage -f $kv.Value.Key, $kv.Value.Value))
                 $choices.Add((New-Object $CollectionType $choice))
             }
         }
