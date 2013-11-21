@@ -300,13 +300,6 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                         $smbRemotePath = (Get-Item $source).DirectoryName
                     }
 
-                    Write-Verbose 'smb : New-SmbMapping -LocalPath $valentia.PSDrive -RemotePath ($smbRemotePath) -CimSession $cim'
-                    $smb = New-SmbMapping -LocalPath $valentia.PSDrive -RemotePath $smbRemotePath -CimSession $cim
-
-                    # Check cim and smb variables
-                    Write-Verbose ("cim : {0}" -f $cim)
-                    Write-Verbose ("smb : {0}" -f $smb)
-
                     # Running Copy-Item cmdlet, switch with $force
                     try
                     {                     
@@ -333,9 +326,6 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                     }
                     finally
                     {
-                        # Remove All SMB Mapping
-                        Get-SmbMapping $smb -CimSession $cim | Remove-SmbMapping -Force -CimSession $cim
-                        Get-CimSession | Remove-CimSession
                         # Stopwatch
                         $Duration = $stopwatchSession.Elapsed.TotalSeconds
                         Write-Verbose ("Session duration Second : {0}" -f $Duration)
