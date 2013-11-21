@@ -27,78 +27,157 @@ Also [psasync](http://newsqlblog.com/category/powershell/powershell-concurrency/
 	* fix issue 31 : valentia cmdlet will stop with error when trying to run more then 2 whithin same console
 	* Enhanced issue 32 : Now you can modify Runspace Pool Size within valentia-config.ps1 
 
-	
-# Valid OS and PowerShell Verstion
+
+# Basic
+
+## Valid OS and PowerShell Verstion
 
 valentia works with PowerShell Version 3.0 and higher.
-I'm developing with Windows 8, Windows 8.1 and Windows 2012.
-Supporting Operating System are...
 
-- Windows 7 (with PowerShell V3.0 and higher)
-- Windows 8 (with PowerShell V3.0 and higher)
-- Windows 8.1 (with PowerShell V4.0 and higher)
-- Windows 2012 (with PowerShell V3.0 and higher)
-- Windows 2012 R2 (with PowerShell V4.0 and higher)
+|OS|PowerShell Version|
+|:----:|:----:|
+|Windows 7 |3.0 and higher|
+|Windows 8 |3.0 and higher|
+|Windows 8.1 |4.0 and higher|
+|Windows 2008R2 |3.0 and higher|
+|Windows 2012 |3.0 and higher|
+|Windows 2012 R2|4.0 and higher|
 
 note : all functions are confirmed with Windows Server 2012 x64 English environment.
 
+### Development Environment
 
-# Prerequisite
+I'm develop Valentia with following environemt.
 
-You need to install followings to use valentia file transfer.
+|OS|PowerShell Version|
+|:----:|:----:|
+|Windows 8 |3.0 and higher|
+|Windows 8.1 |4.0 and higher|
+|Windows 2012 |3.0 and higher|
 
-1. Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"
-2. Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")
-	- [Download FastCopy? click here to go HP.](http://ipmsg.org/tools/fastcopy.html)
-3. Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.
-	- ```Set-ExecutionPolicy RemoteSigned```
+## Prerequisite
+
+Please consider followings before using valentia.
+
+1. Allow ```PowerShell Execution Policy```
+2. Set Network Profile not in public.
+3. Install Tools using in valentia
+
+#### 1. PowerShell Execution Policy
+
+You can define your PowerShell Commands into scripts which can use in Valentia. However PowerShell default execution Policy don't trust scripts, it is required change Execution Policy from ```Restricted``` to any other. Then you can load PowerShell Scripts using Valentia Task Keyword.
+
+To enable loading your custom PowerShell Scripts, execute following command with Admin elevated PowerShell console.
+
+```PowerShell
+Set-ExecutionPolicy RemoteSigned
+```
+
+- The default Execution policy of "PowerShell V4 on Windows Server 2012 R2" is ```RemoteSigned```.
+
+#### 2. Network Profile
+
+Valentia is Deployment library with PowerShell. The base of remote connection between Server and Client is PowerShell Remoting. It means you need to enable PSRemoting to use valentia.
+
+Please run following commands to check you network adaptor profile.
+```PowerShell
+Get-NetConnectionProfile
+```
+If you find any Network Adaptor showing as **Public** then ```Enable-PSRemoting -Force``` will fail.
+
+To change all the Network adaptor which NetworkCategory from ```Public``` to ```Private``` then run following command with Admin elevated PowerShell 
+
+```PowerShell
+Get-NetConnectionProfile | where NetworkCategory -eq "Public" | Set-NetConnectionProfile -NetworkCa
+tegory Private
+```
+
+#### 3. Tools 
+
+The following tools are used in Valentia. You can ignore them if you don't Valentia Cmdlet which depend on tools.
+
+|Tool|using Valentia Cmdlet|Description|URI|
+|:----:|:----:|:----:|:----:|
+|Bits Transfer|```Invoke-ValentiaUpload``` & ```Invoke-ValentiaUploadList```|Using for Single and List file transfer. Enable "IIS BITs Transfer" from "Windows Program and freature"|<a href="http://msdn.microsoft.com/en-us/library/bb968799(v=vs.85).aspx" title="Background Intelligent Transfer Service">Background Intelligent Transfer Service</a>|
+|FastCopy|```Invoke-ValentiaSync```|Please intstall FastCopyx64 to "C:\Program Files\FastCopy" or configure path to fastcopy.exe with ```valentia-config.ps1```|[Download FastCopy? click here to go HP.](http://ipmsg.org/tools/fastcopy.html)|
 
 # Install valentia module
 
-To use valentia module, please set valentia folder to 
+To use valentia module, please set valentia folder to PowerShell module path. Normally user module path is defined in Environment variables ```PATH``` as ```%homepath%\documents\WindowsPowerShell\Module\```
+
+## 1. Valentia Installation
+
+Valentia written with standard module, thus the only thing required is "set valentia folder into module path or custom path".
+
+#### Using Valentia with Current User only
+
+You can install valentia with running ```install.bat```. This bat file will copy Valentia to user Module Path.
+
+|Module Scope|Copying Module Path|
+|:----:|:----:|
+|Current User only|```env:USERPROFILE\Documents\WindowsPowerShell\Modules\Valentia```|
+
+#### Using Valentia with All Users
+
+If you you want to use valentia with all users in your machine, then set valentia module folder to Machine Module Path.
+
+if you are using x64 Windows and want to use Valentia with PowerShell x86 then Module path is under SysWOW64.
+
+|Module Scope|Copying Module Path|
+|:----:|:----:|
+|All Users|```C:\Windows\System32\WindowsPowerShell\v1.0\Modules\Valentia```|
+|All Users (x86 for 64bit OS)|```C:\Windows\SysWOW64\WindowsPowerShell\v1.0\Modules\Valentia```|
+
+#### Custom Path
+
+If you don't want copy Valentia to any module path but using your custom path, then set Valentia anywhere you want.
+
+|Module Scope|Copying Module Path Sample|
+|:----:|:----:|
+|Anywhere|```D:\CustomPowerShell\Valentia```|
+
+## 2. Import valentia module
+
+### If you set Valentia in Default PowerShell Module Path
+
+In PowerShell V3.0, all modules located in Module Path will be automatically loaded. You don't need to use ```Import-Modue Valentia``` in this case. Normally default Module Path is defined in Environment variables "PATH".
+
+|Module Scope|Default Module Path|
+|:----:|:----:|
+|Current user Module Path|env:USERPROFILE\Documents\WindowsPowerShell\Modules|
+|Machine level Module Path|C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia|
+|Machie level (x86 for 64bit OS)|```C:\Windows\SysWOW64\WindowsPowerShell\v1.0\Modules\Valentia```|
+
+Valentia Module will automatically import when calling Valentia functions. However if you want to check $valentia variables before running Valentia Cmdlet, then ```Import-Module``` is required.
 
 ```PowerShell
-%homepath%\documents\WindowsPowerShell\Module\
-```
-
-Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.
-
-You can install valentia with ```run install.bat```. This bat file will copy valentia to module path ```env:USERPROFILE\Documents\WindowsPowerShell\Modules```
-
-Or if you want to use valentia with all user, then set valentia module folder to:
-
-```PowerShell
-C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
-```
-
-Else place anywhere you want.
-
-# Import valentia module
-
-In PowerShell V3.0, all modules located in default psmodulepath will be automatically loaded.
-
-if you sat module in custom path, then use Import-Module Cmdlet.
-
-```PowerShell
-cd "move to custom path you sat valentia"
 Import-Module valentia
 ```
 
-If you sat valentia in standard psmodule path described in "Install valentia", you don't need manually import module, but you can do it.
+### If you set Valentia in Custom Path
+
+if you sat module in custom path, then it is required using Import-Module Cmdlet to Import valentia in your PowerShell session.
 
 ```PowerShell
+cd PathToValentia # the path you set valentia.psm1
 Import-Module valentia
 ```
 
-or check detail with following.
+### Reload initial valentia settings into current PowreShell Session
+
+You can reload Module into current session anytime with following command.
 
 ```PowerShell
-Import-Module valentia -Verbose
+Import-Module valentia -Force -Verbose
 ```
 
-# valentia Cmdlets
+# Check Valentia Cmdlets and Alias
 
-You can see valentia Cmdlets by following command.
+After Valentia had sat in Module Path or Imported, you can use Valentia!!
+
+## 1. Valentia Cmdlets
+
+You can check all Valentia Cmdlets by running command.
 
 ```PowerShell
 Get-command -module valentia
@@ -106,67 +185,68 @@ Get-command -module valentia
 
 Following Cmdlets will be shown.
 
-```PowerShell
-CommandType     Name                                               ModuleName
------------     ----                                               ----------
-Function        Get-ValentiaCredential                             valentia
-Function        Get-ValentiaGroup                                  valentia
-Function        Get-ValentiaModuleReload                           valentia
-Function        Get-ValentiaRebootRequiredStatus                   valentia
-Function        Get-ValentiaTask                                   valentia
-Function        Initialize-valentiaEnvironment                     valentia
-Function        Invoke-Valentia                                    valentia
-Function        Invoke-ValentiaAsync                               valentia
-Function        Invoke-ValentiaClean                               valentia
-Function        Invoke-ValentiaCommand                             valentia
-Function        Invoke-valentiaDeployGroupRemark                   valentia
-Function        Invoke-valentiaDeployGroupUnremark                 valentia
-Function        Invoke-ValentiaDownload                            valentia
-Function        Invoke-ValentiaParallel                            valentia
-Function        Invoke-ValentiaSync                                valentia
-Function        Invoke-ValentiaUpload                              valentia
-Function        Invoke-ValentiaUploadList                          valentia
-Function        New-ValentiaCredential                             valentia
-Function        New-ValentiaFolder                                 valentia
-Function        New-ValentiaGroup                                  valentia
-Function        Set-ValentiaHostName                               valentia
-Function        Set-ValentiaLocation                               valentia
-Function        Show-ValentiaGroup                                 valentia
-Workflow        Invoke-ValentiaCommandParallel                     valentia
-```
+|CommandType |Name|ModuleName|
+|:----|:----|:----|
+|Function|    ConvertTo-ValentiaTask|             valentia|
+|Function|    Edit-ValentiaConfig|                valentia|
+|Function|    Get-ValentiaCredential|             valentia|
+|Function|    Get-ValentiaFileEncoding|           valentiav
+|Function|    Get-ValentiaGroup|                  valentia|
+|Function|    Get-ValentiaRebootRequiredStatus|   valentia|
+|Function|    Get-ValentiaTask|                   valentia|
+|Function|    Initialize-ValentiaEnvironment|     valentia|
+|Function|    Invoke-Valentia|                    valentia|
+|Function|    Invoke-ValentiaAsync|               valentia|
+|Function|    Invoke-ValentiaClean|               valentia|
+|Function|    Invoke-ValentiaCommand|             valentia|
+|Function|    Invoke-valentiaDeployGroupRemark|   valentia|
+|Function|    Invoke-valentiaDeployGroupUnremark| valentia|
+|Function|    Invoke-ValentiaDownload|            valentia|
+|Function|    Invoke-ValentiaParallel|            valentia|
+|Function|    Invoke-ValentiaSync|                valentia|
+|Function|    Invoke-ValentiaUpload|              valentia|
+|Function|    Invoke-ValentiaUploadList|          valentia|
+|Function|    New-ValentiaCredential|             valentia|
+|Function|    New-ValentiaFolder|                 valentia|
+|Function|    New-ValentiaGroup|                  valentia|
+|Function|    Set-ValentiaHostName|               valentia|
+|Function|    Set-ValentiaLocation|               valentia|
+|Function|    Show-ValentiaConfig|                valentia|
+|Function|   Show-ValentiaGroup|                 valentia|
+|Function|    Show-ValentiaPromptForChoice|       valentia|
+|Workflow|    Invoke-ValentiaCommandParallel|     valentia|
 
-All Cmdlets have alias to lket you use easily.
+
+## 2. Valentia Alias
+
+All Cmdlets have alias to let you use easily.
 You can find them as like this.
-
 
 ```PowerShell
 Get-Alias | where ModuleName -eq "valentia"
 ```
 
-This show alias defined in valentia
+Following Alias->Cmdlets will be shown.
 
-```PowerShell
-CommandType     Name                                               ModuleName
------------     ----                                               ----------
-Alias           Clean -> Invoke-ValentiaClean                      valentia
-Alias           Cred -> Get-ValentiaCredential                     valentia
-Alias           Download -> Invoke-ValentiaDownload                valentia
-Alias           Go -> Set-ValentiaLocation                         valentia
-Alias           Initial -> Initialize-valentiaEnvironment          valentia
-Alias           ipremark -> Invoke-valentiaDeployGroupRemark       valentia
-Alias           ipunremark -> Invoke-valentiaDeployGroupUnremark   valentia
-Alias           Reload -> Get-ValentiaModuleReload                 valentia
-Alias           Rename -> Set-ValentiaHostName                     valentia
-Alias           Sync -> Invoke-ValentiaSync                        valentia
-Alias           Target -> Get-ValentiaGroup                        valentia
-Alias           Task -> Get-ValentiaTask                           valentia
-Alias           Upload -> Invoke-ValentiaUpload                    valentia
-Alias           UploadL -> Invoke-ValentiaUploadList               valentia
-Alias           Vale -> Invoke-Valentia                            valentia
-Alias           Valea -> Invoke-ValentiaAsync                      valentia
-Alias           Valep -> Invoke-ValentiaParallel                   valentia
-```
 
+|CommandType |DisplayName|ModuleName|
+|:----|:----|:----|
+|Alias|Clean -> Invoke-ValentiaClean|valentia
+|Alias|Cred -> Get-ValentiaCredential|valentia
+|Alias|Download -> Invoke-ValentiaDownload|valentia
+|Alias|Go -> Set-ValentiaLocation|valentia
+|Alias|Initial -> Initialize-ValentiaEnvironment|valentia
+|Alias|ipremark -> Invoke-valentiaDeployGroupRemark|valentia
+|Alias|ipunremark -> Invoke-valentiaDeployGroupUnremark|valentia
+|Alias|Rename -> Set-ValentiaHostName|valentia
+|Alias|Sync -> Invoke-ValentiaSync|valentia
+|Alias|Target -> Get-ValentiaGroup|valentia
+|Alias|Task -> Get-ValentiaTask|valentia
+|Alias|Upload -> Invoke-ValentiaUpload|valentia
+|Alias|UploadL -> Invoke-ValentiaUploadList|valentia
+|Alias|Vale -> Invoke-Valentia|valentia
+|Alias|Valea -> Invoke-ValentiaAsync|valentia
+|Alias|Valep -> Invoke-ValentiaParallel|valentia
 
 # Environment Setup Commands
 
