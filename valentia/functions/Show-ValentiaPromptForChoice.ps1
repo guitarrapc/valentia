@@ -80,7 +80,7 @@ You can see choice description for each deploygroup file, and will get which ite
 
         # create dictionary include dictionary <int, KV<string, string>> : accessing KV <string, string> with int key return from prompt
         $script:dictionary = New-Object 'System.Collections.Generic.Dictionary[int, System.Collections.Generic.KeyValuePair[string, string]]'
-		
+        
         foreach ($question in $questions)
         {
             if ("$questions" -eq "$($valentia.promptForChoice.questions)")
@@ -108,7 +108,7 @@ You can see choice description for each deploygroup file, and will get which ite
             # add to Dictionary
             $dictionary.Add($count, $keyValuePair)
 
-			# increment to next char
+            # increment to next char
             $count++
 
             # prompt limit to max 26 items as using single Alphabet charactors.

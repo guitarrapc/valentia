@@ -39,7 +39,7 @@ function Test-ValentiaPowerShellElevated
     (
     )
 
-	$user = [Security.Principal.WindowsIdentity]::GetCurrent()
-	return (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+    $user = [Security.Principal.WindowsIdentity]::GetCurrent()
+    return (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
 }

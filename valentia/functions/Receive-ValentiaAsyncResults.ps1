@@ -34,28 +34,28 @@ Above will retrieve Async Result
         [AsyncPipeline[]]
         $Pipelines,
 
-		[Parameter(
+        [Parameter(
             Position=1,
             Mandatory = 0,
             HelpMessage = "An optional switch to display a progress indicator.")]
         [Switch]
         $ShowProgress,
 
-		[Parameter(
+        [Parameter(
             Position = 2,
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [Switch]
         $quiet
     )
-	
+    
     # Initialising for Write-Progress
     $i = 1 
-	
+    
     foreach($Pipeline in $Pipelines)
     {
-		try
-		{
+        try
+        {
 
             # Inherite variable
             [HashTable]$task = @{}
@@ -68,41 +68,41 @@ Above will retrieve Async Result
             }
 
             # output Asyanc result
-        	$task.result = $Pipeline.Pipeline.EndInvoke($Pipeline.AsyncResult)
-			
+            $task.result = $Pipeline.Pipeline.EndInvoke($Pipeline.AsyncResult)
+            
             # Check status of stream
-			if($Pipeline.Pipeline.Streams.Error)
-			{
+            if($Pipeline.Pipeline.Streams.Error)
+            {
                 $task.SuccessStatus += $false
                 $task.ErrorMessageDetail += $_
-				throw $Pipeline.Pipeline.Streams.Error
-			}
+                throw $Pipeline.Pipeline.Streams.Error
+            }
         }
         catch 
         {
             $task.SuccessStatus += $false
             $task.ErrorMessageDetail += $_
             Write-Error $_
-		}
+        }
         
         # Dispose Pipeline
         $Pipeline.Pipeline.Dispose()
-		
+        
         # Dispose RunspacePool
         $pool.Close()
         $pool.Dispose()
 
         # Show Progress bar
-		if($ShowProgress)
-		{
+        if($ShowProgress)
+        {
             if (!$quiet)
             {
-			    Write-Progress -Activity 'Receiving AsyncPipeline Results' `
+                Write-Progress -Activity 'Receiving AsyncPipeline Results' `
                     -PercentComplete $(($i/$Pipelines.Length) * 100) `
-				    -Status "Percent Complete"
+                    -Status "Percent Complete"
             }
-		}
-		
+        }
+        
         # Incrementing for Write-Progress
         $i++
 

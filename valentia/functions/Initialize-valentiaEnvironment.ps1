@@ -130,7 +130,7 @@ read production-hoge.ps1 from c:\test.
         Write-Verbose "Command : Test-ValentiaPowerShellElevated"
         if(-not(Test-ValentiaPowerShellElevated))
         {
-	        throw "To run this Cmdlet on UAC 'Windows Vista, 7, 8, Windows Server 2008, 2008 R2, 2012 and later versions of Windows' must start an elevated PowerShell console."
+            throw "To run this Cmdlet on UAC 'Windows Vista, 7, 8, Windows Server 2008, 2008 R2, 2012 and later versions of Windows' must start an elevated PowerShell console."
         }
         else
         {
