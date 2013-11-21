@@ -259,24 +259,35 @@ You can prepare script file to run, and specify path.
             Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
 
             # execute workflow
-            Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
-                $result = @{}
-            
-            }{
-                $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
-                $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
-                if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
+            if (-not $PSBoundParameters.quiet.IsPresent)
+            {
+                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
+                    $result = @{}           
+                }{
+                    $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
+                    $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
+                    if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
                 
 
-                # Output to host
-                if(!$quiet)
-                {
                     # Output to host
                     $_.result
-                }
 
-                # For wsman trap hit
-                $WSManInstanceflag = $_.WSManInstanceflag
+                    # For wsman trap hit
+                    $WSManInstanceflag = $_.WSManInstanceflag
+                }
+            }
+            else
+            {
+                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -quiet | %{
+                    $result = @{}
+                }{
+                    $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
+                    $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
+                    if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
+                
+                    # For wsman trap hit
+                    $WSManInstanceflag = $_.WSManInstanceflag
+                }
             }
             
             # Check WSManInstance flag if there are restart WinRM happens or not
@@ -286,19 +297,34 @@ You can prepare script file to run, and specify path.
                 Write-Warning "Restart Complete, trying remote session again."
 
                 # if hit then automatically rerun workflow
-                Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
-                    $result = @{}
-            
-                }{
-                    $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
-                    $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
-                    if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
+                if (-not $PSBoundParameters.quiet.IsPresent)
+                {
+                    Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
+                        $result = @{}           
+                    }{
+                        $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
+                        $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
+                        if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
+                
 
-
-                    if(!$quiet)
-                    {
                         # Output to host
                         $_.result
+
+                        # For wsman trap hit
+                        $WSManInstanceflag = $_.WSManInstanceflag
+                    }
+                }
+                else
+                {
+                    Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -quiet | %{
+                        $result = @{}
+                    }{
+                        $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
+                        $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
+                        if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
+                
+                        # For wsman trap hit
+                        $WSManInstanceflag = $_.WSManInstanceflag
                     }
                 }
             }
@@ -348,7 +374,7 @@ You can prepare script file to run, and specify path.
         }
             
         # show result
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             [PSCustomObject]$CommandResult
         }

@@ -62,7 +62,7 @@ Above will retrieve Async Result
 
             # Get HostName of Pipeline
             $task.host = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
-            if (!$quiet)
+            if (-not $PSBoundParameters.quiet.IsPresent)
             {
                 Write-Warning  -Message ("{0} Asynchronous execution done." -f $task.host)
             }
@@ -95,7 +95,7 @@ Above will retrieve Async Result
         # Show Progress bar
         if($ShowProgress)
         {
-            if (!$quiet)
+            if (-not $PSBoundParameters.quiet.IsPresent)
             {
                 Write-Progress -Activity 'Receiving AsyncPipeline Results' `
                     -PercentComplete $(($i/$Pipelines.Length) * 100) `

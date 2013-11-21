@@ -269,7 +269,7 @@ You can prepare script file to run, and specify path.
         $ReceiveAsyncStatus = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
 
         # hide progress or not
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             Write-Warning -Message "$((&$ReceiveAsyncStatus).Name)"
         }
@@ -280,7 +280,7 @@ You can prepare script file to run, and specify path.
         $limitCount = 10000
 
         # hide progress or not
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             Write-Warning -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($sleepMS * $limitCount / 1000))
         }
@@ -290,7 +290,7 @@ You can prepare script file to run, and specify path.
             $count++
 
             # hide progress or not
-            if (!$quiet)
+            if (-not $PSBoundParameters.quiet.IsPresent)
             {
                 if ($count % 100 -eq 0)
                 {
@@ -311,7 +311,7 @@ You can prepare script file to run, and specify path.
 
 
         # Obtain Async Command Result
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress | %{
                 $result = @{}
@@ -409,7 +409,7 @@ You can prepare script file to run, and specify path.
         }
 
         # show result
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             [PSCustomObject]$CommandResult
         }

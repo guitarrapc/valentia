@@ -135,7 +135,7 @@ Created: 20/June/2013
         $MessageStopwatch = Invoke-Command -ScriptBlock {$DurationMessage}
 
         # Show Duration Seconds
-        if(!$quiet)
+        if (-not $quiet)
         {
             Write-Warning -Message $MessageStopwatch
         }

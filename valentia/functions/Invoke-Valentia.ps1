@@ -264,7 +264,7 @@ You can prepare script file to run, and specify path.
         }
 
         # Check Connection Status
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             if ($Sessions.State -eq "opened")
             {
@@ -398,7 +398,7 @@ You can prepare script file to run, and specify path.
 
 
         # show result
-        if (!$quiet)
+        if (-not $PSBoundParameters.quiet.IsPresent)
         {
             [PSCustomObject]$CommandResult
         }

@@ -65,7 +65,14 @@ Created: 20/June/2013
             Mandatory = 0,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [string[]]
-        $TaskParameter
+        $TaskParameter,
+
+        [Parameter(
+            Position = 3, 
+            Mandatory = 0,
+            HelpMessage = "Hide execution progress.")]
+        [switch]
+        $quiet
     )
     
     $ErrorActionPreference = $valentia.errorPreference
@@ -90,7 +97,7 @@ Created: 20/June/2013
                 $WorkflowScript = [ScriptBlock]::Create($using:ScriptToRun)
 
                 # Run ScriptBlock
-                $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ArgumentList $TaskParameter
+                $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ArgumentList $using:TaskParameter
                 $task.WSManInstanceflag = $false
             }
             catch 
@@ -109,7 +116,7 @@ Created: 20/June/2013
             $MessageStopwatch = Invoke-Command -ScriptBlock {&$DurationMessage}
 
             # Show Duration Seconds
-            if (!$quiet)
+            if (-not $using:quiet)
             {
                 Write-Warning -Message ("`t`t{0}" -f $MessageStopwatch)
             }
