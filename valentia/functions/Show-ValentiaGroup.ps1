@@ -47,7 +47,7 @@ show files in $valentia.Root\$valentia.BranchFolder.Application folder recursibl
             Position = 1,
             Mandatory = 0,
             HelpMessage = "Use if you want to search directory recursibly.")]
-        [string[]]
+        [switch]
         $recurse
      )
  
