@@ -59,7 +59,7 @@ Add PowerShellRemoting-In accessible rule to Firewall.
 
     if (-not((Get-NetFirewallRule | where Name -eq $Name) -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort)))
     {
-        Write-Verbose ("Windows PowerShell Remoting port TCP $PSRemotePort was not opend. Set new rule [ {1} ]" -f $PSRemotePort, $Name)
+        Write-Verbose ("Windows PowerShell Remoting port TCP $PSRemotePort was not opend. Set new rule '{1}'" -f $PSRemotePort, $Name)
         New-NetFirewallRule `
             -Name $Name `
             -DisplayName $Name `
@@ -86,5 +86,35 @@ Add PowerShellRemoting-In accessible rule to Firewall.
     {
         Write-Verbose "Windows PowerShell Remoting port TCP 5985 was alredy opened. Get Firewall Rule."
         Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq 5985
+    }
+
+    if ((Get-WinSystemLocale).Name -eq "ja-JP")
+    {
+        $japanesePSRemoteingEnableRule = "Windows リモート管理 (HTTP 受信)"
+        if (-not((Get-NetFirewallRule | where DisplayName -eq $japanesePSRemoteingEnableRule) -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort) -and -not(Get-NetFirewallRule | where Profile -ne "Any")))
+        {
+            Write-Verbose ("日本語OSと検知しました。'{0}' という名称で TCP '{1}' をファイアウォールに許可します。" -f $japanesePSRemoteingEnableRule, 5985)
+            New-NetFirewallRule `
+                -Name $japanesePSRemoteingEnableRule `
+                -DisplayName $japanesePSRemoteingEnableRule `
+                -Description $Description `
+                -Group $Group `
+                -Enabled True `
+                -Profile Any `
+                -Direction Inbound `
+                -Action Allow `
+                -EdgeTraversalPolicy Block `
+                -LooseSourceMapping $False `
+                -LocalOnlyMapping $False `
+                -OverrideBlockRules $False `
+                -Program Any `
+                -LocalAddress Any `
+                -RemoteAddress Any `
+                -Protocol TCP `
+                -LocalPort $PSRemotePort `
+                -RemotePort Any `
+                -LocalUser Any `
+                -RemoteUser Any 
+        }
     }
 }
