@@ -89,18 +89,20 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
         $Users = $valentia.users.deployuser,
 
         [parameter(
-            mandatory,
+            mandatory = 0,
             ParameterSetName = 'Secret',
             HelpMessage = "User account Password.")]
+        [ValidateNotNullOrEmpty()]
         [Security.SecureString]
-        ${Type your OS User password},
+        $SecuredPassword,
 
         [parameter(
-            mandatory,
+            mandatory = 0,
             ParameterSetName = 'Plain',
             HelpMessage = "User account Password.")]
+        [ValidateNotNullOrEmpty()]
         [String]
-        $Password = "",
+        $Password,
 
         [parameter(
             mandatory = 0,
@@ -119,9 +121,13 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
         {
             $SecretPassword = $Password | ConvertTo-SecureString -AsPlainText -Force
         }
+        elseif ($SecuredPassword)
+        {
+            $SecretPassword = $SecuredPassword
+        }
         else
         {
-            $SecretPassword = ${Type your OS User password}
+            $SecretPassword = Read-Host -AsSecureString -Prompt ("Type your OS User password for '{0}'" -f $($users -join ","))
         }
     }
 
