@@ -91,7 +91,7 @@ Add PowerShellRemoting-In accessible rule to Firewall.
     if ((Get-WinSystemLocale).Name -eq "ja-JP")
     {
         $japanesePSRemoteingEnableRule = "Windows リモート管理 (HTTP 受信)"
-        if (-not((Get-NetFirewallRule | where DisplayName -eq $japanesePSRemoteingEnableRule) -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort) -and -not(Get-NetFirewallRule | where Profile -ne "Any")))
+        if (-not((Get-NetFirewallRule | where DisplayName -eq $japanesePSRemoteingEnableRule | where Profile -ne "Any") -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort)))
         {
             Write-Verbose ("日本語OSと検知しました。'{0}' という名称で TCP '{1}' をファイアウォールに許可します。" -f $japanesePSRemoteingEnableRule, 5985)
             New-NetFirewallRule `
