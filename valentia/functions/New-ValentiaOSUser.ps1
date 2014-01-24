@@ -127,7 +127,7 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
         }
         else
         {
-            $SecretPassword = (Get-Credential -UserName $users -Message "Type your valentia execusion user password").GetNetworkCredential().Password
+            $SecretPassword = (Get-Credential -UserName $users -Message "Type your valentia execusion user password").Password
         }
     }
 
