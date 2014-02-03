@@ -35,7 +35,7 @@ read production-hoge.ps1 from c:\test.
     (
         [Parameter(
             Position = 0,
-            Mandatory,
+            Mandatory = 1,
             HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string[]]
         $DeployGroups,
@@ -44,35 +44,34 @@ read production-hoge.ps1 from c:\test.
             Position = 1,
             Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [ValidateNotNullOrEmpty()]
         [string]
         $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup)
     )
 
 
     # Get valentiaGroup
-    function Resolve-ValentiaGroup{
-
-        param(
+    function Read-ValentiaGroup
+    {
+        [CmdletBinding()]
+        param
+        (
             [Parameter(Position = 0,Mandatory)]
             [string]
             $DeployGroup
         )
 
-        if ($DeployGroup.EndsWith($DeployExtension)) # if DeployGroup last letter is same as $DeployExtension
+        if ($DeployGroup.EndsWith($DeployExtension)) # if DeployGroup last letter = Extension is same as $DeployExtension
         {
-            $DeployFile = $DeployGroup
-
-            Write-Verbose ("Creating Deploy Path with DeployFolder [{0}] and DeployGroup [{1}] ." -f $DeployFolder, $DeployFile)
-            $DeployGroupPath = Join-Path $DeployFolder $DeployFile
+            Write-Verbose ("Creating Deploy Path with DeployFolder [{0}] and DeployGroup [{1}] ." -f $DeployFolder, $DeployGroup)
+            $DeployGroupPath = Join-Path $DeployFolder $DeployGroup
 
             Write-Verbose ("Check DeployGroupPath {0}" -f $DeployGroupPath)
             if(Test-Path $DeployGroupPath)
             {
                 # Obtain IP only by selecting leter start from decimal
                 Write-Verbose ("Read DeployGroupPath {0} where letter not contain # inline." -f $DeployGroupPath)
-                Write-Verbose 'code : Select-String -path $DeployGroupPath -Pattern "".*#.*"" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern ""\w"" -Encoding utf8 | select -ExpandProperty line'
-                $Readlines = Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern "\w" -Encoding $valentia.fileEncode | select -ExpandProperty line
-                return $Readlines
+                return (Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern "\w" -Encoding $valentia.fileEncode).line
             }
             else
             {
@@ -80,61 +79,49 @@ read production-hoge.ps1 from c:\test.
                     ErrorMessageDetail = ("DeployGroup '{0}' not found in DeployFolder path '{1}'." -f $DeployGroup, $DeployFolder)
                     SuccessStatus = $false
                 }
-            
+
                 throw $errorDetail.ErrorMessageDetail
             }
 
         }
-        elseif (Test-Connection -ComputerName $DeployGroup -Count 1 -Quiet) # if deploygroup not have extension $valentia.deployextension, try test-connection
-        {
-            return $DeployGroup
-        }
         else
         {
-            if ([string]::IsNullOrWhiteSpace($DeployGroups))
+            if (-not [string]::IsNullOrWhiteSpace($DeployGroup))
             {
-                throw ("DeployGroups '{0}' was white space. Cancel execution." -f $DeployGroups)
+                return $DeployGroup
             }
             else
             {
-                throw ("Could not resolve connection with DeployGroups '{0}'. Cancel execution." -f $DeployGroups)
+                throw ("DeployGroup '{0}' was white space. Cancel execution." -f $DeployGroup)
             }
         }
     }
     
 
-    # Initialize DeployMembers variable
-    $DeployMembers = @()
-
-
     # Get valentia.deployextension information
     Write-Verbose ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension)
     $DeployExtension = $valentia.deployextension
-    $extensionlength = $DeployExtension.length
-
 
     switch ($DeployGroups.Length)
     {
         0 {throw '"$DeployGroups" was Null or Empty, input DeployGroup.'}
         1 {
+            Write-Verbose ("DeployGroups length was 1" -f $DeployGroups.Length)
             # Parse DeplotGroup from [string[]] to [String]
             [string]$DeployGroup = $DeployGroups
 
-            # Resolve DeployGroup is filename or IPAddress/Hostname and return $DeployMemebers
-            $Deploymembers += Resolve-ValentiaGroup -DeployGroup $DeployGroup}
+            Write-Verbose 'Read DeployGroup and return $DeployMemebers'
+            return Read-ValentiaGroup -DeployGroup $DeployGroup}
 
         # more than 2
         default {
+            
+            Write-Verbose ("DeployGroups length default" -f $DeployGroups.Length)
             foreach ($DeployGroup in $DeployGroups)
             {
-                # Parse DeplotGroup from [string[]] to [String]
-                [string]$DeployGroup = $DeployGroup
-
-                # Resolve DeployGroup is filename or IPAddress/Hostname and return $DeployMemebers
-                $Deploymembers += Resolve-ValentiaGroup -DeployGroup $DeployGroup
+                Write-Verbose 'Read DeployGroup and return $DeployMemebers'
+                Read-ValentiaGroup -DeployGroup $DeployGroup
             }
         }
     }
-
-    return $DeployMembers
 }
