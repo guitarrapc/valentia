@@ -54,272 +54,119 @@ Especially psake showed cool way of coding and valentia followed in many points.
 
 <ul>
 <li>
-<p>version : 0.3.3</p>
+<p>version : 0.3.4</p>
 
 <p>[ author : guitarrapc ]</p>
 
-<p>[ Nov 15, 2013 ]</p>
+<p>[ Fev 4, 2013 ]</p>
 
 <ul>
-<li>
-<li>Added function <code>Show-ValentiaConfig</code>. Now you can check valentia-config.ps1 within console.</li>
-<li>Added function <code>Edit-ValentiaConfig</code>. Now you can edit valentia-config.ps1 with PowerShell ISE.</li>
-<li>fix issue 31 : valentia cmdlet will stop with error when trying to run more then 2 whithin same console</li>
-<li>Enhanced issue 32 : Now you can modify Runspace Pool Size within valentia-config.ps1 </li>
+<li>Remove non use function Get-ValentiaModuleReload</li>
+<li>Added function <code>ConvertTo-ValentiaTask</code>. Now you can convert your powershell script to valentia task easier. </li>
+<li>Added function <code>Show-ValentiaPromptForChoice</code>. Now you can show prompt easier.</li>
+<li>Added function <code>Get-ValentiaFileEncoding</code>. Now you can detect file encoding easier.</li>
+<li>Added function <code>Ping-ValentiaGroupAsync</code>. You can ping to the host ultra fast and test connections.</li>
+<li>Added function <code>Test-ValentiaGroupConnection</code>. You can filter result of <code>Ping-ValentiaGroupAsync</code> for demanded status.</li>
+<li>Added function <code>New-ValentiaDynamicParamMulti</code>. Now you can create Dynamic parameter easier.</li>
+<li>Enhanced for <a href="https://github.com/guitarrapc/valentia/issues/47">issue #47</a>. Could not enable PSRemoting on AWS Windows Server is now solved. Added Firewall detection for <code>Initialize-ValentiaEnvironment</code>.</li>
+<li>fix issue : <a href="https://github.com/guitarrapc/valentia/commit/31bd1a48382a5a59fea90fd87b9d8eff144a3c6a#commitcomment-4621590">Edit-valentaiaconfig ISE -NoProfile</a>
+</li>
+<li>fix <a href="https://github.com/guitarrapc/valentia/issues/36">issue #36</a> : Now installer keep directory structure for module.</li>
+<li>fix issue <a href="https://github.com/guitarrapc/valentia/issues/42">#42</a> : Now <code>Invoke-ValentiaDownload</code> as desired.</li>
+<li>fix issue <a href="Show-ValentiaGroup%20Recurse%20switch%20defined%20as%20parameter">#46</a> : now Show-ValentiaGroup -Recurse works as desired.</li>
+<li>Change valentia Development from PowerShell ISE to Visual Studio 2013 with <a href="http://visualstudiogallery.msdn.microsoft.com/c9eb3ba8-0c59-4944-9a62-6eee37294597">PowerShell Tools for Visual Studio</a>
+</li>
+<li>Change CLR Target to 4.0 and OS version.</li>
+<li>Changed valentia file encoding from default(shift-jis) to UTF8.</li>
+<li>Change Module Type from Script Module to Manifest Module.</li>
+<li>Change Password input from Read-Host to Get-Credential. <a href="https://github.com/guitarrapc/valentia/issues/48">Issue #48</a>
+</li>
+<li>Chage Get-ValentiaGroup for <a href="https://github.com/guitarrapc/valentia/issues/50">Issue #50</a>. Now Get-ValentiaGroup never check connection.</li>
+<li>Changed parameter for $valentia.RunSpacePool. Now Logical Number of Core will be use for this parameter.</li>
+<li>Enhanced for <a href="https://github.com/guitarrapc/valentia/issues/28">issue #28</a>Change <code>Invoke-ValentiaAsync</code> meassage from Warning line to Progress. You can check each host progress when added -Verbose switch.</li>
+<li>ErrorPreference handling now can control with valentia-config.ps1</li>
+<li>define help message for all functions.</li>
+<li>Added <code>-quiet</code> switch to <code>Invoke-Valentia</code>,<code>Invoke-valentiaParallel</code> and <code>Invoke-ValentiaAsync</code>. Now you can compress messages and only recieve execution result in bool.</li>
 </ul>
 </li>
 </ul><h1>
-<a name="basic" class="anchor" href="#basic"><span class="octicon octicon-link"></span></a>Basic</h1>
+<a name="valid-os-and-powershell-verstion" class="anchor" href="#valid-os-and-powershell-verstion"><span class="octicon octicon-link"></span></a>Valid OS and PowerShell Verstion</h1>
 
-<h2>
-<a name="valid-os-and-powershell-verstion" class="anchor" href="#valid-os-and-powershell-verstion"><span class="octicon octicon-link"></span></a>Valid OS and PowerShell Verstion</h2>
-
-<p>valentia works with PowerShell Version 3.0 and higher.</p>
-
-<table>
-<thead><tr>
-<th align="center">OS</th>
-<th align="center">PowerShell Version</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="center">Windows 7</td>
-<td align="center">3.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 8</td>
-<td align="center">3.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 8.1</td>
-<td align="center">4.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 2008R2</td>
-<td align="center">3.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 2012</td>
-<td align="center">3.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 2012 R2</td>
-<td align="center">4.0 and higher</td>
-</tr>
-</tbody>
-</table><p>note : all functions are confirmed with Windows Server 2012 x64 English environment.</p>
-
-<h3>
-<a name="development-environment" class="anchor" href="#development-environment"><span class="octicon octicon-link"></span></a>Development Environment</h3>
-
-<p>I'm develop Valentia with following environemt.</p>
-
-<table>
-<thead><tr>
-<th align="center">OS</th>
-<th align="center">PowerShell Version</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="center">Windows 8</td>
-<td align="center">3.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 8.1</td>
-<td align="center">4.0 and higher</td>
-</tr>
-<tr>
-<td align="center">Windows 2012</td>
-<td align="center">3.0 and higher</td>
-</tr>
-</tbody>
-</table><h2>
-<a name="prerequisite" class="anchor" href="#prerequisite"><span class="octicon octicon-link"></span></a>Prerequisite</h2>
-
-<p>Please consider followings before using valentia.</p>
-
-<ol>
-<li>Allow <code>PowerShell Execution Policy</code>
-</li>
-<li>Set Network Profile not in public.</li>
-<li>Install Tools using in valentia</li>
-</ol><h4>
-<a name="1-powershell-execution-policy" class="anchor" href="#1-powershell-execution-policy"><span class="octicon octicon-link"></span></a>1. PowerShell Execution Policy</h4>
-
-<p>You can define your PowerShell Commands into scripts which can use in Valentia. However PowerShell default execution Policy don't trust scripts, it is required change Execution Policy from <code>Restricted</code> to any other. Then you can load PowerShell Scripts using Valentia Task Keyword.</p>
-
-<p>To enable loading your custom PowerShell Scripts, execute following command with Admin elevated PowerShell console.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Set-ExecutionPolicy</span> <span class="n">RemoteSigned</span>
-</pre></div>
+<p>valentia works with PowerShell Version 3.0 and higher.
+I'm developing with Windows 8, Windows 8.1 and Windows 2012.
+Supporting Operating System are...</p>
 
 <ul>
-<li>The default Execution policy of "PowerShell V4 on Windows Server 2012 R2" is <code>RemoteSigned</code>.</li>
-</ul><h4>
-<a name="2-network-profile" class="anchor" href="#2-network-profile"><span class="octicon octicon-link"></span></a>2. Network Profile</h4>
+<li>Windows 7 (with PowerShell V3.0 and higher)</li>
+<li>Windows 8 (with PowerShell V3.0 and higher)</li>
+<li>Windows 8.1 (with PowerShell V4.0 and higher)</li>
+<li>Windows 2012 (with PowerShell V3.0 and higher)</li>
+<li>Windows 2012 R2 (with PowerShell V4.0 and higher)</li>
+</ul><p>note : all functions are confirmed with Windows Server 2012 x64 English environment.</p>
 
-<p>Valentia is Deployment library with PowerShell. The base of remote connection between Server and Client is PowerShell Remoting. It means you need to enable PSRemoting to use valentia.</p>
+<h1>
+<a name="prerequisite" class="anchor" href="#prerequisite"><span class="octicon octicon-link"></span></a>Prerequisite</h1>
 
-<p>Please run following commands to check you network adaptor profile.</p>
+<p>You need to install followings to use valentia file transfer.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-NetConnectionProfile</span>
-</pre></div>
+<ol>
+<li>Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"</li>
+<li>Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")
 
-<p>If you find any Network Adaptor showing as <strong>Public</strong> then <code>Enable-PSRemoting -Force</code> will fail.</p>
+<ul>
+<li><a href="http://ipmsg.org/tools/fastcopy.html">Download FastCopy? click here to go HP.</a></li>
+</ul>
+</li>
+<li>Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.
 
-<p>To change all the Network adaptor which NetworkCategory from <code>Public</code> to <code>Private</code> then run following command with Admin elevated PowerShell </p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-NetConnectionProfile</span> <span class="p">|</span> <span class="n">where</span> <span class="n">NetworkCategory</span> <span class="o">-eq</span> <span class="s2">"Public"</span> <span class="p">|</span> <span class="nb">Set-NetConnectionProfile</span> <span class="n">-NetworkCa</span>
-<span class="n">tegory</span> <span class="n">Private</span>
-</pre></div>
-
-<h4>
-<a name="3-tools" class="anchor" href="#3-tools"><span class="octicon octicon-link"></span></a>3. Tools</h4>
-
-<p>The following tools are used in Valentia. You can ignore them if you don't Valentia Cmdlet which depend on tools.</p>
-
-<table>
-<thead><tr>
-<th align="center">Tool</th>
-<th align="center">using Valentia Cmdlet</th>
-<th align="center">Description</th>
-<th align="center">URI</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="center">Bits Transfer</td>
-<td align="center">
-<code>Invoke-ValentiaUpload</code> &amp; <code>Invoke-ValentiaUploadList</code>
-</td>
-<td align="center">Using for Single and List file transfer. Enable "IIS BITs Transfer" from "Windows Program and freature"</td>
-<td align="center"><a href="http://msdn.microsoft.com/en-us/library/bb968799(v=vs.85).aspx" title="Background Intelligent Transfer Service">Background Intelligent Transfer Service</a></td>
-</tr>
-<tr>
-<td align="center">FastCopy</td>
-<td align="center"><code>Invoke-ValentiaSync</code></td>
-<td align="center">Please intstall FastCopyx64 to "C:\Program Files\FastCopy" or configure path to fastcopy.exe with <code>valentia-config.ps1</code>
-</td>
-<td align="center"><a href="http://ipmsg.org/tools/fastcopy.html">Download FastCopy? click here to go HP.</a></td>
-</tr>
-</tbody>
-</table><h1>
+<ul>
+<li><code>Set-ExecutionPolicy RemoteSigned</code></li>
+</ul>
+</li>
+</ol><h1>
 <a name="install-valentia-module" class="anchor" href="#install-valentia-module"><span class="octicon octicon-link"></span></a>Install valentia module</h1>
 
-<p>To use valentia module, please set valentia folder to PowerShell module path. Normally user module path is defined in Environment variables <code>PATH</code> as <code>%homepath%\documents\WindowsPowerShell\Module\</code></p>
+<p>To use valentia module, please set valentia folder to </p>
 
-<h2>
-<a name="1-valentia-installation" class="anchor" href="#1-valentia-installation"><span class="octicon octicon-link"></span></a>1. Valentia Installation</h2>
+<div class="highlight highlight-PowerShell"><pre><span class="k">%</span><span class="n">homepath</span><span class="p">%\</span><span class="n">documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Module</span><span class="p">\</span>
+</pre></div>
 
-<p>Valentia written with standard module, thus the only thing required is "set valentia folder into module path or custom path".</p>
+<p>Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.</p>
 
-<h4>
-<a name="using-valentia-with-current-user-only" class="anchor" href="#using-valentia-with-current-user-only"><span class="octicon octicon-link"></span></a>Using Valentia with Current User only</h4>
+<p>You can install valentia with <code>run install.bat</code>. This bat file will copy valentia to module path <code>env:USERPROFILE\Documents\WindowsPowerShell\Modules</code></p>
 
-<p>You can install valentia with running <code>install.bat</code>. This bat file will copy Valentia to user Module Path.</p>
+<p>Or if you want to use valentia with all user, then set valentia module folder to:</p>
 
-<table>
-<thead><tr>
-<th align="center">Module Scope</th>
-<th align="center">Copying Module Path</th>
-</tr></thead>
-<tbody><tr>
-<td align="center">Current User only</td>
-<td align="center"><code>env:USERPROFILE\Documents\WindowsPowerShell\Modules\Valentia</code></td>
-</tr></tbody>
-</table><h4>
-<a name="using-valentia-with-all-users" class="anchor" href="#using-valentia-with-all-users"><span class="octicon octicon-link"></span></a>Using Valentia with All Users</h4>
+<div class="highlight highlight-PowerShell"><pre><span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Windows</span><span class="p">\</span><span class="n">System32</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">v1</span><span class="p">.</span><span class="n">0</span><span class="p">\</span><span class="n">Modules</span><span class="p">\</span><span class="n">valentia</span>
+</pre></div>
 
-<p>If you you want to use valentia with all users in your machine, then set valentia module folder to Machine Module Path.</p>
+<p>Else place anywhere you want.</p>
 
-<p>if you are using x64 Windows and want to use Valentia with PowerShell x86 then Module path is under SysWOW64.</p>
+<h1>
+<a name="import-valentia-module" class="anchor" href="#import-valentia-module"><span class="octicon octicon-link"></span></a>Import valentia module</h1>
 
-<table>
-<thead><tr>
-<th align="center">Module Scope</th>
-<th align="center">Copying Module Path</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="center">All Users</td>
-<td align="center"><code>C:\Windows\System32\WindowsPowerShell\v1.0\Modules\Valentia</code></td>
-</tr>
-<tr>
-<td align="center">All Users (x86 for 64bit OS)</td>
-<td align="center"><code>C:\Windows\SysWOW64\WindowsPowerShell\v1.0\Modules\Valentia</code></td>
-</tr>
-</tbody>
-</table><h4>
-<a name="custom-path" class="anchor" href="#custom-path"><span class="octicon octicon-link"></span></a>Custom Path</h4>
+<p>In PowerShell V3.0, all modules located in default psmodulepath will be automatically loaded.</p>
 
-<p>If you don't want copy Valentia to any module path but using your custom path, then set Valentia anywhere you want.</p>
+<p>if you sat module in custom path, then use Import-Module Cmdlet.</p>
 
-<table>
-<thead><tr>
-<th align="center">Module Scope</th>
-<th align="center">Copying Module Path Sample</th>
-</tr></thead>
-<tbody><tr>
-<td align="center">Anywhere</td>
-<td align="center"><code>D:\CustomPowerShell\Valentia</code></td>
-</tr></tbody>
-</table><h2>
-<a name="2-import-valentia-module" class="anchor" href="#2-import-valentia-module"><span class="octicon octicon-link"></span></a>2. Import valentia module</h2>
+<div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="s2">"move to custom path you sat valentia"</span>
+<span class="nb">Import-Module</span> <span class="n">valentia</span>
+</pre></div>
 
-<h3>
-<a name="if-you-set-valentia-in-default-powershell-module-path" class="anchor" href="#if-you-set-valentia-in-default-powershell-module-path"><span class="octicon octicon-link"></span></a>If you set Valentia in Default PowerShell Module Path</h3>
-
-<p>In PowerShell V3.0, all modules located in Module Path will be automatically loaded. You don't need to use <code>Import-Modue Valentia</code> in this case. Normally default Module Path is defined in Environment variables "PATH".</p>
-
-<table>
-<thead><tr>
-<th align="center">Module Scope</th>
-<th align="center">Default Module Path</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="center">Current user Module Path</td>
-<td align="center">env:USERPROFILE\Documents\WindowsPowerShell\Modules</td>
-</tr>
-<tr>
-<td align="center">Machine level Module Path</td>
-<td align="center">C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia</td>
-</tr>
-<tr>
-<td align="center">Machie level (x86 for 64bit OS)</td>
-<td align="center"><code>C:\Windows\SysWOW64\WindowsPowerShell\v1.0\Modules\Valentia</code></td>
-</tr>
-</tbody>
-</table><p>Valentia Module will automatically import when calling Valentia functions. However if you want to check $valentia variables before running Valentia Cmdlet, then <code>Import-Module</code> is required.</p>
+<p>If you sat valentia in standard psmodule path described in "Install valentia", you don't need manually import module, but you can do it.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span>
 </pre></div>
 
-<h3>
-<a name="if-you-set-valentia-in-custom-path" class="anchor" href="#if-you-set-valentia-in-custom-path"><span class="octicon octicon-link"></span></a>If you set Valentia in Custom Path</h3>
+<p>or check detail with following.</p>
 
-<p>if you sat module in custom path, then it is required using Import-Module Cmdlet to Import valentia in your PowerShell session.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="n">PathToValentia</span> <span class="c"># the path you set valentia.psm1</span>
-<span class="nb">Import-Module</span> <span class="n">valentia</span>
-</pre></div>
-
-<h3>
-<a name="reload-initial-valentia-settings-into-current-powreshell-session" class="anchor" href="#reload-initial-valentia-settings-into-current-powreshell-session"><span class="octicon octicon-link"></span></a>Reload initial valentia settings into current PowreShell Session</h3>
-
-<p>You can reload Module into current session anytime with following command.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span> <span class="n">-Force</span> <span class="n">-Verbose</span>
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span> <span class="n">-Verbose</span>
 </pre></div>
 
 <h1>
-<a name="check-valentia-cmdlets-and-alias" class="anchor" href="#check-valentia-cmdlets-and-alias"><span class="octicon octicon-link"></span></a>Check Valentia Cmdlets and Alias</h1>
+<a name="valentia-cmdlets" class="anchor" href="#valentia-cmdlets"><span class="octicon octicon-link"></span></a>valentia Cmdlets</h1>
 
-<p>After Valentia had sat in Module Path or Imported, you can use Valentia!!</p>
-
-<h2>
-<a name="1-valentia-cmdlets" class="anchor" href="#1-valentia-cmdlets"><span class="octicon octicon-link"></span></a>1. Valentia Cmdlets</h2>
-
-<p>You can check all Valentia Cmdlets by running command.</p>
+<p>You can see valentia Cmdlets by following command.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">Get-command</span> <span class="n">-module</span> <span class="n">valentia</span>
 </pre></div>
@@ -328,249 +175,266 @@ Especially psake showed cool way of coding and valentia followed in many points.
 
 <table>
 <thead><tr>
-<th align="left">CommandType</th>
-<th align="left">Name</th>
-<th align="left">ModuleName</th>
+<th>CommandType</th>
+<th>Name</th>
+<th>ModuleName</th>
 </tr></thead>
 <tbody>
 <tr>
-<td align="left">Function</td>
-<td align="left">ConvertTo-ValentiaTask</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>ConvertTo-ValentiaTask</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Edit-ValentiaConfig</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Edit-ValentiaConfig</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Get-ValentiaCredential</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Get-ValentiaCredential</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Get-ValentiaFileEncoding</td>
-<td align="left">valentiav</td>
+<td>Function</td>
+<td>Get-ValentiaFileEncoding</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Get-ValentiaGroup</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Get-ValentiaGroup</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Get-ValentiaRebootRequiredStatus</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Get-ValentiaRebootRequiredStatus</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Get-ValentiaTask</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Get-ValentiaTask</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Initialize-ValentiaEnvironment</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Initialize-ValentiaEnvironment</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-Valentia</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-Valentia</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaAsync</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaAsync</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaClean</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaClean</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaCommand</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaCommand</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-valentiaDeployGroupRemark</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-valentiaDeployGroupRemark</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-valentiaDeployGroupUnremark</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaDeployGroupUnremark</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaDownload</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaDownload</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaParallel</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaParallel</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaSync</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaSync</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaUpload</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaUpload</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Invoke-ValentiaUploadList</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Invoke-ValentiaUploadList</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">New-ValentiaCredential</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>New-ValentiaCredential</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">New-ValentiaFolder</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>New-ValentiaFolder</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">New-ValentiaGroup</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>New-ValentiaGroup</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Set-ValentiaHostName</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Ping-ValentiaGroupAsync</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Set-ValentiaLocation</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Set-ValentiaHostName</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Show-ValentiaConfig</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Set-ValentiaLocation</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Show-ValentiaGroup</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Show-ValentiaConfig</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Function</td>
-<td align="left">Show-ValentiaPromptForChoice</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Show-ValentiaGroup</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Workflow</td>
-<td align="left">Invoke-ValentiaCommandParallel</td>
-<td align="left">valentia</td>
+<td>Function</td>
+<td>Show-ValentiaPromptForChoice</td>
+<td>valentia</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Test-ValentiaGroupConnection</td>
+<td>valentia</td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>Invoke-ValentiaCommandParallel</td>
+<td>valentia</td>
 </tr>
 </tbody>
-</table><h2>
-<a name="2-valentia-alias" class="anchor" href="#2-valentia-alias"><span class="octicon octicon-link"></span></a>2. Valentia Alias</h2>
-
-<p>All Cmdlets have alias to let you use easily.
+</table><p>All Cmdlets have alias to lket you use easily.
 You can find them as like this.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">Get-Alias</span> <span class="p">|</span> <span class="n">where</span> <span class="n">ModuleName</span> <span class="o">-eq</span> <span class="s2">"valentia"</span>
 </pre></div>
 
-<p>Following Alias-&gt;Cmdlets will be shown.</p>
+<p>This show alias defined in valentia</p>
 
 <table>
 <thead><tr>
-<th align="left">CommandType</th>
-<th align="left">DisplayName</th>
-<th align="left">ModuleName</th>
+<th>CommandType</th>
+<th>Name</th>
+<th>ModuleName</th>
 </tr></thead>
 <tbody>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Clean -&gt; Invoke-ValentiaClean</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaClean</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Cred -&gt; Get-ValentiaCredential</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Get-ValentiaCredential</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Download -&gt; Invoke-ValentiaDownload</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaDownload</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Go -&gt; Set-ValentiaLocation</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Set-ValentiaLocation</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Initial -&gt; Initialize-ValentiaEnvironment</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Initialize-ValentiaEnvironment</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">ipremark -&gt; Invoke-valentiaDeployGroupRemark</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-valentiaDeployGroupRemark</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">ipunremark -&gt; Invoke-valentiaDeployGroupUnremark</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaDeployGroupUnremark</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Rename -&gt; Set-ValentiaHostName</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Ping-ValentiaGroupAsync</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Sync -&gt; Invoke-ValentiaSync</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Set-ValentiaHostName</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Target -&gt; Get-ValentiaGroup</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaSync</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Task -&gt; Get-ValentiaTask</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Get-ValentiaGroup</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Upload -&gt; Invoke-ValentiaUpload</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Get-ValentiaTask</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">UploadL -&gt; Invoke-ValentiaUploadList</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaUpload</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Vale -&gt; Invoke-Valentia</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaUploadList</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Valea -&gt; Invoke-ValentiaAsync</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-Valentia</td>
+<td>valentia</td>
 </tr>
 <tr>
-<td align="left">Alias</td>
-<td align="left">Valep -&gt; Invoke-ValentiaParallel</td>
-<td align="left">valentia</td>
+<td>Alias</td>
+<td>Invoke-ValentiaAsync</td>
+<td>valentia</td>
+</tr>
+<tr>
+<td>Alias</td>
+<td>Invoke-ValentiaParallel</td>
+<td>valentia</td>
+</tr>
+<tr>
+<td>Alias</td>
+<td>Valep</td>
+<td>valentia</td>
 </tr>
 </tbody>
 </table><h1>
