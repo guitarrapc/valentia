@@ -32,8 +32,8 @@ $valentia.config_default = New-Object PSObject -property @{
 
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
 $valentia.poolSize = New-Object psobject -property @{
-    minPoolSize                         = 50;
-    maxPoolSize                         = 50;
+    minPoolSize                         = $env:NUMBER_OF_PROCESSORS;
+    maxPoolSize                         = $env:NUMBER_OF_PROCESSORS;
 }
 
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script

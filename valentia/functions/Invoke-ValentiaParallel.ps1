@@ -98,6 +98,7 @@ You can prepare script file to run, and specify path.
             Position = 2, 
             Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [ValidateNotNullOrEmpty()]
         [string]
         $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup),
 
@@ -105,6 +106,7 @@ You can prepare script file to run, and specify path.
             Position = 3, 
             Mandatory = 0,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [ValidateNotNullOrEmpty()]
         [string[]]
         $TaskParameter,
 
@@ -116,11 +118,12 @@ You can prepare script file to run, and specify path.
         $quiet
     )
 
-    ### Begin
+#region Begin
 
     try
-    {        
-        $ErrorActionPreference = $valentia.errorPreference
+    {
+        # Preference
+        $script:ErrorActionPreference = $valentia.errorPreference
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -132,28 +135,16 @@ You can prepare script file to run, and specify path.
         # Get Start Time
         $TimeStart = (Get-Date).DateTime
 
+        # Import default Configurations
+        Write-Verbose $valeWarningMessages.warn_import_configuration
+        Import-valentiaConfigration
 
-        # Import default Configurations & Modules
-        if ($PSBoundParameters['Verbose'])
-        {
-            # Import default Configurations
-            Write-Verbose $valeWarningMessages.warn_import_configuration
-            Import-valentiaConfigration -Verbose
-
-            # Import default Modules
-            Write-Verbose $valeWarningMessages.warn_import_modules
-            Import-valentiaModules -Verbose
-        }
-        else
-        {
-            Import-valentiaConfigration
-            Import-valentiaModules
-        }
-        
+        # Import default Modules
+        Write-Verbose $valeWarningMessages.warn_import_modules
+        Import-valentiaModules
 
         # Log Setting
         $LogPath = New-ValentiaLog
-
 
         # Swtich ScriptBlock or ScriptFile(Task) was selected
         switch ($true)
@@ -179,8 +170,7 @@ You can prepare script file to run, and specify path.
                     $TaskFileStatus = [PSCustomObject]@{
                         ErrorMessageDetail = "TaskFileName [ {0} ] not found in {1} exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
                         SuccessStatus = $false
-                    }
-                                        
+                    }      
                     $SuccessStatus.Add($TaskFileStatus.SuccessStatus)
                     $ErrorMessageDetail.Add($TaskFileStatus.ErrorMessageDetail)
                 }
@@ -198,7 +188,6 @@ You can prepare script file to run, and specify path.
                     $valeErrorMessages.error_duplicate_task_name -F $Name
                     $SuccessStatus += $false
                 }
-
             }
             default {
                 $SuccessStatus.Add($false)
@@ -214,7 +203,7 @@ You can prepare script file to run, and specify path.
         # Obtain Remote Login Credential (No need if clients are same user/pass)
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
         }
         catch
         {
@@ -223,26 +212,22 @@ You can prepare script file to run, and specify path.
             Write-Error $_
         }
         
-
         # Obtain DeployMember IP or Hosts for deploy
+        Write-Verbose "Get hostaddresses to connect."
         $DeployMembers = Get-ValentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        Write-Verbose ("Connecting to Target Computer : [{0}] `n" -f $DeployMembers)
-
         if ($DeployMembers.SuccessStatus -eq $false)
         {
             $SuccessStatus.Add($DeployMembers.SuccessStatus)
             $ErrorMessageDetail.Add($DeployMembers.ErrorMessageDetail)
         }        
 
-
         # Show Stopwatch for Begin section
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
-        ""
         
+#endregion
 
-    ### Process
-
+#region Process
 
         # Run ScriptBlock as Parallel for each DeployMember
         Write-Verbose ("Execute command {0} " -f $ScriptToRun)
@@ -346,7 +331,12 @@ You can prepare script file to run, and specify path.
     finally
     {
 
-    ### End
+#endregion
+
+#region End
+
+        # reverse Error Action Preference
+        $script:ErrorActionPreference = $valentia.originalErrorActionPreference
 
         # Show Stopwatch for Total section
         $TotalDuration += $TotalstopwatchSession.Elapsed.TotalSeconds
@@ -389,6 +379,7 @@ You can prepare script file to run, and specify path.
         # Cleanup valentia Environment
         Invoke-ValentiaClean
 
+#endregion
     }
 
 }

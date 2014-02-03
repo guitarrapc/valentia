@@ -3,7 +3,7 @@
 #-- Deploy Folder/File Module Functions --#
 
 # ipunremark
-function Invoke-valentiaDeployGroupUnremark
+function Invoke-ValentiaDeployGroupUnremark
 {
 
 <#

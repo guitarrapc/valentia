@@ -7,13 +7,43 @@ This indicate Version History for valentia.
 
 ## Version 0.3.x
 
+- version : 0.3.4
+	
+	[ author : guitarrapc ]
+	
+	[ Fev 4, 2013 ]
+	
+	* Remove non use function Get-ValentiaModuleReload
+	* Added function ```ConvertTo-ValentiaTask```. Now you can convert your powershell script to valentia task easier. 
+	* Added function ```Show-ValentiaPromptForChoice```. Now you can show prompt easier.
+	* Added function ```Get-ValentiaFileEncoding```. Now you can detect file encoding easier.
+	* Added function ```Ping-ValentiaGroupAsync```. You can ping to the host ultra fast and test connections.
+	* Added function ```Test-ValentiaGroupConnection```. You can filter result of ```Ping-ValentiaGroupAsync``` for demanded status.
+	* Added function ```New-ValentiaDynamicParamMulti```. Now you can create Dynamic parameter easier.
+	* Enhanced for [issue #47](https://github.com/guitarrapc/valentia/issues/47). Could not enable PSRemoting on AWS Windows Server is now solved. Added Firewall detection for ```Initialize-ValentiaEnvironment```.
+	* fix issue : [Edit-valentaiaconfig ISE -NoProfile](https://github.com/guitarrapc/valentia/commit/31bd1a48382a5a59fea90fd87b9d8eff144a3c6a#commitcomment-4621590)
+	* fix [issue #36](https://github.com/guitarrapc/valentia/issues/36) : Now installer keep directory structure for module.
+	* fix issue [#42](https://github.com/guitarrapc/valentia/issues/42) : Now ```Invoke-ValentiaDownload``` as desired.
+	* fix issue [#46](Show-ValentiaGroup Recurse switch defined as parameter) : now Show-ValentiaGroup -Recurse works as desired.
+	* Change valentia Development from PowerShell ISE to Visual Studio 2013 with [PowerShell Tools for Visual Studio](http://visualstudiogallery.msdn.microsoft.com/c9eb3ba8-0c59-4944-9a62-6eee37294597)
+	* Change CLR Target to 4.0 and OS version.
+	* Changed valentia file encoding from default(shift-jis) to UTF8.
+	* Change Module Type from Script Module to Manifest Module.
+	* Change Password input from Read-Host to Get-Credential. [Issue #48](https://github.com/guitarrapc/valentia/issues/48)
+	* Chage Get-ValentiaGroup for [Issue #50](https://github.com/guitarrapc/valentia/issues/50). Now Get-ValentiaGroup never check connection.
+	* Changed parameter for $valentia.RunSpacePool. Now Logical Number of Core will be use for this parameter.
+	* Enhanced for [issue #28](https://github.com/guitarrapc/valentia/issues/28)Change ```Invoke-ValentiaAsync``` meassage from Warning line to Progress. You can check each host progress when added -Verbose switch.
+	* ErrorPreference handling now can control with valentia-config.ps1
+	* define help message for all functions.
+	* Added ```-quiet``` switch to ```Invoke-Valentia```,```Invoke-valentiaParallel``` and ```Invoke-ValentiaAsync```. Now you can compress messages and only recieve execution result in bool.
+
+
 - version : 0.3.3
 	
 	[ author : guitarrapc ]
 	
 	[ Nov 15, 2013 ]
 	
-	* 
 	* Added function ```Show-ValentiaConfig```. Now you can check valentia-config.ps1 within console.
 	* Added function ```Edit-ValentiaConfig```. Now you can edit valentia-config.ps1 with PowerShell ISE.
 	* fix issue 31 : valentia cmdlet will stop with error when trying to run more then 2 whithin same console

@@ -16,16 +16,35 @@ valentia は、 Capistrano ( LinuxにおけるRuby 製のデプロイツール) 
 
 ## Version 0.3.x
 
-- version : 0.3.3
+- version : 0.3.4
 	
 	[ author : guitarrapc ]
 	
-	[ Nov 15, 2013 ]
+	[ Fev 4, 2013 ]
 	
-	* ```Show-ValentiaConfig``` ファンクションを追加 : これにて PowerShellコンソール内部で valentia-config.ps1 の内容を見れます
-	* ```Edit-ValentiaConfig```　ファンクションを追加 : これにて PowerSheli_iseで valentia-config.ps1 を編集可能です
-	* Issue 31 の修正: 同一コンソールで2回以上のvalentia Cmdlet 実行時に失敗する問題が解決しました
-	* Issue 32 の対応: これにて、valentia-config で Runspace Pool のサイズを指定できるようになりました。 
+	* Remove non use function Get-ValentiaModuleReload
+	* Added function ```ConvertTo-ValentiaTask```. Now you can convert your powershell script to valentia task easier. 
+	* Added function ```Show-ValentiaPromptForChoice```. Now you can show prompt easier.
+	* Added function ```Get-ValentiaFileEncoding```. Now you can detect file encoding easier.
+	* Added function ```Ping-ValentiaGroupAsync```. You can ping to the host ultra fast and test connections.
+	* Added function ```Test-ValentiaGroupConnection```. You can filter result of ```Ping-ValentiaGroupAsync``` for demanded status.
+	* Added function ```New-ValentiaDynamicParamMulti```. Now you can create Dynamic parameter easier.
+	* Enhanced for [issue #47](https://github.com/guitarrapc/valentia/issues/47). Could not enable PSRemoting on AWS Windows Server is now solved. Added Firewall detection for ```Initialize-ValentiaEnvironment```.
+	* fix issue : [Edit-valentaiaconfig ISE -NoProfile](https://github.com/guitarrapc/valentia/commit/31bd1a48382a5a59fea90fd87b9d8eff144a3c6a#commitcomment-4621590)
+	* fix [issue #36](https://github.com/guitarrapc/valentia/issues/36) : Now installer keep directory structure for module.
+	* fix issue [#42](https://github.com/guitarrapc/valentia/issues/42) : Now ```Invoke-ValentiaDownload``` as desired.
+	* fix issue [#46](Show-ValentiaGroup Recurse switch defined as parameter) : now Show-ValentiaGroup -Recurse works as desired.
+	* Change valentia Development from PowerShell ISE to Visual Studio 2013 with [PowerShell Tools for Visual Studio](http://visualstudiogallery.msdn.microsoft.com/c9eb3ba8-0c59-4944-9a62-6eee37294597)
+	* Change CLR Target to 4.0 and OS version.
+	* Changed valentia file encoding from default(shift-jis) to UTF8.
+	* Change Module Type from Script Module to Manifest Module.
+	* Change Password input from Read-Host to Get-Credential. [Issue #48](https://github.com/guitarrapc/valentia/issues/48)
+	* Chage Get-ValentiaGroup for [Issue #50](https://github.com/guitarrapc/valentia/issues/50). Now Get-ValentiaGroup never check connection.
+	* Changed parameter for $valentia.RunSpacePool. Now Logical Number of Core will be use for this parameter.
+	* Enhanced for [issue #28](https://github.com/guitarrapc/valentia/issues/28)Change ```Invoke-ValentiaAsync``` meassage from Warning line to Progress. You can check each host progress when added -Verbose switch.
+	* ErrorPreference handling now can control with valentia-config.ps1
+	* define help message for all functions.
+	* Added ```-quiet``` switch to ```Invoke-Valentia```,```Invoke-valentiaParallel``` and ```Invoke-ValentiaAsync```. Now you can compress messages and only recieve execution result in bool.
 
 
 # 対象OS PowerShell バージョン
@@ -106,34 +125,26 @@ Get-command -module valentia
 
 これらのCmdletが表示されるはずです。
 
-```PowerShell
-CommandType     Name                                               ModuleName
------------     ----                                               ----------
-Function        Get-ValentiaCredential                             valentia
-Function        Get-ValentiaGroup                                  valentia
-Function        Get-ValentiaModuleReload                           valentia
-Function        Get-ValentiaRebootRequiredStatus                   valentia
-Function        Get-ValentiaTask                                   valentia
-Function        Initialize-valentiaEnvironment                     valentia
-Function        Invoke-Valentia                                    valentia
-Function        Invoke-ValentiaAsync                               valentia
-Function        Invoke-ValentiaClean                               valentia
-Function        Invoke-ValentiaCommand                             valentia
-Function        Invoke-valentiaDeployGroupRemark                   valentia
-Function        Invoke-valentiaDeployGroupUnremark                 valentia
-Function        Invoke-ValentiaDownload                            valentia
-Function        Invoke-ValentiaParallel                            valentia
-Function        Invoke-ValentiaSync                                valentia
-Function        Invoke-ValentiaUpload                              valentia
-Function        Invoke-ValentiaUploadList                          valentia
-Function        New-ValentiaCredential                             valentia
-Function        New-ValentiaFolder                                 valentia
-Function        New-ValentiaGroup                                  valentia
-Function        Set-ValentiaHostName                               valentia
-Function        Set-ValentiaLocation                               valentia
-Function        Show-ValentiaGroup                                 valentia
-Workflow        Invoke-ValentiaCommandParallel                     valentia
-```
+|CommandType|Name|ModuleName|
+|----|----|----|
+|Alias|Invoke-ValentiaClean|valentia|
+|Alias|Get-ValentiaCredential|valentia|
+|Alias|Invoke-ValentiaDownload|valentia|
+|Alias|Set-ValentiaLocation|valentia|
+|Alias|Initialize-ValentiaEnvironment|valentia|
+|Alias|Invoke-valentiaDeployGroupRemark|valentia|
+|Alias|Invoke-ValentiaDeployGroupUnremark|valentia|
+|Alias|Ping-ValentiaGroupAsync|valentia|
+|Alias|Set-ValentiaHostName|valentia|
+|Alias|Invoke-ValentiaSync|valentia|
+|Alias|Get-ValentiaGroup|valentia|
+|Alias|Get-ValentiaTask|valentia|
+|Alias|Invoke-ValentiaUpload|valentia|
+|Alias|Invoke-ValentiaUploadList|valentia|
+|Alias|Invoke-Valentia|valentia|
+|Alias|Invoke-ValentiaAsync|valentia|
+|Alias|Invoke-ValentiaParallel|valentia|
+|Alias|Valep|valentia|
 
 各モジュールには利用しやすいようにAliasが設定されています。
 Aliasは以下のコマンドで確認できます。
@@ -145,27 +156,26 @@ Get-Alias | where ModuleName -eq "valentia"
 
 これによりvalentiaで定義されているalias一覧が表示されます。
 
-```PowerShell
-CommandType     Name                                               ModuleName
------------     ----                                               ----------
-Alias           Clean -> Invoke-ValentiaClean                      valentia
-Alias           Cred -> Get-ValentiaCredential                     valentia
-Alias           Download -> Invoke-ValentiaDownload                valentia
-Alias           Go -> Set-ValentiaLocation                         valentia
-Alias           Initial -> Initialize-valentiaEnvironment          valentia
-Alias           ipremark -> Invoke-valentiaDeployGroupRemark       valentia
-Alias           ipunremark -> Invoke-valentiaDeployGroupUnremark   valentia
-Alias           Reload -> Get-ValentiaModuleReload                 valentia
-Alias           Rename -> Set-ValentiaHostName                     valentia
-Alias           Sync -> Invoke-ValentiaSync                        valentia
-Alias           Target -> Get-ValentiaGroup                        valentia
-Alias           Task -> Get-ValentiaTask                           valentia
-Alias           Upload -> Invoke-ValentiaUpload                    valentia
-Alias           UploadL -> Invoke-ValentiaUploadList               valentia
-Alias           Vale -> Invoke-Valentia                            valentia
-Alias           Valea -> Invoke-ValentiaAsync                      valentia
-Alias           Valep -> Invoke-ValentiaParallel                   valentia
-```
+|CommandType|Name|ModuleName|
+|----|----|----|
+|Alias|Invoke-ValentiaClean|valentia|
+|Alias|Get-ValentiaCredential|valentia|
+|Alias|Invoke-ValentiaDownload|valentia|
+|Alias|Set-ValentiaLocation|valentia|
+|Alias|Initialize-ValentiaEnvironment|valentia|
+|Alias|Invoke-valentiaDeployGroupRemark|valentia|
+|Alias|Invoke-ValentiaDeployGroupUnremark|valentia|
+|Alias|Ping-ValentiaGroupAsync|valentia|
+|Alias|Set-ValentiaHostName|valentia|
+|Alias|Invoke-ValentiaSync|valentia|
+|Alias|Get-ValentiaGroup|valentia|
+|Alias|Get-ValentiaTask|valentia|
+|Alias|Invoke-ValentiaUpload|valentia|
+|Alias|Invoke-ValentiaUploadList|valentia|
+|Alias|Invoke-Valentia|valentia|
+|Alias|Invoke-ValentiaAsync|valentia|
+|Alias|Invoke-ValentiaParallel|valentia|
+|Alias|Valep|valentia|
 
 
 # 環境設定コマンド

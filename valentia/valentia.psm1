@@ -277,8 +277,14 @@ $valentia.config_default = New-Object PSObject -property @{
 
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
 $valentia.poolSize = New-Object psobject -property @{
-    minPoolSize                         = 50;
-    maxPoolSize                         = 50;
+    minPoolSize                         = $env:NUMBER_OF_PROCESSORS;
+    maxPoolSize                         = $env:NUMBER_OF_PROCESSORS;
+}
+
+# contains ping property
+$valentia.ping = New-Object psobject -property @{
+    timeout                             = 10;
+    buffer                              = 16;
 }
 
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
@@ -367,6 +373,7 @@ New-Alias -Name Download   -Value Invoke-ValentiaDownload
 New-Alias -Name Go         -Value Set-ValentiaLocation
 New-Alias -Name Clean      -Value Invoke-ValentiaClean
 New-Alias -Name Target     -Value Get-ValentiaGroup
+New-Alias -Name PingAsync  -Value Ping-ValentiaGroupAsync
 New-Alias -Name ipremark   -Value Invoke-valentiaDeployGroupRemark
 New-Alias -Name ipunremark -Value Invoke-valentiaDeployGroupUnremark
 New-Alias -Name Cred       -Value Get-ValentiaCredential
