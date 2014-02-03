@@ -167,26 +167,26 @@ Get-Alias | where ModuleName -eq "valentia"
 
 This show alias defined in valentia
 
-|CommandType|Name|ModuleName|
-|----|----|----|
-|Alias|Invoke-ValentiaClean|valentia|
-|Alias|Get-ValentiaCredential|valentia|
-|Alias|Invoke-ValentiaDownload|valentia|
-|Alias|Set-ValentiaLocation|valentia|
-|Alias|Initialize-ValentiaEnvironment|valentia|
-|Alias|Invoke-valentiaDeployGroupRemark|valentia|
-|Alias|Invoke-ValentiaDeployGroupUnremark|valentia|
-|Alias|Ping-ValentiaGroupAsync|valentia|
-|Alias|Set-ValentiaHostName|valentia|
-|Alias|Invoke-ValentiaSync|valentia|
-|Alias|Get-ValentiaGroup|valentia|
-|Alias|Get-ValentiaTask|valentia|
-|Alias|Invoke-ValentiaUpload|valentia|
-|Alias|Invoke-ValentiaUploadList|valentia|
-|Alias|Invoke-Valentia|valentia|
-|Alias|Invoke-ValentiaAsync|valentia|
-|Alias|Invoke-ValentiaParallel|valentia|
-|Alias|Valep|valentia|
+|CommandType|Name|ResolveCommandName|ModuleName|
+|----|----|----|----|
+|Alias|Clean|Invoke-ValentiaClean|Valentia|
+|Alias|Cred|Get-ValentiaCredential|Valentia|
+|Alias|Download|Invoke-ValentiaDownload|Valentia|
+|Alias|Go|Set-ValentiaLocation|Valentia|
+|Alias|Initial|Initialize-ValentiaEnvironment|Valentia|
+|Alias|ipremark|Invoke-valentiaDeployGroupRemark|Valentia|
+|Alias|ipunremark|Invoke-ValentiaDeployGroupUnremark|Valentia|
+|Alias|PingAsync|Ping-ValentiaGroupAsync|Valentia|
+|Alias|Rename|Set-ValentiaHostName|Valentia|
+|Alias|Sync|Invoke-ValentiaSync|Valentia|
+|Alias|Target|Get-ValentiaGroup|Valentia|
+|Alias|Task|Get-ValentiaTask|Valentia|
+|Alias|Upload|Invoke-ValentiaUpload|Valentia|
+|Alias|UploadL|Invoke-ValentiaUploadList|Valentia|
+|Alias|Vale|Invoke-Valentia|Valentia|
+|Alias|Valea|Invoke-ValentiaAsync|Valentia|
+|Alias|Valep|Invoke-ValentiaParallel|Valentia|
+
 
 # Environment Setup Commands
 
