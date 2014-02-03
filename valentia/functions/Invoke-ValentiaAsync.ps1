@@ -96,6 +96,7 @@ You can prepare script file to run, and specify path.
             Position = 2, 
             Mandatory = 0,
             HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
+        [ValidateNotNullOrEmpty()]
         [string]
         $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup),
 
@@ -103,6 +104,7 @@ You can prepare script file to run, and specify path.
             Position = 3, 
             Mandatory = 0,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [ValidateNotNullOrEmpty()]
         [string[]]
         $TaskParameter,
 
@@ -114,11 +116,13 @@ You can prepare script file to run, and specify path.
         $quiet
     )
 
-    ### Begin
+#region Begin
 
 
     try
-    {        
+    {
+        # Preference
+        $script:ErrorActionPreference = $valentia.errorPreference
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -130,28 +134,16 @@ You can prepare script file to run, and specify path.
         # Get Start Time
         $TimeStart = (Get-Date).DateTime
 
+        # Import default Configurations
+        Write-Verbose $valeWarningMessages.warn_import_configuration
+        Import-valentiaConfigration 
 
-        # Import default Configurations & Modules
-        if ($PSBoundParameters['Verbose'])
-        {
-            # Import default Configurations
-            Write-Verbose $valeWarningMessages.warn_import_configuration
-            Import-valentiaConfigration -Verbose
-
-            # Import default Modules
-            Write-Verbose $valeWarningMessages.warn_import_modules
-            Import-valentiaModules -Verbose
-        }
-        else
-        {
-            Import-valentiaConfigration
-            Import-valentiaModules
-        }
-
+        # Import default Modules
+        Write-Verbose $valeWarningMessages.warn_import_modules
+        Import-valentiaModules
 
         # Log Setting
         $LogPath = New-ValentiaLog
-
 
         # Swtich ScriptBlock or ScriptFile was selected
         switch ($true)
@@ -167,7 +159,7 @@ You can prepare script file to run, and specify path.
                 # Check Key duplicate or not
                 if ($currentContext.executedTasks.Contains($taskKey))
                 {
-                    $valeErrorMessages.error_duplicate_task_name -F $Name
+                    $valeErrorMessages.error_duplicate_task_name -f $Name
                 }
             }
             {$TaskFileName} {
@@ -177,8 +169,7 @@ You can prepare script file to run, and specify path.
                     $TaskFileStatus = [PSCustomObject]@{
                         ErrorMessageDetail = "TaskFileName [ {0} ] not found in {1} exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
                         SuccessStatus = $false
-                    }
-                                        
+                    }        
                     $SuccessStatus += $TaskFileStatus.SuccessStatus
                     $ErrorMessageDetail += $TaskFileStatus.ErrorMessageDetail                    
                 }
@@ -196,7 +187,6 @@ You can prepare script file to run, and specify path.
                     $valeErrorMessages.error_duplicate_task_name -F $Name
                     $SuccessStatus += $false
                 }
-
             }
             default {
                 $SuccessStatus += $false
@@ -209,11 +199,10 @@ You can prepare script file to run, and specify path.
         $task = $currentContext.tasks.$taskKey
         $ScriptToRun = $task.Action
   
-
-        # Obtain Remote Login Credential
+        # Obtain Remote Login Credential (No need if clients are same user/pass)
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
             $SuccessStatus += $true
         }
         catch
@@ -223,26 +212,22 @@ You can prepare script file to run, and specify path.
             Write-Error $_
         }
 
-
         # Obtain DeployMember IP or Hosts for deploy
+        Write-Verbose "Get hostaddresses to connect."
         $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        Write-Verbose ("Connecting to Target Computer : [{0}] `n" -f $DeployMembers)
-
         if ($DeployMembers.SuccessStatus -eq $false)
         {
             $SuccessStatus += $DeployMembers.SuccessStatus
             $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
-        }        
-
+        }
 
         # Show Stopwatch for Begin section
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tDuration Second for Begin Section: $TotalDuration" -f $TotalDuration)
-        ""
 
-    ### Process
+#endregion
 
-
+#region Process
 
         # Create HashTable for Runspace
         $ScriptToRunHash = @{ScriptBlock = $ScriptToRun}
@@ -250,7 +235,7 @@ You can prepare script file to run, and specify path.
         $TaskParameterHash = @{TaskParameter = $TaskParameter} 
 
         # Create a pool of 100 runspaces
-        $pool = New-ValentiaRunSpacePool -minPoolSize $valentia.poolSize.minPoolSize -maxPoolSize $valentia.poolSize.maxPoolSize
+        $pool = New-ValentiaRunSpacePool -minPoolSize $valentia.poolSize.minPoolSize -maxPoolSize $valentia.poolSize.maxPoolSize -Verbose:$VerbosePreference
 
         #Initialize AsyncPipelines
         $AsyncPipelines = @() 
@@ -266,15 +251,11 @@ You can prepare script file to run, and specify path.
         }
 
         # Create ScriptBlock to obtain AsyncStatus
-        $ReceiveAsyncStatus = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
+        $ReceiveAsyncStatusScriptBlock = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
 
-        # hide progress or not
-        if (-not $PSBoundParameters.quiet.IsPresent)
-        {
-            Write-Warning -Message "$((&$ReceiveAsyncStatus).Name)"
-        }
-
-        
+        Write-Verbose -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($sleepMS * $limitCount / 1000))
+        $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
+      
         # Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
         $sleepMS = 10
         $limitCount = 10000
@@ -282,22 +263,28 @@ You can prepare script file to run, and specify path.
         # hide progress or not
         if (-not $PSBoundParameters.quiet.IsPresent)
         {
-            Write-Warning -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($sleepMS * $limitCount / 1000))
+            Write-Warning -Message ("{0}" -f $($ReceiveAsyncStatus.Name))
         }
 
-        while (($(&$ReceiveAsyncStatus) | where name -like "Running*").count -ge 1)
+        while (($ReceiveAsyncStatus | where name -like "Running*").count -ge 1)
         {
             $count++
 
-            # hide progress or not
             if (-not $PSBoundParameters.quiet.IsPresent)
             {
                 if ($count % 100 -eq 0)
                 {
                     # Show Current Status
-                    Write-Warning -Message "$((&$ReceiveAsyncStatus).Name)"
+                    Write-Verbose -Message "$($ReceiveAsyncStatus.Name)"
+                    Write-Warning ("Running/Completed : {1}/{0}" -f ($ReceiveAsyncStatus | where name -like "Completed*").count, ($ReceiveAsyncStatus | where name -like "Running*").count)
                 }
             }
+
+            # hide progress or not
+            Write-Progress -Activity 'Running Status' `
+                -PercentComplete $((($ReceiveAsyncStatus | where name -like "Completed*").count/$ReceiveAsyncStatus.count) * 100) `
+                -Status "Percent Complete"
+
 
             # Wait a moment
             sleep -Milliseconds $sleepMS
@@ -307,6 +294,8 @@ You can prepare script file to run, and specify path.
             {
                 break
             }
+
+            $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
         }
 
 
@@ -328,10 +317,8 @@ You can prepare script file to run, and specify path.
         }
         else
         {
-            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress -quiet | %{
-                $result = @{}
-
-            }{
+            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress -quiet `
+            | %{$result = @{}}{
                 $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
                 $SuccessStatus += $_.SuccessStatus                     # Get success or error
                 if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
@@ -378,7 +365,12 @@ You can prepare script file to run, and specify path.
     finally
     {
 
-    ### End
+#endregion
+
+#region End
+
+        # reverse Error Action Preference
+        $script:ErrorActionPreference = $valentia.originalErrorActionPreference
 
         # Show Stopwatch for Total section
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
@@ -424,5 +416,7 @@ You can prepare script file to run, and specify path.
         # Cleanup valentia Environment
         Invoke-ValentiaClean
     }
+
+#endregion
 
 }
