@@ -50,7 +50,23 @@ Ping production-hoge.ps1 from deploy group branch path
             HelpMessage = "Input buffer size for the data size send/recieve with ICMP send.")]
         [ValidateNotNullOrEmpty()]
         [byte[]]
-        $Buffer = $valentia.ping.buffer
+        $Buffer = $valentia.ping.buffer,
+
+        [Parameter(
+            Position = 3,
+            Mandatory = 0,
+            HelpMessage = "Input ttl for the ping option.")]
+        [ValidateNotNullOrEmpty()]
+        [int]
+        $Ttl = $valentia.ping.pingOption.ttl,
+
+        [Parameter(
+            Position = 4,
+            Mandatory = 0,
+            HelpMessage = "Input dontFragment for the ping option.")]
+        [ValidateNotNullOrEmpty()]
+        [bool]
+        $dontFragment = $valentia.ping.pingOption.dontfragment
     )
 
     begin
@@ -59,64 +75,48 @@ Ping production-hoge.ps1 from deploy group branch path
         $script:ErrorActionPreference = $valentia.errorPreference
 
         # new object for event and job
-        $script:jobs= New-Object System.Collections.Generic.List[System.Management.Automation.PSEventJob]
-        $global:____responceList = New-Object System.Collections.Generic.List[PSCustomObject]
+        $pingOptions = New-Object Net.NetworkInformation.PingOptions($Ttl, $dontFragment)
+        $tasks = New-Object System.Collections.Generic.List[PSCustomObject]
     }
 
     process
     {
-        try
+        foreach ($hostNameOrAddress in $HostNameOrAddresses)
         {
-            foreach ($hostNameOrAddress in $HostNameOrAddresses)
-            {
-                # create ping object
-                $ping  = New-Object System.Net.NetworkInformation.Ping
+            $ping  = New-Object System.Net.NetworkInformation.Ping
 
-                Write-Verbose ("Register Event for Ping '{0}' and return object with PSCustomObject" -f $hostNameOrAddress)
-                $eventResult = Register-ObjectEvent -Action {
-                    $returnObject = $($event.SourceArgs[1].Reply `
-                    | %{ [PSCustomObject]@{
-                        Address       = $_.Address
-                        Status        = $_.Status
-                        RoundtripTime = $_.RoundtripTime
-                        DeployMember  = $event.SourceArgs[1].UserState}
-                    })
-                    $____responceList.Add($returnObject)
-                    Unregister-Event -SourceIdentifier $EventSubscriber.SourceIdentifier
-                } -EventName PingCompleted -InputObject $ping
+            Write-Verbose ("Execute SendPingAsync to host '{0}'." -f $hostNameOrAddress)
+            $PingReply = $ping.SendPingAsync($hostNameOrAddress, $timeout, $buffer, $pingOptions)
 
-                if ($null -eq $eventResult)
-                {
-                    throw "event register null exception!"
-                }
-                else
-                {
-                    Write-Verbose "Add event result to the job."
-                    $jobs.Add($eventResult)
-                }
-
-                Write-Verbose ("Execute Ping SendAsync event to host '{0}'." -f $hostNameOrAddress)
-                $ping.SendAsync($hostNameOrAddress, $timeout, $buffer, $hostNameOrAddress);
-            }
-
-            Write-Verbose "Recieve Jon for the event."
-            $result = Receive-Job $jobs
-
-            while($____responceList.Count -lt $HostNameOrAddresses.count)
-            {
-                Write-Verbose ("Monitor job result until finished. Count for ____responceList : {0}, HostNameOrAddresses :{1}" -f $____responceList.count, $HostNameOrAddresses.count)
-                Start-Sleep -Milliseconds 5
-            }
-
-            $____responceList
+            $task = [PSCustomObject]@{
+                HostNameOrAddress = $hostNameOrAddress
+                Task              = $PingReply
+                Ping              = $ping}
+            $tasks.Add($task)
         }
-        finally
-        {
-            Write-Verbose "Remove event Object variable"
-            Remove-Variable -Name ____responceList -Force -Scope Global
+    }
 
-            Write-Verbose "Dispose ping Object"
-            $ping.Dispose()
+    end
+    {
+        Write-Verbose "WaitAll for Task PingReply have been completed."
+        [System.Threading.Tasks.Task]::WaitAll($tasks.Task)
+        
+        foreach ($task in $tasks)
+        {
+            [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
+            [PSCustomObject]@{
+                Id                 = $task.Task.Id
+                HostNameOrAddress  = $task.HostNameOrAddress
+                Status             = $result.Status
+                IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
+                RoundtripTime      = $result.RoundtripTime
+            }
+
+            Write-Debug "Dispose Ping Object"
+            $task.Ping.Dispose()
+            
+            Write-Debug "Dispose PingReply Object"
+            $task.Task.Dispose()
         }
     }
 }

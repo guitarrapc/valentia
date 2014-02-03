@@ -36,6 +36,16 @@ $valentia.poolSize = New-Object psobject -property @{
     maxPoolSize                         = $env:NUMBER_OF_PROCESSORS;
 }
 
+# contains ping property
+$valentia.ping = New-Object psobject -property @{
+    timeout                             = 10;
+    buffer                              = 16;
+    pingOption                              = @{
+        ttl                                     = 64;
+        dontFragment                            = $false;
+    }
+}
+
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.users = New-Object psobject -property @{
     deployUser                          = "deployment";
