@@ -281,6 +281,12 @@ $valentia.poolSize = New-Object psobject -property @{
     maxPoolSize                         = $env:NUMBER_OF_PROCESSORS;
 }
 
+# contains wait Limit settings for Asynchronous cmdlet (Invoke-ValentiaAsync)
+$valentia.async = New-Object psobject -property @{
+    sleepMS                             = 10;
+    limitCount                          = 10000;
+}
+
 # contains ping property
 $valentia.ping = New-Object psobject -property @{
     timeout                             = 10;

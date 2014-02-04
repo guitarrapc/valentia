@@ -118,7 +118,6 @@ You can prepare script file to run, and specify path.
 
 #region Begin
 
-
     try
     {
         # Preference
@@ -150,7 +149,7 @@ You can prepare script file to run, and specify path.
         {
             {$ScriptBlock} {
                 # Assign ScriptBlock to run
-                Write-Verbose ("ScriptBlock parameter [ {0} ] was selected." -f $ScriptBlock)
+                Write-Verbose ("ScriptBlock parameter '{0}' was selected." -f $ScriptBlock)
                 $taskkey = Task -name ScriptBlock -action $ScriptBlock
 
                 # Read Current Context
@@ -167,7 +166,7 @@ You can prepare script file to run, and specify path.
                 if (-not(Test-Path (Join-Path (Get-Location).Path $TaskFileName)))
                 {
                     $TaskFileStatus = [PSCustomObject]@{
-                        ErrorMessageDetail = "TaskFileName [ {0} ] not found in {1} exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
+                        ErrorMessageDetail = "TaskFileName '{0}' not found in '{1}' exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
                         SuccessStatus = $false
                     }        
                     $SuccessStatus += $TaskFileStatus.SuccessStatus
@@ -175,7 +174,7 @@ You can prepare script file to run, and specify path.
                 }
                 
                 # Read Task File and get Action to run
-                Write-Verbose ("TaskFileName parameter [ {0} ] was selected." -f $TaskFileName)
+                Write-Verbose ("TaskFileName parameter '{0}' was selected." -f $TaskFileName)
 
                 # run Task $TaskFileName inside functions and obtain scriptblock written in.
                 $taskkey = & $TaskFileName
@@ -202,7 +201,7 @@ You can prepare script file to run, and specify path.
         # Obtain Remote Login Credential (No need if clients are same user/pass)
         try
         {
-            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
+            $Credential = Get-ValentiaCredential
             $SuccessStatus += $true
         }
         catch
@@ -223,19 +222,19 @@ You can prepare script file to run, and specify path.
 
         # Show Stopwatch for Begin section
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tDuration Second for Begin Section: $TotalDuration" -f $TotalDuration)
+        Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalDuration)
 
 #endregion
 
 #region Process
 
         # Create HashTable for Runspace
-        $ScriptToRunHash = @{ScriptBlock = $ScriptToRun}
-        $credentialHash = @{Credential = $Credential} 
+        $ScriptToRunHash   = @{ScriptBlock   = $ScriptToRun}
+        $credentialHash    = @{Credential    = $Credential} 
         $TaskParameterHash = @{TaskParameter = $TaskParameter} 
 
         # Create a pool of 100 runspaces
-        $pool = New-ValentiaRunSpacePool -minPoolSize $valentia.poolSize.minPoolSize -maxPoolSize $valentia.poolSize.maxPoolSize -Verbose:$VerbosePreference
+        $pool = New-ValentiaRunSpacePool -minPoolSize $valentia.poolSize.minPoolSize -maxPoolSize $valentia.poolSize.maxPoolSize
 
         #Initialize AsyncPipelines
         $AsyncPipelines = @() 
@@ -253,12 +252,9 @@ You can prepare script file to run, and specify path.
         # Create ScriptBlock to obtain AsyncStatus
         $ReceiveAsyncStatusScriptBlock = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
 
-        Write-Verbose -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($sleepMS * $limitCount / 1000))
-        $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
-      
         # Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
-        $sleepMS = 10
-        $limitCount = 10000
+        Write-Verbose -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($valentia.async.sleepMS * $valentia.async.limitCount / 1000))
+        $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
 
         # hide progress or not
         if (-not $PSBoundParameters.quiet.IsPresent)
@@ -270,27 +266,28 @@ You can prepare script file to run, and specify path.
         {
             $count++
 
-            if (-not $PSBoundParameters.quiet.IsPresent)
-            {
-                if ($count % 100 -eq 0)
-                {
-                    # Show Current Status
-                    Write-Verbose -Message "$($ReceiveAsyncStatus.Name)"
-                    Write-Warning ("Running/Completed : {1}/{0}" -f ($ReceiveAsyncStatus | where name -like "Completed*").count, ($ReceiveAsyncStatus | where name -like "Running*").count)
-                }
-            }
+            $completed     = $ReceiveAsyncStatus | where name -like "Completed*"
+            $running       = $ReceiveAsyncStatus | where name -like "Running*"
+            $statusPercent = ($completed.count/$ReceiveAsyncStatus.count) * 100
+
+            # Show Current Status
+            $ReceiveAsyncStatus.Name | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
+            [PSCustomObject]@{
+                DateTime  = Get-Date
+                Running   = $running.count
+                Completed = $completed.count
+            } | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
 
             # hide progress or not
-            Write-Progress -Activity 'Running Status' `
-                -PercentComplete $((($ReceiveAsyncStatus | where name -like "Completed*").count/$ReceiveAsyncStatus.count) * 100) `
-                -Status "Percent Complete"
-
+            Write-Progress -Activity 'Async Execution Running Status....' `
+                -PercentComplete $statusPercent `
+                -Status ("{0}/{1}({2:0.00})% Completed" -f $completed.count, $ReceiveAsyncStatus.count, $statusPercent)
 
             # Wait a moment
-            sleep -Milliseconds $sleepMS
+            sleep -Milliseconds $valentia.async.sleepMS
 
             # safety release for 100 sec
-            if ($count -ge $limitCount)
+            if ($count -ge $valentia.async.limitCount)
             {
                 break
             }
@@ -298,15 +295,11 @@ You can prepare script file to run, and specify path.
             $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
         }
 
-
         # Obtain Async Command Result
         if (-not $PSBoundParameters.quiet.IsPresent)
         {
-            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress | %{
-                $result = @{}
-
-
-            }{
+            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress `
+            | %{$result = @{}}{
                 $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
                 $SuccessStatus += $_.SuccessStatus                     # Get success or error
                 if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
@@ -324,14 +317,13 @@ You can prepare script file to run, and specify path.
                 if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
             }
         }
-        
+
         # Check Command Result
         if ($task.SuccessStatus -eq $false)
         {
             $ErrorMessageDetail += $task.ErrorMessageDetail
             $SuccessStatus += $task.SuccessStatus
         }
-
 
         # Remove pssession remains.
         try
@@ -352,15 +344,12 @@ You can prepare script file to run, and specify path.
             Write-Verbose "Clean up previous Job"
             Get-Job | Remove-Job -Force
         }
-
     }
     catch
     {
-
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
         throw $_
-
     }
     finally
     {
@@ -376,10 +365,8 @@ You can prepare script file to run, and specify path.
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
 
-
         # Get End Time
         $TimeEnd = (Get-Date).DateTime
-
 
         # obtain Result
         $CommandResult = [ordered]@{
@@ -397,7 +384,6 @@ You can prepare script file to run, and specify path.
             TargetHosts = "$DeployMembers"
             Result = $result
             ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
-
         }
 
         # show result
