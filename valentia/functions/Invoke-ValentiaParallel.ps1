@@ -253,7 +253,6 @@ You can prepare script file to run, and specify path.
                     $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
                     if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
                 
-
                     # Output to host
                     $_.result
 
@@ -284,13 +283,11 @@ You can prepare script file to run, and specify path.
                 # if hit then automatically rerun workflow
                 if (-not $PSBoundParameters.quiet.IsPresent)
                 {
-                    Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential | %{
-                        $result = @{}           
-                    }{
+                    Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential `
+                    | %{$result = @{}}{
                         $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
                         $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
                         if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result
-                
 
                         # Output to host
                         $_.result
@@ -301,9 +298,8 @@ You can prepare script file to run, and specify path.
                 }
                 else
                 {
-                    Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -quiet | %{
-                        $result = @{}
-                    }{
+                    Invoke-ValentiaCommandParallel -PSComputerName $DeployMembers -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter -PSCredential $Credential -quiet `
+                    | %{$result = @{}}{
                         $ErrorMessageDetail.Add([string]($_.ErrorMessageDetail))                        # Get ErrorMessageDetail
                         $SuccessStatus.Add([string]($_.SuccessStatus))                                  # Get success or error
                         if ($_.host -ne $null){$result.$($_.host) = $_.result}                          # Get Result

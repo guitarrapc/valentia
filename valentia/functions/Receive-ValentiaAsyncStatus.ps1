@@ -38,13 +38,13 @@ Above will retrieve Async Result
     foreach($Pipeline in $Pipelines)
     {
        [PSCustomObject]@{
-            HostName = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
+            HostName   = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
             InstanceID = $Pipeline.Pipeline.Instance_Id
-            State = $Pipeline.Pipeline.InvocationStateInfo.State
-            Reason = $Pipeline.Pipeline.InvocationStateInfo.Reason
-            Completed = $Pipeline.AsyncResult.IsCompleted
+            State      = $Pipeline.Pipeline.InvocationStateInfo.State
+            Reason     = $Pipeline.Pipeline.InvocationStateInfo.Reason
+            Completed  = $Pipeline.AsyncResult.IsCompleted
             AsyncState = $Pipeline.AsyncResult.AsyncState			
-            Error = $Pipeline.Pipeline.Streams.Error
+            Error      = $Pipeline.Pipeline.Streams.Error
        }
     } 
 }

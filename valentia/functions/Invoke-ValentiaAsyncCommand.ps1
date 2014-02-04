@@ -34,35 +34,35 @@ Above example will concurrently running with 10 processes for each Computers.
     Param
     (
         [Parameter(
-            Position=0,
-            Mandatory,
+            Position  = 0,
+            Mandatory = 1,
             HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
         $RunspacePool,
         
         [Parameter(
-            Position=1,
-            Mandatory,
+            Position  = 1,
+            Mandatory = 1,
             HelpMessage = "The scriptblock to be executed to the Remote host.")]
         [HashTable]
         $ScriptToRunHash,
         
         [Parameter(
-            Position=2,
-            Mandatory,
+            Position  = 2,
+            Mandatory = 1,
             HelpMessage = "Target Computers to be execute.")]
         [string[]]
         $DeployMembers,
         
         [Parameter(
-            Position=3,
-            Mandatory,
+            Position  = 3,
+            Mandatory = 1,
             HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
         [HashTable]
         $CredentialHash,
 
         [Parameter(
-            Position=4,
-            Mandatory,
+            Position  = 4,
+            Mandatory = 1,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [HashTable]
         $TaskParameterHash
@@ -79,7 +79,6 @@ Above example will concurrently running with 10 processes for each Computers.
                 $CredentialHash,
                 $TaskParameterHash
             )
-        
             Invoke-Command -ScriptBlock $($ScriptToRunHash.Values) -ComputerName $($ComputerName.Values) -Credential $($CredentialHash.Values) -ArgumentList $($TaskParameterHash.Values)
         }
 
@@ -92,10 +91,10 @@ Above example will concurrently running with 10 processes for each Computers.
 
         # Add Script and Parameter arguments from Hashtables
         Write-Verbose "Adding Script and Arguments Hastables to PowerShell Instance"
-        Write-Verbose ('Add InvokeCommand Script : {0}' -f $InvokeCommand)
-        Write-Verbose ("Add ScriptBlock Argument..... Keys : {0}, Values : {1}" -f $($ScriptToRunHash.Keys), $($ScriptToRunHash.Values))
-        Write-Verbose ("Add ComputerName Argument..... Keys : {0}, Values : {1}" -f $($ComputerName.Keys), $($ComputerName.Values))
-        Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}" -f $($CredentialHash.Keys), $($CredentialHash.Values))
+        Write-Verbose ('Add InvokeCommand Script : {0}'                          -f $InvokeCommand)
+        Write-Verbose ("Add ScriptBlock Argument..... Keys : {0}, Values : {1}"  -f $($ScriptToRunHash.Keys)  , $($ScriptToRunHash.Values))
+        Write-Verbose ("Add ComputerName Argument..... Keys : {0}, Values : {1}" -f $($ComputerName.Keys)     , $($ComputerName.Values))
+        Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}"   -f $($CredentialHash.Keys)   , $($CredentialHash.Values))
         Write-Verbose ("Add ArgumentList Argument..... Keys : {0}, Values : {1}" -f $($TaskParameterHash.Keys), $($TaskParameterHash.Values))
         $Pipeline.AddScript($InvokeCommand).AddArgument($ScriptToRunHash).AddArgument($ComputerName).AddArgument($CredentialHash).AddArgument($TaskParameterHash) > $null
 
@@ -119,7 +118,6 @@ Above example will concurrently running with 10 processes for each Computers.
     
         Write-Verbose ("Output Result '{0}' and '{1}'" -f $Output.Pipeline, $Output.AsyncResult)
         return $Output
-
     }
     catch
     {

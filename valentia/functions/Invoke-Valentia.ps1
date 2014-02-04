@@ -276,10 +276,8 @@ You can prepare script file to run, and specify path.
         $WSManInstanceflag = $true
 
         # Executing job
-        Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter | %{
-            $result = @{}
-            
-        }{
+        Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter `
+        | %{$result = @{}}{
             # Obtain parameter to show on log
             $ErrorMessageDetail += $_.ErrorMessageDetail
             $SuccessStatus += $_.SuccessStatus
@@ -303,10 +301,8 @@ You can prepare script file to run, and specify path.
             Write-Warning "Restart Complete, trying remote session again."
 
             # if hit then automatically rerun command
-            Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter | %{
-                $result = @{}
-            
-            }{
+            Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter `
+            | %{$result = @{}}{
                 # Obtain parameter to show on log
                 $ErrorMessageDetail += $_.ErrorMessageDetail
                 $SuccessStatus += $_.SuccessStatus
@@ -316,7 +312,6 @@ You can prepare script file to run, and specify path.
                 {
                     $_.result
                 }
-
             }
         }
 
@@ -339,7 +334,6 @@ You can prepare script file to run, and specify path.
             Write-Verbose "Clean up previous Job"
             Get-Job | Remove-Job -Force
         }
-
     }
     catch
     {
@@ -382,7 +376,6 @@ You can prepare script file to run, and specify path.
             TargetHosts = "$DeployMembers"
             Result = $result
             ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
-
         }
 
 

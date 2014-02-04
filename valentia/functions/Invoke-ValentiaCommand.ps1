@@ -126,7 +126,6 @@ Created: 20/June/2013
             # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
             $task.SuccessStatus = $false
             $task.ErrorMessageDetail = $_
-
         }
 
         # Get Duration Seconds for each command
@@ -142,7 +141,6 @@ Created: 20/June/2013
 
         # Add each command exec time to Totaltime
         $DurationTotal += $Duration
-        
 
         # Get Current host WSManInstance (No need set Connection URI as it were already connecting
         $WSManInstance = Invoke-Command -ScriptBlock {Get-WSManInstance shell -Enumerate} -Session $session
@@ -165,7 +163,6 @@ Created: 20/June/2013
                 $task.SuccessStatus = $false
                 $task.ErrorMessageDetail = $_
             }
-
         }
 
         # Output $task variable to file. This will obtain by other cmdlet outside workflow.
@@ -176,5 +173,4 @@ Created: 20/June/2013
     # Show stopwatch result
     Write-Verbose ("`t`tTotal exec Command Sec: {0}" -f $DurationTotal)
     "" | Out-Default
-
 }
