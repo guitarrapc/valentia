@@ -265,18 +265,23 @@ You can prepare script file to run, and specify path.
         while (($ReceiveAsyncStatus | where name -like "Running*").count -ge 1)
         {
             $count++
-
             $completed     = $ReceiveAsyncStatus | where name -like "Completed*"
             $running       = $ReceiveAsyncStatus | where name -like "Running*"
             $statusPercent = ($completed.count/$ReceiveAsyncStatus.count) * 100
 
-            # Show Current Status
-            $ReceiveAsyncStatus.Name | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
-            [PSCustomObject]@{
-                DateTime  = Get-Date
-                Running   = $running.count
-                Completed = $completed.count
-            } | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
+            # Log Current Status
+            if (-not $null-eq $prevRunningCount)
+            {
+                if ($running.count -lt $prevRunningCount)
+                {
+                    $ReceiveAsyncStatus.Name | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
+                    [PSCustomObject]@{
+                        DateTime  = Get-Date
+                        Running   = $running.count
+                        Completed = $completed.count
+                    } | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
+                }
+            }
 
             # hide progress or not
             Write-Progress -Activity 'Async Execution Running Status....' `
@@ -293,6 +298,7 @@ You can prepare script file to run, and specify path.
             }
 
             $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
+            $prevRunningCount = $running.count
         }
 
         # Obtain Async Command Result
@@ -357,6 +363,10 @@ You can prepare script file to run, and specify path.
 #endregion
 
 #region End
+
+        # Dispose RunspacePool
+        $pool.Close()
+        $pool.Dispose()
 
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference

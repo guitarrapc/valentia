@@ -56,7 +56,6 @@ Above will retrieve Async Result
     {
         try
         {
-
             # Inherite variable
             [HashTable]$task = @{}
 
@@ -77,6 +76,23 @@ Above will retrieve Async Result
                 $task.ErrorMessageDetail += $_
                 throw $Pipeline.Pipeline.Streams.Error
             }
+
+            # Show Progress bar
+            if($ShowProgress)
+            {
+                if (-not $PSBoundParameters.quiet.IsPresent)
+                {
+                    Write-Progress -Activity 'Receiving AsyncPipeline Results' `
+                        -PercentComplete $(($i/$Pipelines.Length) * 100) `
+                        -Status "Percent Complete"
+                }
+            }
+        
+            # Incrementing for Write-Progress
+            $i++
+
+            # Output $task variable to file. This will obtain by other cmdlet outside function.
+            $task
         }
         catch 
         {
@@ -84,30 +100,10 @@ Above will retrieve Async Result
             $task.ErrorMessageDetail += $_
             Write-Error $_
         }
-        
-        # Dispose Pipeline
-        $Pipeline.Pipeline.Dispose()
-        
-        # Dispose RunspacePool
-        $pool.Close()
-        $pool.Dispose()
-
-        # Show Progress bar
-        if($ShowProgress)
+        finally
         {
-            if (-not $PSBoundParameters.quiet.IsPresent)
-            {
-                Write-Progress -Activity 'Receiving AsyncPipeline Results' `
-                    -PercentComplete $(($i/$Pipelines.Length) * 100) `
-                    -Status "Percent Complete"
-            }
+            # Dispose Pipeline
+            $Pipeline.Pipeline.Dispose()
         }
-        
-        # Incrementing for Write-Progress
-        $i++
-
-        # Output $task variable to file. This will obtain by other cmdlet outside function.
-        $task
     }
-
 }
