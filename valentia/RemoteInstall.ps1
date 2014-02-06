@@ -280,4 +280,4 @@ function Main
     Install-Repogisty -installerPath $InstallerPath
 }
 
-.Main
+. Main
