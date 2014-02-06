@@ -1,23 +1,44 @@
 ﻿#Requires -Version 2.0
 
-[CmdletBinding()]
-Param
-(
-    [Parameter(
-        Position = 0,
-        Mandatory = 0)]
+function Main
+{
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(
+            Position = 0,
+            Mandatory = 0)]
+        [string]
+        $path = $(Split-Path $PSCommandPath -Parent),
 
-    [string]
-    $path = $(Split-Path $PSCommandPath -Parent),
+        [Parameter(
+            Position = 1,
+            Mandatory = 0)]
+        [string]
+        $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))})
+    )
 
-    [Parameter(
-        Position = 1,
-        Mandatory = 0)]
+    Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $modulepath)
+    if(-not(Test-ModulePath -modulepath $modulepath))
+    {
+        Write-Warning "$modulepath not found. creating module path."
+        New-ModulePath -modulepath $modulepath
+    }
 
-    [string]
-    $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))})
-)
+    $moduleName = Get-ModuleName -path $path
+    if ($moduleName)
+    {
+        Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, "$modulepath") -ForegroundColor Cyan
+    }
+    else
+    {
+        Write-Host ("Copying scripts in '{0}' to Module path '{1}'." -f $path , "$modulepath") -ForegroundColor Green
+    }
 
+    $destinationtfolder = Copy-Module -path $path -destination $modulepath
+    Write-Host ("Installation Completed. Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
+
+}
 Function Get-OperatingSystemVersion
 {
     [System.Environment]::OSVersion.Version
@@ -104,8 +125,6 @@ Function Copy-Module
         $destination
     )
 
-    $ErrorActionPreference = "Stop"
-
     if(Test-Path $path)
     {
         $rootpath = Get-Item $path
@@ -141,7 +160,7 @@ Function Copy-Module
                 $script:dpath = Join-Path $ddirectorypath $_.Name
 
                 Write-Host ("Copying '{0}' to {1}" -f $_.FullName, $dpath) -ForegroundColor Cyan
-                Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse
+                Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse -ErrorAction Stop
             }
             catch
             {
@@ -158,26 +177,4 @@ Function Copy-Module
     }
 }
 
-
-
-Write-Host "Starting check Module path and Copy PowerShell Scripts job." -ForegroundColor Green
-
-Write-Host "Checking is Module Path exist not not." -ForegroundColor Green
-if(-not(Test-ModulePath -modulepath $modulepath))
-{
-    Write-Warning "$modulepath not found. creating module path."
-    New-ModulePath -modulepath $modulepath
-}
-
-$moduleName = Get-ModuleName -path $path
-if ($moduleName)
-{
-    Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, "$modulepath") -ForegroundColor Green
-}
-else
-{
-    Write-Host ("Copying scripts in '{0}' to Module path '{1}'." -f $path , "$modulepath") -ForegroundColor Green
-}
-$destinationtfolder = Copy-Module -path $path -destination $modulepath
-
-Write-Host "Installation finished. Scripts copied to PowerShell Module path $destinationtfolder" -ForegroundColor Green
+. Main
