@@ -1,4 +1,50 @@
-﻿function Get-GitHubRepositryURI
+﻿#Required -Version 3.0
+
+$VerbosePreference = "Continue"
+
+function Main
+{
+    # Uri
+    Write-Debug "Creating GitHub zip uri."
+    $GitHubURI = @{
+        github = "guitarrapc"
+        repository = "valentia"
+    }
+    $uri = Get-GitHubRepositryURI @GitHubURI
+
+    # Directory
+    Write-Debug "Checking temp directory is already exist."
+    $dir = Join-Path $env:TEMP $GitHubURI.repository
+    $tempDir = Join-Path $dir "Install"
+    New-Directory -tempDir $tempDir
+
+    # Download
+    Write-Debug "Donwloading zip file from repogitory."
+    $source = Join-Path $tempDir "master.zip"
+    $Download = @{
+        Source    = $uri.AbsoluteUri
+        Destination = $source
+    }
+    Download-File @Download
+
+    # Unzip
+    Write-Debug "Unzipping dowmloaded zip file."
+    $destination = Join-Path $tempDir "master"
+    $Unzip = @{
+        Source = $source
+        Destination = $destination
+    }
+    New-ZipExtract @Unzip -force
+
+    # Install
+    Write-Verbose ("Installing {0} to the computer" -f $gitHubURI.repository)
+    $installer = "Install.bat"
+    $toolFolder = Join-Path $destination ("{0}-Master\{0}" -f $gitHubURI.repository)
+    $InstallerPath = Join-Path $toolFolder "Install.bat"
+    Install-Repogisty -installerPath $InstallerPath
+}
+
+function Get-GitHubRepositryURI
 {
     [CmdletBinding()]
     param
@@ -13,6 +59,7 @@
 
 function New-Directory
 {
+    [CmdletBinding()]
     param
     (
         [string]$tempDir
@@ -20,6 +67,7 @@ function New-Directory
 
     if (-not [System.IO.Directory]::Exists($tempDir))
     {
+        Write-Verbose ("Could not found temp folder '{0}', creating new folder " -f $tempDir)
         [System.IO.Directory]::CreateDirectory($tempDir)
     }
 }
@@ -230,7 +278,6 @@ function New-ZipExtract
     }
 }
 
-
 function Install-Repogisty
 {
     [CmdletBinding()]
@@ -242,42 +289,19 @@ function Install-Repogisty
     .$installerPath
 }
 
-function Main
+function Remove-Directory
 {
-    # Uri
-    $GitHubURI = @{
-        github = "guitarrapc"
-        repository = "valentia"
+    [CmdletBinding()]
+    param
+    (
+        [string]$tempDir
+    )
+
+    if ([System.IO.Directory]::Exists($tempDir))
+    {
+        Write-Verbose ("temp folder '{0}' found, Removing folder for clean up." -f $tempDir)
+        [System.IO.Directory]::Delete($tempDir)
     }
-    $uri = Get-GitHubRepositryURI @GitHubURI -Verbose
-
-    # Directory
-    $dir = Join-Path $env:TEMP "valentia"
-    $tempDir = Join-Path $dir "Install"
-    $source = Join-Path $tempDir "master.zip"
-    $destination = Join-Path $tempDir "master"
-    New-Directory -tempDir $tempDir
-
-    # Download
-    $Download = @{
-        Source    = $uri.AbsoluteUri
-        Destination = $source
-    }
-    Download-File @Download -Verbose
-
-    # Unzip
-    $Unzip = @{
-        Source = $source
-        Destination = $destination
-    }
-    New-ZipExtract @Unzip -force -Verbose
-
-    # Install
-    Write-Verbose ("Installing {0} to the computer" -f $gitHubURI.repository)
-    $installer = "Install.bat"
-    $toolFolder = Join-Path $destination ("{0}-Master\{0}" -f $gitHubURI.repository)
-    $InstallerPath = Join-Path $toolFolder "Install.bat"
-    Install-Repogisty -installerPath $InstallerPath
 }
 
 . Main
