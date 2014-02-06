@@ -74,6 +74,7 @@
     <Compile Include="example\Deployment\Deploygroup\localhost.ps1" />
     <Compile Include="example\Deployment\Upload\test.csv" />
     <Compile Include="example\Deployment\Upload\test.txt" />
+    <Compile Include="RemoteInstall.ps1" />
     <Compile Include="valentia-Help\valentia.psm1.xml" />
   </ItemGroup>
   <ItemGroup>
