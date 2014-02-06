@@ -42,6 +42,10 @@ function Main
     $toolFolder = Join-Path $destination ("{0}-Master\{0}" -f $gitHubURI.repository)
     $InstallerPath = Join-Path $toolFolder "Install.bat"
     Install-Repogisty -installerPath $InstallerPath
+
+    # Clean up
+    Write-Debug "Removing temp directory for clean up."
+    Remove-Directory -tempDir $tempDir
 }
 
 function Get-GitHubRepositryURI
