@@ -124,54 +124,63 @@ Supporting Operating System are...</p>
 </ul>
 </li>
 </ol><h1>
-<a name="install-valentia-module" class="anchor" href="#install-valentia-module"><span class="octicon octicon-link"></span></a>Install valentia module</h1>
+<a name="easy-install-" class="anchor" href="#easy-install-"><span class="octicon octicon-link"></span></a>Easy Install !!</h1>
 
-<p>To use valentia module, please set valentia folder to </p>
+<p>To install valentia now, open a command prompt and pate the text from the box below and press enter.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="k">%</span><span class="n">homepath</span><span class="p">%\</span><span class="n">documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Module</span><span class="p">\</span>
+<div class="highlight highlight-text"><pre>@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
 </pre></div>
 
-<p>Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.</p>
+<p>After the installation complete, you will find valentia installed into your user's Module folder.</p>
 
-<p>You can install valentia with <code>run install.bat</code>. This bat file will copy valentia to module path <code>env:USERPROFILE\Documents\WindowsPowerShell\Modules</code></p>
-
-<p>Or if you want to use valentia with all user, then set valentia module folder to:</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Windows</span><span class="p">\</span><span class="n">System32</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">v1</span><span class="p">.</span><span class="n">0</span><span class="p">\</span><span class="n">Modules</span><span class="p">\</span><span class="n">valentia</span>
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$env:USERPROFILE</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span>
 </pre></div>
 
-<p>Else place anywhere you want.</p>
+<h2>
+<a name="custom-install" class="anchor" href="#custom-install"><span class="octicon octicon-link"></span></a>Custom Install</h2>
 
-<h1>
-<a name="import-valentia-module" class="anchor" href="#import-valentia-module"><span class="octicon octicon-link"></span></a>Import valentia module</h1>
+<h3>
+<a name="local-installation-for-user" class="anchor" href="#local-installation-for-user"><span class="octicon octicon-link"></span></a>Local Installation for user</h3>
 
-<p>In PowerShell V3.0, all modules located in default psmodulepath will be automatically loaded.</p>
+<p>If Remote installation are not allowed in your environment, set valentia in any path then you can install valentia localy with run <code>install.bat</code>.
+This bat file will also copy valentia to user module path </p>
 
-<p>if you sat module in custom path, then use Import-Module Cmdlet.</p>
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$env:USERPROFILE</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span>
+</pre></div>
 
-<div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="s2">"move to custom path you sat valentia"</span>
+<h3>
+<a name="use-valentia-for-all-users" class="anchor" href="#use-valentia-for-all-users"><span class="octicon octicon-link"></span></a>Use valentia for all users.</h3>
+
+<p>If you want to use valentia with all users, then set valentia module folder to:</p>
+
+<pre><code>C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
+</code></pre>
+
+<h2>
+<a name="import-valentia-module" class="anchor" href="#import-valentia-module"><span class="octicon octicon-link"></span></a>Import valentia module</h2>
+
+<p>In PowerShell V3.0, all modules located in default Module Path will be automatically search and loaded before starting script.</p>
+
+<p>But if you sat module into custom path, means not default Module Path, PowerShell will not automatically load yout module. In this case, please use Import-Module cmdlet in where <code>valentia.psd1</code> locating.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="s2">"move to custom path you sat valentia.psd1"</span>
 <span class="nb">Import-Module</span> <span class="n">valentia</span>
 </pre></div>
 
-<p>If you sat valentia in standard psmodule path described in "Install valentia", you don't need manually import module, but you can do it.</p>
+<p>If you sat valentia in standard Module Path described in "Easy Install", you don't need to import manually. However <code>Import-Module valentia</code> will import $valentia variables, and it will be help you some.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span>
 </pre></div>
 
-<p>or check detail with following.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span> <span class="n">-Verbose</span>
-</pre></div>
-
 <h1>
-<a name="valentia-cmdlets" class="anchor" href="#valentia-cmdlets"><span class="octicon octicon-link"></span></a>valentia Cmdlets</h1>
+<a name="valentia-functions" class="anchor" href="#valentia-functions"><span class="octicon octicon-link"></span></a>valentia functions</h1>
 
-<p>You can see valentia Cmdlets by following command.</p>
+<p>You can see valentia functions by following command.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">Get-command</span> <span class="n">-module</span> <span class="n">valentia</span>
 </pre></div>
 
-<p>Following Cmdlets will be shown.</p>
+<p>Following functions will be shown.</p>
 
 <table>
 <thead><tr>
@@ -331,7 +340,10 @@ Supporting Operating System are...</p>
 <td>valentia</td>
 </tr>
 </tbody>
-</table><p>All Cmdlets have alias to lket you use easily.
+</table><h1>
+<a name="valentia-alias" class="anchor" href="#valentia-alias"><span class="octicon octicon-link"></span></a>valentia Alias</h1>
+
+<p>valentia functions have Alias to let you use it easir.
 You can find them as like this.</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">Get-Alias</span> <span class="p">|</span> <span class="n">where</span> <span class="n">ModuleName</span> <span class="o">-eq</span> <span class="s2">"valentia"</span>
@@ -506,7 +518,7 @@ Also trying to save password in secdure stirng in default, input deploy user pas
 <div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Server</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoPassSave</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="2-initialize-valentiaenvironment--client--setup-clients" class="anchor" href="#2-initialize-valentiaenvironment--client--setup-clients"><span class="octicon octicon-link"></span></a>2. <code>Initialize-ValentiaEnvironment -Client</code> : Setup Clients</h3>
@@ -543,14 +555,14 @@ Also trying to save password in secdure stirng in default, input deploy user pas
 <div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Client</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoOSUser</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="3-new-valentiacredential--create-new-credential-secure-file" class="anchor" href="#3-new-valentiacredential--create-new-credential-secure-file"><span class="octicon octicon-link"></span></a>3. <code>New-ValentiaCredential</code> : Create New Credential secure file</h3>
 
 <p>Following command will make secure string file to save your credential.
 ** If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section. **
-** However if you want to revise saved secure Password, then use this Cmdlet to revise save file. **</p>
+** However if you want to revise saved secure Password, then use this function to revise save file. **</p>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaCredential</span>
 </pre></div>
@@ -606,9 +618,9 @@ ex) if you sat file name as "new.ps1" then use it by "new".</p>
 <p>There would be many time to remark some deploy target inside deploygroup file.
 This is easy work but boring to check which file contains target deploy ip.</p>
 
-<p>This cmdlet will ease you remark target ipaddresses and check how change.</p>
+<p>This function will ease you remark target ipaddresses and check how change.</p>
 
-<p>The cmdlet will search recursible inside deploygroup.</p>
+<p>The function will search recursible inside deploygroup.</p>
 
 <pre><code>C:\Deployment\Deploygroup\**\**\.....*****.ps1
 </code></pre>
@@ -641,9 +653,9 @@ This is easy work but boring to check which file contains target deploy ip.</p>
 <a name="6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>6. <code>Invoke-valentiaDeployGroupUnremark</code> : Unremark ipaddress for deploygroup file inside deploygroup</h3>
 
 <p>if you remark ipaddresses in deploygroup file, then you want to unremark it:)
-This cmdlet will ease you unremark target ipaddresses and check how change.</p>
+This function will ease you unremark target ipaddresses and check how change.</p>
 
-<p>The cmdlet will search recursible inside deploygroup.</p>
+<p>The function will search recursible inside deploygroup.</p>
 
 <pre><code>C:\Deployment\Deploygroup\**\**\.....*****.ps1
 </code></pre>
@@ -714,14 +726,14 @@ Task file format is as below.</p>
 <span class="p">}</span>
 </pre></div>
 
-<p>You can use almost all cmdlets and variables set.
-Please check vale and valep section about a detail of some cmdlets cannot use in task.</p>
+<p>You can use almost all functions and variables set.
+Please check vale and valep section about a detail of some functions cannot use in task.</p>
 
 <ul>
 <li>Note:
 
 <ul>
-<li>All valentia cmdlets got credential before running task, therefore you don't need to get anymnore credentials in your script.</li>
+<li>valentia functions get stored credential before running task, therefore you don't need to create/write credentials in your script.</li>
 <li>In other word, do not try to get another credential in you script. Especially in "valep" .</li>
 </ul>
 </li>
@@ -744,7 +756,7 @@ As sequencially running, many hosts will takes x times to complete job.</p>
 <div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">new</span> <span class="p">{</span><span class="nb">Get-ChildItem</span><span class="p">}</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="2-vale--sequential-commandset-execution" class="anchor" href="#2-vale--sequential-commandset-execution"><span class="octicon octicon-link"></span></a>2. <code>vale</code> : Sequential Commandset execution</h3>
@@ -769,7 +781,7 @@ ex ) application, then</p>
 <div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="3-valep--parallel-single-command-execution" class="anchor" href="#3-valep--parallel-single-command-execution"><span class="octicon octicon-link"></span></a>3. <code>valep</code> : Parallel Single Command execution</h3>
@@ -782,7 +794,7 @@ It will speed up abpit 3-5 times than sequencial command.</p>
 </ul><div class="highlight highlight-PowerShell"><pre><span class="n">valep</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="4-valep--parallel-commandset-execution" class="anchor" href="#4-valep--parallel-commandset-execution"><span class="octicon octicon-link"></span></a>4. <code>valep</code> : Parallel Commandset execution</h3>
@@ -812,7 +824,7 @@ ex ) application, then</p>
 <div class="highlight highlight-PowerShell"><pre><span class="n">valep</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="5-valea--asynchronous-single-command-execution" class="anchor" href="#5-valea--asynchronous-single-command-execution"><span class="octicon octicon-link"></span></a>5. <code>valea</code> : Asynchronous Single Command execution</h3>
@@ -827,7 +839,7 @@ valea is multithread asynchronous commad and also can call from C# while valep c
 <div class="highlight highlight-PowerShell"><pre><span class="n">valea</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="6-valea--asynchronous-commandset-execution" class="anchor" href="#6-valea--asynchronous-commandset-execution"><span class="octicon octicon-link"></span></a>6. <code>valea</code> : Asynchronous Commandset execution</h3>
@@ -857,7 +869,7 @@ ex ) application, then</p>
 <div class="highlight highlight-PowerShell"><pre><span class="n">valea</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h1>
 <a name="execute-file-transfer-commands" class="anchor" href="#execute-file-transfer-commands"><span class="octicon octicon-link"></span></a>Execute File transfer Commands</h1>
@@ -914,7 +926,7 @@ Deleimiter must ",".</p>
 <div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">new</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
 
 <h3>
 <a name="3-sync--sync-server-folder-and-files-with-clients-diff-mode" class="anchor" href="#3-sync--sync-server-folder-and-files-with-clients-diff-mode"><span class="octicon octicon-link"></span></a>3. <code>sync</code> : Sync Server Folder and Files with Clients (DIFF mode)</h3>
@@ -932,7 +944,7 @@ Parent will be DeployServer, it means clietns folder will be changed to sync as 
 <div class="highlight highlight-Powershell"><pre><span class="n">Sync</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">new</span>
 </pre></div>
 
-<p>** Adding <code>-Verbose</code> switch will ease you check how cmdlet working. **</p>
+<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
       </section>
     </div>
 
