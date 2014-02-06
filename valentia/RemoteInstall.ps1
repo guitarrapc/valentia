@@ -304,7 +304,7 @@ function Remove-Directory
     if ([System.IO.Directory]::Exists($tempDir))
     {
         Write-Verbose ("temp folder '{0}' found, Removing folder for clean up." -f $tempDir)
-        [System.IO.Directory]::Delete($tempDir)
+        [System.IO.Directory]::Delete($tempDir, $true)
     }
 }
 
