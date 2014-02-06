@@ -73,57 +73,64 @@ valentiaにおけるファイル転送のため、valentiaは 以下が準備さ
 	- ```Set-ExecutionPolicy RemoteSigned```
 
 
-# valentia をインストールする
+# 簡単インストール
 
-valentiaを利用するにあたり、valentiaモジュールを既定のモジュールパスか任意のパスに設置してください。
+valentia をインストールするには、　コマンドプロンプトを開き ↓のコマンドをコピーして貼り付け、エンターキーを押すだけです。
 
+```text
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
+
+インストール完了後、valentia がユーザーフォルダにインストールされます。
+
+```PowerShell
+$env:USERPROFILE\Documents\WindowsPowerShell\Modules
 ```
-%homepath%\documents\WindowsPowerShell\Module\
+
+## カスタムインストール
+
+### ローカルインストール (現在のユーザーのみ)
+
+もし、リモートインストールがダメな環境では、 valentiaを適当なパスにおいて、```install.bat```　を実行してください。
+これで、現在のユーザーのモジュールパスにコピーします。 
+
+```PowerShell
+$env:USERPROFILE\documents\WindowsPowerShell\Module\
 ```
 
-valentia は ```run install.bat```　を実行することでインストール可能です。 このバッチファイルは valentia をモジュールパス ```env:USERPROFILE\Documents\WindowsPowerShell\Modules```にインストールします。
+### 全ユーザーでvalentia を利用する
 
 もし、valentia を全ユーザーにインストールする場合は、valentiaモジュールフォルダーを以下のパスに配置します。
 
-```PowerShell
+```
 C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
 ```
 
-あるいは、自分の好きなパスに配置してください。
-
-
 # valentia Module のインポート
 
-PowerShell 3.0においては、デフォルトの psmoduleパスに設置されたモジュールは自動的に読み込まれます。
+PowerShell 3.0においては、デフォルトの psmoduleパスに設置されたモジュールは、スクリプト開始前に自動的に読み込まれます。
 
-しかし、自分の好きなパスにモジュールを置いた場合は、Import-Module コマンドレットでモジュールをインポートしてください。
+しかし、自分の好きなパスにモジュールを置いた場合、つまりデフォルトのモジュールパスでない場合、PowerShellは自動的にモジュールを読み込むことができません。 この場合、```valentia.psd1```があるパスでImport-Module コマンドレットを使ってインポートしてください。
 
 ```PowerShell
-cd "valentiaを設置したパス"
+cd "valentia.psd1 を設置したパス"
 Import-Module valentia
 ```
 
-もし"valentia をインストールする"で紹介した既定のモジュールパスに配置した場合は、手動でモジュールをインポートする必要はありません。が、明示的に読み込むこともできます。
+もし"簡単インストール"で紹介した既定のモジュールパスに配置した場合は、手動でモジュールをインポートする必要はありません。ただ、 ```Import-Module valentia``` で $valentia 変数が読み込まれるため、助けになる可能性はあります。
 
 ```PowerShell
 Import-Module valentia
 ```
 
-あるいは、さらにインポート詳細を確認することもできます。
+# valentia Functions
 
-```PowerShell
-Import-Module valentia -Verbose
-```
-
-# valentia Cmdlets
-
-インポート後は、以下のコマンドでvalentia Cmdletを確認できます。
+インポート後は、以下のコマンドでvalentia ファンクションを確認できます。
 
 ```PowerShell
 Get-command -module valentia
 ```
 
-これらのCmdletが表示されるはずです。
+これらのファンクションが表示されるはずです。
 
 |CommandType|Name|ModuleName|
 |----|----|----
@@ -245,7 +252,7 @@ Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoOSUser
 Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoPassSave
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how ファンクション working. **
 
 ### 2. ```Initialize-ValentiaEnvironment -Client``` : Setup Clients
 
@@ -283,7 +290,7 @@ Wanna setup without OS User setup? then add -NoOSUser switch.
 Initialize-ValentiaEnvironment -Client -TrustedHosts "*" -NoOSUser
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how ファンクション working. **
 
 ### 3. ```New-ValentiaCredential``` : Create New Credential secure file
 

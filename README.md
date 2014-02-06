@@ -71,58 +71,65 @@ You need to install followings to use valentia file transfer.
 3. Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.
 	- ```Set-ExecutionPolicy RemoteSigned```
 
-# Install valentia module
+# Easy Install !!
 
-To use valentia module, please set valentia folder to 
+To install valentia now, open a command prompt and pate the text from the box below and press enter.
 
-```PowerShell
-%homepath%\documents\WindowsPowerShell\Module\
+```text
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
 ```
 
-Valentia written with standard module so you don't need to install it but just required to sat valentia folder into module path or custom path.
-
-You can install valentia with ```run install.bat```. This bat file will copy valentia to module path ```env:USERPROFILE\Documents\WindowsPowerShell\Modules```
-
-Or if you want to use valentia with all user, then set valentia module folder to:
+After the installation complete, you will find valentia installed into your user's Module folder.
 
 ```PowerShell
+$env:USERPROFILE\Documents\WindowsPowerShell\Modules
+```
+
+## Custom Install
+
+### Local Installation for user
+ 
+If Remote installation are not allowed in your environment, set valentia in any path then you can install valentia localy with run ```install.bat```.
+This bat file will also copy valentia to user module path 
+
+```PowerShell
+$env:USERPROFILE\Documents\WindowsPowerShell\Modules
+```
+
+### Use valentia for all users.
+
+If you want to use valentia with all users, then set valentia module folder to:
+
+```
 C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
 ```
 
-Else place anywhere you want.
+## Import valentia module
 
-# Import valentia module
+In PowerShell V3.0, all modules located in default Module Path will be automatically search and loaded before starting script.
 
-In PowerShell V3.0, all modules located in default psmodulepath will be automatically loaded.
-
-if you sat module in custom path, then use Import-Module Cmdlet.
+But if you sat module into custom path, means not default Module Path, PowerShell will not automatically load yout module. In this case, please use Import-Module cmdlet in where ```valentia.psd1``` locating.
 
 ```PowerShell
-cd "move to custom path you sat valentia"
+cd "move to custom path you sat valentia.psd1"
 Import-Module valentia
 ```
 
-If you sat valentia in standard psmodule path described in "Install valentia", you don't need manually import module, but you can do it.
+If you sat valentia in standard Module Path described in "Easy Install", you don't need to import manually. However ```Import-Module valentia``` will import $valentia variables, and it will be help you some.
 
 ```PowerShell
 Import-Module valentia
 ```
 
-or check detail with following.
+# valentia functions
 
-```PowerShell
-Import-Module valentia -Verbose
-```
-
-# valentia Cmdlets
-
-You can see valentia Cmdlets by following command.
+You can see valentia functions by following command.
 
 ```PowerShell
 Get-command -module valentia
 ```
 
-Following Cmdlets will be shown.
+Following functions will be shown.
 
 |CommandType|Name|ModuleName|
 |----|----|----
@@ -157,9 +164,10 @@ Following Cmdlets will be shown.
 |Function|Test-ValentiaGroupConnection|valentia|
 |Workflow|Invoke-ValentiaCommandParallel|valentia|
 
-All Cmdlets have alias to lket you use easily.
-You can find them as like this.
+# valentia Alias
 
+valentia functions have Alias to let you use it easir.
+You can find them as like this.
 
 ```PowerShell
 Get-Alias | where ModuleName -eq "valentia"
@@ -244,7 +252,7 @@ Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoOSUser
 Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoPassSave
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 ### 2. ```Initialize-ValentiaEnvironment -Client``` : Setup Clients
 
@@ -282,13 +290,13 @@ Wanna setup without OS User setup? then add -NoOSUser switch.
 Initialize-ValentiaEnvironment -Client -TrustedHosts "*" -NoOSUser
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 ### 3. ```New-ValentiaCredential``` : Create New Credential secure file
 
 Following command will make secure string file to save your credential.
 ** If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section. **
-** However if you want to revise saved secure Password, then use this Cmdlet to revise save file. **
+** However if you want to revise saved secure Password, then use this function to revise save file. **
 
 
 ```PowerShell
@@ -347,10 +355,10 @@ ex) if you sat file name as "new.ps1" then use it by "new".
 There would be many time to remark some deploy target inside deploygroup file.
 This is easy work but boring to check which file contains target deploy ip.
 
-This cmdlet will ease you remark target ipaddresses and check how change.
+This function will ease you remark target ipaddresses and check how change.
 
 
-The cmdlet will search recursible inside deploygroup.
+The function will search recursible inside deploygroup.
 
 ```
 C:\Deployment\Deploygroup\**\**\.....*****.ps1
@@ -386,10 +394,10 @@ Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.102 -Verbose
 ### 6. ```Invoke-valentiaDeployGroupUnremark``` : Unremark ipaddress for deploygroup file inside deploygroup
 
 if you remark ipaddresses in deploygroup file, then you want to unremark it:)
-This cmdlet will ease you unremark target ipaddresses and check how change.
+This function will ease you unremark target ipaddresses and check how change.
 
 
-The cmdlet will search recursible inside deploygroup.
+The function will search recursible inside deploygroup.
 
 ```
 C:\Deployment\Deploygroup\**\**\.....*****.ps1
@@ -466,11 +474,11 @@ task taskname -Action{
 }
 ```
 
-You can use almost all cmdlets and variables set.
-Please check vale and valep section about a detail of some cmdlets cannot use in task.
+You can use almost all functions and variables set.
+Please check vale and valep section about a detail of some functions cannot use in task.
 
 - Note:
-	* All valentia cmdlets got credential before running task, therefore you don't need to get anymnore credentials in your script.
+	* valentia functions get stored credential before running task, therefore you don't need to create/write credentials in your script.
 	* In other word, do not try to get another credential in you script. Especially in "valep" .
 
 
@@ -493,7 +501,7 @@ SAMPLE:
 vale new {Get-ChildItem}
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 ### 2. ```vale``` : Sequential Commandset execution
 
@@ -519,7 +527,7 @@ After you move to BranchFolder run vale command
 vale DeployGroup .\Taskfile.ps1
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 ### 3. ```valep``` : Parallel Single Command execution 
 
@@ -532,7 +540,7 @@ It will speed up abpit 3-5 times than sequencial command.
 valep Deploygroup {ScriptBlock}
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 ### 4. ```valep``` : Parallel Commandset execution
 
@@ -562,7 +570,7 @@ After you move to BranchFolder run valep command
 valep DeployGroup .\Taskfile.ps1
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 
 ### 5. ```valea``` : Asynchronous Single Command execution 
@@ -579,7 +587,7 @@ It will speed up O(n) times with host count times than sequencial command.
 valea Deploygroup {ScriptBlock}
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 
 ### 6. ```valea``` : Asynchronous Commandset execution
@@ -610,7 +618,7 @@ After you move to BranchFolder run valea command
 valea DeployGroup .\Taskfile.ps1
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 
 # Execute File transfer Commands
@@ -667,7 +675,7 @@ Of cource you can omit parameter names like this.
 UploadL list.txt c:\ new
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
 
 
 ### 3. ```sync``` : Sync Server Folder and Files with Clients (DIFF mode)
@@ -686,4 +694,4 @@ Of cource you can omit parameter names like this.
 Sync C:\Requirements "c:\hoge hoge" new
 ```
 
-** Adding ```-Verbose``` switch will ease you check how cmdlet working. **
+** Adding ```-Verbose``` switch will ease you check how function working. **
