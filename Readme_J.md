@@ -75,11 +75,11 @@ valentiaにおけるファイル転送のため、valentiaは 以下が準備さ
 
 # 簡単インストール
 
-valentia のインストールを行ってみましょう！
+valentia のインストールを行ってみましょう！'PowerShell' か 'コマンドプロンプト' を開き、 ↓のコマンドを貼り付けてエンターキーを押すだけです、簡単。
 
-|'PowerShell' か 'コマンドプロンプト' を開き、 ↓のコマンドを貼り付けてエンターキーを押すだけです、簡単！|
+||
 |----|
-|powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"|
+|**powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"**|
 
 
 
