@@ -73,11 +73,9 @@ You need to install followings to use valentia file transfer.
 
 # Easy Install !!
 
-To install valentia now, open a command prompt and pate the text from the box below and press enter.
+To install valentia now, open a 'PowerShell' OR 'command prompt' and pate the text from the box below and press enter.
 
-```text
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
-```
+```powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"```
 
 After the installation complete, you will find valentia installed into your user's Module folder.
 
