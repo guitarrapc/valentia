@@ -133,7 +133,7 @@ Supporting Operating System are...</p>
 <th></th>
 </tr></thead>
 <tbody><tr>
-<td><strong>powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('<a href="https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))">https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))</a>"</strong></td>
+<td><strong>powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((irm "<a href="https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1%22).Content))).Remove(0,1)">https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)</a>'</strong></td>
 </tr></tbody>
 </table><p>After the installation complete, you will find valentia installed into your user's Module folder.</p>
 
