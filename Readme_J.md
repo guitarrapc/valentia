@@ -79,7 +79,7 @@ valentia のインストールを行ってみましょう！'PowerShell' か '�
 
 ||
 |----|
-|**powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)'**|
+|**powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)'**|
 
 
 
