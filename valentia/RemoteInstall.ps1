@@ -308,6 +308,13 @@ function Remove-Directory
     }
 }
 
-# To run this function paste below in PowerShell or Command Prompt(cmd)
-# powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
 . Main
+
+
+# To run this function paste below in PowerShell or Command Prompt(cmd)
+
+# 1. x not prefered : raw.github.com
+# powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
+
+# 2. o prefered : api.github.com
+# powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)'
