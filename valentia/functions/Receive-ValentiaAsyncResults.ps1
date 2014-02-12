@@ -52,57 +52,60 @@ Above will retrieve Async Result
     # Initialising for Write-Progress
     $i = 1 
     
-    foreach($Pipeline in $Pipelines)
+    try
     {
-        try
+        foreach($Pipeline in $Pipelines)
         {
-            # Inherite variable
-            [HashTable]$task = @{}
+                # Inherite variable
+                [HashTable]$task = @{}
 
-            # Get HostName of Pipeline
-            $task.host = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
-            if (-not $PSBoundParameters.quiet.IsPresent)
-            {
-                Write-Warning  -Message ("{0} Asynchronous execution done." -f $task.host)
-            }
-
-            # output Asyanc result
-            $task.result = $Pipeline.Pipeline.EndInvoke($Pipeline.AsyncResult)
-            
-            # Check status of stream
-            if($Pipeline.Pipeline.Streams.Error)
-            {
-                $task.SuccessStatus += $false
-                $task.ErrorMessageDetail += $_
-                throw $Pipeline.Pipeline.Streams.Error
-            }
-
-            # Show Progress bar
-            if($ShowProgress)
-            {
+                # Get HostName of Pipeline
+                $task.host = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
                 if (-not $PSBoundParameters.quiet.IsPresent)
                 {
-                    Write-Progress -Activity 'Receiving AsyncPipeline Results' `
-                        -PercentComplete $(($i/$Pipelines.Length) * 100) `
-                        -Status "Percent Complete"
+                    Write-Warning  -Message ("{0} Asynchronous execution done." -f $task.host)
                 }
-            }
-        
-            # Incrementing for Write-Progress
-            $i++
 
-            # Output $task variable to file. This will obtain by other cmdlet outside function.
-            $task
+                # output Asyanc result
+                $task.result = $Pipeline.Pipeline.EndInvoke($Pipeline.AsyncResult)
+            
+                # Check status of stream
+                if($Pipeline.Pipeline.Streams.Error)
+                {
+                    $task.SuccessStatus += $false
+                    $task.ErrorMessageDetail += $_
+                    throw $Pipeline.Pipeline.Streams.Error
+                }
+
+                # Show Progress bar
+                if($ShowProgress)
+                {
+                    if (-not $PSBoundParameters.quiet.IsPresent)
+                    {
+                        Write-Progress -Activity 'Receiving AsyncPipeline Results' `
+                            -PercentComplete $(($i/$Pipelines.Length) * 100) `
+                            -Status "Percent Complete"
+                    }
+                }
+        
+                # Incrementing for Write-Progress
+                $i++
+
+                # Output $task variable to file. This will obtain by other cmdlet outside function.
+                $task
         }
-        catch 
+    }
+    catch 
+    {
+        $task.SuccessStatus += $false
+        $task.ErrorMessageDetail += $_
+        Write-Error $_
+    }
+    finally
+    {
+        # Dispose Pipeline
+        foreach($Pipeline in $Pipelines)
         {
-            $task.SuccessStatus += $false
-            $task.ErrorMessageDetail += $_
-            Write-Error $_
-        }
-        finally
-        {
-            # Dispose Pipeline
             $Pipeline.Pipeline.Dispose()
         }
     }
