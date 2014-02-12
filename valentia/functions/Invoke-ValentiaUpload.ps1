@@ -278,13 +278,13 @@ upload files in target to Directory as Background Async job for hosts written in
                                     try
                                     {
                                         # Run Job
-                                        Write-Warning ("Running Async Job upload to {0}" -f $DeployMember)
+                                        Write-Verbose ("Running Async Job upload to {0}" -f $DeployMember)
                                         $Job = Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload
 
                                         # Waiting for complete job
                                         $Sleepms = 10
 
-                                        Write-Warning ("Current States was {0}" -f $Job.JobState)
+                                        Write-Verbose ("Current States was {0}" -f $Job.JobState)
                                     }
                                     catch
                                     {
@@ -301,7 +301,7 @@ upload files in target to Directory as Background Async job for hosts written in
                                 # Retrieving transfer status and monitor for transffered
                                 while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
                                 { 
-                                    Write-Warning ("Current Job States was {0}, waiting for {1} ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
+                                    Write-Verbose ("Current Job States was {0}, waiting for {1} ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
                                     Sleep -Milliseconds $Sleepms
                                 }
 
@@ -342,7 +342,7 @@ upload files in target to Directory as Background Async job for hosts written in
                                     #Only start upload for file.
                                     if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                                     {
-                                        Write-Warning ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination)
+                                        Write-Verbose ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination)
                                         Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential
                                     }
                                 }
