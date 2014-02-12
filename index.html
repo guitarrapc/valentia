@@ -40,95 +40,90 @@ This module set will optimize your work for deploy Commands or files to remote s
 <h1>
 <a name="special-thanks" class="anchor" href="#special-thanks"><span class="octicon octicon-link"></span></a>Special Thanks</h1>
 
-<p>Valentia inspired from capistrano ( a Ruby deployment tool for Linux) and psake ( a PowerShell build tool).
-They are fantastic and awesome tools for automation and DevOps.
-Especially psake showed cool way of coding and valentia followed in many points.</p>
-
-<p>Also <a href="http://newsqlblog.com/category/powershell/powershell-concurrency/">psasync</a> and <a href="http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/">Get-NetworkInfo</a> give me inspire to do asynchronous execution.</p>
+<p>Valentia inspired from <a href="https://github.com/capistrano/capistrano">capistrano</a> and <a href="https://github.com/psake/psake">psake</a>. They are fantastic and awesome tools for automation and DevOps. Especially psake showed cool way of coding and valentia followed in many points. Also <a href="http://newsqlblog.com/category/powershell/powershell-concurrency/">psasync</a> and <a href="http://learn-powershell.net/2012/05/13/using-background-runspaces-instead-of-psjobs-for-better-performance/">Get-NetworkInfo</a> give me inspire to do asynchronous execution.</p>
 
 <h1>
 <a name="latest-change" class="anchor" href="#latest-change"><span class="octicon octicon-link"></span></a>Latest Change</h1>
 
 <h2>
-<a name="version-03x" class="anchor" href="#version-03x"><span class="octicon octicon-link"></span></a>Version 0.3.x</h2>
+<a name="version-035" class="anchor" href="#version-035"><span class="octicon octicon-link"></span></a>Version 0.3.5</h2>
 
-<ul>
-<li>
-<p>version : 0.3.4</p>
+<pre><code>[ author : guitarrapc ]
 
-<p>[ author : guitarrapc ]</p>
+[ Feb 13, 2013 ]
 
-<p>[ Fev 4, 2013 ]</p>
+* fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.
+* tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently
+* enhanced issue #52 : change Ping-ValentiaGroupAsync from PSEventJob to System.Threading.Tasks.task
+</code></pre>
 
-<ul>
-<li>Remove non use function Get-ValentiaModuleReload</li>
-<li>Added function <code>ConvertTo-ValentiaTask</code>. Now you can convert your powershell script to valentia task easier. </li>
-<li>Added function <code>Show-ValentiaPromptForChoice</code>. Now you can show prompt easier.</li>
-<li>Added function <code>Get-ValentiaFileEncoding</code>. Now you can detect file encoding easier.</li>
-<li>Added function <code>Ping-ValentiaGroupAsync</code>. You can ping to the host ultra fast and test connections.</li>
-<li>Added function <code>Test-ValentiaGroupConnection</code>. You can filter result of <code>Ping-ValentiaGroupAsync</code> for demanded status.</li>
-<li>Added function <code>New-ValentiaDynamicParamMulti</code>. Now you can create Dynamic parameter easier.</li>
-<li>Enhanced for <a href="https://github.com/guitarrapc/valentia/issues/47">issue #47</a>. Could not enable PSRemoting on AWS Windows Server is now solved. Added Firewall detection for <code>Initialize-ValentiaEnvironment</code>.</li>
-<li>fix issue : <a href="https://github.com/guitarrapc/valentia/commit/31bd1a48382a5a59fea90fd87b9d8eff144a3c6a#commitcomment-4621590">Edit-valentaiaconfig ISE -NoProfile</a>
-</li>
-<li>fix <a href="https://github.com/guitarrapc/valentia/issues/36">issue #36</a> : Now installer keep directory structure for module.</li>
-<li>fix issue <a href="https://github.com/guitarrapc/valentia/issues/42">#42</a> : Now <code>Invoke-ValentiaDownload</code> as desired.</li>
-<li>fix issue <a href="Show-ValentiaGroup%20Recurse%20switch%20defined%20as%20parameter">#46</a> : now Show-ValentiaGroup -Recurse works as desired.</li>
-<li>Change valentia Development from PowerShell ISE to Visual Studio 2013 with <a href="http://visualstudiogallery.msdn.microsoft.com/c9eb3ba8-0c59-4944-9a62-6eee37294597">PowerShell Tools for Visual Studio</a>
-</li>
-<li>Change CLR Target to 4.0 and OS version.</li>
-<li>Changed valentia file encoding from default(shift-jis) to UTF8.</li>
-<li>Change Module Type from Script Module to Manifest Module.</li>
-<li>Change Password input from Read-Host to Get-Credential. <a href="https://github.com/guitarrapc/valentia/issues/48">Issue #48</a>
-</li>
-<li>Chage Get-ValentiaGroup for <a href="https://github.com/guitarrapc/valentia/issues/50">Issue #50</a>. Now Get-ValentiaGroup never check connection.</li>
-<li>Changed parameter for $valentia.RunSpacePool. Now Logical Number of Core will be use for this parameter.</li>
-<li>Enhanced for <a href="https://github.com/guitarrapc/valentia/issues/28">issue #28</a>Change <code>Invoke-ValentiaAsync</code> meassage from Warning line to Progress. You can check each host progress when added -Verbose switch.</li>
-<li>ErrorPreference handling now can control with valentia-config.ps1</li>
-<li>define help message for all functions.</li>
-<li>Added <code>-quiet</code> switch to <code>Invoke-Valentia</code>,<code>Invoke-valentiaParallel</code> and <code>Invoke-ValentiaAsync</code>. Now you can compress messages and only recieve execution result in bool.</li>
-</ul>
-</li>
-</ul><h1>
+<h1>
 <a name="valid-os-and-powershell-verstion" class="anchor" href="#valid-os-and-powershell-verstion"><span class="octicon octicon-link"></span></a>Valid OS and PowerShell Verstion</h1>
 
-<p>valentia works with PowerShell Version 3.0 and higher.
-I'm developing with Windows 8, Windows 8.1 and Windows 2012.
-Supporting Operating System are...</p>
-
-<ul>
-<li>Windows 7 (with PowerShell V3.0 and higher)</li>
-<li>Windows 8 (with PowerShell V3.0 and higher)</li>
-<li>Windows 8.1 (with PowerShell V4.0 and higher)</li>
-<li>Windows 2012 (with PowerShell V3.0 and higher)</li>
-<li>Windows 2012 R2 (with PowerShell V4.0 and higher)</li>
-</ul><p>note : all functions are confirmed with Windows Server 2012 x64 English environment.</p>
+<table>
+<thead><tr>
+<th>OS</th>
+<th>PowerShell</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Windows 7 SP1</td>
+<td>PowerShell V3.0 and higher</td>
+</tr>
+<tr>
+<td>Windows 8</td>
+<td>PowerShell V3.0 and higher</td>
+</tr>
+<tr>
+<td>Windows 8.1</td>
+<td>PowerShell V4.0 and higher</td>
+</tr>
+<tr>
+<td>Windows 2012</td>
+<td>PowerShell V3.0 and higher</td>
+</tr>
+<tr>
+<td>Windows 2012 R2</td>
+<td>PowerShell V4.0 and higher</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="note-all-functions-are-confirmed-with-windows-server-2012-x64-english-environment" class="anchor" href="#note-all-functions-are-confirmed-with-windows-server-2012-x64-english-environment"><span class="octicon octicon-link"></span></a>NOTE: All functions are confirmed with Windows Server 2012 x64 English environment.</h4>
 
 <h1>
 <a name="prerequisite" class="anchor" href="#prerequisite"><span class="octicon octicon-link"></span></a>Prerequisite</h1>
 
-<p>You need to install followings to use valentia file transfer.</p>
-
-<ol>
-<li>Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"</li>
-<li>Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")
-
 <ul>
-<li><a href="http://ipmsg.org/tools/fastcopy.html">Download FastCopy? click here to go HP.</a></li>
-</ul>
-</li>
-<li>Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.
-
-<ul>
-<li><code>Set-ExecutionPolicy RemoteSigned</code></li>
-</ul>
-</li>
-</ol><h1>
+<li>You need to install followings to use valentia file transfer.</li>
+</ul><table>
+<thead><tr>
+<th>#</th>
+<th>Description</th>
+<th>Note</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"</td>
+<td></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")</td>
+<td><a href="http://ipmsg.org/tools/fastcopy.html">Download FastCopy? click here to go HP.</a></td>
+</tr>
+<tr>
+<td>3.</td>
+<td>Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.</td>
+<td><code>Set-ExecutionPolicy RemoteSigned</code></td>
+</tr>
+</tbody>
+</table><h1>
 <a name="easy-install-" class="anchor" href="#easy-install-"><span class="octicon octicon-link"></span></a>Easy Install !!</h1>
 
-<p>Let's start install valentia now, Open PowerShell or Command prompt, paste the text below and press Enter.</p>
-
-<table>
+<ul>
+<li>Let's start install valentia now, Open PowerShell or Command prompt, paste the text below and press Enter.</li>
+</ul><table>
 <thead><tr>
 <th></th>
 </tr></thead>
@@ -146,47 +141,45 @@ Supporting Operating System are...</p>
 <h3>
 <a name="local-installation-for-user" class="anchor" href="#local-installation-for-user"><span class="octicon octicon-link"></span></a>Local Installation for user</h3>
 
-<p>If Remote installation are not allowed in your environment, set valentia in any path then you can install valentia localy with run <code>install.bat</code>.
-This bat file will also copy valentia to user module path </p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nv">$env:USERPROFILE</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span>
+<ul>
+<li>If Remote installation are not allowed in your environment, set valentia in any path then you can install valentia localy with run <code>install.bat</code>,  this bat file copy valentia to user module path </li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="nv">$env:USERPROFILE</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span>
 </pre></div>
 
 <h3>
 <a name="use-valentia-for-all-users" class="anchor" href="#use-valentia-for-all-users"><span class="octicon octicon-link"></span></a>Use valentia for all users.</h3>
 
-<p>If you want to use valentia with all users, then set valentia module folder to:</p>
-
-<pre><code>C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
+<ul>
+<li>In case you want to use valentia with all users, then set valentia module folder to:</li>
+</ul><pre><code>C:\Windows\System32\WindowsPowerShell\v1.0\Modules\valentia
 </code></pre>
 
 <h2>
 <a name="import-valentia-module" class="anchor" href="#import-valentia-module"><span class="octicon octicon-link"></span></a>Import valentia module</h2>
 
-<p>In PowerShell V3.0, all modules located in default Module Path will be automatically search and loaded before starting script.</p>
-
-<p>But if you sat module into custom path, means not default Module Path, PowerShell will not automatically load yout module. In this case, please use Import-Module cmdlet in where <code>valentia.psd1</code> locating.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="s2">"move to custom path you sat valentia.psd1"</span>
+<ul>
+<li><p>In PowerShell V3.0, all modules located in default Module Path will be automatically search and loaded before starting script.</p></li>
+<li><p>If you sat module into custom path, means not default Module Path, PowerShell will not automatically load yout module. In this case, please use Import-Module cmdlet in where <code>valentia.psd1</code> locating.</p></li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="n">cd</span> <span class="s2">"move to custom path you sat valentia.psd1"</span>
 <span class="nb">Import-Module</span> <span class="n">valentia</span>
 </pre></div>
 
-<p>If you sat valentia in standard Module Path described in "Easy Install", you don't need to import manually. However <code>Import-Module valentia</code> will import $valentia variables, and it will be help you some.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span>
+<ul>
+<li>While valentia sat in standard Module Path, described in "Easy Install", you don't need to import manually. However <code>Import-Module valentia</code> will import $valentia variables, and it will be help you some.</li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="nb">Import-Module</span> <span class="n">valentia</span>
 </pre></div>
 
 <h1>
 <a name="valentia-functions" class="anchor" href="#valentia-functions"><span class="octicon octicon-link"></span></a>valentia functions</h1>
 
-<p>You can see valentia functions by following command.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-command</span> <span class="n">-module</span> <span class="n">valentia</span>
+<ul>
+<li>You can see valentia functions by following command.</li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="nb">Get-command</span> <span class="n">-module</span> <span class="n">valentia</span>
 </pre></div>
 
-<p>Following functions will be shown.</p>
-
-<table>
+<ul>
+<li>Following functions will be shown.</li>
+</ul><table>
 <thead><tr>
 <th>CommandType</th>
 <th>Name</th>
@@ -347,15 +340,14 @@ This bat file will also copy valentia to user module path </p>
 </table><h1>
 <a name="valentia-alias" class="anchor" href="#valentia-alias"><span class="octicon octicon-link"></span></a>valentia Alias</h1>
 
-<p>valentia functions have Alias to let you use it easir.
-You can find them as like this.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-Alias</span> <span class="p">|</span> <span class="n">where</span> <span class="n">ModuleName</span> <span class="o">-eq</span> <span class="s2">"valentia"</span>
+<ul>
+<li>valentia functions have Alias to let you use it easir, you can find them as like this.</li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="nb">Get-Alias</span> <span class="p">|</span> <span class="n">where</span> <span class="n">ModuleName</span> <span class="o">-eq</span> <span class="s2">"valentia"</span>
 </pre></div>
 
-<p>This show alias defined in valentia</p>
-
-<table>
+<ul>
+<li>This show alias defined in valentia</li>
+</ul><table>
 <thead><tr>
 <th>CommandType</th>
 <th>Name</th>
@@ -464,6 +456,208 @@ You can find them as like this.</p>
 <td>Valep</td>
 <td>Invoke-ValentiaParallel</td>
 <td>Valentia</td>
+</tr>
+</tbody>
+</table><h1>
+<a name="execute-deploy-commands" class="anchor" href="#execute-deploy-commands"><span class="octicon octicon-link"></span></a>Execute deploy Commands</h1>
+
+<ul>
+<li>After you satup Server/Clients, Credential amd DeproyGroups you can start execution.</li>
+</ul><h2>
+<a name="1-vale--back-ground-job-execution" class="anchor" href="#1-vale--back-ground-job-execution"><span class="octicon octicon-link"></span></a>1. <code>vale</code> : Back ground job execution.</h2>
+
+<blockquote>
+<p><strong>vale</strong> is Alias of <code>Invoke-Valentia</code>. This will execute Command to deploy group as back ground job.
+vale is the standard way of valentia Command execution to the host, and quite fast in many cases. (Invoke-Valentia will run like Asynchros.)</p>
+</blockquote>
+
+<p>You have 2 choice executing command to host.</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Run</th>
+<th>Expression</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>ScriptBlock</td>
+<td><code>vale Deploygroup {ScriptBlock}</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Task File</td>
+<td><code>vale DeployGroup .\Taskfile.ps1</code></td>
+</tr>
+</tbody>
+</table><h2>
+<a name="2-valep--powershell-workflow-inlinescript-exection" class="anchor" href="#2-valep--powershell-workflow-inlinescript-exection"><span class="octicon octicon-link"></span></a>2. <code>valep</code> : PowerShell WorkFlow InlineScript exection.</h2>
+
+<blockquote>
+<p><strong>valep</strong> is Alias of <code>Invoke-ValentiaParallel</code>. This will execute Command to deploy group as PowreShell WorkFlow.
+This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.
+However if command execute in same PSHost process then valep can be fastest way of execution. It means if valep use same session as previous.</p>
+</blockquote>
+
+<p>You have 2 choice executing command to host.</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Run</th>
+<th>Expression</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>ScriptBlock</td>
+<td><code>valep Deploygroup {ScriptBlock}</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Task File</td>
+<td><code>valep DeployGroup .\Taskfile.ps1</code></td>
+</tr>
+</tbody>
+</table><h4>
+<a name="note-you-can-not-call-valep-from-c-calling-valentia-this-is-limitation-of-psworkflow" class="anchor" href="#note-you-can-not-call-valep-from-c-calling-valentia-this-is-limitation-of-psworkflow"><span class="octicon octicon-link"></span></a>NOTE: You can not call <code>valep</code> from C# calling valentia. This is limitation of PSWorkflow.</h4>
+
+<h2>
+<a name="3-valea--asynchronous-runspace-command-invokation" class="anchor" href="#3-valea--asynchronous-runspace-command-invokation"><span class="octicon octicon-link"></span></a>3. <code>valea</code> : Asynchronous RunSpace Command invokation.</h2>
+
+<blockquote>
+<p><strong>valea</strong> is Alias of <code>Invoke-ValentiaAsync</code>. This will execute Command to deploy group as RunSpacePooling.
+valea is the asynchronous way of valentia Command execution to the host, and quite fast in most of the cases.</p>
+</blockquote>
+
+<p>You have 2 choice executing command to host.</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Run</th>
+<th>Expression</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>ScriptBlock</td>
+<td><code>valea Deploygroup {ScriptBlock}</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Task File</td>
+<td><code>valea DeployGroup .\Taskfile.ps1</code></td>
+</tr>
+</tbody>
+</table><h1>
+<a name="execute-file-transfer-commands" class="anchor" href="#execute-file-transfer-commands"><span class="octicon octicon-link"></span></a>Execute File transfer Commands</h1>
+
+<h3>
+<a name="1-upload--single-file-upload-from-server-to-clients" class="anchor" href="#1-upload--single-file-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>1. <code>upload</code> : Single File Upload from Server to Clients</h3>
+
+<blockquote>
+<p><strong>upload</strong> is Alias of <code>Invoke-ValentiaUpload</code>. You can upload file to client.
+This function wrapps BITs Transfer inside and you can use option of BITS Transfer.</p>
+</blockquote>
+
+<h4>
+<a name="note-the-files-using-to-upload-must-set-in-cdeploymentupload-at-server-side" class="anchor" href="#note-the-files-using-to-upload-must-set-in-cdeploymentupload-at-server-side"><span class="octicon octicon-link"></span></a>NOTE: The files using to upload must set in C:\Deployment\Upload at Server side.</h4>
+
+<p>You have 2 choice executing command to host.</p>
+
+<p>ex ) Upload file c:\deployment\upload\upload.txt to Remote Client C:\ for DeployGroup new is.</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Run</th>
+<th>Expression</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>Synchronous</td>
+<td><code>upload -SourceFile "hoge.txt" -DestinationFolder c:\ -DeployGroup new</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Asynchronous</td>
+<td><code>upload -SourceFile "hoge.txt" -DestinationFolder c:\ -DeployGroup new -Async</code></td>
+</tr>
+</tbody>
+</table><h3>
+<a name="2-uploadl--files-in-list-upload-from-server-to-clients" class="anchor" href="#2-uploadl--files-in-list-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>2. <code>uploadL</code> : Files in List Upload from Server to Clients</h3>
+
+<blockquote>
+<p><strong>uploadL</strong> is Alias of <code>Invoke-ValentiaUploadList</code>. You can upload multiple files listed in file.
+This function wrapps BITs Transfer inside and you can use option of BITS Transfer.</p>
+</blockquote>
+
+<h4>
+<a name="note-the-files-using-to-upload-must-set-in-cdeploymentupload-at-server-side-1" class="anchor" href="#note-the-files-using-to-upload-must-set-in-cdeploymentupload-at-server-side-1"><span class="octicon octicon-link"></span></a>NOTE: The files using to upload must set in C:\Deployment\Upload at Server side.</h4>
+
+<ul>
+<li>List File format should like this.</li>
+</ul><pre><code>Source, Destination
+C:\Deployment\Upload\DownLoad.txt,\\10.0.4.100\C$
+C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
+</code></pre>
+
+<blockquote>
+<p>1st top line is an "Header" for Source, Destination.
+2nd line is SourceFile fullpath and Destination folder full path to transfer.
+Keep Deleimiter as ",".</p>
+</blockquote>
+
+<p>ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ for DeployGroup new is.</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Run</th>
+<th>Expression</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>Synchronous</td>
+<td><code>UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Asynchronous</td>
+<td><code>UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new -Async</code></td>
+</tr>
+</tbody>
+</table><h3>
+<a name="3-sync--sync-server-folder-and-files-with-clients-diff-mode" class="anchor" href="#3-sync--sync-server-folder-and-files-with-clients-diff-mode"><span class="octicon octicon-link"></span></a>3. <code>sync</code> : Sync Server Folder and Files with Clients (DIFF mode)</h3>
+
+<blockquote>
+<p><strong>sync</strong> is Alias of <code>Invoke-ValentiaSync</code>. You can Synchronise DeployServer folder and Clients Folder.
+Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.
+This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadvance.</p>
+</blockquote>
+
+<p>ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for DeployGroup new is.</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Run</th>
+<th>Expression</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>Synchronous</td>
+<td><code>sync -SourceFolder C:\Requirements -DestinationFolder "c:\hoge hoge" -DeployGroup new</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td>Asynchronous</td>
+<td>Not yet ready.</td>
 </tr>
 </tbody>
 </table><h1>
@@ -713,7 +907,7 @@ Write task in file with below format and save it in BranchFolders you want to wo
 <p>It's easy to convert normal .ps1 to task.
 Task file format is as below.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="n">task</span> <span class="n">taskname</span> <span class="n">-Action</span><span class="p">{</span>
+<div class="highlight highlight-PowerShell"><pre><span class="n">task</span> <span class="n">taskname</span> <span class="n">-Action</span> <span class="p">{</span>
     <span class="n">PowerShell</span> <span class="n">Commands</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run</span>
 <span class="p">}</span>
 </pre></div>
@@ -725,7 +919,7 @@ Task file format is as below.</p>
 
 <p>Then task will be like this.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="n">task</span> <span class="n">taskname</span> <span class="n">-Action</span><span class="p">{</span>
+<div class="highlight highlight-PowerShell"><pre><span class="n">task</span> <span class="n">taskname</span> <span class="n">-Action</span> <span class="p">{</span>
     <span class="nb">Get-ChildItem</span>
 <span class="p">}</span>
 </pre></div>
@@ -741,214 +935,7 @@ Please check vale and valep section about a detail of some functions cannot use 
 <li>In other word, do not try to get another credential in you script. Especially in "valep" .</li>
 </ul>
 </li>
-</ul><h1>
-<a name="execute-deploy-commands" class="anchor" href="#execute-deploy-commands"><span class="octicon octicon-link"></span></a>Execute deploy Commands</h1>
-
-<p>After you satup Server/Clients, Credential amd DeproyGroups you can start execution.</p>
-
-<h3>
-<a name="1-vale--sequential-single-command-execution" class="anchor" href="#1-vale--sequential-single-command-execution"><span class="octicon octicon-link"></span></a>1. <code>vale</code> : Sequential Single Command execution</h3>
-
-<p>This command will execute ScriptBlock to deploy group written in DeployGroup.ps1.
-As sequencially running, many hosts will takes x times to complete job.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
-</pre></div>
-
-<p>SAMPLE:</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">new</span> <span class="p">{</span><span class="nb">Get-ChildItem</span><span class="p">}</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h3>
-<a name="2-vale--sequential-commandset-execution" class="anchor" href="#2-vale--sequential-commandset-execution"><span class="octicon octicon-link"></span></a>2. <code>vale</code> : Sequential Commandset execution</h3>
-
-<p>Just make task for commandset.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
-    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
-    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
-<span class="p">}</span>
-</pre></div>
-
-<p>After you made task, you should move to BranchFolder you saved task.
-"go" command will ease you move to BranchFolder path where you carete task. 
-ex ) application, then</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">go</span> <span class="n">application</span>
-</pre></div>
-
-<p>After you move to BranchFolder run vale command</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">vale</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h3>
-<a name="3-valep--parallel-single-command-execution" class="anchor" href="#3-valep--parallel-single-command-execution"><span class="octicon octicon-link"></span></a>3. <code>valep</code> : Parallel Single Command execution</h3>
-
-<p>Almost same as vale command, just change command to valep.
-It will speed up abpit 3-5 times than sequencial command.</p>
-
-<ul>
-<li>Note that this isn't asyncroniuous but only parallel.</li>
-</ul><div class="highlight highlight-PowerShell"><pre><span class="n">valep</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h3>
-<a name="4-valep--parallel-commandset-execution" class="anchor" href="#4-valep--parallel-commandset-execution"><span class="octicon octicon-link"></span></a>4. <code>valep</code> : Parallel Commandset execution</h3>
-
-<p>Almost same as valep command, just change command to valep.
-It will speed up abpit 3-5 times than sequencial command.</p>
-
-<ul>
-<li>Note that this isn't asyncroniuous but only parallel.</li>
-</ul><p>Just make task for commandset.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
-    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
-    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
-<span class="p">}</span>
-</pre></div>
-
-<p>After you made task, you should move to BranchFolder you saved task.
-"go" command will ease you move to BranchFolder path where you carete task. 
-ex ) application, then</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">go</span> <span class="n">application</span>
-</pre></div>
-
-<p>After you move to BranchFolder run valep command</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">valep</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h3>
-<a name="5-valea--asynchronous-single-command-execution" class="anchor" href="#5-valea--asynchronous-single-command-execution"><span class="octicon octicon-link"></span></a>5. <code>valea</code> : Asynchronous Single Command execution</h3>
-
-<p>Not same as vale and valep command. Because valea will execute asynchrously.
-vale is sequential job and will cost host count.
-valep is parallel execution similer to valea but is not asynchronous.
-valea is multithread asynchronous commad and also can call from C# while valep cannot.</p>
-
-<p>It will speed up O(n) times with host count times than sequencial command.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">valea</span> <span class="n">Deploygroup</span> <span class="p">{</span><span class="n">ScriptBlock</span><span class="p">}</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h3>
-<a name="6-valea--asynchronous-commandset-execution" class="anchor" href="#6-valea--asynchronous-commandset-execution"><span class="octicon octicon-link"></span></a>6. <code>valea</code> : Asynchronous Commandset execution</h3>
-
-<p>Not same as vale and valep command. Because valea will execute asynchrously.
-vale is sequential job and will cost host count.
-valep is parallel execution similer to valea but is not asynchronous.
-valea is multithread asynchronous commad and also can call from C# while valep cannot.</p>
-
-<p>Just make task for commandset.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">Task</span> <span class="n">taskname</span> <span class="p">{</span>
-    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run1</span>
-    <span class="n">Commandset</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">run2</span>
-<span class="p">}</span>
-</pre></div>
-
-<p>After you made task, you should move to BranchFolder you saved task.
-"go" command will ease you move to BranchFolder path where you carete task. 
-ex ) application, then</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">go</span> <span class="n">application</span>
-</pre></div>
-
-<p>After you move to BranchFolder run valea command</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="n">valea</span> <span class="n">DeployGroup</span> <span class="p">.\</span><span class="n">Taskfile</span><span class="p">.</span><span class="n">ps1</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h1>
-<a name="execute-file-transfer-commands" class="anchor" href="#execute-file-transfer-commands"><span class="octicon octicon-link"></span></a>Execute File transfer Commands</h1>
-
-<h3>
-<a name="1-upload--single-file-upload-from-server-to-clients" class="anchor" href="#1-upload--single-file-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>1. <code>upload</code> : Single File Upload from Server to Clients</h3>
-
-<p>You can upload file to client with "upload" command.
-This wrapps BITs Transfer inside.</p>
-
-<ul>
-<li>Note: The files using to upload must set in C:\Deployment\Upload at Server side.</li>
-</ul><p>ex ) Upload file c:\deployment\upload\upload.txt to Remote Client C:\ for DeployGroup new is.</p>
-
-<div class="highlight highlight-Powershell"><pre><span class="n">upload</span> <span class="n">-SourceFile</span> <span class="s2">"filename in C:\Deployment\Upload\...."</span> <span class="n">-DestinationFolder</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
-</pre></div>
-
-<p>you can omit parameter names like this.</p>
-
-<div class="highlight highlight-Powershell"><pre><span class="n">upload</span> <span class="s2">"upload.txt"</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">new</span>
-</pre></div>
-
-<h3>
-<a name="2-uploadl--files-in-list-upload-from-server-to-clients" class="anchor" href="#2-uploadl--files-in-list-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>2. <code>uploadL</code> : Files in List Upload from Server to Clients</h3>
-
-<p>You can upload multiple files listed in file with "uploadL" command.
-This allow you ease select file manytime in command.</p>
-
-<p>This wrapps BITs Transfer inside.</p>
-
-<ul>
-<li>Note: The files using to upload must set in C:\Deployment\Upload at Server side.</li>
-</ul><p>before use ran this command, you should create list file in C:\Deployment\Upload direcoty.
-File format should like this.</p>
-
-<pre><code>Source, Destination
-C:\Deployment\Upload\DownLoad.txt,\\10.0.4.100\C$
-C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
-</code></pre>
-
-<p>A Top line is Source, Destination header.
-After 2nd line is SourceFile fullpath and Destination folder full path to transfer.
-Deleimiter must ",".</p>
-
-<p>Now you are ready to transfer list of files with following command.</p>
-
-<p>ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ for DeployGroup new is.</p>
-
-<div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">-ListFile</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">-DestinationFolder</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
-</pre></div>
-
-<p>Of cource you can omit parameter names like this.</p>
-
-<div class="highlight highlight-Powershell"><pre><span class="n">UploadL</span> <span class="n">list</span><span class="p">.</span><span class="n">txt</span> <span class="n">c</span><span class="err">:</span><span class="p">\</span> <span class="n">new</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
-
-<h3>
-<a name="3-sync--sync-server-folder-and-files-with-clients-diff-mode" class="anchor" href="#3-sync--sync-server-folder-and-files-with-clients-diff-mode"><span class="octicon octicon-link"></span></a>3. <code>sync</code> : Sync Server Folder and Files with Clients (DIFF mode)</h3>
-
-<p>You can Synchronise DeployServer folder and Clients Folder.
-Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.</p>
-
-<p>ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for DeployGroup new is.</p>
-
-<div class="highlight highlight-Powershell"><pre><span class="n">sync</span> <span class="n">-SourceFolder</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="n">-DestinationFolder</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">-DeployGroup</span> <span class="n">new</span>
-</pre></div>
-
-<p>Of cource you can omit parameter names like this.</p>
-
-<div class="highlight highlight-Powershell"><pre><span class="n">Sync</span> <span class="n">C</span><span class="err">:</span><span class="p">\</span><span class="n">Requirements</span> <span class="s2">"c:\hoge hoge"</span> <span class="n">new</span>
-</pre></div>
-
-<p>** Adding <code>-Verbose</code> switch will ease you check how function working. **</p>
+</ul>
       </section>
     </div>
 
