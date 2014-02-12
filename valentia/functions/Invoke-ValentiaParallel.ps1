@@ -118,7 +118,7 @@ You can prepare script file to run, and specify path.
         $quiet
     )
 
-#region Begin
+    #region Begin
 
     try
     {
@@ -225,9 +225,9 @@ You can prepare script file to run, and specify path.
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
         
-#endregion
+        #endregion
 
-#region Process
+        #region Process
 
         # Run ScriptBlock as Parallel for each DeployMember
         Write-Verbose ("Execute command {0} " -f $ScriptToRun)
@@ -327,9 +327,9 @@ You can prepare script file to run, and specify path.
     finally
     {
 
-#endregion
+    #endregion
 
-#region End
+    #region End
 
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference
@@ -375,7 +375,6 @@ You can prepare script file to run, and specify path.
         # Cleanup valentia Environment
         Invoke-ValentiaClean
 
-#endregion
+    #endregion
     }
-
 }

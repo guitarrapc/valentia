@@ -116,7 +116,7 @@ You can prepare script file to run, and specify path.
         $quiet
     )
 
-#region Begin
+    #region Begin
 
     try
     {
@@ -224,9 +224,9 @@ You can prepare script file to run, and specify path.
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalDuration)
 
-#endregion
+        #endregion
 
-#region Process
+        #region Process
 
         # Create HashTable for Runspace
         $ScriptToRunHash   = @{ScriptBlock   = $ScriptToRun}
@@ -360,9 +360,9 @@ You can prepare script file to run, and specify path.
     finally
     {
 
-#endregion
+    #endregion
 
-#region End
+    #region End
 
         # Dispose RunspacePool
         $pool.Close()
@@ -411,8 +411,7 @@ You can prepare script file to run, and specify path.
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean
+
+    #endregion
     }
-
-#endregion
-
 }
