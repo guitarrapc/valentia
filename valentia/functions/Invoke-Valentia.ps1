@@ -164,7 +164,7 @@ You can prepare script file to run, and specify path.
                 if (-not(Test-Path (Join-Path (Get-Location).Path $TaskFileName)))
                 {
                     $TaskFileStatus = [PSCustomObject]@{
-                        ErrorMessageDetail = "TaskFileName [ {0} ] not found in {1} exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
+                        ErrorMessageDetail = "TaskFileName '{0}' not found in '{1}' exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
                         SuccessStatus = $false
                     }             
                     $SuccessStatus += $TaskFileStatus.SuccessStatus
@@ -172,7 +172,7 @@ You can prepare script file to run, and specify path.
                 }
                 
                 # Read Task File and get Action to run
-                Write-Verbose ("TaskFileName parameter [ {0} ] was selected." -f $TaskFileName)
+                Write-Verbose ("TaskFileName parameter '{0}' was selected." -f $TaskFileName)
 
                 # run Task $TaskFileName inside functions and obtain scriptblock written in.
                 $taskkey = & $TaskFileName
@@ -235,7 +235,7 @@ You can prepare script file to run, and specify path.
 
         # Run ScriptBlock as Sequence for each DeployMember
         Write-Verbose ("Execute command : {0}" -f $ScriptToRun)
-        Write-Verbose ("Target Computers : [{0}]" -f $Sessions.ComputerName)
+        Write-Verbose ("Target Computers : '{0}'" -f ($DeployMembers -join ", "))
 
         # Flag for WSManInstance restart detection
         $WSManInstanceflag = $true
