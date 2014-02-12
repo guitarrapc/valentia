@@ -196,13 +196,6 @@ You can prepare script file to run, and specify path.
         $task = $currentContext.tasks.$taskKey
         $ScriptToRun = $task.Action
 
-        # Cleanup previous PSSession before start
-        if ((Get-PSSession).count -gt 0)
-        {
-            Write-Verbose "Clean up previous PSSession"
-            Get-PSSession | Remove-PSSession
-        }
-
         # Cleanup previous Job before start
         if ((Get-Job).count -gt 0)
         {
@@ -232,39 +225,13 @@ You can prepare script file to run, and specify path.
             $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
         }
 
-        # Create PSSessions
-        Write-Verbose "Starting create PSSession."
-        try
-        {
-            $Sessions = New-PSSession -ComputerName $DeployMembers -Credential $Credential -Name $($DeployMember -replace ".","")
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            Write-Error $_
-        }
-
-        # Check Connection Status
-        if (-not $PSBoundParameters.quiet.IsPresent)
-        {
-            if ($Sessions.State -eq "opened")
-            {
-                Write-Verbose ("Session [ {0} ] created with [ {1} ]" -f $Sessions.State, $Sessions.ComputerName)
-            }
-            else
-            {
-                Write-Warning ("Session [ {0} ] not created with [ {1} ]" -f $Sessions.State, $Sessions.ComputerName)
-            }
-        }
-
         # Show Stopwatch for Begin section
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
 
-        #endregion
+    #endregion
 
-        #region Process
+    #region Process
 
         # Run ScriptBlock as Sequence for each DeployMember
         Write-Verbose ("Execute command : {0}" -f $ScriptToRun)
@@ -274,7 +241,7 @@ You can prepare script file to run, and specify path.
         $WSManInstanceflag = $true
 
         # Executing job
-        Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter `
+        Invoke-ValentiaCommand -ComputerNames $DeployMembers -ScriptToRun $ScriptToRun -Credential $Credential -TaskParameter $TaskParameter  `
         | %{$result = @{}}{
             # Obtain parameter to show on log
             $ErrorMessageDetail += $_.ErrorMessageDetail
@@ -286,66 +253,18 @@ You can prepare script file to run, and specify path.
                 # Output to host
                 $_.result
             }
-
-            # For wsman trap hit
-            $WSManInstanceflag = $_.WSManInstanceflag
         }
 
-
-        # Check WinRM trap was hit or not
-        if ($WSManInstanceflag -eq $true)
-        {
-            Write-Warning ("WinRM session exceeded {0} and neerly limit of 25. Restarted WinRM on Remote Server to reset WinRM session." -f $valentia.wsmanSessionlimit)
-            Write-Warning "Restart Complete, trying remote session again."
-
-            # if hit then automatically rerun command
-            Invoke-ValentiaCommand -Session $Sessions -ScriptToRun $ScriptToRun -wsmanSessionlimit $valentia.wsmanSessionlimit -TaskParameter $TaskParameter `
-            | %{$result = @{}}{
-                # Obtain parameter to show on log
-                $ErrorMessageDetail += $_.ErrorMessageDetail
-                $SuccessStatus += $_.SuccessStatus
-
-                # Output to host
-                if(!$quiet)
-                {
-                    $_.result
-                }
-            }
-        }
-
-        # Remove pssession remains.
-        try
-        {            
-            Write-Verbose "Remove all PSSession."
-            Get-PSSession | Remove-PSSession
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            Write-Error $_
-        }
-        
-        # Cleanup previous Job before start
-        if ((Get-Job).count -gt 0)
-        {
-            Write-Verbose "Clean up previous Job"
-            Get-Job | Remove-Job -Force
-        }
+    #endregion
     }
     catch
     {
-
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
         throw $_
-
     }
     finally
     {
-
-    #endregion
-
     #region End
 
         # reverse Error Action Preference

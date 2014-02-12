@@ -47,30 +47,30 @@ Created: 20/June/2013
     (
         [Parameter(
             Position = 0,
+            Mandatory = 1,
             ParameterSetName = "Default",
-            ValueFromPipeline =$True,
-            ValueFromPipelineByPropertyName =$True,
-            Mandatory =$true,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1,
             HelpMessage = "Input Session")]
-        [System.Management.Automation.Runspaces.PSSession[]]
-        $Sessions,
+        [string[]]
+        $ComputerNames,
 
         [Parameter(
             Position = 1,
+            Mandatory = 1,
             ParameterSetName = "Default",
-            ValueFromPipeline =$True,
-            ValueFromPipelineByPropertyName =$True,
-            Mandatory =$true,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1,
             HelpMessage = "Input ScriptBlock. ex) Get-ChildItem, Get-NetAdaptor | where MTUSize -gt 1400")]
         [ScriptBlock]
         $ScriptToRun,
 
         [Parameter(
             Position = 2,
-            Mandatory =$true,
-            HelpMessage = "Input wsmanSession Threshold number to restart wsman")]
-        [int]
-        $wsmanSessionlimit,
+            Mandatory = 1,
+            HelpMessage = "Input PSCredential for Remote Command execution.")]
+        [System.Management.Automation.PSCredential]
+        $Credential,
 
         [Parameter(
             Position = 3, 
@@ -80,43 +80,37 @@ Created: 20/June/2013
         $TaskParameter
     )
 
-
-    $ErrorActionPreference = $valentia.errorPreference
-
-    # Set variable for Stopwatch
-    [decimal]$DurationTotal = 0
-
-    foreach ($session in $Sessions)
+    begin
     {
-        # Initializing stopwatch
-        $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
+        $ErrorActionPreference = $valentia.errorPreference
+        $list = New-Object System.Collections.Generic.List[System.Management.Automation.Job]
 
-        # Inherite variable
-        [HashTable]$task = @{}
+        # Set variable for Stopwatch
+        [decimal]$DurationTotal = 0
 
-        # set wsmanflag to check command success or not
-        $task.WSManInstanceflag = $True
+        # Set variable for output each task result
+        $task = @{}
+    }
 
-        # Get Host
-        $task.host = $session.ComputerName
-
-        # Check parameter for Invoke-Command
-        Write-Verbose ("Session..... {0}" -f $($Sessions))
-        Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
-        Write-Verbose ("wsmanSessionlimit..... {0}" -f $($wsmanSessionlimit))
-        Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
-
-        # Run ScriptBlock in Job
-        Write-Verbose ("Running ScriptBlock to {0} as Job" -f $session)
-        $job = Invoke-Command -Session $session -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -AsJob
-
+    process
+    {
+        #region execute to host
         try
         {
-            # Recieve ScriptBlock result from Job
-            Write-Verbose "Receiving Job result."
-            $task.result = Receive-Job -Job $job -Wait
-            $task.WSManInstanceflag = $false
-            
+            foreach ($computerName in $ComputerNames)
+            {
+                # Initializing stopwatch
+                $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
+
+                # Check parameter for Invoke-Command
+                Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
+                Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
+
+                # Run ScriptBlock in Job
+                Write-Verbose ("Running ScriptBlock to {0} as Job" -f $computerName)
+                $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -AsJob
+                $list.Add($job)
+            }
         }
         catch [System.Management.Automation.ActionPreferenceStopException]
         {
@@ -127,7 +121,61 @@ Created: 20/June/2013
             $task.SuccessStatus = $false
             $task.ErrorMessageDetail = $_
         }
+        catch [System.Management.Automation.Remoting.PSRemotingTransportException]
+        {
+            # Show Error Message
+            Write-Error $_
 
+            # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
+            $task.SuccessStatus = $false
+            $task.ErrorMessageDetail = $_
+        }
+        #endregion
+
+        #region monitor job status
+        while (((Get-Job).State) -contains "Running")
+        {
+            Write-Verbose "Waiting for job running complete."
+            sleep -Milliseconds 10
+        }
+        #endregion
+
+        #region recieve job result
+        foreach ($listJob in $list)
+        {
+            try
+            {
+                Write-Verbose ("Recieve ScriptBlock result from Job for '{0}'" -f $listJob.Location)
+                $task.host = $listJob.Location
+                $task.result = Receive-Job -Job $listJob
+            }
+            catch
+            {
+                # Show Error Message
+                Write-Error $_
+
+                # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
+                $task.SuccessStatus = $false
+                $task.ErrorMessageDetail = $_
+            }
+            finally
+            {
+                # Output
+                $task
+
+                # initialize
+                $task.host = $null
+                $task.result = $null
+
+                Write-Verbose "Clean up Job"
+                Remove-Job -Job $listJob -Force
+            }
+        }
+        #endregion
+    }
+
+    end
+    {
         # Get Duration Seconds for each command
         $Duration = $stopwatchSession.Elapsed.TotalSeconds
         $DurationMessage = "{0} exec Duration Sec :{1}" -f $session.ComputerName, $Duration
@@ -142,35 +190,10 @@ Created: 20/June/2013
         # Add each command exec time to Totaltime
         $DurationTotal += $Duration
 
-        # Get Current host WSManInstance (No need set Connection URI as it were already connecting
-        $WSManInstance = Invoke-Command -ScriptBlock {Get-WSManInstance shell -Enumerate} -Session $session
-        Write-Verbose ("Current WSManInstance count is $($WSManInstance.count)")
-
-        # Close Remote Connection existing by restart wsman if current wsmanInstance count greater than $valentia.wsmanSessionlimit
-        # Remove or Restart session will cause error but already session is over and usually session terminated in 90 seconds
-        if ($WSManInstance.count -ge $valentia.wsmanSessionlimit)
-        {     
-            # Will Restart WinRM and kill all sessions
-            try
-            {
-                # if restart WinRM happens, all result in this session will be voided
-                Restart-Service -Name WinRM -Force -PassThru
-            }
-            catch
-            {
-                Write-Error $_
-
-                $task.SuccessStatus = $false
-                $task.ErrorMessageDetail = $_
-            }
-        }
-
         # Output $task variable to file. This will obtain by other cmdlet outside workflow.
-        $task
 
+        # Show stopwatch result
+        Write-Verbose ("`t`tTotal exec Command Sec: {0}" -f $DurationTotal)
+        "" | Out-Default
     }
-
-    # Show stopwatch result
-    Write-Verbose ("`t`tTotal exec Command Sec: {0}" -f $DurationTotal)
-    "" | Out-Default
 }
