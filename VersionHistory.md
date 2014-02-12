@@ -7,6 +7,16 @@ This indicate Version History for valentia.
 
 ## Version 0.3.x
 
+- version : 0.3.5
+	
+	[ author : guitarrapc ]
+	
+	[ Feb 13, 2013 ]
+	
+	* fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.
+	* tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently
+	* enhanced issue #52 : change Ping-ValentiaGroupAsync from PSEventJob to System.Threading.Tasks.task
+
 - version : 0.3.4
 	
 	[ author : guitarrapc ]
