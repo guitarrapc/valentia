@@ -456,15 +456,14 @@ This module set will optimize your work for deploy Commands or files to remote s
 </table><h1>
 <a name="execute-deploy-commands" class="anchor" href="#execute-deploy-commands"><span class="octicon octicon-link"></span></a>Execute deploy Commands</h1>
 
-<ul>
-<li>After you satup Server/Clients, Credential amd DeproyGroups you can start execution.</li>
-</ul><h2>
-<a name="1-vale--back-ground-job-execution" class="anchor" href="#1-vale--back-ground-job-execution"><span class="octicon octicon-link"></span></a>1. <code>vale</code> : Back ground job execution.</h2>
+<p>After you satup Server/Clients, Credential amd DeproyGroups you can start execution.</p>
+
+<h2>
+<a name="1-vale--back-ground-job-execution" class="anchor" href="#1-vale--back-ground-job-execution"><span class="octicon octicon-link"></span></a>1. vale : Back ground job execution.</h2>
 
 <blockquote>
-<p><strong>vale</strong> is Alias of <code>Invoke-Valentia</code>. This will execute Command to deploy group as back ground job.</p>
-
-<p>vale is the standard way of valentia Command execution to the host, and quite fast in many cases. (Invoke-Valentia will run like Asynchros.)</p>
+<p><strong>vale</strong> is Alias of <code>Invoke-Valentia</code>. This will execute Command to deploy group as back ground job.
+vale is the standard way of valentia Command execution to the host, and quite fast in many cases. (Invoke-Valentia will run like Asynchros.)</p>
 </blockquote>
 
 <p>You have 2 choice executing command to host.</p>
@@ -488,14 +487,12 @@ This module set will optimize your work for deploy Commands or files to remote s
 </tr>
 </tbody>
 </table><h2>
-<a name="2-valep--powershell-workflow-inlinescript-exection" class="anchor" href="#2-valep--powershell-workflow-inlinescript-exection"><span class="octicon octicon-link"></span></a>2. <code>valep</code> : PowerShell WorkFlow InlineScript exection.</h2>
+<a name="2-valep--powershell-workflow-inlinescript-exection" class="anchor" href="#2-valep--powershell-workflow-inlinescript-exection"><span class="octicon octicon-link"></span></a>2. valep : PowerShell WorkFlow InlineScript exection.</h2>
 
 <blockquote>
-<p><strong>valep</strong> is Alias of <code>Invoke-ValentiaParallel</code>. This will execute Command to deploy group as PowreShell WorkFlow.</p>
-
-<p>This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.</p>
-
-<p>However if command execute in same PSHost process then valep can be fastest way of execution. It means if valep use same session as previous.</p>
+<p><strong>valep</strong> is Alias of <code>Invoke-ValentiaParallel</code>. This will execute Command to deploy group as PowreShell WorkFlow.
+This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.
+However if command execute in same PSHost process then valep can be fastest way of execution. It means if valep use same session as previous.</p>
 </blockquote>
 
 <p>You have 2 choice executing command to host.</p>
@@ -522,12 +519,11 @@ This module set will optimize your work for deploy Commands or files to remote s
 <a name="note-you-can-not-call-valep-from-c-calling-valentia-this-is-limitation-of-psworkflow" class="anchor" href="#note-you-can-not-call-valep-from-c-calling-valentia-this-is-limitation-of-psworkflow"><span class="octicon octicon-link"></span></a>NOTE: You can not call <code>valep</code> from C# calling valentia. This is limitation of PSWorkflow.</h4>
 
 <h2>
-<a name="3-valea--asynchronous-runspace-command-invokation" class="anchor" href="#3-valea--asynchronous-runspace-command-invokation"><span class="octicon octicon-link"></span></a>3. <code>valea</code> : Asynchronous RunSpace Command invokation.</h2>
+<a name="3-valea--asynchronous-runspace-command-invokation" class="anchor" href="#3-valea--asynchronous-runspace-command-invokation"><span class="octicon octicon-link"></span></a>3. valea : Asynchronous RunSpace Command invokation.</h2>
 
 <blockquote>
-<p><strong>valea</strong> is Alias of <code>Invoke-ValentiaAsync</code>. This will execute Command to deploy group as RunSpacePooling.</p>
-
-<p>valea is the asynchronous way of valentia Command execution to the host, and quite fast in most of the cases.</p>
+<p><strong>valea</strong> is Alias of <code>Invoke-ValentiaAsync</code>. This will execute Command to deploy group as RunSpacePooling.
+valea is the asynchronous way of valentia Command execution to the host, and quite fast in most of the cases.</p>
 </blockquote>
 
 <p>You have 2 choice executing command to host.</p>
@@ -554,12 +550,11 @@ This module set will optimize your work for deploy Commands or files to remote s
 <a name="execute-file-transfer-commands" class="anchor" href="#execute-file-transfer-commands"><span class="octicon octicon-link"></span></a>Execute File transfer Commands</h1>
 
 <h3>
-<a name="1-upload--single-file-upload-from-server-to-clients" class="anchor" href="#1-upload--single-file-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>1. <code>upload</code> : Single File Upload from Server to Clients</h3>
+<a name="1-upload--single-file-upload-from-server-to-clients" class="anchor" href="#1-upload--single-file-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>1. upload : Single File Upload from Server to Clients</h3>
 
 <blockquote>
-<p><strong>upload</strong> is Alias of <code>Invoke-ValentiaUpload</code>. You can upload file to client.</p>
-
-<p>This function wrapps BITs Transfer inside and you can use option of BITS Transfer.</p>
+<p><strong>upload</strong> is Alias of <code>Invoke-ValentiaUpload</code>. You can upload file to client.
+This function wrapps BITs Transfer inside and you can use option of BITS Transfer.</p>
 </blockquote>
 
 <h4>
@@ -588,12 +583,11 @@ This module set will optimize your work for deploy Commands or files to remote s
 </tr>
 </tbody>
 </table><h3>
-<a name="2-uploadl--files-in-list-upload-from-server-to-clients" class="anchor" href="#2-uploadl--files-in-list-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>2. <code>uploadL</code> : Files in List Upload from Server to Clients</h3>
+<a name="2-uploadl--files-in-list-upload-from-server-to-clients" class="anchor" href="#2-uploadl--files-in-list-upload-from-server-to-clients"><span class="octicon octicon-link"></span></a>2. uploadL : Files in List Upload from Server to Clients</h3>
 
 <blockquote>
-<p><strong>uploadL</strong> is Alias of <code>Invoke-ValentiaUploadList</code>. You can upload multiple files listed in file.</p>
-
-<p>This function wrapps BITs Transfer inside and you can use option of BITS Transfer.</p>
+<p><strong>uploadL</strong> is Alias of <code>Invoke-ValentiaUploadList</code>. You can upload multiple files listed in file.
+This function wrapps BITs Transfer inside and you can use option of BITS Transfer.</p>
 </blockquote>
 
 <h4>
@@ -607,11 +601,9 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </code></pre>
 
 <blockquote>
-<p>1st top line is an "Header" for Source, Destination.</p>
-
-<p>2nd line is SourceFile fullpath and Destination folder full path to transfer.</p>
-
-<p>Keep Deleimiter as ",".</p>
+<p>1st top line is an "Header" for Source, Destination.
+2nd line is SourceFile fullpath and Destination folder full path to transfer.
+Keep Deleimiter as ",".</p>
 </blockquote>
 
 <p>ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ for DeployGroup new is.</p>
@@ -635,14 +627,12 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </tr>
 </tbody>
 </table><h3>
-<a name="3-sync--sync-server-folder-and-files-with-clients-diff-mode" class="anchor" href="#3-sync--sync-server-folder-and-files-with-clients-diff-mode"><span class="octicon octicon-link"></span></a>3. <code>sync</code> : Sync Server Folder and Files with Clients (DIFF mode)</h3>
+<a name="3-sync--sync-server-folder-and-files-with-clients-diff-mode" class="anchor" href="#3-sync--sync-server-folder-and-files-with-clients-diff-mode"><span class="octicon octicon-link"></span></a>3. sync : Sync Server Folder and Files with Clients (DIFF mode)</h3>
 
 <blockquote>
-<p><strong>sync</strong> is Alias of <code>Invoke-ValentiaSync</code>. You can Synchronise DeployServer folder and Clients Folder.</p>
-
-<p>Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.</p>
-
-<p>This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadvance.</p>
+<p><strong>sync</strong> is Alias of <code>Invoke-ValentiaSync</code>. You can Synchronise DeployServer folder and Clients Folder.
+Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.
+This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadvance.</p>
 </blockquote>
 
 <p>ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for DeployGroup new is.</p>
@@ -671,7 +661,7 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 <ul>
 <li>Before you start valentia deployment, you should setup both Server and Clients to work PSRemote Connection.</li>
 </ul><h3>
-<a name="1-initialize-valentiaenvironment--setup-server" class="anchor" href="#1-initialize-valentiaenvironment--setup-server"><span class="octicon octicon-link"></span></a>1. <code>Initialize-ValentiaEnvironment</code> : Setup Server</h3>
+<a name="1-initialize-valentiaenvironment--setup-server" class="anchor" href="#1-initialize-valentiaenvironment--setup-server"><span class="octicon octicon-link"></span></a>1. Initialize-ValentiaEnvironment : Setup Server</h3>
 
 <ul>
 <li>This command will let your Server for valentia remoting.</li>
@@ -718,10 +708,8 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </ul><div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Server</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoPassSave</span>
 </pre></div>
 
-<ul>
-<li>Adding <code>-Verbose</code> switch will ease you check how function working.</li>
-</ul><h3>
-<a name="2-initialize-valentiaenvironment--client--setup-clients" class="anchor" href="#2-initialize-valentiaenvironment--client--setup-clients"><span class="octicon octicon-link"></span></a>2. <code>Initialize-ValentiaEnvironment -Client</code> : Setup Clients</h3>
+<h3>
+<a name="2-initialize-valentiaenvironment--client--setup-clients" class="anchor" href="#2-initialize-valentiaenvironment--client--setup-clients"><span class="octicon octicon-link"></span></a>2. Initialize-ValentiaEnvironment -Client : Setup Clients</h3>
 
 <ul>
 <li>
@@ -762,10 +750,8 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </ul><div class="highlight highlight-PowerShell"><pre><span class="n">Initialize-ValentiaEnvironment</span> <span class="n">-Client</span> <span class="n">-TrustedHosts</span> <span class="s2">"*"</span> <span class="n">-NoOSUser</span>
 </pre></div>
 
-<ul>
-<li>Adding <code>-Verbose</code> switch will ease you check how function working.</li>
-</ul><h3>
-<a name="3-new-valentiacredential--create-new-credential-secure-file" class="anchor" href="#3-new-valentiacredential--create-new-credential-secure-file"><span class="octicon octicon-link"></span></a>3. <code>New-ValentiaCredential</code> : Create New Credential secure file</h3>
+<h3>
+<a name="3-new-valentiacredential--create-new-credential-secure-file" class="anchor" href="#3-new-valentiacredential--create-new-credential-secure-file"><span class="octicon octicon-link"></span></a>3. New-ValentiaCredential : Create New Credential secure file</h3>
 
 <ul>
 <li>Following command will make secure string file to save your credential.</li>
@@ -790,7 +776,7 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </blockquote>
 
 <h3>
-<a name="4-initialize-valentiagroup--create-new-deploygroup-file" class="anchor" href="#4-initialize-valentiagroup--create-new-deploygroup-file"><span class="octicon octicon-link"></span></a>4. <code>Initialize-ValentiaGroup</code> : Create New deploygroup file</h3>
+<a name="4-initialize-valentiagroup--create-new-deploygroup-file" class="anchor" href="#4-initialize-valentiagroup--create-new-deploygroup-file"><span class="octicon octicon-link"></span></a>4. Initialize-ValentiaGroup : Create New deploygroup file</h3>
 
 <ul>
 <li>To execute deployment command to multiple hosts, you don't need to input hosts everytime. Just list them up in file.</li>
@@ -823,7 +809,7 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </ul><p>ex) if you sat file name as "new.ps1" then use it by "new".</p>
 
 <h3>
-<a name="5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>5. <code>Invoke-valentiaDeployGroupRemark</code> : Remark ipaddress for deploygroup file inside deploygroup</h3>
+<a name="5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>5. Invoke-valentiaDeployGroupRemark : Remark ipaddress for deploygroup file inside deploygroup</h3>
 
 <ul>
 <li>There would be many time to remark some deploy target inside deploygroup file. This is easy work but boring to check which file contains target deploy ip.</li>
@@ -855,7 +841,7 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 </pre></div>
 
 <h3>
-<a name="6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>6. <code>Invoke-valentiaDeployGroupUnremark</code> : Unremark ipaddress for deploygroup file inside deploygroup</h3>
+<a name="6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>6. Invoke-valentiaDeployGroupUnremark : Unremark ipaddress for deploygroup file inside deploygroup</h3>
 
 <ul>
 <li>if you remark ipaddresses in deploygroup file, then you want to unremark it:) This function will ease you unremark target ipaddresses and check how change.</li>
