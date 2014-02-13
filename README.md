@@ -163,15 +163,15 @@ Get-Alias | where ModuleName -eq "valentia"
 |Alias|Valea|Invoke-ValentiaAsync|Valentia|
 |Alias|Valep|Invoke-ValentiaParallel|Valentia|
 
+
 # Execute deploy Commands
 
-- After you satup Server/Clients, Credential amd DeproyGroups you can start execution.
+After you satup Server/Clients, Credential amd DeproyGroups you can start execution.
 
 
-## 1. ```vale``` : Back ground job execution.
+## 1. vale : Back ground job execution.
 
 > **vale** is Alias of ```Invoke-Valentia```. This will execute Command to deploy group as back ground job.
-> 
 > vale is the standard way of valentia Command execution to the host, and quite fast in many cases. (Invoke-Valentia will run like Asynchros.)
 
 You have 2 choice executing command to host.
@@ -182,12 +182,10 @@ You have 2 choice executing command to host.
 |2.|Task File|```vale DeployGroup .\Taskfile.ps1```|
 
 
-## 2. ```valep``` : PowerShell WorkFlow InlineScript exection.
+## 2. valep : PowerShell WorkFlow InlineScript exection.
 
 > **valep** is Alias of ```Invoke-ValentiaParallel```. This will execute Command to deploy group as PowreShell WorkFlow.
-> 
 > This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.
-> 
 > However if command execute in same PSHost process then valep can be fastest way of execution. It means if valep use same session as previous.
 
 You have 2 choice executing command to host.
@@ -200,10 +198,9 @@ You have 2 choice executing command to host.
 #### NOTE: You can not call ```valep``` from C# calling valentia. This is limitation of PSWorkflow.
 
 
-## 3. ```valea``` : Asynchronous RunSpace Command invokation.
+## 3. valea : Asynchronous RunSpace Command invokation.
 
 > **valea** is Alias of ```Invoke-ValentiaAsync```. This will execute Command to deploy group as RunSpacePooling.
-> 
 > valea is the asynchronous way of valentia Command execution to the host, and quite fast in most of the cases.
 
 You have 2 choice executing command to host.
@@ -216,10 +213,9 @@ You have 2 choice executing command to host.
 
 # Execute File transfer Commands
 
-### 1. ```upload``` : Single File Upload from Server to Clients
+### 1. upload : Single File Upload from Server to Clients
 
 > **upload** is Alias of ```Invoke-ValentiaUpload```. You can upload file to client.
-> 
 > This function wrapps BITs Transfer inside and you can use option of BITS Transfer.
 
 #### NOTE: The files using to upload must set in C:\Deployment\Upload at Server side.
@@ -233,10 +229,9 @@ ex ) Upload file c:\deployment\upload\upload.txt to Remote Client C:\ for Deploy
 |1.|Synchronous|```upload -SourceFile "hoge.txt" -DestinationFolder c:\ -DeployGroup new```|
 |2.|Asynchronous|```upload -SourceFile "hoge.txt" -DestinationFolder c:\ -DeployGroup new -Async```|
 
-### 2. ```uploadL``` : Files in List Upload from Server to Clients
+### 2. uploadL : Files in List Upload from Server to Clients
 
 > **uploadL** is Alias of ```Invoke-ValentiaUploadList```. You can upload multiple files listed in file.
-> 
 > This function wrapps BITs Transfer inside and you can use option of BITS Transfer.
 
 #### NOTE: The files using to upload must set in C:\Deployment\Upload at Server side.
@@ -250,9 +245,7 @@ C:\Deployment\Upload\hogehoge.txt,\\10.0.4.100\C$
 ```
 
 > 1st top line is an "Header" for Source, Destination.
-> 
 > 2nd line is SourceFile fullpath and Destination folder full path to transfer.
-> 
 > Keep Deleimiter as ",".
 
 ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ for DeployGroup new is.
@@ -262,12 +255,10 @@ ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ f
 |1.|Synchronous|```UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new```|
 |2.|Asynchronous|```UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new -Async```|
 
-### 3. ```sync``` : Sync Server Folder and Files with Clients (DIFF mode)
+### 3. sync : Sync Server Folder and Files with Clients (DIFF mode)
 
 > **sync** is Alias of ```Invoke-ValentiaSync```. You can Synchronise DeployServer folder and Clients Folder.
-> 
 > Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.
-> 
 > This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadvance.
 
 ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for DeployGroup new is.
@@ -278,12 +269,11 @@ ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for Depl
 |2.|Asynchronous|Not yet ready.|
 
 
-
 # Environment Setup Commands
 
 - Before you start valentia deployment, you should setup both Server and Clients to work PSRemote Connection.
 
-### 1. ```Initialize-ValentiaEnvironment``` : Setup Server
+### 1. Initialize-ValentiaEnvironment : Setup Server
 
 - This command will let your Server for valentia remoting.
 
@@ -337,9 +327,8 @@ Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoOSUser
 Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoPassSave
 ```
 
-- Adding ```-Verbose``` switch will ease you check how function working.
 
-### 2. ```Initialize-ValentiaEnvironment -Client``` : Setup Clients
+### 2. Initialize-ValentiaEnvironment -Client : Setup Clients
 
 - This command will let your Client for valentia remoting.
 
@@ -379,9 +368,8 @@ Initialize-ValentiaEnvironment -Client -TrustedHosts "*"
 Initialize-ValentiaEnvironment -Client -TrustedHosts "*" -NoOSUser
 ```
 
-- Adding ```-Verbose``` switch will ease you check how function working.
 
-### 3. ```New-ValentiaCredential``` : Create New Credential secure file
+### 3. New-ValentiaCredential : Create New Credential secure file
 
 - Following command will make secure string file to save your credential.
 
@@ -405,7 +393,7 @@ New-ValentiaCredential -User hogehoge
 > Default user is sat as ec2-user, it will use if no -user had input.
 
 
-### 4. ```Initialize-ValentiaGroup``` : Create New deploygroup file
+### 4. Initialize-ValentiaGroup : Create New deploygroup file
 
 - To execute deployment command to multiple hosts, you don't need to input hosts everytime. Just list them up in file.
 - The file you specified will be output in following path.
@@ -442,7 +430,7 @@ New-ValentiaGroup -DeployClients "10.0.0.1","10.0.0.2" -FileName sample.ps1
 
 ex) if you sat file name as "new.ps1" then use it by "new".
 
-### 5. ```Invoke-valentiaDeployGroupRemark``` : Remark ipaddress for deploygroup file inside deploygroup
+### 5. Invoke-valentiaDeployGroupRemark : Remark ipaddress for deploygroup file inside deploygroup
 
 - There would be many time to remark some deploy target inside deploygroup file. This is easy work but boring to check which file contains target deploy ip.
 
@@ -479,7 +467,7 @@ Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.102 -Verbose
 ```
  
 
-### 6. ```Invoke-valentiaDeployGroupUnremark``` : Unremark ipaddress for deploygroup file inside deploygroup
+### 6. Invoke-valentiaDeployGroupUnremark : Unremark ipaddress for deploygroup file inside deploygroup
 
 - if you remark ipaddresses in deploygroup file, then you want to unremark it:) This function will ease you unremark target ipaddresses and check how change.
 

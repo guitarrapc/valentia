@@ -171,7 +171,7 @@ Get-Alias | where ModuleName -eq "valentia"
 After you satup Server/Clients, Credential amd DeproyGroups you can start execution.
 
 
-## 1. ```vale``` : Back ground job execution.
+## 1. vale : Back ground job execution.
 
 > **vale** is Alias of ```Invoke-Valentia```. This will execute Command to deploy group as back ground job.
 > vale is the standard way of valentia Command execution to the host, and quite fast in many cases. (Invoke-Valentia will run like Asynchros.)
@@ -184,7 +184,7 @@ You have 2 choice executing command to host.
 |2.|Task File|```vale DeployGroup .\Taskfile.ps1```|
 
 
-## 2. ```valep``` : PowerShell WorkFlow InlineScript exection.
+## 2. valep : PowerShell WorkFlow InlineScript exection.
 
 > **valep** is Alias of ```Invoke-ValentiaParallel```. This will execute Command to deploy group as PowreShell WorkFlow.
 > This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.
@@ -200,7 +200,7 @@ You have 2 choice executing command to host.
 #### NOTE: You can not call ```valep``` from C# calling valentia. This is limitation of PSWorkflow.
 
 
-## 3. ```valea``` : Asynchronous RunSpace Command invokation.
+## 3. valea : Asynchronous RunSpace Command invokation.
 
 > **valea** is Alias of ```Invoke-ValentiaAsync```. This will execute Command to deploy group as RunSpacePooling.
 > valea is the asynchronous way of valentia Command execution to the host, and quite fast in most of the cases.
@@ -215,7 +215,7 @@ You have 2 choice executing command to host.
 
 # Execute File transfer Commands
 
-### 1. ```upload``` : Single File Upload from Server to Clients
+### 1. upload : Single File Upload from Server to Clients
 
 > **upload** is Alias of ```Invoke-ValentiaUpload```. You can upload file to client.
 > This function wrapps BITs Transfer inside and you can use option of BITS Transfer.
@@ -231,7 +231,7 @@ ex ) Upload file c:\deployment\upload\upload.txt to Remote Client C:\ for Deploy
 |1.|Synchronous|```upload -SourceFile "hoge.txt" -DestinationFolder c:\ -DeployGroup new```|
 |2.|Asynchronous|```upload -SourceFile "hoge.txt" -DestinationFolder c:\ -DeployGroup new -Async```|
 
-### 2. ```uploadL``` : Files in List Upload from Server to Clients
+### 2. uploadL : Files in List Upload from Server to Clients
 
 > **uploadL** is Alias of ```Invoke-ValentiaUploadList```. You can upload multiple files listed in file.
 > This function wrapps BITs Transfer inside and you can use option of BITS Transfer.
@@ -257,7 +257,7 @@ ex ) Upload files listed in c:\deployment\upload\list.txt to Remote Client C:\ f
 |1.|Synchronous|```UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new```|
 |2.|Asynchronous|```UploadL -ListFile list.txt -DestinationFolder c:\ -DeployGroup new -Async```|
 
-### 3. ```sync``` : Sync Server Folder and Files with Clients (DIFF mode)
+### 3. sync : Sync Server Folder and Files with Clients (DIFF mode)
 
 > **sync** is Alias of ```Invoke-ValentiaSync```. You can Synchronise DeployServer folder and Clients Folder.
 > Parent will be DeployServer, it means clietns folder will be changed to sync as like as DeployServer.
@@ -275,7 +275,7 @@ ex ) sync folder C:\Requirements to Remote Client folder "C:\hoge hoge" for Depl
 
 valentiaによるdeploymentを実行するまえに、サーバーとクラインとで PSRemoting が動作するように設定する必要があります。
 
-### 1. ```Initialize-ValentiaEnvironment``` : サーバーセットアップ
+### 1. Initialize-ValentiaEnvironment : サーバーセットアップ
 
 このコマンドは、対象のサーバーをデプロイサーバーとして動作するように環境構成します。
 
@@ -327,9 +327,8 @@ Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoOSUser
 Initialize-ValentiaEnvironment -Server -TrustedHosts "*" -NoPassSave
 ```
 
-** Adding ```-Verbose``` switch will ease you check how ファンクション working. **
 
-### 2. ```Initialize-ValentiaEnvironment -Client``` : Setup Clients
+### 2. Initialize-ValentiaEnvironment -Client : Setup Clients
 
 This command will let your Client for valentia remoting.
 
@@ -365,9 +364,8 @@ Wanna setup without OS User setup? then add -NoOSUser switch.
 Initialize-ValentiaEnvironment -Client -TrustedHosts "*" -NoOSUser
 ```
 
-** Adding ```-Verbose``` switch will ease you check how ファンクション working. **
 
-### 3. ```New-ValentiaCredential``` : Create New Credential secure file
+### 3. New-ValentiaCredential : Create New Credential secure file
 
 Following command will make secure string file to save your credential.
 ** If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section. **
@@ -388,7 +386,7 @@ New-ValentiaCredential -User hogehoge
 - Default user is sat as ec2-user, it will use if no -user had input.
 
 
-### 4. ```Initialize-ValentiaGroup``` : Create New deploygroup file
+### 4. Initialize-ValentiaGroup : Create New deploygroup file
 
 To execute deployment command to multiple hosts, you don't need to input hosts everytime.
 Just list them up in file.
