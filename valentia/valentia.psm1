@@ -278,7 +278,7 @@ $valentia.config_default = New-Object PSObject -property @{
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
 $valentia.poolSize = New-Object psobject -property @{
     minPoolSize                         = 1;
-    maxPoolSize                         = $env:NUMBER_OF_PROCESSORS * 4;
+    maxPoolSize                         = ([int]$env:NUMBER_OF_PROCESSORS * 30);
 }
 
 # contains wait Limit settings for Asynchronous cmdlet (Invoke-ValentiaAsync)
@@ -306,7 +306,6 @@ $valentia.group                         = "Administrators"
 # contains valentia configuration Information
 $valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
 $valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
-$valentia.wsmanSessionlimit             = 22 ;              # Set PSRemoting WSman limit prvention threshold
 
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
