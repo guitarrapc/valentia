@@ -244,8 +244,9 @@ You can prepare script file to run, and specify path.
         Invoke-ValentiaCommand -ComputerNames $DeployMembers -ScriptToRun $ScriptToRun -Credential $Credential -TaskParameter $TaskParameter  `
         | %{$result = @{}}{
             # Obtain parameter to show on log
-            $ErrorMessageDetail += $_.ErrorMessageDetail
-            $SuccessStatus += $_.SuccessStatus
+            $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
+            $SuccessStatus += $_.SuccessStatus                     # Get success or error
+            if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
 
             # Output to host
             if(!$quiet)
