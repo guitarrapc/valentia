@@ -55,20 +55,13 @@ Created: 20/June/2013
 
         [Parameter(
             Position = 1,
-            Mandatory =$true,
-            HelpMessage = "Input wsmanSession Threshold number to restart wsman")]
-        [int]
-        $wsmanSessionlimit,
-
-        [Parameter(
-            Position = 2,
             Mandatory = 0,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [string[]]
         $TaskParameter,
 
         [Parameter(
-            Position = 3, 
+            Position = 2, 
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [switch]
@@ -77,10 +70,10 @@ Created: 20/June/2013
     
     $ErrorActionPreference = $valentia.errorPreference
 
-    foreach -Parallel ($DeployMember in $PSComputerName){
+    foreach -Parallel ($DeployMember in $PSComputerName)
+    {
         InlineScript
         {
-            
             # Initializing stopwatch
             $stopwatchSession = Invoke-Command {[System.Diagnostics.Stopwatch]::StartNew()}
             
@@ -98,17 +91,14 @@ Created: 20/June/2013
 
                 # Run ScriptBlock
                 $task.result = Invoke-Command -ScriptBlock {&$WorkflowScript} -ArgumentList $using:TaskParameter
-                $task.WSManInstanceflag = $false
             }
             catch 
             {
                 # Show Error Message
-                Write-Error $_
-
                 $task.SuccessStatus = $false
                 $task.ErrorMessageDetail = $_
+                Write-Error $_
             }
-
 
             # Get Duration Seconds for each command
             $Duration = $stopwatchSession.Elapsed.TotalSeconds
@@ -121,36 +111,12 @@ Created: 20/June/2013
                 Write-Warning -Message ("`t`t{0}" -f $MessageStopwatch)
             }
             
-            # Get Current host WSManInstance (No need set Connection URI as it were already connecting
-            $WSManInstance = Get-WSManInstance shell -Enumerate
-
-            # Close Remote Connection existing by workflow session if session count up to $valentia.wsmanSessionlimit
-            # Remove or Restart session will cause error but already session is over and usually session terminated in 90 seconds
-            if ($WSManInstance.count -ge $using:wsmanSessionlimit)
-            {
-
-                # Will remove specific session you select include current. (In this command will be all session)
-                $WSManInstance | %{Remove-WSManInstance -ConnectionURI http://localhost:5985/wsman shell @{shellid=$_.ShellId}}
-                
-                # Will Restart WinRM and kill all sessions
-                try
-                {
-                    # if restart WinRM happens, all result in this session will be voided
-                    Restart-Service -Name WinRM -Force -PassThru
-                }
-                catch
-                {
-                    Write-Error $_
-
-                    $task.SuccessStatus = $false
-                    $task.ErrorMessageDetail = $_
-                }
-
-            }
-            
             # Output $task variable to file. This will obtain by other cmdlet outside workflow.
             return $task
         }
     }
-   
+
+    # Clear Progress bar from Host,
+    # Make sure this is critical, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
+    Write-Progress -Activity "done" -Status "done" -Completed   
 }
