@@ -45,17 +45,18 @@ This module set will optimize your work for deploy Commands or files to remote s
 <h1>
 <a name="latest-change" class="anchor" href="#latest-change"><span class="octicon octicon-link"></span></a>Latest Change</h1>
 
-<h2>
-<a name="version-035" class="anchor" href="#version-035"><span class="octicon octicon-link"></span></a>Version 0.3.5</h2>
+<ul>
+<li>
+<p>version : 0.3.6</p>
 
 <p>[ author : guitarrapc ]</p>
 
 <p>[ Feb 13, 2013 ]</p>
 
 <ul>
-<li>fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.</li>
-<li>tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently</li>
-<li>enhanced issue #52 : change Ping-ValentiaGroupAsync from PSEventJob to System.Threading.Tasks.task</li>
+<li>fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.</li>
+</ul>
+</li>
 </ul><h1>
 <a name="valid-os-and-powershell-verstion" class="anchor" href="#valid-os-and-powershell-verstion"><span class="octicon octicon-link"></span></a>Valid OS and PowerShell Verstion</h1>
 
@@ -103,16 +104,11 @@ This module set will optimize your work for deploy Commands or files to remote s
 <tbody>
 <tr>
 <td>1.</td>
-<td>Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"</td>
-<td></td>
-</tr>
-<tr>
-<td>2.</td>
 <td>Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")</td>
 <td><a href="http://ipmsg.org/tools/fastcopy.html">Download FastCopy?</a></td>
 </tr>
 <tr>
-<td>3.</td>
+<td>2.</td>
 <td>Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.</td>
 <td><code>Set-ExecutionPolicy RemoteSigned</code></td>
 </tr>
@@ -127,7 +123,7 @@ This module set will optimize your work for deploy Commands or files to remote s
 <th></th>
 </tr></thead>
 <tbody><tr>
-<td><strong>powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "<a href="https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1%22).Content))).Remove(0,1)">https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)</a>'</strong></td>
+<td><strong>powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm '<a href="https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1').Content))).Remove(0,1)">https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1').Content))).Remove(0,1)</a>"</strong></td>
 </tr></tbody>
 </table><p>After the installation complete, you will find valentia installed into your user's Module folder.</p>
 
