@@ -19,18 +19,6 @@ Allowed to run from C# code.
 Author: guitarrapc
 Created: 20/June/2013
 
-# --- Depends on following functions ---
-#
-#  Task
-#  Invoke-ValetinaAsyncCommand
-#  Get-valentiaCredential
-#  Get-valentiaGroup
-#  Import-valentiaConfigration
-#  Import-valentiaModules
-#  Clean
-# 
-# ---                                ---
-
 .EXAMPLE
   valea 192.168.1.100 {Get-ChildItem}
 --------------------------------------------
@@ -221,32 +209,35 @@ You can prepare script file to run, and specify path.
         }
 
         # Show Stopwatch for Begin section
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalDuration)
+        Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalstopwatchSession.Elapsed.TotalSeconds)
 
-        #endregion
+    #endregion
 
-        #region Process
+    #region Process
 
-        # Create HashTable for Runspace
-        $ScriptToRunHash   = @{ScriptBlock   = $ScriptToRun}
-        $credentialHash    = @{Credential    = $Credential} 
-        $TaskParameterHash = @{TaskParameter = $TaskParameter} 
+        # Create RunSpacePools
+        $poolParam = @{
+            minPoolSize = $valentia.poolSize.minPoolSize
+            maxPoolSize = $valentia.poolSize.maxPoolSize
+        }
+        $pool = New-ValentiaRunSpacePool @poolParam
 
-        # Create a pool of 100 runspaces
-        $pool = New-ValentiaRunSpacePool -minPoolSize $valentia.poolSize.minPoolSize -maxPoolSize $valentia.poolSize.maxPoolSize
-
-        #Initialize AsyncPipelines
-        $AsyncPipelines = @() 
-
-        # Run ScriptBlock as Sequence for each DeployMember
-        Write-Verbose ("Execute command : {0} " -f $ScriptToRun)
-        Write-Verbose ("Target Computers : [{0}]" -f $DeployMembers)
+        # splatting
+        $param = @{
+            RunSpacePool      = $pool
+            ScriptToRunHash   = @{ScriptBlock   = $ScriptToRun}
+            credentialHash    = @{Credential    = $Credential}
+            TaskParameterHash = @{TaskParameter = $TaskParameter}
+        }
 
         # Execute Async Job
+        Write-Verbose ("Execute command : {0} " -f $param.ScriptToRunHash.ScriptBlock)
+        Write-Verbose ("Target Computers : [{0}]" -f ($DeployMembers -join ", "))
+
+        $AsyncPipelines = @() 
         foreach ($DeployMember in $DeployMembers)
         {
-            $AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $pool -ScriptToRunHash $ScriptToRunHash -Deploymember $DeployMember -CredentialHash $credentialHash -TaskParameterHash $TaskParameterHash
+            $AsyncPipelines += Invoke-ValentiaAsyncCommand @param -Deploymember $DeployMember
         }
 
         # Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
@@ -254,6 +245,7 @@ You can prepare script file to run, and specify path.
         $ReceiveAsyncStatusScriptBlock = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
+        #region AsyncStatus monitoring
         while ((($ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock) | where name -like "Running*").count -ge 1)
         {
             $count++
@@ -267,10 +259,13 @@ You can prepare script file to run, and specify path.
                 # hide progress or not
                 if ($statusPercent -ne 100)
                 {
-                    Write-Progress -Activity 'Async Execution Running Status....' `
-                        -PercentComplete $statusPercent `
-                        -Status ("{0}/{1}({2:0.00})% Completed" -f $completed.count, $ReceiveAsyncStatus.count, $statusPercent)
+                    $paramProgress = @{
+                        Activity        = 'Async Execution Running Status....'
+                        PercentComplete = $statusPercent
+                        status          = ("{0}/{1}({2:0.00})% Completed" -f $completed.count, $ReceiveAsyncStatus.count, $statusPercent)
+                    }
                     
+                    Write-Progress @paramProgress
                     $sw.Reset()
                     $sw.Start()
                 }
@@ -294,10 +289,7 @@ You can prepare script file to run, and specify path.
             sleep -Milliseconds $valentia.async.sleepMS
 
             # safety release for 100 sec
-            if ($count -ge $valentia.async.limitCount)
-            {
-                break
-            }
+            if ($count -ge $valentia.async.limitCount){break;}
 
             $prevRunningCount = $running.count
         }
@@ -305,6 +297,7 @@ You can prepare script file to run, and specify path.
         # Clear Progress bar from Host,
         # Make sure this is critical, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
         Write-Progress "done" "done" -Completed
+        #endregion
         
         # Obtain Async Command Result
         if (-not $PSBoundParameters.quiet.IsPresent)
@@ -329,7 +322,6 @@ You can prepare script file to run, and specify path.
             }
         }
 
-
         # Check Command Result
         if ($task.SuccessStatus -eq $false)
         {
@@ -337,25 +329,8 @@ You can prepare script file to run, and specify path.
             $SuccessStatus += $task.SuccessStatus
         }
 
-        # Remove pssession remains.
-        try
-        {            
-            Write-Verbose "Remove all PSSession."
-            Get-PSSession | Remove-PSSession
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            Write-Error $_
-        }
-        
-        # Cleanup previous Job before start
-        if ((Get-Job).count -gt 0)
-        {
-            Write-Verbose "Clean up previous Job"
-            Get-Job | Remove-Job -Force
-        }
+    #endregion
+
     }
     catch
     {
@@ -366,45 +341,38 @@ You can prepare script file to run, and specify path.
     finally
     {
 
-    #endregion
-
     #region End
 
         # Dispose RunspacePool
-        $pool.Close()
-        $pool.Dispose()
+        Remove-ValentiaRunSpacePool -Pool $pool
 
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference
 
-        # Show Stopwatch for Total section
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
-
-        # Get End Time
-        $TimeEnd = (Get-Date).DateTime
-
         # obtain Result
         $CommandResult = [ordered]@{
-            Success = !($SuccessStatus -contains $false)
-            TimeStart = $TimeStart
-            TimeEnd = $TimeEnd
-            TotalDuration = $TotalDuration
-            Module = "$($MyInvocation.MyCommand.Module)"
-            Cmdlet = "$($MyInvocation.MyCommand.Name)"
-            Alias = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
-            TaskFileName = $TaskFileName
-            ScriptBlock = "$ScriptToRun"
-            DeployGroup = "$DeployGroups"
+            Success        = !($SuccessStatus -contains $false)
+            TimeStart      = $TimeStart
+            TimeEnd        = (Get-Date).DateTime
+            TotalDuration  = $TotalstopwatchSession.Elapsed.TotalSeconds
+            Module         = "$($MyInvocation.MyCommand.Module)"
+            Cmdlet         = "$($MyInvocation.MyCommand.Name)"
+            Alias          = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
+            TaskFileName   = $TaskFileName
+            ScriptBlock    = "$ScriptToRun"
+            DeployGroup    = "$DeployGroups"
             TargetHosCount = $($DeployMembers.count)
-            TargetHosts = "$DeployMembers"
-            Result = $result
-            ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
+            TargetHosts    = "$DeployMembers"
+            Result         = $result
+            ErrorMessage   = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
 
         # show result
         if (-not $PSBoundParameters.quiet.IsPresent)
         {
+            # Show Stopwatch for Total section
+            Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $CommandResult.TotalDuration)
+
             [PSCustomObject]$CommandResult
         }
         else

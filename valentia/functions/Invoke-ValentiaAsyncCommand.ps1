@@ -37,6 +37,7 @@ Above example will concurrently running with 10 processes for each Computers.
             Position  = 0,
             Mandatory = 1,
             HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
+        [System.Management.Automation.Runspaces.RunspacePool]
         $RunspacePool,
         
         [Parameter(
