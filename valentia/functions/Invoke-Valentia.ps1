@@ -18,18 +18,6 @@ Run Job valentia execution to remote host
 Author: guitarrapc
 Created: 20/June/2013
 
-# --- Depends on following functions ---
-#
-#  Task
-#  Invoke-ValetinaCommand
-#  Get-valentiaCredential
-#  Get-valentiaGroup
-#  Import-valentiaConfigration
-#  Import-valentiaModules
-#  Clean
-# 
-# ---                                ---
-
 .EXAMPLE
   vale 192.168.1.100 {Get-ChildItem}
 --------------------------------------------
@@ -226,22 +214,26 @@ You can prepare script file to run, and specify path.
         }
 
         # Show Stopwatch for Begin section
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
+        Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalstopwatchSession.Elapsed.TotalSeconds)
 
     #endregion
 
     #region Process
 
-        # Run ScriptBlock as Sequence for each DeployMember
-        Write-Verbose ("Execute command : {0}" -f $ScriptToRun)
-        Write-Verbose ("Target Computers : '{0}'" -f ($DeployMembers -join ", "))
+        # Splatting
+        $param = @{
+            ComputerNames = $DeployMembers
+            ScriptToRun   = $ScriptToRun
+            Credential    = $Credential
+            TaskParameter = $TaskParameter
+        }
 
-        # Flag for WSManInstance restart detection
-        $WSManInstanceflag = $true
+        # Run ScriptBlock as Sequence for each DeployMember
+        Write-Verbose ("Execute command : {0}" -f $param.ScriptToRun)
+        Write-Verbose ("Target Computers : '{0}'" -f ($param.ComputerNames -join ", "))
 
         # Executing job
-        Invoke-ValentiaCommand -ComputerNames $DeployMembers -ScriptToRun $ScriptToRun -Credential $Credential -TaskParameter $TaskParameter  `
+        Invoke-ValentiaCommand @param  `
         | %{$result = @{}}{
             # Obtain parameter to show on log
             $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
@@ -271,35 +263,30 @@ You can prepare script file to run, and specify path.
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference
 
-        # Show Stopwatch for Total section
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
-
-        # Get End Time
-        $TimeEnd = (Get-Date).DateTime
-
         # obtain Result
         $CommandResult = [ordered]@{
-            Success = !($SuccessStatus -contains $false)
-            TimeStart = $TimeStart
-            TimeEnd = $TimeEnd
-            TotalDuration = $TotalDuration
-            Module = "$($MyInvocation.MyCommand.Module)"
-            Cmdlet = "$($MyInvocation.MyCommand.Name)"
-            Alias = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
-            TaskFileName = $TaskFileName
-            ScriptBlock = "$ScriptToRun"
-            DeployGroup = "$DeployGroups"
+            Success        = !($SuccessStatus -contains $false)
+            TimeStart      = $TimeStart
+            TimeEnd        = (Get-Date).DateTime
+            TotalDuration  = $TotalstopwatchSession.Elapsed.TotalSeconds
+            Module         = "$($MyInvocation.MyCommand.Module)"
+            Cmdlet         = "$($MyInvocation.MyCommand.Name)"
+            Alias          = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
+            TaskFileName   = $TaskFileName
+            ScriptBlock    = "$ScriptToRun"
+            DeployGroup    = "$DeployGroups"
             TargetHosCount = $($DeployMembers.count)
-            TargetHosts = "$DeployMembers"
-            Result = $result
-            ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
+            TargetHosts    = "$DeployMembers"
+            Result         = $result
+            ErrorMessage   = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
-
 
         # show result
         if (-not $PSBoundParameters.quiet.IsPresent)
         {
+            # Show Stopwatch for Total section
+            Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $CommandResult.TotalDuration)
+
             [PSCustomObject]$CommandResult
         }
         else

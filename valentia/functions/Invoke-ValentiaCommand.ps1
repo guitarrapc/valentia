@@ -18,12 +18,6 @@ Allowed to run from C# code.
 Author: guitarrapc
 Created: 20/June/2013
 
-# --- Depends on following functions ---
-#
-#  Invoke-Valetina
-# 
-# ---                                ---
-
 .EXAMPLE
   Invoke-ValentiaCommand -ScriptToRun $ScriptToRun
 --------------------------------------------
@@ -85,9 +79,6 @@ Created: 20/June/2013
         $ErrorActionPreference = $valentia.errorPreference
         $list = New-Object System.Collections.Generic.List[System.Management.Automation.Job]
 
-        # Set variable for Stopwatch
-        [decimal]$DurationTotal = 0
-
         # Set variable for output each task result
         $task = @{}
     }
@@ -99,9 +90,6 @@ Created: 20/June/2013
         {
             foreach ($computerName in $ComputerNames)
             {
-                # Initializing stopwatch
-                $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
-
                 # Check parameter for Invoke-Command
                 Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
                 Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
@@ -133,67 +121,19 @@ Created: 20/June/2013
         #endregion
 
         #region monitor job status
-        while (((Get-Job).State) -contains "Running")
-        {
-            Write-Verbose "Waiting for job running complete."
-            sleep -Milliseconds 10
-        }
+        Write-Verbose "Waiting for job running complete."
+        Wait-Job -State Running            
         #endregion
 
         #region recieve job result
-        foreach ($listJob in $list)
-        {
-            try
-            {
-                Write-Verbose ("Recieve ScriptBlock result from Job for '{0}'" -f $listJob.Location)
-                $task.host = $listJob.Location
-                $task.result = Receive-Job -Job $listJob
-            }
-            catch
-            {
-                # Show Error Message
-                Write-Error $_
-
-                # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
-                $task.SuccessStatus = $false
-                $task.ErrorMessageDetail = $_
-            }
-            finally
-            {
-                # Output
-                $task
-
-                # initialize
-                $task.host = $null
-                $task.result = $null
-
-                Write-Verbose "Clean up Job"
-                Remove-Job -Job $listJob -Force
-            }
-        }
+        Write-Verbose "Receive all job result."
+        Receive-ValentiaResult -listJob  $list
         #endregion
     }
 
     end
     {
-        # Get Duration Seconds for each command
-        $Duration = $stopwatchSession.Elapsed.TotalSeconds
-        $DurationMessage = "{0} exec Duration Sec :{1}" -f $session.ComputerName, $Duration
-        $MessageStopwatch = Invoke-Command -ScriptBlock {$DurationMessage}
-
-        # Show Duration Seconds
-        if (-not $quiet)
-        {
-            Write-Warning -Message $MessageStopwatch
-        }
-
-        # Add each command exec time to Totaltime
-        $DurationTotal += $Duration
-
-        # Output $task variable to file. This will obtain by other cmdlet outside workflow.
-
-        # Show stopwatch result
-        Write-Verbose ("`t`tTotal exec Command Sec: {0}" -f $DurationTotal)
+        # add blank line and reset format
         "" | Out-Default
     }
 }
