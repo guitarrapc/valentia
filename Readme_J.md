@@ -9,15 +9,13 @@ valentia は、 [capistrano](https://github.com/capistrano/capistrano) と [psak
 
 # Latest Change
 
-## Version 0.3.5
+- version : 0.3.6
 	
 	[ author : guitarrapc ]
 	
 	[ Feb 13, 2013 ]
 	
-	* fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.
-	* tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently
-	* enhanced issue #52 : change Ping-ValentiaGroupAsync from PSEventJob to System.Threading.Tasks.task
+	* fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.
 
 
 # 対象OS PowerShell バージョン
@@ -39,9 +37,8 @@ valentia は、 [capistrano](https://github.com/capistrano/capistrano) と [psak
 
 |#|概要|NOTE|
 |----|----|----|
-|1.| 単独/複数ファイル転送のために、BITS Transferを利用しています。 "Windows の機能" から "IIS BITs Transfer" を有効にしてください。||
-|2.| "FastCopy" を フォルダ同期に利用しています。( FastCopyx64 を "C:\Program Files\FastCopy" にインストールしてください。) |[FastCopy をダウンロードしますか? ここをクリックへ HP に移動します。](http://ipmsg.org/tools/fastcopy.html)|
-|3.| PowerShell スクリプトが実行できるポリシーになっていることを確認してください。 実行できるポリシーに変更するには以下のコマンドをPowerShellで管理者として実行します。|```Set-ExecutionPolicy RemoteSigned```|
+|1.| "FastCopy" を フォルダ同期に利用しています。( FastCopyx64 を "C:\Program Files\FastCopy" にインストールしてください。) |[FastCopy をダウンロードしますか? ここをクリックへ HP に移動します。](http://ipmsg.org/tools/fastcopy.html)|
+|2.| PowerShell スクリプトが実行できるポリシーになっていることを確認してください。 実行できるポリシーに変更するには以下のコマンドをPowerShellで管理者として実行します。|```Set-ExecutionPolicy RemoteSigned```|
 
 
 # 簡単インストール
@@ -50,8 +47,7 @@ valentia は、 [capistrano](https://github.com/capistrano/capistrano) と [psak
 
 ||
 |----|
-|**powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)'**|
-
+|**powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm 'https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1').Content))).Remove(0,1)"**|
 
 
 インストール完了後、valentia がユーザーフォルダにインストールされます。

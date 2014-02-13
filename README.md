@@ -9,15 +9,13 @@ Valentia inspired from [capistrano](https://github.com/capistrano/capistrano) an
 
 # Latest Change
 
-## Version 0.3.5
+- version : 0.3.6
 	
-[ author : guitarrapc ]
+	[ author : guitarrapc ]
 	
-[ Feb 13, 2013 ]
+	[ Feb 13, 2013 ]
 	
- * fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.
- * tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently
- * enhanced issue #52 : change Ping-ValentiaGroupAsync from PSEventJob to System.Threading.Tasks.task
+	* fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.
 
 	
 # Valid OS and PowerShell Verstion
@@ -39,9 +37,8 @@ Valentia inspired from [capistrano](https://github.com/capistrano/capistrano) an
 
 |#|Description|Note|
 |----|----|----|
-|1.|Enable "IIS BITs Transfer" for single and List file transfer from "Windows Program and freature"||
-|2. |Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")|[Download FastCopy?](http://ipmsg.org/tools/fastcopy.html)|
-|3. |Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.|```Set-ExecutionPolicy RemoteSigned```|
+|1. |Install "FastCopy" to Sync Folders. (please intstall FastCopyx64 to "C:\Program Files\FastCopy")|[Download FastCopy?](http://ipmsg.org/tools/fastcopy.html)|
+|2. |Make sure you can execute PowerShell Script with Execution Policy. To enable Execution Policy then run following command with Admin elevated PowerShell.|```Set-ExecutionPolicy RemoteSigned```|
 
 
 # Easy Install !!
@@ -50,7 +47,7 @@ Valentia inspired from [capistrano](https://github.com/capistrano/capistrano) an
 
 ||
 |----|
-|**powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)'**|
+|**powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm 'https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1').Content))).Remove(0,1)"**|
 
 After the installation complete, you will find valentia installed into your user's Module folder.
 

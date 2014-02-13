@@ -7,6 +7,14 @@ This indicate Version History for valentia.
 
 ## Version 0.3.x
 
+- version : 0.3.6
+	
+	[ author : guitarrapc ]
+	
+	[ Feb 13, 2013 ]
+	
+	* fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.
+
 - version : 0.3.5
 	
 	[ author : guitarrapc ]
