@@ -6,7 +6,6 @@ function Invoke-ValentiaSed
 {
 
 <#
-
 .SYNOPSIS 
 PowerShell Sed alternate function
 
@@ -26,7 +25,6 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and replace file. (like sed -f "s/^10
 Invoke-ValentiaSed -path D:\Deploygroup\*.ps1 -searchPattern "^#10.0.0.10$" -replaceWith "10.0.0.10"
 --------------------------------------------
 replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
-
 #>
 
     [CmdletBinding()]

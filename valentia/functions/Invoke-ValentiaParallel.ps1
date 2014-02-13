@@ -7,7 +7,6 @@ function Invoke-ValentiaParallel
 {
 
 <#
-
 .SYNOPSIS 
 1 of invoking valentia by workflow execution to remote host
 
@@ -18,19 +17,6 @@ workflow not allowed to run from C# code.
 .NOTES
 Author: guitarrapc
 Created: 20/June/2013
-
-# --- Depends on following functions ---
-#
-#  Task
-#  Invoke-ValetinaCommandParallel
-#  Get-valentiaCredential
-#  Get-valentiaGroup
-#  Import-valentiaConfigration
-#  Import-valentiaModules
-#  Clean
-# 
-# ---                                ---
-
 
 .EXAMPLE
   valep 192.168.1.100 {Get-ChildItem}
@@ -61,7 +47,6 @@ Specify DeployGroupFile and ScriptBlock
   valep DeployGroupFile.ps1 .\default.ps1
 --------------------------------------------
 You can prepare script file to run, and specify path.
-
 #>
 
 
@@ -222,8 +207,7 @@ You can prepare script file to run, and specify path.
         }        
 
         # Show Stopwatch for Begin section
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
+        Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalstopwatchSession.Elapsed.TotalSeconds)
         
     #endregion
 
@@ -235,9 +219,6 @@ You can prepare script file to run, and specify path.
         
         try
         {
-            # Flag for WSManInstance restart detection
-            $WSManInstanceflag = $true
-
             # Check parameter for Invoke-Command
             Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
             Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
@@ -290,34 +271,30 @@ You can prepare script file to run, and specify path.
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference
 
-        # Show Stopwatch for Total section
-        $TotalDuration += $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
-
-        # Get End Time
-        $TimeEnd = (Get-Date).DateTime
-
         # obtain Result
         $CommandResult = [ordered]@{
-            Success = ($SuccessStatus.FindAll({$args[0] -eq $false}).count -eq 0)
-            TimeStart = $TimeStart
-            TimeEnd = $TimeEnd
-            TotalDuration = $TotalDuration
-            Module = "$($MyInvocation.MyCommand.Module)"
-            Cmdlet = "$($MyInvocation.MyCommand.Name)"
-            Alias = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
-            TaskFileName = $TaskFileName
-            ScriptBlock = "$ScriptToRun"
-            DeployGroup = "$DeployGroups"
+            Success        = !($SuccessStatus -contains $false)
+            TimeStart      = $TimeStart
+            TimeEnd        = (Get-Date).DateTime
+            TotalDuration  = $TotalstopwatchSession.Elapsed.TotalSeconds
+            Module         = "$($MyInvocation.MyCommand.Module)"
+            Cmdlet         = "$($MyInvocation.MyCommand.Name)"
+            Alias          = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
+            TaskFileName   = $TaskFileName
+            ScriptBlock    = "$ScriptToRun"
+            DeployGroup    = "$DeployGroups"
             TargetHosCount = $($DeployMembers.count)
-            TargetHosts = "$DeployMembers"
-            Result = $result
-            ErrorMessage = $($ErrorMessageDetail.FindAll({$args[0] | where {$_ -ne ""} | where {$_ -ne $false}}) | sort -Unique)
+            TargetHosts    = "$DeployMembers"
+            Result         = $result
+            ErrorMessage   = $($ErrorMessageDetail.FindAll({$args[0] | where {$_ -ne ""} | where {$_ -ne $false}}) | sort -Unique)
         }
             
         # show result
         if (-not $PSBoundParameters.quiet.IsPresent)
         {
+            # Show Stopwatch for Total section
+            Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $CommandResult.TotalDuration)
+
             [PSCustomObject]$CommandResult
         }
         else

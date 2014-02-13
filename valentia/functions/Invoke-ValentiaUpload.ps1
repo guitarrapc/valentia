@@ -41,7 +41,6 @@ upload file to Directory as Background Async job for host ip 192.168.0.10
 upload C:\hogehoge* c:\ production-first -Directory production-fist.ps1 -Async
 --------------------------------------------
 upload files in target to Directory as Background Async job for hosts written in production-first.ps1
-
 #>
 
     [CmdletBinding(DefaultParameterSetName = "File")]

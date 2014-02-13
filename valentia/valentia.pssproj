@@ -97,6 +97,8 @@
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
     <Content Include="functions\Get-ValentiaFileEncoding.ps1" />
+    <Content Include="functions\Remove-ValentiaRunSpacePool.ps1" />
+    <Content Include="functions\Receive-ValentiaResult.ps1" />
     <Content Include="functions\New-ValentiaDynamicParamMulti.ps1" />
     <Content Include="functions\Test-ValentiaGroupConnection.ps1" />
     <Content Include="functions\Ping-ValentiaGroupAsync.ps1" />

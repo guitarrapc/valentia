@@ -7,7 +7,6 @@ function Invoke-valentiaDeployGroupRemark
 {
 
 <#
-
 .SYNOPSIS 
 Remark Deploy ip from deploygroup file
 
@@ -26,7 +25,6 @@ replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 then replace file
 Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.10,10.0.0.11 -Verbose
 --------------------------------------------
 replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^10.0.0.10$/#10.0.0.10")
-
 #>
 
     [CmdletBinding()]

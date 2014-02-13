@@ -8,7 +8,7 @@
 .EXAMPLE
    Show-ValentiaConfig
 #>
-
+    [CmdletBinding()]
     param
     (
         [parameter(

@@ -7,7 +7,6 @@ function Get-ValentiaGroup
 {
 
 <#
-
 .SYNOPSIS 
 Get ipaddress or NetBIOS from DeployGroup File specified
 
@@ -27,7 +26,6 @@ read production-hoge.ps1 from deploy group branch path.
 target production-hoge.ps1 c:\test
 --------------------------------------------
 read production-hoge.ps1 from c:\test.
-
 #>
 
     [CmdletBinding()]

@@ -6,7 +6,6 @@ workflow Invoke-ValentiaCommandParallel
 {
 
 <#
-
 .SYNOPSIS 
 Invoke workflow valentia execution to remote host
 
@@ -17,13 +16,6 @@ workflow not allowed to run from C# code.
 .NOTES
 Author: guitarrapc
 Created: 20/June/2013
-
-# --- Depends on following functions ---
-#
-#  Invoke-ValetinaParallel
-# 
-# ---                                ---
-
 
 .EXAMPLE
   CommandParallel -ScriptToRun $ScriptToRun
@@ -40,7 +32,6 @@ Created: 20/June/2013
 .EXAMPLE
   Invoke-ValentiaCommandParallel {test-connection localhost}
 --------------------------------------------
-
 #>
 
     [CmdletBinding()]

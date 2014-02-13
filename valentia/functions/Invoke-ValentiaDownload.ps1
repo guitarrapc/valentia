@@ -33,7 +33,6 @@ download remote sourth item to local destinationfolder
 download -SourcePath c:\logs\white\20130716 -DestinationFolder c:\test -DeployGroup production-first.ps1 -Directory
 --------------------------------------------
 download remote sourthdirectory items to local destinationfolder in backgroud job. Omit parameter name.
-
 #>
 
     [CmdletBinding(DefaultParameterSetName = "File")]
