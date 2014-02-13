@@ -35,14 +35,7 @@ Above will retrieve Async Result
         $Pipelines,
 
         [Parameter(
-            Position=1,
-            Mandatory = 0,
-            HelpMessage = "An optional switch to display a progress indicator.")]
-        [Switch]
-        $ShowProgress,
-
-        [Parameter(
-            Position = 2,
+            Position = 1,
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [Switch]
@@ -61,9 +54,6 @@ Above will retrieve Async Result
         {
             try
             {
-                # Incrementing for Write-Progress
-                $i++
-
                 # Get HostName of Pipeline
                 $task.host = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
                 if (-not $PSBoundParameters.quiet.IsPresent)
@@ -81,18 +71,7 @@ Above will retrieve Async Result
                     $task.ErrorMessageDetail += $_
                     throw $Pipeline.Pipeline.Streams.Error
                 }
-
-                # Show Progress bar
-                if($ShowProgress)
-                {
-                    if (-not $PSBoundParameters.quiet.IsPresent)
-                    {
-                        Write-Progress -Activity 'Receiving AsyncPipeline Results' `
-                            -PercentComplete $(($i/$Pipelines.Length) * 100) `
-                            -Status "Percent Complete"
-                    }
-                }
-        
+       
                 # Output $task variable to file. This will obtain by other cmdlet outside function.
                 $task
             }

@@ -249,25 +249,32 @@ You can prepare script file to run, and specify path.
             $AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $pool -ScriptToRunHash $ScriptToRunHash -Deploymember $DeployMember -CredentialHash $credentialHash -TaskParameterHash $TaskParameterHash
         }
 
-        # Create ScriptBlock to obtain AsyncStatus
-        $ReceiveAsyncStatusScriptBlock = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
-
         # Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
         Write-Verbose -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($valentia.async.sleepMS * $valentia.async.limitCount / 1000))
-        $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
+        $ReceiveAsyncStatusScriptBlock = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-        # hide progress or not
-        if (-not $PSBoundParameters.quiet.IsPresent)
-        {
-            Write-Warning -Message ("{0}" -f $($ReceiveAsyncStatus.Name))
-        }
-
-        while (($ReceiveAsyncStatus | where name -like "Running*").count -ge 1)
+        while ((($ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock) | where name -like "Running*").count -ge 1)
         {
             $count++
             $completed     = $ReceiveAsyncStatus | where name -like "Completed*"
             $running       = $ReceiveAsyncStatus | where name -like "Running*"
             $statusPercent = ($completed.count/$ReceiveAsyncStatus.count) * 100
+
+            # hide progress or not
+            if (-not $PSBoundParameters.quiet.IsPresent -and ($sw.Elapsed.TotalMilliseconds -ge 500))
+            {
+                # hide progress or not
+                if ($statusPercent -ne 100)
+                {
+                    Write-Progress -Activity 'Async Execution Running Status....' `
+                        -PercentComplete $statusPercent `
+                        -Status ("{0}/{1}({2:0.00})% Completed" -f $completed.count, $ReceiveAsyncStatus.count, $statusPercent)
+                    
+                    $sw.Reset()
+                    $sw.Start()
+                }
+            }
 
             # Log Current Status
             if (-not $null-eq $prevRunningCount)
@@ -281,12 +288,7 @@ You can prepare script file to run, and specify path.
                         Completed = $completed.count
                     } | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
                 }
-            }
-
-            # hide progress or not
-            Write-Progress -Activity 'Async Execution Running Status....' `
-                -PercentComplete $statusPercent `
-                -Status ("{0}/{1}({2:0.00})% Completed" -f $completed.count, $ReceiveAsyncStatus.count, $statusPercent)
+            }              
 
             # Wait a moment
             sleep -Milliseconds $valentia.async.sleepMS
@@ -297,14 +299,17 @@ You can prepare script file to run, and specify path.
                 break
             }
 
-            $ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock
             $prevRunningCount = $running.count
         }
 
+        # Clear Progress bar from Host,
+        # Make sure this is critical, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
+        Write-Progress "done" "done" -Completed
+        
         # Obtain Async Command Result
         if (-not $PSBoundParameters.quiet.IsPresent)
         {
-            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress `
+            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines `
             | %{$result = @{}}{
                 $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
                 $SuccessStatus += $_.SuccessStatus                     # Get success or error
@@ -316,13 +321,14 @@ You can prepare script file to run, and specify path.
         }
         else
         {
-            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress -quiet `
+            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -quiet `
             | %{$result = @{}}{
                 $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
                 $SuccessStatus += $_.SuccessStatus                     # Get success or error
                 if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
             }
         }
+
 
         # Check Command Result
         if ($task.SuccessStatus -eq $false)
