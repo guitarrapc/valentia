@@ -60,6 +60,7 @@ Created: 20/June/2013
     )
     
     $ErrorActionPreference = $valentia.errorPreference
+    $ProgressPreference = "SilentlyContinue"
 
     foreach -Parallel ($DeployMember in $PSComputerName)
     {
@@ -106,8 +107,4 @@ Created: 20/June/2013
             return $task
         }
     }
-
-    # Clear Progress bar from Host,
-    # Make sure this is critical, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
-    Write-Progress -Activity "done" -Status "done" -Completed   
 }
