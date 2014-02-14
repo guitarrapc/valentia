@@ -113,21 +113,20 @@ Ping production-hoge.ps1 from deploy group branch path
         foreach ($task in $tasks)
         {
             [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
-            $PSObject = [PSCustomObject]@{
-                Id                 = $task.Task.Id
-                HostNameOrAddress  = $task.HostNameOrAddress
-                Status             = $result.Status
-                IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-                RoundtripTime      = $result.RoundtripTime
-            }
 
             if (-not $quiet)
             {
-                $PSObject
+                    [PSCustomObject]@{
+                    Id                 = $task.Task.Id
+                    HostNameOrAddress  = $task.HostNameOrAddress
+                    Status             = $result.Status
+                    IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
+                    RoundtripTime      = $result.RoundtripTime
+                }
             }
             else
             {
-                $output.Add($PSObject)
+                $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
             }
 
             Write-Debug "Dispose Ping Object"
@@ -135,11 +134,6 @@ Ping production-hoge.ps1 from deploy group branch path
             
             Write-Debug "Dispose PingReply Object"
             $task.Task.Dispose()
-        }
-
-        if ($quiet)
-        {
-            ($output.IsSuccess | sort -Unique) -notcontains $false
         }
     }
 }
