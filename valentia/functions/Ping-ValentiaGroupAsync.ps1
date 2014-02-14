@@ -139,7 +139,7 @@ Ping production-hoge.ps1 from deploy group branch path
 
         if ($quiet)
         {
-            $true -eq ($PSObject.IsSuccess | sort -Unique)
+            ($output.IsSuccess | sort -Unique) -notcontains $false
         }
     }
 }
