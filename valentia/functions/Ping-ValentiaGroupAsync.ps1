@@ -66,7 +66,15 @@ Ping production-hoge.ps1 from deploy group branch path
             HelpMessage = "Input dontFragment for the ping option.")]
         [ValidateNotNullOrEmpty()]
         [bool]
-        $dontFragment = $valentia.ping.pingOption.dontfragment
+        $dontFragment = $valentia.ping.pingOption.dontfragment,
+
+        [Parameter(
+            Position = 5,
+            Mandatory = 0,
+            HelpMessage = "Change return type to bool only.")]
+        [ValidateNotNullOrEmpty()]
+        [switch]
+        $quiet
     )
 
     begin
@@ -77,6 +85,7 @@ Ping production-hoge.ps1 from deploy group branch path
         # new object for event and job
         $pingOptions = New-Object Net.NetworkInformation.PingOptions($Ttl, $dontFragment)
         $tasks = New-Object System.Collections.Generic.List[PSCustomObject]
+        $output = New-Object System.Collections.Generic.List[PSCustomObject]
     }
 
     process
@@ -104,7 +113,7 @@ Ping production-hoge.ps1 from deploy group branch path
         foreach ($task in $tasks)
         {
             [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
-            [PSCustomObject]@{
+            $PSObject = [PSCustomObject]@{
                 Id                 = $task.Task.Id
                 HostNameOrAddress  = $task.HostNameOrAddress
                 Status             = $result.Status
@@ -112,11 +121,25 @@ Ping production-hoge.ps1 from deploy group branch path
                 RoundtripTime      = $result.RoundtripTime
             }
 
+            if (-not $quiet)
+            {
+                $PSObject
+            }
+            else
+            {
+                $output.Add($PSObject)
+            }
+
             Write-Debug "Dispose Ping Object"
             $task.Ping.Dispose()
             
             Write-Debug "Dispose PingReply Object"
             $task.Task.Dispose()
+        }
+
+        if ($quiet)
+        {
+            $true -eq ($PSObject.IsSuccess | sort -Unique)
         }
     }
 }
