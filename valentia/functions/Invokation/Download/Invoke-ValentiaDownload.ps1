@@ -16,7 +16,7 @@ If target path was directory then download files below path. (None recurse)
 If target path was file then download specific file.
 
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 14/Aug/2013
 
 .EXAMPLE
