@@ -31,7 +31,7 @@ Above will retrieve Async Result
             Position=0,
             Mandatory,
             HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
-        [AsyncPipeline[]]
+        [System.Collections.Generic.List[AsyncPipeline]]
         $Pipelines,
 
         [Parameter(

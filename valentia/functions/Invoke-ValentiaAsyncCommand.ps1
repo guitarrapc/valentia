@@ -80,7 +80,15 @@ Above example will concurrently running with 10 processes for each Computers.
                 $CredentialHash,
                 $TaskParameterHash
             )
-            Invoke-Command -ScriptBlock $($ScriptToRunHash.Values) -ComputerName $($ComputerName.Values) -Credential $($CredentialHash.Values) -ArgumentList $($TaskParameterHash.Values)
+
+            $param = @{
+                ScriptBlock  = $($ScriptToRunHash.Values)
+                ComputerName = $($ComputerName.Values)
+                Credential   = $($CredentialHash.Values)
+                ArgumentList = $($TaskParameterHash.Values)
+            }
+
+            Invoke-Command @param
         }
 
         # Create Hashtable for ComputerName passed to Pipeline
