@@ -13,7 +13,7 @@ This function receives the results of a pipeline running in a separate runspace.
 Since it is unknown what exists in the results stream of the pipeline, this function will not have a standard return type.
  
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 13/July/2013
 
 .EXAMPLE
