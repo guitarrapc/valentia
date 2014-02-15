@@ -15,7 +15,7 @@ This function only support files listed in csv sat in upload context.
 Make sure destination path format is not "c:\" but use "c$\" as UNC path.
 
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 13/July/2013
 
 
