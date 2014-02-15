@@ -80,7 +80,6 @@ read production-hoge.ps1 from c:\test.
 
                 throw $errorDetail.ErrorMessageDetail
             }
-
         }
         else
         {
@@ -102,19 +101,16 @@ read production-hoge.ps1 from c:\test.
 
     switch ($DeployGroups.Length)
     {
-        0 {throw '"$DeployGroups" was Null or Empty, input DeployGroup.'}
-        1 {
-            Write-Verbose ("DeployGroups length was 1" -f $DeployGroups.Length)
+        0 { throw '"$DeployGroups" was Null or Empty, input DeployGroup.'}
+        1 { Write-Verbose ("DeployGroups length was 1" -f $DeployGroups.Length)
             # Parse DeplotGroup from [string[]] to [String]
             [string]$DeployGroup = $DeployGroups
 
             Write-Verbose 'Read DeployGroup and return $DeployMemebers'
-            return Read-ValentiaGroup -DeployGroup $DeployGroup}
-
+            return Read-ValentiaGroup -DeployGroup $DeployGroup
+        }
         # more than 2
-        default {
-            
-            Write-Verbose ("DeployGroups length default" -f $DeployGroups.Length)
+        default {Write-Verbose ("DeployGroups length default" -f $DeployGroups.Length)
             foreach ($DeployGroup in $DeployGroups)
             {
                 Write-Verbose 'Read DeployGroup and return $DeployMemebers'

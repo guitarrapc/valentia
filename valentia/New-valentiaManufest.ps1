@@ -36,8 +36,7 @@ $script:functionToExport = @(
         "Set-ValentiaLocation", 
         "Show-ValentiaConfig",
         "Show-ValentiaGroup",
-        "Show-ValentiaPromptForChoice",
-        "Test-ValentiaGroupConnection"
+        "Show-ValentiaPromptForChoice"
 )
 
 $script:variableToExport = "valentia"

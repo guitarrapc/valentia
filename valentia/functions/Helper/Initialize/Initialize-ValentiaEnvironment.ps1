@@ -195,7 +195,7 @@ read production-hoge.ps1 from c:\test.
         Write-Verbose "Command : Disable-ValentiaEnhancedIESecutiry"
         Disable-ValentiaEnhancedIESecutiry
 
-        # Add ec2-user 
+        # Add valentia connection user
         if ($NoOSUser)
         {
             Write-Verbose "NoOSUser switch was enabled, skipping create OSUser."

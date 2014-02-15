@@ -51,19 +51,25 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
         [Parameter(
             Position = 3,
             Mandatory = 0,
+            HelpMessage = "If you want to write into ReadOnly file.")]
+        [switch]
+        $Force,
+
+        [Parameter(
+            Position = 4,
+            Mandatory = 0,
             HelpMessage = "If you want to popup confirm message when file created.")]
         [switch]
         $Confirm,
 
         [Parameter(
-            Position = 4,
+            Position = 5,
             Mandatory = 0,
             HelpMessage = "If you want to confiem what will happen.")]
         [switch]
         $WhatIf
 
     )
-
 
     begin
     {
@@ -73,11 +79,11 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
         {
             if($WhatIf)
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -WhatIf -Force
+                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -WhatIf -Force
             }
             else
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Force
+                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Force -PassThru
             }
         }
 
@@ -85,11 +91,11 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
         {
             if($WhatIf)
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif -Confirm
+                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif -Confirm
             }
             else
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Confirm
+                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Confirm -PassThru
             }
         }
 
@@ -97,11 +103,11 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
         {
             if($WhatIf)
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif
+                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif
             }
             else
             {
-                $DeployClients | Set-Content -Path $DeployPath -Encoding $valentia.fileEncode
+                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -PassThru
             }
         }
 
@@ -153,7 +159,6 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean
-
     }
 }
 

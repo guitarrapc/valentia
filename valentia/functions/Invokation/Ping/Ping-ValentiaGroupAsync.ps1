@@ -15,7 +15,7 @@ This Cmdlet will ping and get reachability to the host.
 
 .NOTES
 Author: guitarrapc
-Created: 02/03/2014
+Created: 03/Feb/2014
 
 .EXAMPLE
 Ping-ValentiaGroupAsync production-hoge.ps1

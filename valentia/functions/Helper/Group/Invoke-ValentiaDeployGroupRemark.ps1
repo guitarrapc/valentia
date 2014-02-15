@@ -3,7 +3,7 @@
 #-- Deploy Folder/File Module Functions --#
 
 # ipremark
-function Invoke-valentiaDeployGroupRemark
+function Invoke-ValentiaDeployGroupRemark
 {
 
 <#

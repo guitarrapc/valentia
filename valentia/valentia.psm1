@@ -229,7 +229,7 @@ ConvertFrom-StringData @'
 $Script:valentia                        = @{}
 $valentia.name                          = "valentia"                          # contains the Name of Module
 $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
-$valentia.helpersPath                   = "\functions\*.ps1"
+$valentia.helpersPath                   = "\functions\*"
 $valentia.defaultconfigurationfile      = "\config\valentia-config.ps1"       # default configuration file name within valentia.psm1
 $valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
 $valentia.fileEncode                    = "utf8"
@@ -299,6 +299,7 @@ $valentia.ping = New-Object psobject -property @{
 
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.users = New-Object psobject -property @{
+    CurrentUser                         = $env:USERNAME;
     deployUser                          = "deployment";
 }
 $valentia.group                         = "Administrators"
@@ -395,9 +396,10 @@ New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 # -- Export Modules when loading this module -- #
 # grab functions from files
 
-Resolve-Path (Join-Path $valentia.modulePath $valentia.helpersPath) | 
-    where { -not ($_.ProviderPath.Contains(".Tests.")) } |
-    % { . $_.ProviderPath }
+Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
+    | where { -not ($_.FullName.Contains(".Tests.")) } `
+    | where Extension -eq ".ps1" `
+    | % {. $_.FullName}
 
 #-- Loading Internal Function when loaded --#
 

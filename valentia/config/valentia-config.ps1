@@ -54,6 +54,7 @@ $valentia.ping = New-Object psobject -property @{
 
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.users = New-Object psobject -property @{
+    CurrentUser                         = $env:USERNAME;
     deployUser                          = "deployment";
 }
 $valentia.group                         = "Administrators"

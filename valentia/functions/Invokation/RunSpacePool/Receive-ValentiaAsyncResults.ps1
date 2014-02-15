@@ -84,7 +84,7 @@ Above will retrieve Async Result
             finally
             {
                 # Dispose Pipeline
-                $Pipeline.Pipeline.Dispose()
+                $Pipeline.Pipeline.Dispose()                
             }
         }
     }

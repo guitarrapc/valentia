@@ -240,7 +240,7 @@ You can prepare script file to run, and specify path.
 
         #region Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
-        while ((($ReceiveAsyncStatus = (Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement)) | where name -like "Running*").count -ge 1)
+        while ((($ReceiveAsyncStatus = (Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement)) | where name -like "Running*").count -ne 0)
         {
             $count++
             $completed     = $ReceiveAsyncStatus | where name -like "Completed*"
@@ -283,12 +283,15 @@ You can prepare script file to run, and specify path.
             # Wait a moment
             sleep -Milliseconds $valentia.async.sleepMS
 
-            # safety release for 100 sec
+            # safety release
             if ($count -ge $valentia.async.limitCount){break;}
         }
 
         # Clear Progress bar from Host, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
         Write-Progress "done" "done" -Completed
+
+        # Dispose variables
+        if (-not ($null -eq $ReceiveAsyncStatus)){$ReceiveAsyncStatus = $null}
         #endregion
         
         # Obtain Async Command Result
@@ -324,6 +327,9 @@ You can prepare script file to run, and specify path.
 
         # Dispose RunspacePool
         Remove-ValentiaRunSpacePool -Pool $pool
+
+        # Dispose variables
+        if (-not ($null -eq $AsyncPipelines)){$AsyncPipelines = $null}
 
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference

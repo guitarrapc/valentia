@@ -35,15 +35,30 @@ Change Hostname as web-$PrefixHostName-$PrefixIpString-Ip1-Ip2-Ip3-Ip4
         [string]
         $HostUsage,
 
+        [Parameter(
+            Position = 1,
+            Mandatory = 0,
+            HelpMessage = "Set Prefix String for hostname if required.")]
         [string]
         $PrefixHostName = $valentia.prefix.hostname,
 
-        $PrefixIpString = $valentia.prefic.ipstring
+        [Parameter(
+            Position = 2,
+            Mandatory = 0,
+            HelpMessage = "Set Prefix IpString for hostname if required.")]
+        [string]
+        $PrefixIpString = $valentia.prefic.ipstring,
+
+        [Parameter(
+            Position = 3,
+            Mandatory = 0,
+            HelpMessage = "Set this switch to check whatif.")]
+        [switch]
+        $WhatIf
     )
 
     begin
     {
-        
         # Get IpAddress
         $ipAddress = ([Net.Dns]::GetHostAddresses('').IPAddressToString | Select-String -Pattern "^\d*.\.\d*.\.\d*.\.\d*.").line
 
@@ -64,13 +79,15 @@ Change Hostname as web-$PrefixHostName-$PrefixIpString-Ip1-Ip2-Ip3-Ip4
         }
         else
         {
-            Write-Warning -Message ("Current HostName [ {0} ] change to New HostName [ {1} ]" -f $currentHostName, $newHostName)
-            Rename-Computer -NewName $newHostName -Force
+            if ($PSBoundParameters.WhatIf.IsPresent -ne $true)
+            {
+                Write-Warning -Message ("Current HostName [ {0} ] change to New HostName [ {1} ]" -f $currentHostName, $newHostName)
+                Rename-Computer -NewName $newHostName -Force
+            }
+            else
+            {
+                $Host.UI.WriteLine("what if: Current HostName [ {0} ] change to New HostName [ {1} ]" -f $currentHostName, $newHostName)
+            }
         }
     }
-
-    end
-    {
-    }
-
 }
