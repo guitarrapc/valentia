@@ -14,7 +14,7 @@ Use BITS Transfer to upload a file to remote server.
 This function supports multiple file transfer, if you want to fix file in list then use uploadList function.
   
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 13/July/2013
 
 .EXAMPLE
