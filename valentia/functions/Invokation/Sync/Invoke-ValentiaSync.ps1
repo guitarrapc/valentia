@@ -14,7 +14,7 @@ Use fastcopy.exe to Sync Folder for Diff folder/files not consider Diff from rem
 You must install fastcopy.exe to use this function.
 
 .NOTES
-Author: Ikiru Yoshizaki
+Author: gutiarrapc
 Created: 13/July/2013
 
 .EXAMPLE
