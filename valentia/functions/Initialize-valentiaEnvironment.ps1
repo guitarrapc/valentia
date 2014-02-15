@@ -179,8 +179,17 @@ read production-hoge.ps1 from c:\test.
 
         # Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue.
         # default 1024 change to 0 means unlimited
-        Write-Verbose "Command : Set-ValentiaWsManMaxMemoryPerShellMB -ShellsPerUser 100"
+        Write-Verbose "Command : Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0"
         Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0
+
+        # Configure WSMan MaxProccessesPerShell to improve performance
+        # default 100 change to 0 means unlimited
+        Write-Verbose "Command : Set-ValentiaWsManMaxProccessesPerShell -MaxProccessesPerShell 0"
+        Set-ValentiaWsManMaxProccessesPerShell -MaxProccessesPerShell 0
+
+        # Restart WinRM to change take effect
+        Write-Verbose "Restart-Service WinRM -PassThru"
+        Restart-Service WinRM -PassThru
 
         # Disable Enhanced Security for Internet Explorer
         Write-Verbose "Command : Disable-ValentiaEnhancedIESecutiry"
@@ -196,8 +205,6 @@ read production-hoge.ps1 from c:\test.
             Write-Verbose "Command : New-ValentiaOSUser"
             New-ValentiaOSUser
         }
-
-
 
         # Create PowerShell ModulePath
         Write-Verbose "Create PowerShell ModulePath for deploy user."
@@ -228,17 +235,13 @@ read production-hoge.ps1 from c:\test.
             }
         }
 
-
-
-
         # Only if $Server swtich was passed. (Default $true, Only disabled when $client switch was passed.)
         if ($Server)
         {
             # Create Deploy Folder
             Write-Verbose "Command : New-ValentiaFolder"
             New-ValentiaFolder
-
-
+            
             # Create Deploy user credential $user.pass
             Write-Verbose "Checking for Deploy User Credential secure credentail creation."
             if ($NoPassSave)
@@ -252,9 +255,7 @@ read production-hoge.ps1 from c:\test.
                 New-ValentiaCredential
             }
         }
-
-
-
+        
         # Set Host Computer Name (Checking if server name is same as current or not)
         Write-Verbose "Checking for HostName Status is follow rule and set if not correct."
         if ($NoSetHostName)
@@ -266,8 +267,7 @@ read production-hoge.ps1 from c:\test.
             Write-Verbose "Command : Set-ValentiaHostName -HostUsage $HostUsage"
             Set-ValentiaHostName -HostUsage $HostUsage
         }
-
-
+        
         # Checking for Reboot Status, if pending then prompt for reboot confirmation.
         Write-Verbose "Command : if ($NoReboot){Write-Verbose 'NoReboot switch was enabled, skipping reboot.'}elseif ($ForceReboot){Restart-Computer -Force}else{Restart-Computer -Force -Confirm}"
         if(Get-ValentiaRebootRequiredStatus)

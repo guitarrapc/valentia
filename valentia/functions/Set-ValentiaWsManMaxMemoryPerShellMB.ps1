@@ -45,7 +45,7 @@ set as unlimited
     
     if (-not((Get-ChildItem $MaxMemoryPerShellMBPath).Value -eq $MaxMemoryPerShellMB))
     {
-        Set-Item -Path $MaxMemoryPerShellMBPath -Value $MaxMemoryPerShellMB -Force
+        Set-Item -Path $MaxMemoryPerShellMBPath -Value $MaxMemoryPerShellMB -Force -PassThru
     }
     else
     {

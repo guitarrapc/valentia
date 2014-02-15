@@ -61,7 +61,7 @@
     <Compile Include="functions\Receive-ValentiaAsyncResults.ps1" />
     <Compile Include="functions\Receive-ValentiaAsyncStatus.ps1" />
     <Compile Include="functions\Set-ValentiaHostName.ps1" />
-    <Compile Include="functions\Set-WsManMaxShellsPerUser.ps1" />
+    <Compile Include="functions\Set-ValentiaWsManMaxShellsPerUser.ps1" />
     <Compile Include="functions\Show-ValentiaConfig.ps1" />
     <Compile Include="functions\Show-ValentiaGroup.ps1" />
     <Compile Include="functions\Show-ValentiaPromptForChoice.ps1" />
@@ -100,6 +100,8 @@
     <Content Include="functions\Remove-ValentiaRunSpacePool.ps1" />
     <Content Include="functions\Receive-ValentiaResult.ps1" />
     <Content Include="functions\New-ValentiaDynamicParamMulti.ps1" />
+    <Content Include="functions\Set-ValentiaWsManMaxMemoryPerShellMB.ps1" />
+    <Content Include="functions\Set-ValentiaWsManMaxProccessesPerShell.ps1" />
     <Content Include="functions\Test-ValentiaGroupConnection.ps1" />
     <Content Include="functions\Ping-ValentiaGroupAsync.ps1" />
     <Content Include="install.bat" />

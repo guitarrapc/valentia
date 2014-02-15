@@ -45,7 +45,7 @@ set as 100
     
     if (-not((Get-ChildItem $MaxShellsPerUserPath).Value -eq $ShellsPerUser))
     {
-        Set-Item -Path $MaxShellsPerUserPath -Value $ShellsPerUser -Force
+        Set-Item -Path $MaxShellsPerUserPath -Value $ShellsPerUser -Force -PassThru
     }
     else
     {
