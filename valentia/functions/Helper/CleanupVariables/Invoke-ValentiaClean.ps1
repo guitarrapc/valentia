@@ -15,7 +15,7 @@ Clear valentia variables for each task, and remove then.
 valentia only keep default variables after this cmdlet has been run.
 
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 13/Jul/2013
 
 .EXAMPLE
