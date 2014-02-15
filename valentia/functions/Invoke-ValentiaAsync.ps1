@@ -222,7 +222,8 @@ You can prepare script file to run, and specify path.
         }
         $pool = New-ValentiaRunSpacePool @poolParam
 
-        # splatting
+        # Execute Async Job
+        Write-Verbose ("Target Computers : [{0}]" -f ($DeployMembers -join ", "))
         $param = @{
             RunSpacePool      = $pool
             ScriptToRunHash   = @{ScriptBlock   = $ScriptToRun}
@@ -230,23 +231,16 @@ You can prepare script file to run, and specify path.
             TaskParameterHash = @{TaskParameter = $TaskParameter}
         }
 
-        # Execute Async Job
-        Write-Verbose ("Execute command : {0} " -f $param.ScriptToRunHash.ScriptBlock)
-        Write-Verbose ("Target Computers : [{0}]" -f ($DeployMembers -join ", "))
-
-        $AsyncPipelines = @() 
+        $AsyncPipelines = New-Object System.Collections.Generic.List[AsyncPipeline]
         foreach ($DeployMember in $DeployMembers)
         {
-            $AsyncPipelines += Invoke-ValentiaAsyncCommand @param -Deploymember $DeployMember
+            $AsyncPipeline = Invoke-ValentiaAsyncCommand @param -Deploymember $DeployMember
+            $AsyncPipelines.Add($AsyncPipeline)
         }
 
-        # Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
-        Write-Verbose -Message ("Waiting for Asynchronous staus completed, or {0} sec to be complete." -f ($valentia.async.sleepMS * $valentia.async.limitCount / 1000))
-        $ReceiveAsyncStatusScriptBlock = {Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement}
+        #region Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
-
-        #region AsyncStatus monitoring
-        while ((($ReceiveAsyncStatus = &$ReceiveAsyncStatusScriptBlock) | where name -like "Running*").count -ge 1)
+        while ((($ReceiveAsyncStatus = (Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement)) | where name -like "Running*").count -ge 1)
         {
             $count++
             $completed     = $ReceiveAsyncStatus | where name -like "Completed*"
@@ -283,43 +277,28 @@ You can prepare script file to run, and specify path.
                         Completed = $completed.count
                     } | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Append
                 }
-            }              
+            }
+            $prevRunningCount = $running.count
 
             # Wait a moment
             sleep -Milliseconds $valentia.async.sleepMS
 
             # safety release for 100 sec
             if ($count -ge $valentia.async.limitCount){break;}
-
-            $prevRunningCount = $running.count
         }
 
-        # Clear Progress bar from Host,
-        # Make sure this is critical, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
+        # Clear Progress bar from Host, YOU MUST CLEAR PROGRESS BAR, other wise host output will be terriblly slow down.
         Write-Progress "done" "done" -Completed
         #endregion
         
         # Obtain Async Command Result
-        if (-not $PSBoundParameters.quiet.IsPresent)
-        {
-            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines `
-            | %{$result = @{}}{
-                $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
-                $SuccessStatus += $_.SuccessStatus                     # Get success or error
-                if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
-
-                # Output to host
-                $_.result
-            }
-        }
-        else
-        {
-            Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -quiet `
-            | %{$result = @{}}{
-                $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
-                $SuccessStatus += $_.SuccessStatus                     # Get success or error
-                if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
-            }
+        $quietPreference = $PSBoundParameters.quiet.IsPresent
+        Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -quiet:$quietPreference `
+        | %{$result = @{}}{
+            $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
+            $SuccessStatus += $_.SuccessStatus                     # Get success or error
+            if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
+            if (-not $quietPreference){$_.result}                  # Output to host
         }
 
         # Check Command Result
