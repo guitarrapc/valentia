@@ -15,7 +15,7 @@ You can specify branch path in configuration.
 If you changed from default, then change validation set for BranchPath for intellisence.
 
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 13/Jul/2013
 
 .EXAMPLE
