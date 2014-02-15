@@ -2,7 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Set-WsManMaxShellsPerUser
+function Set-ValentiaWsManMaxShellsPerUser
 {
 
 <#
@@ -19,7 +19,7 @@ Author: guitarrapc
 Created: 18/Jul/2013
 
 .EXAMPLE
-Set-WsManMaxShellsPerUser -ShellsPerUser 100
+Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100
 --------------------------------------------
 set as 100
 
@@ -49,7 +49,7 @@ set as 100
     }
     else
     {
-        Write-Verbose ("WinRM Trustedhosts was alredy enabled for {0}." -f $ShellsPerUser)
+        Write-Verbose ("Current value for MaxShellsPerUser is {0}." -f $ShellsPerUser)
         Get-ChildItem $MaxShellsPerUserPath
     }
 }

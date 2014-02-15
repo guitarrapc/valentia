@@ -96,7 +96,7 @@ read production-hoge.ps1 from c:\test.
         $NoReboot = $false,
 
         [parameter(
-        HelpMessage = "Select this switch If you want to Forece Restart without prompt.")]
+            HelpMessage = "Select this switch If you want to Forece Restart without prompt.")]
         [switch]
         $ForceReboot = $false,
 
@@ -106,7 +106,7 @@ read production-hoge.ps1 from c:\test.
         $TrustedHosts = "*",
 
         [parameter(
-        HelpMessage = "Select this switch If you want to skip setup PSRemoting.")]
+            HelpMessage = "Select this switch If you want to skip setup PSRemoting.")]
         [switch]
         $SkipEnablePSRemoting = $false
 
@@ -174,8 +174,13 @@ read production-hoge.ps1 from c:\test.
 
         # Configure WSMan MaxShellsPerUser to prevent error "The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded."
         # default 25 change to 100
-        Write-Verbose "Command : Set-WsManMaxShellsPerUser -ShellsPerUser 100"
-        Set-WsManMaxShellsPerUser -ShellsPerUser 100
+        Write-Verbose "Command : Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100"
+        Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100
+
+        # Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue.
+        # default 1024 change to 0 means unlimited
+        Write-Verbose "Command : Set-ValentiaWsManMaxMemoryPerShellMB -ShellsPerUser 100"
+        Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0
 
         # Disable Enhanced Security for Internet Explorer
         Write-Verbose "Command : Disable-ValentiaEnhancedIESecutiry"
