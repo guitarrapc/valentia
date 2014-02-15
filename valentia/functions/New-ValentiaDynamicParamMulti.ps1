@@ -2,6 +2,121 @@
 
 #-- function helper for Dynamic Param --#
 
+function New-ValentiaDynamicParamMulti
+{
+<#
+.SYNOPSIS 
+This cmdlet will return Dynamic param dictionary
+
+.DESCRIPTION
+You can use this cmdlet to define Dynamic Param
+
+.NOTES
+Author: guitarrapc
+Created: 02/03/2014
+
+.EXAMPLE
+function Show-DynamicParamMulti
+{
+    [CmdletBinding()]
+    param()
+    
+    dynamicParam
+    {
+        $parameters = (
+            @{name         = "hoge"
+              options      = "fuga"
+              validateSet  = $true
+              position     = 0},
+
+            @{name         = "foo"
+              options      = "bar"
+              position     = 1})
+
+        New-ValentiaDynamicParamMulti -dynamicParams $parameters
+    }
+
+    begin
+    {
+    }
+    process
+    {
+        $PSBoundParameters.hoge
+        $PSBoundParameters.foo
+    }
+
+}
+
+Show-DynamicParamMulti -hoge fuga -foo bar
+#>
+
+    [CmdletBinding()]
+    param
+    (
+        [parameter(
+            mandatory = 1,
+            position = 0,
+            valueFromPipeline = 1,
+            valueFromPipelineByPropertyName = 1)]
+        [hashtable[]]
+        $dynamicParams
+    )
+
+    begin
+    {
+        $dynamicParamLists = New-ValentiaDynamicParamList -dynamicParams $dynamicParams
+        $dictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+    }
+
+    process
+    {
+        foreach ($dynamicParamList in $dynamicParamLists)
+        {
+            # create attributes
+            $attributes = New-Object System.Management.Automation.ParameterAttribute
+            $attributes.ParameterSetName = "__AllParameterSets"
+            (
+                "helpMessage",
+                "mandatory",
+                "parameterSetName",
+                "position",
+                "valueFromPipeline",
+                "valueFromPipelineByPropertyName",
+                "valueFromRemainingArguments"
+            ) `
+            | %{
+                if($dynamicParamList.$_)
+                {
+                    $attributes.$_ = $dynamicParamList.$_
+                }
+            }
+
+            # create attributes Collection
+            $attributesCollection = New-Object 'Collections.ObjectModel.Collection[System.Attribute]'
+            $attributesCollection.Add($attributes)
+        
+            # create validation set
+            if ($dynamicParamList.validateSet)
+            {
+                $validateSetAttributes = New-Object System.Management.Automation.ValidateSetAttribute $dynamicParamList.options
+                $attributesCollection.Add($validateSetAttributes)
+            }
+
+            # create RuntimeDefinedParameter
+            $runtimeDefinedParameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter @($dynamicParamList.name, [System.String], $attributesCollection)
+
+            # create Dictionary
+            $dictionary.Add($dynamicParamList.name, $runtimeDefinedParameter)
+        }
+    }
+
+    end
+    {
+        # return result
+        return $dictionary
+    }
+}
+
 function New-ValentiaDynamicParamList
 {
 <#
@@ -50,7 +165,7 @@ function Show-DynamicParamMulti
 
 Show-DynamicParamMulti -hoge fuga -foo bar
 #>
-
+    [CmdletBinding()]
     param
     (
         [parameter(
@@ -73,10 +188,13 @@ Show-DynamicParamMulti -hoge fuga -foo bar
         $keyCheckList = New-Object System.Collections.Generic.List[String]
         $keyCheckList.AddRange($keyCheckInputItems)
 
+        # sort dynamicParams hashtable by position
+        $newDynamicParams = Sort-ValentiaDynamicParamHashTable -dynamicParams $dynamicParams
     }
+
     process
     {
-        foreach ($dynamicParam in $dynamicParams)
+        foreach ($dynamicParam in $newDynamicParams)
         {
             $invalidParamter = $dynamicParam.Keys | Where {$_ -notin $keyCheckList}
             if ($($invalidParamter).count -ne 0)
@@ -107,98 +225,83 @@ Show-DynamicParamMulti -hoge fuga -foo bar
     }
 }
 
-function New-ValentiaDynamicParamMulti
-{
-<#
-.SYNOPSIS 
-This cmdlet will return Dynamic param dictionary
 
-.DESCRIPTION
-You can use this cmdlet to define Dynamic Param
-
-.NOTES
-Author: guitarrapc
-Created: 02/03/2014
-
-.EXAMPLE
-function Show-DynamicParamMulti
+function Sort-ValentiaDynamicParamHashTable
 {
     [CmdletBinding()]
-    param()
-    
-    dynamicParam
-    {
-        $parameters = (
-            @{name         = "hoge"
-              options      = "fuga"
-              validateSet  = $true
-              position     = 0},
-
-            @{name         = "foo"
-              options      = "bar"
-              position     = 1})
-
-        $dynamicParamLists = New-ValentiaDynamicParamList -dynamicParams $parameters
-        New-ValentiaDynamicParamMulti -dynamicParamLists $dynamicParamLists
-    }
-
-    begin
-    {
-    }
-    process
-    {
-        $PSBoundParameters.hoge
-        $PSBoundParameters.foo
-    }
-
-}
-
-Show-DynamicParamMulti -hoge fuga -foo bar
-#>
-
     param
     (
         [parameter(
             mandatory = 1,
-            position = 0)]
-        [System.Collections.Generic.List[HashTable]]
-        $dynamicParamLists
+            position = 0,
+            valueFromPipeline = 1,
+            valueFromPipelineByPropertyName = 1)]
+        [hashtable[]]
+        $dynamicParams
     )
 
-    $dictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-
-    foreach ($dynamicParamList in $dynamicParamLists)
+    begin
     {
-        # create attributes
-        $attributes = New-Object System.Management.Automation.ParameterAttribute
-        $attributes.ParameterSetName = "__AllParameterSets"
-        if($dynamicParamList.helpMessage){$attributes.helpMessage = $dynamicParamList.helpMessage}                                                            # helpMessage
-        if($dynamicParamList.mandatory){$attributes.mandatory = $dynamicParamList.mandatory}                                                                  # mandatory
-        if($dynamicParamList.parameterSetName -ne $null){$attributes.parameterSetName = $dynamicParamList.parameterSetName}                                   # parameterSetName
-        if($dynamicParamList.position -ne $null){$attributes.position = $dynamicParamList.position}                                                           # position
-        if($dynamicParamList.valueFromPipeline -ne $null){$attributes.valueFromPiprline = $dynamicParamList.valueFromPiprline}                                # valueFromPiprline
-        if($dynamicParamList.valueFromPipelineByPropertyName){$attributes.valueFromPipelineByPropertyName = $dynamicParamList.valueFromPipelineByProperyName} # valueFromPipelineByPropertyName
-        if($dynamicParamList.valueFromRemainingArguments){$attributes.valueFromRemainingArguments = $dynamicParamList.ValueFromRemainingArguments}            # valueFromRemainingArguments
-
-        # create attributes Collection
-        $attributesCollection = New-Object 'Collections.ObjectModel.Collection[System.Attribute]'
-        $attributesCollection.Add($attributes)
-        
-        # create validation set
-        if ($dynamicParamList.validateSet)
-        {
-            $validateSetAttributes = New-Object System.Management.Automation.ValidateSetAttribute $dynamicParamList.options
-            $attributesCollection.Add($validateSetAttributes)
-        }
-
-        # create RuntimeDefinedParameter
-        $runtimeDefinedParameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter @($dynamicParamList.name, [System.String], $attributesCollection)
-
-        # create Dictionary
-        $dictionary.Add($dynamicParamList.name, $runtimeDefinedParameter)
+        # get max number of position for null position item
+        $max = ($dynamicParams.position | measure -Maximum).Maximum
     }
 
-    # return result
-    return $dictionary
+    process
+    {
+        # output PSCustomObject[Name<SortedPosition>,Value<DynamicParamHashTable>]. posision is now sorted.
+        $h = $dynamicParams `
+        | %{
+            $history = New-Object System.Collections.Generic.List[int]
+            $hash = @{}
+            
+            # temp posision for null item. This set as (max + number of collection items)
+            $num = $max + $parameters.Length
+        }{
+            Write-Verbose ("position is '{0}'." -f $position)
+            $position = $_.position
+            
+            #region null check
+            if ($null -eq $position)
+            {
+                Write-Verbose ("position is '{0}'. set current max index '{1}'" -f $position, $num)
+                $position = $num
+                $num++
+            }
+            #endregion
 
+            #region dupricate check
+            if ($position -notin $history)
+            {
+                Write-Verbose ("position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", "))
+                $history.Add($position)
+            }
+            else
+            {
+                $changed = $false
+                while ($position -in $history)
+                {
+                    Write-Verbose ("position '{0}' found in '{1}'. Start increment." -f $position, ($history -join ", "))
+                    $position++
+                    $changed = $true
+                }
+                Write-Verbose (" incremented position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", "))
+                if ($changed){$history.Add($position)}
+            }
+            #endregion
+
+            #region set temp hash
+            Write-Verbose ("Set position '{0}' as name of temp hash." -f $position)
+            $hash."$position" = $_
+            #endregion
+        }{[PSCustomObject]$hash}
+    }
+
+    end
+    {
+        # get index for each object
+        $index = [int[]](($h | Get-Member -MemberType NoteProperty).Name) | sort
+        
+        # return sorted hash order by index
+        return $index | %{$h.$_}
+    }
 }

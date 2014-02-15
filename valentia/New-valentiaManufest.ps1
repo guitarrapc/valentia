@@ -1,5 +1,5 @@
 ﻿$script:module = "valentia"
-$script:moduleVersion = "0.3.4"
+$script:moduleVersion = "0.3.6"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
@@ -22,13 +22,15 @@ $script:functionToExport = @(
         "Invoke-ValentiaDeployGroupRemark",
         "Invoke-ValentiaDeployGroupUnremark",
         "Invoke-ValentiaDownload",
-        "Invoke-ValentiaParallel", 
+        "Invoke-ValentiaParallel",
+        "Invoke-ValentiaSed",
         "Invoke-ValentiaSync",
         "Invoke-ValentiaUpload", 
         "Invoke-ValentiaUploadList", 
         "New-ValentiaCredential", 
         "New-ValentiaGroup",
         "New-ValentiaFolder",
+        "New-ValentiaDynamicParamMulti",
         "Ping-ValentiaGroupAsync",
         "Set-ValentiaHostName",
         "Set-ValentiaLocation", 
@@ -39,19 +41,21 @@ $script:functionToExport = @(
 )
 
 $script:variableToExport = "valentia"
-$script:AliasesToExport = @("Task",
-    "Valep","CommandP",
-    "Vale","Command",
+$script:AliasesToExport = @(
+    "Task",
+    "Vale",
+    "Valep",
     "Valea",
     "Upload","UploadL",
     "Sync",
     "Download",
     "Go",
     "Clean","Reload",
-    "Target","PingAsync",
+    "Target","PingAsync","Sed",
     "ipremark","ipunremark",
     "Cred",
     "Rename",
+    "DynamicParameter",
     "Initial"
 )
 

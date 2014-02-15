@@ -371,23 +371,25 @@ $valentia.config_default                = New-Object PSObject -property @{
 
 Write-Verbose "Set Alias for valentia Cmdlets."
 
-New-Alias -Name Task       -Value Get-ValentiaTask
-New-Alias -Name Valep      -Value Invoke-ValentiaParallel
-New-Alias -Name Vale       -Value Invoke-Valentia
-New-Alias -Name Valea      -Value Invoke-ValentiaAsync
-New-Alias -Name Upload     -Value Invoke-ValentiaUpload
-New-Alias -Name UploadL    -Value Invoke-ValentiaUploadList
-New-Alias -Name Sync       -Value Invoke-ValentiaSync
-New-Alias -Name Download   -Value Invoke-ValentiaDownload
-New-Alias -Name Go         -Value Set-ValentiaLocation
-New-Alias -Name Clean      -Value Invoke-ValentiaClean
-New-Alias -Name Target     -Value Get-ValentiaGroup
-New-Alias -Name PingAsync  -Value Ping-ValentiaGroupAsync
-New-Alias -Name ipremark   -Value Invoke-valentiaDeployGroupRemark
-New-Alias -Name ipunremark -Value Invoke-valentiaDeployGroupUnremark
-New-Alias -Name Cred       -Value Get-ValentiaCredential
-New-Alias -Name Rename     -Value Set-ValentiaHostName
-New-Alias -Name Initial    -Value Initialize-valentiaEnvironment
+New-Alias -Name Task             -Value Get-ValentiaTask
+New-Alias -Name Valep            -Value Invoke-ValentiaParallel
+New-Alias -Name Vale             -Value Invoke-Valentia
+New-Alias -Name Valea            -Value Invoke-ValentiaAsync
+New-Alias -Name Upload           -Value Invoke-ValentiaUpload
+New-Alias -Name UploadL          -Value Invoke-ValentiaUploadList
+New-Alias -Name Sync             -Value Invoke-ValentiaSync
+New-Alias -Name Download         -Value Invoke-ValentiaDownload
+New-Alias -Name Go               -Value Set-ValentiaLocation
+New-Alias -Name Clean            -Value Invoke-ValentiaClean
+New-Alias -Name Target           -Value Get-ValentiaGroup
+New-Alias -Name PingAsync        -Value Ping-ValentiaGroupAsync
+New-Alias -Name Sed              -Value Invoke-ValentiaSed
+New-Alias -Name ipremark         -Value Invoke-valentiaDeployGroupRemark
+New-Alias -Name ipunremark       -Value Invoke-valentiaDeployGroupUnremark
+New-Alias -Name Cred             -Value Get-ValentiaCredential
+New-Alias -Name Rename           -Value Set-ValentiaHostName
+New-Alias -Name DynamicParameter -Value New-ValentiaDynamicParamMulti
+New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 
 
 # -- Export Modules when loading this module -- #
