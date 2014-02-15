@@ -13,7 +13,7 @@ Receives one or more Asynchronous pipeline State.
 Asynchronous execution required to check status whether it done or not.
   
 .NOTES
-Author: Ikiru Yoshizaki
+Author: guitarrapc
 Created: 13/July/2013
 
 .EXAMPLE
