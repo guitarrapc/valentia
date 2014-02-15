@@ -22,11 +22,11 @@ Valentia inspired from [capistrano](https://github.com/capistrano/capistrano) an
 
 |OS|PowerShell|
 |----|----|
-|Windows 7 SP1  |PowerShell V3.0 and higher|
-|Windows 8      |PowerShell V3.0 and higher|
-|Windows 8.1    |PowerShell V4.0 and higher|
-|Windows 2012   |PowerShell V3.0 and higher|
-|Windows 2012 R2|PowerShell V4.0 and higher|
+|Windows 7 SP1  |V3.0 and higher|
+|Windows 8      |V3.0 and higher|
+|Windows 8.1    |V4.0 and higher|
+|Windows 2012   |V3.0 and higher|
+|Windows 2012 R2|V4.0 and higher|
 
 #### NOTE: All functions are confirmed with Windows Server 2012 x64 English environment.
 
