@@ -102,6 +102,7 @@
     <Folder Include="functions\Helper\Folder\" />
     <Folder Include="functions\Helper\Log\" />
     <Folder Include="functions\Helper\Location\" />
+    <Folder Include="functions\Helper\HostOutput\" />
     <Folder Include="functions\Helper\PromptForChoice\" />
     <Folder Include="functions\Helper\Task\" />
     <Folder Include="functions\Helper\Windows\" />
@@ -127,6 +128,7 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
     <Content Include="New-valentiaManufest.ps1" />
