@@ -57,8 +57,7 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
         [parameter(
             position = 3,
             mandatory = 0)]
-        [ValidateSet("Ascii", "BigEndianUnicode", "Byte", "Default","Oem", "String", "Unicode", "Unknown", "UTF32", "UTF7", "UTF8")]
-        [string]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $valentia.fileEncode,
 
         [parameter(
@@ -82,7 +81,7 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
             Write-Verbose "define tmp file"
             $tmpextension = "$extention" + "______"
             $tmppath = [System.IO.Path]::ChangeExtension($path,$tmpextension)
-                               
+
             if ($overWrite)
             {
                 Write-Verbose ("execute replace string {0} with {1} for file {2} and output to {3}" -f $searchPattern, $replaceWith, $path, $tmppath)
@@ -99,8 +98,11 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
             else
             {
                 Write-Verbose ("execute replace string {0} with {1} for file {2}" -f $searchPattern, $replaceWith, $path)
-                Get-Content -Path $path -Encoding $encoding `
-                    | %{$_ -replace $searchPattern,$replaceWith}
-            }    
+                if (-not $PSBoundParameters.Compress.IsPresent)
+                {
+                    Get-Content -Path $path -Encoding $encoding `
+                        | %{$_ -replace $searchPattern,$replaceWith}
+                }
+            }
         }
 }
