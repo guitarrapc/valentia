@@ -75,42 +75,6 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
     {
         $ErrorActionPreference = $valentia.errorPreference
 
-        function Get-Force
-        {
-            if($WhatIf)
-            {
-                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -WhatIf -Force
-            }
-            else
-            {
-                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Force -PassThru
-            }
-        }
-
-        function Get-WhatifConfirm
-        {
-            if($WhatIf)
-            {
-                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif -Confirm
-            }
-            else
-            {
-                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Confirm -PassThru
-            }
-        }
-
-        function Get-Whatif
-        {
-            if($WhatIf)
-            {
-                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -Whatif
-            }
-            else
-            {
-                $DeployClients | Add-Content -Path $DeployPath -Encoding $valentia.fileEncode -PassThru
-            }
-        }
-
         # check FileName is null or empty
         try
         {
@@ -126,6 +90,48 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
         catch
         {
             throw $_
+        }
+
+        # set splatting
+        $param = @{
+            path     = $DeployPath
+            Encoding = $valentia.fileEncode
+        }
+
+        function Get-Force
+        {
+            if($WhatIf)
+            {
+                $DeployClients | Add-Content @param -WhatIf -Force
+            }
+            else
+            {
+                $DeployClients | Add-Content @param -Force -PassThru
+            }
+        }
+
+        function Get-WhatifConfirm
+        {
+            if($WhatIf)
+            {
+                $DeployClients | Add-Content @param -Whatif -Confirm
+            }
+            else
+            {
+                $DeployClients | Add-Content @param -Confirm -PassThru
+            }
+        }
+
+        function Get-Whatif
+        {
+            if($WhatIf)
+            {
+                $DeployClients | Add-Content @param -Whatif
+            }
+            else
+            {
+                $DeployClients | Add-Content @param -PassThru
+            }
         }
     }
 
