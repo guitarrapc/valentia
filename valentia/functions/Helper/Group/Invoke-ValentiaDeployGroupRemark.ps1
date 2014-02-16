@@ -47,8 +47,7 @@ replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^
         [parameter(
             position = 2,
             mandatory = 0)]
-        [ValidateSet("Ascii", "BigEndianUnicode", "Byte", "Default","Oem", "String", "Unicode", "Unknown", "UTF32", "UTF7", "UTF8")]
-        [string]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $valentia.fileEncode
     )
 

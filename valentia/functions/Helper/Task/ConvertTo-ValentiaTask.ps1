@@ -45,8 +45,7 @@ Convert ScriptBlock into valentia Task file.
             Position = 1,
             Mandatory = 0,
             ParameterSetName = "File")]
-        [ValidateSet("Ascii", "BigEndianUnicode", "Byte", "Default","Oem", "String", "Unicode", "Unknown", "UTF32", "UTF7", "UTF8")]
-        [string]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $valentia.fileEncode,
 
         # Script Block to Convert into Task

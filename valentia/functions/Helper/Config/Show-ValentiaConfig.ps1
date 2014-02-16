@@ -20,8 +20,7 @@
         [parameter(
             mandatory = 0,
             position = 1)]
-        [ValidateSet("Ascii", "BigEndianUnicode", "Byte", "Default","Oem", "String", "Unicode", "Unknown", "UTF32", "UTF7", "UTF8")]
-        [string]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = "default"
     )
 

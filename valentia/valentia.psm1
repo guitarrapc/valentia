@@ -232,7 +232,7 @@ $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCom
 $valentia.helpersPath                   = "\functions\*"
 $valentia.defaultconfigurationfile      = "\config\valentia-config.ps1"       # default configuration file name within valentia.psm1
 $valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
-$valentia.fileEncode                    = "utf8"
+$valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]"utf8"
 $valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
 
 $valentia.originalErrorActionPreference = $ErrorActionPreference
