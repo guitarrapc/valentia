@@ -98,11 +98,11 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         if ($PSBoundParameters['Verbose'])
         {
             # Import default Configurations
-            Write-Verbose $valeWarningMessages.warn_import_configuration
+            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
             Import-valentiaConfigration -Verbose
 
             # Import default Modules
-            Write-Verbose $valeWarningMessages.warn_import_modules
+            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
             Import-valentiaModules -Verbose
         }
         else
@@ -111,24 +111,8 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
             Import-valentiaModules
         }
 
-
         # Log Setting
         $LogPath = New-ValentiaLog
-
-
-        # Import Bits Transfer Module
-        try
-        {
-            Write-Verbose "Importing BitsTransfer Module to ready File Transfer."
-            Import-Module BitsTransfer
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            throw $_
-        }
-
 
         # Obtain Remote Login Credential
         try
@@ -144,31 +128,22 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
 
 
         # Obtain DeployMember IP or Hosts for BITsTransfer
+        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
         $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        Write-Verbose ("Connecting to Target Computer : [{0}] `n" -f $DeployMembers)
         
-        if ($DeployMembers.SuccessStatus -eq $false)
-        {
-            $SuccessStatus += $DeployMembers.SuccessStatus
-            $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
-        }        
-
-
-
         # Set SourcePath to retrieve target File full path (default Upload folder of deployment)
         $SourceFolder = Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.Upload
 
         if (-not(Test-Path $SourceFolder))
         {
-            Write-Verbose ("SourceFolder not found creating {0}" -f $SourceFolder)
+            ("SourceFolder not found creating {0}" -f $SourceFolder) | Write-ValentiaVerboseDebug
             New-Item -Path $SourceFolder -ItemType Directory            
         }
 
         try
         {
-            Write-Verbose "Defining ListFile full path."
-            $SourcePath = Join-Path $SourceFolder $ListFile
-            Get-Item $SourcePath > $null
+            "Defining ListFile full path." | Write-ValentiaVerboseDebug
+            $SourcePath = Join-Path $SourceFolder $ListFile -Resolve
         }
         catch
         {
@@ -176,10 +151,9 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
             $ErrorMessageDetail += $_
             throw $_
         }
-
-
+        
         # Obtain List of File upload
-        Write-Verbose ("Retrive souce file list from {0} `n" -f $SourcePath)
+        ("Retrive souce file list from {0} `n" -f $SourcePath) | Write-ValentiaVerboseDebug
         $List = Import-Csv $SourcePath -Delimiter "," 
 
         # Show Stopwatch for Begin section
@@ -187,16 +161,13 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
         ""
 
-
     ### Process
 
-
-        Write-Verbose (" Uploading Files written in {0} to Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers)
+        (" Uploading Files written in {0} to Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers) | Write-ValentiaVerboseDebug
 
         # Stopwatch
         [decimal]$DurationTotal = 0
 
-        Write-Verbose ("Starting Upload {0} ." -f $List.Source)
         foreach ($DeployMember in $DeployMembers){
 
             # Stopwatch
@@ -213,33 +184,29 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
             try
             {
                 # Run Start-BitsTransfer
-                Write-Verbose ("Uploading {0} to {1} ." -f "$($NewList.Source)", "$($NewList.Destination)")
+                Write-Warning ("[{0}]: Uploading {1} to {2} ." -f $DeployMember ,"$($NewList.Source)", "$($NewList.Destination)")
                 Write-Verbose ("ListFile : {0}" -f $SourcePath)
-                Write-Verbose ("SourcePath : {0}" -f "$($NewList.Source)")
-                Write-Verbose ("DestinationPath : {0}" -f "$($List.Destination)")
-                Write-Verbose ("DeployMember : {0}" -f $DeployMember)
                 Write-Verbose ("Aysnc : {0}" -f $Async)
 
                 if ($Async)
                 {
                     #Command Detail
-                    Write-Verbose 'Command : $NewList | Start-BitsTransfer -Credential $Credebtial -Async'
                     $ScriptToRun = '$NewList | Start-BitsTransfer -Credential $Credential -Async'
 
                     # Run Start-BitsTransfer retrieving files from List csv with Async switch
-                    Write-Verbose ("Running Async uploadL to '{0}'" -f $DeployMember)
+                    ("Running Async uploadL to '{0}'" -f $DeployMember) | Write-ValentiaVerboseDebug
                     $BitsJob = $NewList | Start-BitsTransfer -Credential $Credential -Async
 
                     # Monitoring Bits Transfer States complete
                     $Sleepms = 10
                     while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
                     {
-                        Write-Verbose ("Current Job States was '{0}', waiting for '{1}' ms '{2}'" -f "$((Get-BitsTransfer).JobState | sort -Unique)", $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
+                        ("Current Job States was '{0}', waiting for '{1}' ms '{2}'" -f "$((Get-BitsTransfer).JobState | sort -Unique)", $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count))) | Write-ValentiaVerboseDebug
                         sleep -Milliseconds $Sleepms
                     }
 
                     # Send Complete message to make file from ****.Tmp
-                    Write-Verbose ("Completing Async uploadL to '{0}'" -f $DeployMember)
+                    ("Completing Async uploadL to '{0}'" -f $DeployMember) | Write-ValentiaVerboseDebug
                     # Retrieve all files when completed
                     Get-BitsTransfer | Complete-BitsTransfer
 
@@ -247,11 +214,10 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
                 else
                 {
                     #Command Detail
-                    Write-Verbose 'Command : $NewList | Start-BitsTransfer -Credential $Credebtial'
                     $ScriptToRun = "$NewList | Start-BitsTransfer -Credential $Credential"
 
                     # Run Start-BitsTransfer retrieving files from List csv
-                    Write-Verbose ("Running Sync uploadL to {0}" -f $DeployMember)
+                    ("Running Sync uploadL to {0}" -f $DeployMember) | Write-ValentiaVerboseDebug
                     $NewList | Start-BitsTransfer -Credential $Credential
                 }
             }
@@ -265,24 +231,17 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
             }
             finally
             {
-                # Delete all not compelte job
+                "Delete all not compelte job" | Write-ValentiaVerboseDebug
                 Get-BitsTransfer | Remove-BitsTransfer
 
                 # Stopwatch
                 $Duration = $stopwatchSession.Elapsed.TotalSeconds
                 Write-Verbose ("Session duration Second : {0}" -f $Duration)
-
-                # Add current session to Total
-                $DurationTotal += $Duration
                 ""
             }
         }
 
-
     ### End
-
-
-        Write-Verbose "All transfer with BitsTransfer had been removed."
 
     }
     catch
@@ -299,10 +258,8 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
         "" | Out-Default
 
-
         # Get End Time
         $TimeEnd = (Get-Date).DateTime
-
 
         # obtain Result
         $CommandResult = [ordered]@{
@@ -329,6 +286,5 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean
-
     }
 }

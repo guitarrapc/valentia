@@ -64,45 +64,48 @@ replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
             position = 4,
             mandatory = 0)]
         [switch]
-        $overWrite
+        $overWrite,
+
+        [parameter(
+            position = 5,
+            mandatory = 0)]
+        [switch]
+        $compress
     )
 
     $read = Select-String -Path $path -Pattern $searchPattern -Encoding $encoding
 
     $read.path `
-        | sort -Unique `
-        | %{
-            Write-Warning ("Executing string replace for {0}" -f $path)
-                
-            Write-Verbose "Get file information"
-            $path = $_
-            $extention = [System.IO.Path]::GetExtension($path)
+    | sort -Unique `
+    | %{Write-Warning ("Executing string replace for '{0}'. 'overwrite': '{1}'." -f $path, ($PSBoundParameters.overWrite.IsPresent -eq $true))
 
-            Write-Verbose "define tmp file"
+        $path = $_
+        $extention = [System.IO.Path]::GetExtension($path)
+
+        if ($overWrite)
+        {
             $tmpextension = "$extention" + "______"
             $tmppath = [System.IO.Path]::ChangeExtension($path,$tmpextension)
 
-            if ($overWrite)
-            {
-                Write-Verbose ("execute replace string {0} with {1} for file {2} and output to {3}" -f $searchPattern, $replaceWith, $path, $tmppath)
-                Get-Content -Path $path `
-                    | %{$_ -replace $searchPattern,$replaceWith} `
-                    | Out-File -FilePath $tmppath -Encoding $valentia.fileEncode -Force -Append
+            ("execute replace string '{0}' with '{1}' for file '{2}', Output to '{3}'" -f $searchPattern, $replaceWith, $path, $tmppath) | Write-ValentiaVerboseDebug
+            Get-Content -Path $path `
+                | %{$_ -replace $searchPattern,$replaceWith} `
+                | Out-File -FilePath $tmppath -Encoding $valentia.fileEncode -Force -Append
 
-                Write-Verbose ("remove original file {0}" -f $path, $tmppath)
-                Remove-Item -Path $path -Force
+            ("remove original file '{0}'" -f $path, $tmppath) | Write-ValentiaVerboseDebug
+            Remove-Item -Path $path -Force
 
-                Write-Verbose ("rename tmp file {0} to original file {1}" -f $tmppath, $path)
-                Rename-Item -Path $tmppath -NewName ([System.IO.Path]::ChangeExtension($tmppath,$extention))
-            }
-            else
+            ("rename tmp file '{0}' to original file '{1}'" -f $tmppath, $path) | Write-ValentiaVerboseDebug
+            Rename-Item -Path $tmppath -NewName ([System.IO.Path]::ChangeExtension($tmppath,$extention))
+        }
+        else
+        {
+            ("execute replace string '{0}' with '{1}' for file '{2}'" -f $searchPattern, $replaceWith, $path) | Write-ValentiaVerboseDebug
+            if (-not $PSBoundParameters.Compress.IsPresent)
             {
-                Write-Verbose ("execute replace string {0} with {1} for file {2}" -f $searchPattern, $replaceWith, $path)
-                if (-not $PSBoundParameters.Compress.IsPresent)
-                {
-                    Get-Content -Path $path -Encoding $encoding `
-                        | %{$_ -replace $searchPattern,$replaceWith}
-                }
+                Get-Content -Path $path -Encoding $encoding `
+                    | %{$_ -replace $searchPattern,$replaceWith}
             }
         }
+    }
 }

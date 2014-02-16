@@ -95,16 +95,16 @@ You can specify other user credential if required.
         
         if (Test-Path $CredPath)
         {
-            Write-Verbose ("Remove existing Credential Password for {0} found in {1}" -f $User, $CredPath)
+            ("Remove existing Credential Password for {0} found in {1}" -f $User, $CredPath) | Write-ValentiaVerboseDebug
             Remove-Item -Path $CredPath -Force -Confirm
         }
 
 
-        Write-Verbose ("Save Credential Password for {0} set in {1}" -f $User, $CredPath)
+        ("Save Credential Password for {0} set in {1}" -f $User, $CredPath) | Write-ValentiaVerboseDebug
         $savePass | Set-Content -Path $CredPath -Force
 
 
-        Write-Verbose ("Completed: Credential Password for {0} had been sat in {1}" -f $User, $CredPath)
+        ("Completed: Credential Password for {0} had been sat in {1}" -f $User, $CredPath) | Write-ValentiaVerboseDebug
     }
     else
     {

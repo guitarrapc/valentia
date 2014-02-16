@@ -63,7 +63,7 @@ change location to BranchPath c:\deployment\application (in default)
     $newlocation = (Join-Path $valentia.RootPath $valentia.BranchFolder.$BranchPath)
 
     # Move to BrachPath if exist
-    Write-Verbose ("{0} : {1}" -f $BranchPath, $newlocation)
+    ("{0} : {1}" -f $BranchPath, $newlocation) | Write-ValentiaVerboseDebug
     if (Test-Path $newlocation)
     {
         switch ($BranchPath) {
@@ -77,14 +77,14 @@ change location to BranchPath c:\deployment\application (in default)
     }
 
     # Show current Loacation
-    Write-Verbose ("(Get-Location).Path : {0}" -f (Get-Location).Path)
-    Write-Verbose ("prevLocation : {0}" -f $prevLocation)
+    ("(Get-Location).Path : {0}" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
+    ("prevLocation : {0}" -f $prevLocation) | Write-ValentiaVerboseDebug
     if ((Get-Location).Path -eq $prevLocation)
     {
         Write-Warning "Location not changed."
     }
     else
     {
-        Write-Verbose ("Location change to {0}" -f (Get-Location).Path)
+        ("Location change to {0}" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
     }
 }

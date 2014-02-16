@@ -49,7 +49,7 @@ set as 100
     }
     else
     {
-        Write-Verbose ("Current value for MaxShellsPerUser is {0}." -f $MaxProccessesPerShell)
+        ("Current value for MaxShellsPerUser is {0}." -f $MaxProccessesPerShell) | Write-ValentiaVerboseDebug
         Get-ChildItem $MaxProccessesPerShellPath
     }
 }

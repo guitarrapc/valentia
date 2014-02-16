@@ -90,12 +90,10 @@ Created: 20/June/2013
         {
             foreach ($computerName in $ComputerNames)
             {
-                # Check parameter for Invoke-Command
+                # Run ScriptBlock in Job
                 Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
                 Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
-
-                # Run ScriptBlock in Job
-                Write-Verbose ("Running ScriptBlock to {0} as Job" -f $computerName)
+                ("Running ScriptBlock to {0} as Job" -f $computerName) | Write-ValentiaVerboseDebug
                 $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -AsJob
                 $list.Add($job)
             }
@@ -121,12 +119,12 @@ Created: 20/June/2013
         #endregion
 
         #region monitor job status
-        Write-Verbose "Waiting for job running complete."
+        "Waiting for job running complete." | Write-ValentiaVerboseDebug
         Wait-Job -State Running            
         #endregion
 
         #region recieve job result
-        Write-Verbose "Receive all job result."
+        "Receive all job result." | Write-ValentiaVerboseDebug
         Receive-ValentiaResult -listJob  $list
         #endregion
     }

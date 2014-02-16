@@ -257,13 +257,13 @@ function Sort-ValentiaDynamicParamHashTable
             # temp posision for null item. This set as (max + number of collection items)
             $num = $max + $parameters.Length
         }{
-            Write-Verbose ("position is '{0}'." -f $position)
+            ("position is '{0}'." -f $position) | Write-ValentiaVerboseDebug
             $position = $_.position
             
             #region null check
             if ($null -eq $position)
             {
-                Write-Verbose ("position is '{0}'. set current max index '{1}'" -f $position, $num)
+                ("position is '{0}'. set current max index '{1}'" -f $position, $num) | Write-ValentiaVerboseDebug
                 $position = $num
                 $num++
             }
@@ -272,7 +272,7 @@ function Sort-ValentiaDynamicParamHashTable
             #region dupricate check
             if ($position -notin $history)
             {
-                Write-Verbose ("position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", "))
+                ("position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", ")) | Write-ValentiaVerboseDebug
                 $history.Add($position)
             }
             else
@@ -280,17 +280,17 @@ function Sort-ValentiaDynamicParamHashTable
                 $changed = $false
                 while ($position -in $history)
                 {
-                    Write-Verbose ("position '{0}' found in '{1}'. Start increment." -f $position, ($history -join ", "))
+                    ("position '{0}' found in '{1}'. Start increment." -f $position, ($history -join ", ")) | Write-ValentiaVerboseDebug
                     $position++
                     $changed = $true
                 }
-                Write-Verbose (" incremented position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", "))
+                (" incremented position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", ")) | Write-ValentiaVerboseDebug
                 if ($changed){$history.Add($position)}
             }
             #endregion
 
             #region set temp hash
-            Write-Verbose ("Set position '{0}' as name of temp hash." -f $position)
+            ("Set position '{0}' as name of temp hash." -f $position) | Write-ValentiaVerboseDebug
             $hash."$position" = $_
             #endregion
         }{[PSCustomObject]$hash}

@@ -84,7 +84,7 @@ Add PowerShellRemoting-In accessible rule to Firewall.
     }
     else
     {
-        Write-Verbose "Windows PowerShell Remoting port TCP 5985 was alredy opened. Get Firewall Rule."
+        "Windows PowerShell Remoting port TCP 5985 was alredy opened. Get Firewall Rule." | Write-ValentiaVerboseDebug
         Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq 5985
     }
 
@@ -93,7 +93,7 @@ Add PowerShellRemoting-In accessible rule to Firewall.
         $japanesePSRemoteingEnableRule = "Windows リモート管理 (HTTP 受信)"
         if (-not((Get-NetFirewallRule | where DisplayName -eq $japanesePSRemoteingEnableRule | where Profile -eq "Any") -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort)))
         {
-            Write-Verbose ("日本語OSと検知しました。'{0}' という名称で TCP '{1}' をファイアウォールに許可します。" -f $japanesePSRemoteingEnableRule, 5985)
+            ("日本語OSと検知しました。'{0}' という名称で TCP '{1}' をファイアウォールに許可します。" -f $japanesePSRemoteingEnableRule, 5985) | Write-ValentiaVerboseDebug
             New-NetFirewallRule `
                 -Name $japanesePSRemoteingEnableRule `
                 -DisplayName $japanesePSRemoteingEnableRule `

@@ -30,7 +30,7 @@
     }
     else
     {
-        Write-Verbose ("Could not found configuration file '{0}'." -f $configPath)
+        ("Could not found configuration file '{0}'." -f $configPath) | Write-ValentiaVerboseDebug
     }
 
 }

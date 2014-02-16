@@ -94,7 +94,7 @@ Ping production-hoge.ps1 from deploy group branch path
         {
             $ping  = New-Object System.Net.NetworkInformation.Ping
 
-            Write-Verbose ("Execute SendPingAsync to host '{0}'." -f $hostNameOrAddress)
+            ("Execute SendPingAsync to host '{0}'." -f $hostNameOrAddress) | Write-ValentiaVerboseDebug
             $PingReply = $ping.SendPingAsync($hostNameOrAddress, $timeout, $buffer, $pingOptions)
 
             $task = [PSCustomObject]@{
@@ -107,7 +107,7 @@ Ping production-hoge.ps1 from deploy group branch path
 
     end
     {
-        Write-Verbose "WaitAll for Task PingReply have been completed."
+        "WaitAll for Task PingReply have been completed." | Write-ValentiaVerboseDebug
         [System.Threading.Tasks.Task]::WaitAll($tasks.Task)
         
         foreach ($task in $tasks)
@@ -129,10 +129,10 @@ Ping production-hoge.ps1 from deploy group branch path
                 $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
             }
 
-            Write-Debug "Dispose Ping Object"
+            "Dispose Ping Object" | Write-ValentiaVerboseDebug
             $task.Ping.Dispose()
             
-            Write-Debug "Dispose PingReply Object"
+            "Dispose PingReply Object" | Write-ValentiaVerboseDebug
             $task.Task.Dispose()
         }
     }

@@ -49,7 +49,7 @@ set as unlimited
     }
     else
     {
-        Write-Verbose ("Current value for MaxMemoryPerShellMB is {0}." -f $MaxMemoryPerShellMB)
+        ("Current value for MaxMemoryPerShellMB is {0}." -f $MaxMemoryPerShellMB) | Write-ValentiaVerboseDebug
         Get-ChildItem $MaxMemoryPerShellMBPath
     }
 }

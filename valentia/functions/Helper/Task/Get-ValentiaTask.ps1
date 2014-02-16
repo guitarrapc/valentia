@@ -71,7 +71,7 @@ Above example will create taskkey as lstest, run "Get-ChildItem c:\" when invoke
     }
     else
     {
-        Write-Verbose $valeWarningMessages.warn_set_taskkey
+        $valeWarningMessages.warn_set_taskkey | Write-ValentiaVerboseDebug
         $currentContext.tasks.$taskKey = $newTask
     }
 

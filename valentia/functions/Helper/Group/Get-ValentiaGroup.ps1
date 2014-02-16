@@ -61,14 +61,14 @@ read production-hoge.ps1 from c:\test.
 
         if ($DeployGroup.EndsWith($DeployExtension)) # if DeployGroup last letter = Extension is same as $DeployExtension
         {
-            Write-Verbose ("Creating Deploy Path with DeployFolder [{0}] and DeployGroup [{1}] ." -f $DeployFolder, $DeployGroup)
+            ("Creating Deploy Path with DeployFolder [{0}] and DeployGroup [{1}] ." -f $DeployFolder, $DeployGroup) | Write-ValentiaVerboseDebug
             $DeployGroupPath = Join-Path $DeployFolder $DeployGroup
 
-            Write-Verbose ("Check DeployGroupPath {0}" -f $DeployGroupPath)
+            ("Check DeployGroupPath {0}" -f $DeployGroupPath) | Write-ValentiaVerboseDebug
             if(Test-Path $DeployGroupPath)
             {
                 # Obtain IP only by selecting leter start from decimal
-                Write-Verbose ("Read DeployGroupPath {0} where letter not contain # inline." -f $DeployGroupPath)
+                ("Read DeployGroupPath {0} where letter not contain # inline." -f $DeployGroupPath) | Write-ValentiaVerboseDebug
                 return (Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern "\w" -Encoding $valentia.fileEncode).line
             }
             else
@@ -96,7 +96,7 @@ read production-hoge.ps1 from c:\test.
     
 
     # Get valentia.deployextension information
-    Write-Verbose ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension)
+    ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension) | Write-ValentiaVerboseDebug
     $DeployExtension = $valentia.deployextension
 
     switch ($DeployGroups.Length)
@@ -106,14 +106,14 @@ read production-hoge.ps1 from c:\test.
             # Parse DeplotGroup from [string[]] to [String]
             [string]$DeployGroup = $DeployGroups
 
-            Write-Verbose 'Read DeployGroup and return $DeployMemebers'
+            'Read DeployGroup and return $DeployMemebers' | Write-ValentiaVerboseDebug
             return Read-ValentiaGroup -DeployGroup $DeployGroup
         }
         # more than 2
-        default {Write-Verbose ("DeployGroups length default" -f $DeployGroups.Length)
+        default {("DeployGroups length default" -f $DeployGroups.Length) | Write-ValentiaVerboseDebug
             foreach ($DeployGroup in $DeployGroups)
             {
-                Write-Verbose 'Read DeployGroup and return $DeployMemebers'
+                'Read DeployGroup and return $DeployMemebers' | Write-ValentiaVerboseDebug
                 Read-ValentiaGroup -DeployGroup $DeployGroup
             }
         }

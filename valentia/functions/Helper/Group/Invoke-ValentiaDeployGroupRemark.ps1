@@ -58,11 +58,11 @@ replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^
             {
                 if ($overWrite)
                 {
-                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^$remarkIPAddress$" -replaceWith "#$remarkIPAddress" -encoding $encoding -overWrite -Verbose
+                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^$remarkIPAddress$" -replaceWith "#$remarkIPAddress" -encoding $encoding -overWrite
                 }
                 else
                 {
-                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^$remarkIPAddress$" -replaceWith "#$remarkIPAddress" -encoding $encoding -Verbose
+                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^$remarkIPAddress$" -replaceWith "#$remarkIPAddress" -encoding $encoding
                 }
             }
         }

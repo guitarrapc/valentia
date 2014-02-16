@@ -49,7 +49,7 @@ Created: 14/Feb/2014
         {
             try
             {
-                Write-Verbose ("Recieve ScriptBlock result from Job for '{0}'" -f $job.Location)
+                ("Recieve ScriptBlock result from Job for '{0}'" -f $job.Location) | Write-ValentiaVerboseDebug
                 $task.host = $job.Location
                 $task.result = Receive-Job -Job $job
             }
@@ -71,7 +71,7 @@ Created: 14/Feb/2014
                 $task.host = $null
                 $task.result = $null
 
-                Write-Verbose ("Removing Job ID '{0}'" -f $job.id)
+                ("Removing Job ID '{0}'" -f $job.id) | Write-ValentiaVerboseDebug
                 Remove-Job -Job $job -Force
             }
         }

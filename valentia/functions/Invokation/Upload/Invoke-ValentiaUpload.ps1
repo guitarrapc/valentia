@@ -119,11 +119,11 @@ upload files in target to Directory as Background Async job for hosts written in
         if ($PSBoundParameters['Verbose'])
         {
             # Import default Configurations
-            Write-Verbose $valeWarningMessages.warn_import_configuration
+            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
             Import-valentiaConfigration -Verbose
 
             # Import default Modules
-            Write-Verbose $valeWarningMessages.warn_import_modules
+            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
             Import-valentiaModules -Verbose
         }
         else
@@ -132,24 +132,8 @@ upload files in target to Directory as Background Async job for hosts written in
             Import-valentiaModules
         }
 
-
         # Log Setting
-        $LogPath = New-ValentiaLog
-
-
-        # Import Bits Transfer Module
-        try
-        {
-            Write-Verbose "Importing BitsTransfer Module to ready File Transfer."
-            Import-Module BitsTransfer
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            throw $_
-        }
-        
+        $LogPath = New-ValentiaLog     
 
         # Obtain Remote Login Credential
         try
@@ -165,18 +149,11 @@ upload files in target to Directory as Background Async job for hosts written in
 
 
         # Obtain DeployMember IP or Hosts for BITsTransfer
+        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
         $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        Write-Verbose ("Connecting to Target Computer : [{0}] `n" -f $DeployMembers)
-        
-        if ($DeployMembers.SuccessStatus -eq $false)
-        {
-            $SuccessStatus += $DeployMembers.SuccessStatus
-            $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
-        }        
-
 
         # Parse Network Destination Path
-        Write-Verbose ("Parsing Network Destination Path {0} as :\ should change to $." -f $DestinationFolder)
+        ("Parsing Network Destination Path {0} as :\ should change to $." -f $DestinationFolder) | Write-ValentiaVerboseDebug
         $DestinationPath = "$DestinationPath".Replace(":","$")
 
         # Show Stopwatch for Begin section
@@ -187,8 +164,7 @@ upload files in target to Directory as Background Async job for hosts written in
 
     ### Process
 
-
-        Write-Verbose ("Uploading {0} to Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers)
+        ("Uploading {0} to Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers) | Write-ValentiaVerboseDebug
 
         # Stopwatch
         [decimal]$DurationTotal = 0
@@ -196,13 +172,11 @@ upload files in target to Directory as Background Async job for hosts written in
         # Create PSSession  for each DeployMember
         foreach ($DeployMember in $DeployMembers)
         {
-            
             # Stopwatch
             $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
     
             # Set Destination
             $Destination = Join-Path "\\" $(Join-Path "$DeployMember" "$DestinationPath")
-
 
             if ($Directory)
             {
@@ -250,13 +224,9 @@ upload files in target to Directory as Background Async job for hosts written in
 
 
             # Show Start-BitsTransfer Parameter
-            Write-Verbose ("Uploading {0} to {1}." -f "$($SourceFiles.Name)", $Destination)
-            Write-Verbose ("SourcePath : {0}" -f $SourcePath)
-            Write-Verbose ("DeployMember : {0}" -f $DeployMembers)
+            Write-Warning ("[{0}]:Uploading {1} to {2}." -f $DeployMember,"$($SourceFiles.Name)", $Destination)
             Write-Verbose ("DestinationDeployFolder : {0}" -f $DeployFolder)
-            Write-Verbose ("DestinationPath : {0}" -f $Destination)
             Write-Verbose ("Aync Mode : {0}" -f $Async)
-
 
             if (Test-Path $SourcePath)
             {
@@ -265,11 +235,8 @@ upload files in target to Directory as Background Async job for hosts written in
                     switch ($true)
                     {
                         # Async Transfer
-                        $Async {
-                    
-                            Write-Verbose 'Command : Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload'
+                        $Async {                    
                             $ScriptToRun = "Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload"
-
                             try
                             {
                                 foreach ($SourceFile in $SourceFiles)
@@ -277,13 +244,11 @@ upload files in target to Directory as Background Async job for hosts written in
                                     try
                                     {
                                         # Run Job
-                                        Write-Verbose ("Running Async Job upload to {0}" -f $DeployMember)
+                                        ("Running Async Job upload to {0}" -f $DeployMember) | Write-ValentiaVerboseDebug
                                         $Job = Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload
 
                                         # Waiting for complete job
                                         $Sleepms = 10
-
-                                        Write-Verbose ("Current States was {0}" -f $Job.JobState)
                                     }
                                     catch
                                     {
@@ -300,13 +265,12 @@ upload files in target to Directory as Background Async job for hosts written in
                                 # Retrieving transfer status and monitor for transffered
                                 while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
                                 { 
-                                    Write-Verbose ("Current Job States was {0}, waiting for {1} ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
+                                    ("Current Job States was {0}, waiting for {1}ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count))) | Write-ValentiaVerboseDebug
                                     Sleep -Milliseconds $Sleepms
                                 }
 
                                 # Retrieve all files when completed
                                 Get-BitsTransfer | Complete-BitsTransfer
-
                             }
                             catch
                             {
@@ -331,7 +295,6 @@ upload files in target to Directory as Background Async job for hosts written in
                         }
                         # NOT Async Transfer
                         default {
-                            Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType' 
                             $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType"
 
                             try
@@ -341,7 +304,7 @@ upload files in target to Directory as Background Async job for hosts written in
                                     #Only start upload for file.
                                     if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                                     {
-                                        Write-Verbose ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination)
+                                        ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination) | Write-ValentiaVerboseDebug
                                         Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential
                                     }
                                 }
@@ -387,10 +350,6 @@ upload files in target to Directory as Background Async job for hosts written in
 
     ### End
 
-
-    Write-Verbose "All transfer with BitsTransfer had been removed."
-
-
     }
     catch
     {
@@ -402,16 +361,13 @@ upload files in target to Directory as Background Async job for hosts written in
     }
     finally
     {
-
         # Stopwatch
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
         "" | Out-Default
 
-
         # Get End Time
         $TimeEnd = (Get-Date).DateTime
-
 
         # obtain Result
         $CommandResult = [ordered]@{

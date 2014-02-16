@@ -49,7 +49,7 @@ allow all hosts as *
     }
     else
     {
-        Write-Verbose ("WinRM Trustedhosts was alredy enabled for {0}." -f $TrustedHosts)
+        ("WinRM Trustedhosts was alredy enabled for {0}." -f $TrustedHosts) | Write-ValentiaVerboseDebug
         Get-ChildItem $TrustedHostsPath
     }
 }

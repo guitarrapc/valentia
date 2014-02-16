@@ -80,15 +80,13 @@ Disable IEEnhanced security.
 
         if ($IsstatusChanged)
         {
-            Write-Verbose "IE Enhanced Security Configuration (ESC) has been disabled. Checking IE to stop process."
-
             # Stop Internet Exploer if launch
-            Write-Verbose "Checking iexplore process status and trying to kill if exist"
+            "IE Enhanced Security Configuration (ESC) has been disabled. Checking IE to stop process." | Write-ValentiaVerboseDebug
             Get-Process | where Name -eq "iexplore" | Stop-Process -Confirm
         }
         else
         {
-            Write-Verbose "IE Enhanced Security Configuration (ESC) had already been disabled. Nothing will do."
+            "IE Enhanced Security Configuration (ESC) had already been disabled. Nothing will do." | Write-ValentiaVerboseDebug
         }
     }
     else

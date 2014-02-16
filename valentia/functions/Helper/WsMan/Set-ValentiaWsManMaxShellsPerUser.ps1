@@ -49,7 +49,7 @@ set as 100
     }
     else
     {
-        Write-Verbose ("Current value for MaxShellsPerUser is {0}." -f $ShellsPerUser)
+        ("Current value for MaxShellsPerUser is {0}." -f $ShellsPerUser) | Write-ValentiaVerboseDebug
         Get-ChildItem $MaxShellsPerUserPath
     }
 }

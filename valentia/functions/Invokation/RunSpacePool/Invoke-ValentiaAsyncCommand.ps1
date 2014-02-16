@@ -95,11 +95,11 @@ Above example will concurrently running with 10 processes for each Computers.
         $ComputerName = @{ComputerName = $DeployMember}
 
         # Create PowerShell Instance
-        Write-Verbose "Creating PowerShell Instance"
+        "Creating PowerShell Instance" | Write-ValentiaVerboseDebug
         $Pipeline = [System.Management.Automation.PowerShell]::Create()
 
         # Add Script and Parameter arguments from Hashtables
-        Write-Verbose "Adding Script and Arguments Hastables to PowerShell Instance"
+        "Adding Script and Arguments Hastables to PowerShell Instance" | Write-ValentiaVerboseDebug
         Write-Verbose ('Add InvokeCommand Script : {0}'                          -f $InvokeCommand)
         Write-Verbose ("Add ScriptBlock Argument..... Keys : {0}, Values : {1}"  -f $($ScriptToRunHash.Keys)  , $($ScriptToRunHash.Values))
         Write-Verbose ("Add ComputerName Argument..... Keys : {0}, Values : {1}" -f $($ComputerName.Keys)     , $($ComputerName.Values))
@@ -108,11 +108,11 @@ Above example will concurrently running with 10 processes for each Computers.
         $Pipeline.AddScript($InvokeCommand).AddArgument($ScriptToRunHash).AddArgument($ComputerName).AddArgument($CredentialHash).AddArgument($TaskParameterHash) > $null
 
         # Add RunSpacePool to PowerShell Instance
-        Write-Verbose ("Adding Runspaces {0}" -f $RunspacePool)
+        ("Adding Runspaces {0}" -f $RunspacePool) | Write-ValentiaVerboseDebug
         $Pipeline.RunspacePool = $RunspacePool
 
         # Invoke PowerShell Command
-        Write-Verbose "Invoking PowerShell Instance"
+        "Invoking PowerShell Instance" | Write-ValentiaVerboseDebug
         $AsyncResult = $Pipeline.BeginInvoke() 
 
         # Get Result
@@ -125,7 +125,7 @@ Above example will concurrently running with 10 processes for each Computers.
         # Output AsyncCommand Result
         $Output.AsyncResult = $AsyncResult
     
-        Write-Verbose ("Output Result '{0}' and '{1}'" -f $Output.Pipeline, $Output.AsyncResult)
+        ("Output Result '{0}' and '{1}'" -f $Output.Pipeline, $Output.AsyncResult) | Write-ValentiaVerboseDebug
         return $Output
     }
     catch

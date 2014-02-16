@@ -51,28 +51,27 @@ show files in $valentia.Root\$valentia.BranchFolder.Application folder recursibl
         $recurse
      )
  
-    Write-Debug "Get valentia.deployextension information"
-    Write-Verbose ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension)
+    ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension) | Write-ValentiaVerboseDebug
     $DeployExtension = $valentia.deployextension
     
-    Write-Debug "Get Branch property name"
+    "Get Branch property name" | Write-ValentiaVerboseDebug
     $p = $valentia.BranchFolder | Get-Member -MemberType NoteProperty | select -ExpandProperty Name
     $valentiaBranchFolders = $p | %{ $valentia.BranchFolder.$_}
 
-    Write-Debug ("processing branches is exist or not for '{0}'" -f $Branches)
+    ("processing branches is exist or not for '{0}'" -f $Branches) | Write-ValentiaVerboseDebug
     foreach ($branch in $Branches)
     {
-        Write-Debug ("Checking '{0}' is include '{1}'" -f $branch, "$valentiaBranchFolders")
+        ("Checking '{0}' is include '{1}'" -f $branch, "$valentiaBranchFolders") | Write-ValentiaVerboseDebug
         if ($branch -in $valentiaBranchFolders)
         {
-            Write-Debug ("Checking '{0}' length" -f $branch)
+            ("Checking '{0}' length" -f $branch) | Write-ValentiaVerboseDebug
             if ($branch.Length -eq 0)
             {
                 throw '"$Branch" was Null or Empty, input BranchName.'
             }
             else
             {
-                Write-Debug ("Creating full path and resolving with '{0}' and '1'" -f $valentia.RootPath, $valentia.BranchFolder.$Branch)
+                ("Creating full path and resolving with '{0}' and '1'" -f $valentia.RootPath, $valentia.BranchFolder.$Branch) | Write-ValentiaVerboseDebug
                 $BranchFolder = Join-Path $valentia.RootPath $valentia.BranchFolder.$Branch -Resolve
 
                 # show items

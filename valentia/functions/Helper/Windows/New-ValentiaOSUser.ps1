@@ -134,18 +134,19 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
     process
     {
         
-        Write-Verbose "Checking type of users variables to retrieve property"
+        "Checking type of users variables to retrieve property" | Write-ValentiaVerboseDebug
         if ($Users -is [System.Management.Automation.PSCustomObject])
         {
-            Write-Verbose ("Get properties for Parameter '{0}'." -f $Users)
+            ("Get properties for Parameter '{0}'." -f $Users) | Write-ValentiaVerboseDebug
             $pname = $Users | Get-Member -MemberType Properties | ForEach-Object{ $_.Name }
 
-            Write-Verbose ("Loop each Users in {0}" -f $Users)
-            foreach ($p in $pname){
+            ("Foreach each Users in {0}" -f $Users) | Write-ValentiaVerboseDebug
+            foreach ($p in $pname)
+            {
                 if ($users.$p -notin $ExistingUsers.Name)
                 {
                     # Create User
-                    Write-Verbose ("{0} not exist, start creating user." -f $Users.$p)
+                    ("{0} not exist, start creating user." -f $Users.$p) | Write-ValentiaVerboseDebug
                     $newuser = $DirectoryComputer.Create("user", $Users.$p)
                     $newuser.SetPassword([System.Runtime.InteropServices.marshal]::PtrToStringAuto([System.Runtime.InteropServices.marshal]::SecureStringToBSTR($SecretPassword)))
                     $newuser.SetInfo()
@@ -154,33 +155,33 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
                     $userFlags = $newuser.Get("UserFlags")
 
                     #UserFlag for password (ex. infinity & No change Password)
-                    Write-Verbose "Define user flag to define account"
+                    "Define user flag to define account" | Write-ValentiaVerboseDebug
                     $userFlags = $userFlags -bor 0X10040
 
-                    Write-Verbose "Put user flag to define account"
+                    "Put user flag to define account" | Write-ValentiaVerboseDebug
                     $newuser.Put("UserFlags", $userFlags)
 
-                    Write-Verbose "Set user flag to define account"
+                    "Set user flag to define account" | Write-ValentiaVerboseDebug
                     $newuser.SetInfo()
 
                     #Assign Group for this user
-                    Write-Verbose ("Assign User to UserGroup {0}" -f $UserGroup)
+                    ("Assign User to UserGroup {0}" -f $UserGroup) | Write-ValentiaVerboseDebug
                     $DirectoryGroup = $DirectoryComputer.GetObject("group", $Group)
                     $DirectoryGroup.Add("WinNT://" + $HostPC + "/" + $Users.$p)
                 }
                 else
                 {
-                    Write-Verbose ("UserName {0} already exist. Nothing had changed." -f $Users.$p)
+                    ("UserName {0} already exist. Nothing had changed." -f $Users.$p) | Write-ValentiaVerboseDebug
                 }
             }
         }
         elseif($Users -is [System.String])
         {
-            Write-Verbose ("Execute with only a user defined in {0}" -f $users)
+            ("Execute with only a user defined in {0}" -f $users) | Write-ValentiaVerboseDebug
             if ($users -notin $ExistingUsers.Name)
             {
                 # Create User
-                Write-Verbose ("{0} not exist, start creating user." -f $users)
+                ("{0} not exist, start creating user." -f $users) | Write-ValentiaVerboseDebug
                 $newuser = $DirectoryComputer.Create("user", $Users)
                 $newuser.SetPassword([System.Runtime.InteropServices.marshal]::PtrToStringAuto([System.Runtime.InteropServices.marshal]::SecureStringToBSTR($SecretPassword)))
                 $newuser.SetInfo()
@@ -189,17 +190,17 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
                 $userFlags = $newuser.Get("UserFlags")
 
                 #UserFlag for password (ex. infinity & No change Password)
-                Write-Verbose "Define user flag to define account"
+                "Define user flag to define account" | Write-ValentiaVerboseDebug
                 $userFlags = $userFlags -bor 0X10040
 
-                Write-Verbose "Put user flag to define account"
+                "Put user flag to define account" | Write-ValentiaVerboseDebug
                 $newuser.Put("UserFlags", $userFlags)
 
-                Write-Verbose "Set user flag to define account"
+                "Set user flag to define account" | Write-ValentiaVerboseDebug
                 $newuser.SetInfo()
 
                 #Assign Group for this user
-                Write-Verbose ("Assign User to UserGroup {0}" -f $UserGroup)
+                ("Assign User to UserGroup {0}" -f $UserGroup) | Write-ValentiaVerboseDebug
                 $DirectoryGroup = $DirectoryComputer.GetObject("group", $Group)
                 $DirectoryGroup.Add("WinNT://" + $HostPC + "/" + $Users)
             }
@@ -208,9 +209,5 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
         {
             throw ("Users must passed as string or custom define in {0}" -f $valentia.defaultconfigurationfile)
         }
-    }
-
-    end
-    {
     }
 }

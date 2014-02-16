@@ -98,7 +98,6 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
     try
     {
 
-
     ### Begin
 
         $ErrorActionPreference = $valentia.errorPreference
@@ -113,16 +112,15 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
         # Get Start Time
         $TimeStart = (Get-Date).DateTime
 
-
         # Import default Configurations & Modules
         if ($PSBoundParameters['Verbose'])
         {
             # Import default Configurations
-            Write-Verbose $valeWarningMessages.warn_import_configuration
+            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
             Import-valentiaConfigration -Verbose
 
             # Import default Modules
-            Write-Verbose $valeWarningMessages.warn_import_modules
+            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
             Import-valentiaModules -Verbose
         }
         else
@@ -130,26 +128,10 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
             Import-valentiaConfigration
             Import-valentiaModules
         }
-
-
+        
         # Log Setting
         $LogPath = New-ValentiaLog
-
-
-        # Import Bits Transfer Module
-        try
-        {
-            Write-Verbose "Importing BitsTransfer Module to ready File Transfer."
-            Import-Module BitsTransfer
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            throw $_
-        }
         
-
         # Obtain Remote Login Credential
         try
         {
@@ -161,21 +143,19 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
             Write-Error $_
             $SuccessStatus += $false
         }
-
-
+        
         # Obtain DeployMember IP or Hosts for BITsTransfer
+        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
         $DeployMembers = Get-ValentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        Write-Verbose (" Connecting to Target Computer : [{0}] `n" -f $DeployMembers)
         
         if ($DeployMembers.SuccessStatus -eq $false)
         {
             $SuccessStatus += $DeployMembers.SuccessStatus
             $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
         }        
-
-
+        
         # Parse Network Source
-        Write-Verbose ("Parsing Network SourcePath {0} as :\ should change to $." -f $SourcrePath)
+        ("Parsing Network SourcePath {0} as :\ should change to $." -f $SourcrePath) | Write-ValentiaVerboseDebug
         $SourcePath = "$SourcePath".Replace(":","$")
 
 
@@ -183,12 +163,10 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
         ""
-
-
+        
     ### Process
-
-
-        Write-Verbose ("Downloading {0} from Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers)
+    
+        ("Downloading {0} from Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers) | Write-ValentiaVerboseDebug
 
         # Stopwatch
         [decimal]$DurationTotal = 0
@@ -204,7 +182,6 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
 
             if (Test-Path $Source)
             {
-
                 if ($Directory)
                 {
                     # Set Source files in source
@@ -275,7 +252,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                 if ($force)
                 {
                     # Show Start-BitsTransfer Parameter
-                    Write-Verbose ("Downloading {0} from {1}." -f $SourceFiles, $DeployMember)
+                    ("Downloading {0} from {1}." -f $SourceFiles, $DeployMember) | Write-ValentiaVerboseDebug
                     Write-Verbose ("DeployFolder : {0}" -f $DeployFolder)
                     Write-Verbose ("DeployMembers : {0}" -f $DeployMembers)
                     Write-Verbose ("DeployMember : {0}" -f $DeployMember)
@@ -284,18 +261,18 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                     Write-Verbose "Aync Mode : You cannot use Async switch with force"
 
                     # Get Cimsession for target Computer
-                    Write-Verbose 'cim : New-CimSession -Credential $Credential -ComputerName $DeployMember'
+                    "cim : New-CimSession to the ComputerName '{0}'" -f $DeployMember | Write-ValentiaVerboseDebug
                     $cim = New-CimSession -Credential $Credential -ComputerName $DeployMember
                         
                     # Create SMB Mapping to target parent directory
                     if ($Directory)
                     {
-                        Write-Verbose "Directory switch Selected"
+                        "Directory switch Selected" | Write-ValentiaVerboseDebug
                         $smbRemotePath = (Get-Item $Source).FullName
                     }
                     elseif ($file)
                     {
-                        Write-Verbose "File switch Selected"
+                        "File switch Selected" | Write-ValentiaVerboseDebug
                         $smbRemotePath = (Get-Item $source).DirectoryName
                     }
 
@@ -307,10 +284,8 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                         {
                             if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
                             {
-                                Write-Verbose 'Command : Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force '
-                                $ScriptToRun = "Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force"
-
                                 Write-Warning ("Downloading {0} from {1} to {2}" -f ($SourceFile).fullname, $DeployMember, $Destination)
+                                $ScriptToRun = "Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force"
                                 Copy-Item -Path $(($SourceFile).fullname) -Destination $Destination -Force
                             }
                         }
@@ -333,16 +308,14 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                 }
                 else # Not Force Swtich
                 {
-
                     # Show Start-BitsTransfer Parameter
-                    Write-Verbose ("Downloading {0} from {1}." -f $SourceFiles, $DeployMember)
+                    ("Downloading {0} from {1}." -f $SourceFiles, $DeployMember) | Write-ValentiaVerboseDebug
                     Write-Verbose ("DeployFolder : {0}" -f $DeployFolder)
                     Write-Verbose ("DeployMembers : {0}" -f $DeployMembers)
                     Write-Verbose ("DeployMember : {0}" -f $DeployMember)
                     Write-Verbose ("Source : {0}" -f $Source)
                     Write-Verbose ("Destination : {0}" -f $Destination)
                     Write-Verbose ("Aync Mode : {0}" -f $Async)
-
 
                     # Running Bits Transfer, switch with $Async and no $Async
                     try
@@ -351,12 +324,9 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                         {
                             # Async Transfer
                             $Async {
-                    
-                                Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download'
-                                $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download"
-
                                 try
                                 {
+                                    $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Download"
                                     foreach($SourceFile in $SourceFiles)
                                     {
                                         try
@@ -371,7 +341,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                                                 # Waiting for complete job
                                                 $Sleepms = 10
 
-                                                Write-Warning ("Current States was {0}" -f $Job.JobState)
+                                                "Current States was {0}" -f $Job.JobState | Write-ValentiaVerboseDebug
                                             }
                                         }
                                         catch
@@ -388,13 +358,12 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                                     $Sleepms = 10
                                     while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
                                     { 
-                                        Write-Warning ("Current Job States was {0}, waiting for {1} ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)))
+                                        "Current Job States was {0}, waiting for {1} ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count)) | Write-ValentiaVerboseDebug
                                         Sleep -Milliseconds $Sleepms
                                     }
 
                                     # Retrieve all files when completed
                                     Get-BitsTransfer | Complete-BitsTransfer
-
                                 }
                                 catch
                                 {
@@ -406,7 +375,6 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                                 }
                                 finally
                                 {
-
                                     # Delete all not compelte job
                                     Get-BitsTransfer | Remove-BitsTransfer
 
@@ -420,12 +388,9 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
                             }
                             default {
                                 # NOT Async Transfer
-                                Write-Verbose 'Command : Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download' 
-                                $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download"
-
-                                # Run Download
                                 try
                                 {
+                                    $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType Download"
                                     foreach($SourceFile in $SourceFiles)
                                     {
                                         #Only start download for file.

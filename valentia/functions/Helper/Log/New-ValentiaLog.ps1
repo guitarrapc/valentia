@@ -51,13 +51,13 @@ As New-ValentiaLog have default value in parameter, you do not required to speci
 
     if (-not(Test-Path $LogFolder))
     {
-        Write-Verbose ("LogFolder not found creating {0}" -f $LogFolder)
+        ("LogFolder not found creating {0}" -f $LogFolder) | Write-ValentiaVerboseDebug
         New-Item -Path $LogFolder -ItemType Directory > $null
     }
 
     try
     {
-        Write-Verbose "Defining LogFile full path."
+        "Defining LogFile full path." | Write-ValentiaVerboseDebug
         $LogPath = Join-Path $LogFolder $LogFile
         return $LogPath
     }

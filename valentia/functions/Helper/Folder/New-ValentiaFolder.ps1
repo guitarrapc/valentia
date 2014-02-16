@@ -53,13 +53,13 @@ create as default
         # Create Fullpath String
         if ($BranchFolder.Length -eq 0)
         {
-            Write-Verbose "BranchFolder detected as empty. using $($valentia.BranchFolder) for BranchFolder name"
+            "BranchFolder detected as empty. using $($valentia.BranchFolder) for BranchFolder name" | Write-ValentiaVerboseDebug
             $pname = $valentia.BranchFolder | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name
             $DeployFolders = $pname | %{Join-Path $RootPath $_}
         }
         else
         {
-            Write-Verbose ("BranchFolder detected as {0}" -f $BranchFolder)
+            ("BranchFolder detected as {0}" -f $BranchFolder) | Write-ValentiaVerboseDebug
             $DeployFolders = $BranchFolder | %{Join-Path $RootPath $_}
         }
     }
@@ -71,24 +71,24 @@ create as default
         {
             if(!(Test-Path $DeployFolder))
             {
-                Write-Verbose ("{0} not exist, creating {1}." -f $DeployFolder, $DeployFolder)
+                ("{0} not exist, creating {1}." -f $DeployFolder, $DeployFolder) | Write-ValentiaVerboseDebug
                 New-Item -Path $DeployFolder -ItemType directory -Force > $null
             }
             else
             {
-                Write-Verbose ("{0} already exist, skip create {1}." -f $DeployFolder, $DeployFolder)
+                ("{0} already exist, skip create {1}." -f $DeployFolder, $DeployFolder) | Write-ValentiaVerboseDebug
             }
         }
 
         # Check Log Folder and create if not exist 
         if(!(Test-Path $LogFolder))
         {
-            Write-Verbose ("{0} not exist, creating {1}." -f $LogFolder, $LogFolder)
+            ("{0} not exist, creating {1}." -f $LogFolder, $LogFolder) | Write-ValentiaVerboseDebug
             New-Item -Path $LogFolder -ItemType directory -Force > $null
         }
         else
         {
-            Write-Verbose ("{0} already exist, skip create {1}." -f $LogFolder, $LogFolder)
+            ("{0} already exist, skip create {1}." -f $LogFolder, $LogFolder) | Write-ValentiaVerboseDebug
         }
 
     }

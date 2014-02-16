@@ -120,11 +120,11 @@ You can prepare script file to run, and specify path.
         $TimeStart = (Get-Date).DateTime
 
         # Import default Configurations
-        Write-Verbose $valeWarningMessages.warn_import_configuration
+        $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
         Import-valentiaConfigration
 
         # Import default Modules
-        Write-Verbose $valeWarningMessages.warn_import_modules
+        $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
         Import-valentiaModules
 
         # Log Setting
@@ -135,7 +135,7 @@ You can prepare script file to run, and specify path.
         {
             {$ScriptBlock} {
                 # Assign ScriptBlock to run
-                Write-Verbose ("ScriptBlock parameter [ {0} ] was selected." -f $ScriptBlock)
+                ("ScriptBlock parameter [ {0} ] was selected." -f $ScriptBlock) | Write-ValentiaVerboseDebug
                 $taskkey = Task -name ScriptBlock -action $ScriptBlock
 
                 # Read Current Context
@@ -160,7 +160,7 @@ You can prepare script file to run, and specify path.
                 }
                 
                 # Read Task File and get Action to run
-                Write-Verbose ("TaskFileName parameter '{0}' was selected." -f $TaskFileName)
+                ("TaskFileName parameter '{0}' was selected." -f $TaskFileName) | Write-ValentiaVerboseDebug
 
                 # run Task $TaskFileName inside functions and obtain scriptblock written in.
                 $taskkey = & $TaskFileName
@@ -187,7 +187,7 @@ You can prepare script file to run, and specify path.
         # Cleanup previous Job before start
         if ((Get-Job).count -gt 0)
         {
-            Write-Verbose "Clean up previous Job"
+            "Clean up previous Job" | Write-ValentiaVerboseDebug
             Get-Job | Remove-Job -Force -Verbose:$VerbosePreference
         }
 
@@ -205,13 +205,8 @@ You can prepare script file to run, and specify path.
         }
 
         # Obtain DeployMember IP or Hosts for deploy
-        Write-Verbose "Get hostaddresses to connect."
+        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
         $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        if ($DeployMembers.SuccessStatus -eq $false)
-        {
-            $SuccessStatus += $DeployMembers.SuccessStatus
-            $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
-        }
 
         # Show Stopwatch for Begin section
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalstopwatchSession.Elapsed.TotalSeconds)
@@ -240,10 +235,9 @@ You can prepare script file to run, and specify path.
             $SuccessStatus += $_.SuccessStatus                     # Get success or error
             if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
 
-            # Output to host
             if(!$quiet)
             {
-                # Output to host
+                "Show result for host '{0}'" -f $_.host | Write-ValentiaVerboseDebug
                 $_.result
             }
         }

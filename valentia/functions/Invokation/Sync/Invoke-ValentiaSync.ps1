@@ -99,11 +99,11 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
         if ($PSBoundParameters['Verbose'])
         {
             # Import default Configurations
-            Write-Verbose $valeWarningMessages.warn_import_configuration
+            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
             Import-valentiaConfigration -Verbose
 
             # Import default Modules
-            Write-Verbose $valeWarningMessages.warn_import_modules
+            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
             Import-valentiaModules -Verbose
         }
         else
@@ -128,28 +128,17 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             Write-Error $_
             $SuccessStatus += $false
         }
-
     
         # Check FastCopy.exe path
-        Write-Verbose "Checking FastCopy Folder is exist or not."
+        "Checking FastCopy Folder is exist or not." | Write-ValentiaVerboseDebug
         if (-not(Test-Path $FastCopyFolder))
         {
             New-Item -Path $FastCopyFolder -ItemType Directory
         }
 
         # Set FastCopy.exe path
-        try
-        {
-            Write-Verbose "Set FastCopy.exe path."
-            $FastCopy = Join-Path $FastCopyFolder $FastcopyExe
-        }
-        catch
-        {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += "$FastCopyFolder or $FastcopyExe not found exceptions! Please set $FastCopy under $FastCopyFolder "
-            throw "{0} or {1} not found exceptions! Please set {2} under {3}" -f $FastCopyFolder, $FastcopyExe, $FastCopy, $FastCopyFolder
-        }
-
+        Write-Verbose "Set FastCopy.exe path."
+        $FastCopy = Join-Path $FastCopyFolder $FastcopyExe
 
         # Check SourceFolder Exist or not
         if (-not(Test-Path $SourceFolder))
@@ -158,24 +147,14 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             $ErrorMessageDetail += "SourceFolder [ $SourceFolder ] not found exeptions! exit job."
             throw "SourceFolder [ {0} ] not found exeptions! exit job." -f $SourceFolder
         }
-                
 
         # Obtain DeployMember IP or Hosts for FastCopy
+        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
         $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-        Write-Verbose ("Connecting to Target Computer : [{0}] `n" -f $DeployMembers)
         
-
-        if ($DeployMembers.SuccessStatus -eq $false)
-        {
-            $SuccessStatus += $DeployMembers.SuccessStatus
-            $ErrorMessageDetail += $DeployMembers.ErrorMessageDetail
-        }        
-
-
         # Parse Network Destination Path
-        Write-Verbose ("Parsing Network Destination Path {0} as :\ should change to $." -f $DestinationFolder)
+        ("Parsing Network Destination Path {0} as :\ should change to $." -f $DestinationFolder) | Write-ValentiaVerboseDebug
         $DestinationPath = "$DestinationFolder".Replace(":","$")
-
 
         # Safety exit for root drive
         if ($SourceFolder.Length -ge 3)
@@ -191,27 +170,22 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             }
         }
 
-
         # Show Stopwatch for Begin section
         $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
         ""
 
-
     ### Process
 
-
-        Write-Verbose (" Syncing {0} to Target Computer : [{1}] {2} `n" -f $SourceFolder, $DeployMembers, $DestinationFolder)
-
-        # Create PSSession  for each DeployMember
         Write-Warning "Starting Sync Below files"
+        Write-Verbose (" Syncing {0} to Target Computer : [{1}] {2} `n" -f $SourceFolder, $DeployMembers, $DestinationFolder)
         (Get-ChildItem $SourceFolder).FullName
 
         # Stopwatch
         [decimal]$DurationTotal = 0
 
-        foreach ($DeployMember in $DeployMembers){
-            
+        foreach ($DeployMember in $DeployMembers)
+        {
             # Stopwatch
             $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -222,55 +196,41 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             $FastCopyArgument = "/cmd=sync /bufsize=512 /speed=full /wipe_del=FALSE /acl /stream /reparse /force_close /estimate /error_stop=FALSE /log=True /logfile=""$LogPath"" ""$SourceFolder"" /to=""$Destination"""
 
             # Run FastCopy
-            Write-Verbose ("Uploading {0} to {1}." -f $SourceFolder, $Destination)
-            Write-Verbose ("SourceFolder : {0}" -f $SourceFolder)
-            Write-Verbose ("DeployMember : {0}" -f $DeployMember)
-            Write-Verbose ("DestinationPath : {0}" -f $Destination)
+            Write-Warning ("[{0}]:Uploading {1} to {2}." -f $DeployMember ,$SourceFolder, $Destination)
             Write-Verbose ("FastCopy : {0}" -f $FastCopy)
             Write-Verbose ("FastCopyArgument : {0}" -f $FastCopyArgument)
 
-            
-            if(Test-Connection $DeployMember -Count 1 -Quiet)
+            if (Ping-ValentiaGroupAsync -HostNameOrAddresses $DeployMember)
             {
                 try
                 {
-                    Write-Warning ("running command to DeployMember: {0}" -f $DeployMember)
-                    Write-Verbose 'Command : Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -PassThru -Credential $Credential'
+                    'Command : Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -PassThru -Credential $Credential' | Write-ValentiaVerboseDebug
                     $Result = Start-Process $FastCopy -ArgumentList $FastCopyArgument -Wait -PassThru -Credential $Credential
                 }
                 catch
                 {
                     Write-Error $_
-
-                    # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
                     $SuccessStatus += $false
                     $ErrorMessageDetail += $_ 
-
                 }
             }
             else
             {
-                    Write-Error ("Target Host {0} unreachable. Check DeployGroup file [ {1} ] again" -f $DeployMember, $DeployGroups)
-
-                    # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
-                    $SuccessStatus += $false
-                    $ErrorMessageDetail += ("Target Host {0} unreachable. Check DeployGroup file [ {1} ] again" -f $DeployMember, $DeployGroups)
+                Write-Error ("Target Host {0} unreachable. Check DeployGroup file [ {1} ] again" -f $DeployMember, $DeployGroups)
+                $SuccessStatus += $false
+                $ErrorMessageDetail += ("Target Host {0} unreachable. Check DeployGroup file [ {1} ] again" -f $DeployMember, $DeployGroups)
             }
-
 
             # Stopwatch
             $Duration = $stopwatchSession.Elapsed.TotalSeconds
             Write-Verbose ("Session duration Second : {0}" -f $Duration)
             ""
             $DurationTotal += $Duration
-
         }
 
-
     ### End
-
    
-        Write-Verbose "All Sync job complete."
+        "All Sync job complete." | Write-ValentiaVerboseDebug
         if (Test-Path $LogPath)
         {
             if (-not((Select-String -Path $LogPath -Pattern "No Errors").count -ge $DeployMembers.count))
@@ -287,25 +247,23 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             Write-Error ("None of the host was reachable with ping with DestinationFolder [ {0} ]" -f $DestinationFolder)
         }
 
-
     }
+
     catch
     {
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
         throw $_
     }
+
     finally
     {    
-
         # Show Stopwatch for Total section
         $TotalDuration += $TotalstopwatchSession.Elapsed.TotalSeconds
         Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
 
-
         # Get End Time
         $TimeEnd = (Get-Date).DateTime
-
 
         # obtain Result
         $CommandResult = [ordered]@{

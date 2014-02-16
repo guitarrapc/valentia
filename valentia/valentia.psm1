@@ -397,9 +397,9 @@ New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 # grab functions from files
 
 Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
-    | where { -not ($_.FullName.Contains(".Tests.")) } `
-    | where Extension -eq ".ps1" `
-    | % {. $_.FullName}
+| where { -not ($_.FullName.Contains(".Tests.")) } `
+| where Extension -eq ".ps1" `
+| % {. $_.FullName}
 
 #-- Loading Internal Function when loaded --#
 
