@@ -35,6 +35,15 @@ public class AsyncPipeline
 }
 '@
 
+#-- PublicEnum for CredRead/Write Type --#
+Add-Type -TypeDefinition @"
+    public enum WindowsCredentialManagerType
+    {
+        Generic           = 1,
+        DomainPassword    = 2,
+        DomainCertificate = 3
+    }
+"@
 
 #-- Public Loading Module Custom Configuration Functions --#
 
@@ -231,6 +240,7 @@ $valentia.name                          = "valentia"                          # 
 $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
 $valentia.helpersPath                   = "\functions\*"
 $valentia.defaultconfigurationfile      = "\config\valentia-config.ps1"       # default configuration file name within valentia.psm1
+$valentia.cSharpPath                    = "\cs\"
 $valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
 $valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]"utf8"
 $valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
@@ -385,8 +395,8 @@ New-Alias -Name Clean            -Value Invoke-ValentiaClean
 New-Alias -Name Target           -Value Get-ValentiaGroup
 New-Alias -Name PingAsync        -Value Ping-ValentiaGroupAsync
 New-Alias -Name Sed              -Value Invoke-ValentiaSed
-New-Alias -Name ipremark         -Value Invoke-valentiaDeployGroupRemark
-New-Alias -Name ipunremark       -Value Invoke-valentiaDeployGroupUnremark
+New-Alias -Name IPRemark         -Value Invoke-valentiaDeployGroupRemark
+New-Alias -Name IPUnremark       -Value Invoke-valentiaDeployGroupUnremark
 New-Alias -Name Cred             -Value Get-ValentiaCredential
 New-Alias -Name Rename           -Value Set-ValentiaHostName
 New-Alias -Name DynamicParameter -Value New-ValentiaDynamicParamMulti

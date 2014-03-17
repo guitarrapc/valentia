@@ -135,7 +135,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
         # Obtain Remote Login Credential
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
             $SuccessStatus += $true
         }
         catch

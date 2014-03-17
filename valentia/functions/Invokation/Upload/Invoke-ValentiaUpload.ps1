@@ -138,7 +138,7 @@ upload files in target to Directory as Background Async job for hosts written in
         # Obtain Remote Login Credential
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
             $SuccessStatus += $true
         }
         catch

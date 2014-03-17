@@ -120,7 +120,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
         # Obtain Remote Login Credential
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
             $SuccessStatus += $true
         }
         catch

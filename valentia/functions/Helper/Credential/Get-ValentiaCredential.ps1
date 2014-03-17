@@ -1,86 +1,55 @@
 ﻿#Requires -Version 3.0
 
-#-- PSRemoting Connect Credential Module Functions --#
-
-# cred
 function Get-ValentiaCredential
 {
-
-<#
-
-.SYNOPSIS 
-Get Secure String of Deployment User / Password
-
-.DESCRIPTION
-Decript password file and set as PSCredential.
-
-.NOTES
-Author: guitarrapc
-Created: 18/Jul/2013
-
-.EXAMPLE
-Get-ValentiaCredential
---------------------------------------------
-This will get credential with default deploy user specified config as $valentia.users.DeployUser. Make sure credential was already created by New-ValentiaCredential.
-
-#>
-
     [CmdletBinding()]
     param
     (
         [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Enter user and Password.")]
+            mandatory = 0,
+            position = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]
-        $User = $valentia.users.DeployUser,
+        $TargetName = $valentia.name,
 
         [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Enter Secure string saved path.")]
-        [string]
-        $BinFolder = (Join-Path $Script:valentia.RootPath $($valentia.BranchFolder).Bin)
+            mandatory = 0,
+            position = 1)]
+        [ValidateNotNullOrEmpty()]
+        [WindowsCredentialManagerType]
+        $Type = [WindowsCredentialManagerType]::Generic
     )
+ 
+    $private:ErrorActionPreference = $valentia.errorPreference
 
-    begin
-    {
-        $ErrorActionPreference = $valentia.errorPreference
+    $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+    $private:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
+    $private:sig = Get-Content -Path $CredReadCS -Raw
 
-        if([string]::IsNullOrEmpty($User))
-        {
-            throw '"$User" was "", input User.'
-        }
+    $private:addType = @{
+        MemberDefinition = $sig
+        Namespace        = "Advapi32"
+        Name             = "Util"
+    }
+    Add-ValentiaTypeMemberDefinition @addType -PassThru `
+    | select -First 1 `
+    | %{
+        $private:typeQualifiedName = $_.AssemblyQualifiedName
+        $private:typeFullName = $_.FullName
     }
 
-    process
+    $private:nCredPtr= New-Object IntPtr
+    if ([System.Type]::GetType($typeQualifiedName)::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
     {
-
-        # Set Credential save path        
-        $currentuser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-        $replaceuser = $currentuser.Replace("\","_")
-        $credFolder = Join-Path $BinFolder $replaceuser
-
-        # check credential save path exist or not
-        if (-not(Test-Path $credFolder))
-        {
-            New-Item -ItemType Directory -Path $BinFolder -Name $replaceuser -Force
-        }
-
-        # Set CredPath with current Username
-        $credPath = Join-Path $credFolder "$User.pass"
-
-        if (Test-Path $CredPath)
-        {
-            $credPassword = Get-Content -Path $credPath | ConvertTo-SecureString
-
-            Write-Verbose ("Obtain credential for User [ {0} ] from {1} " -f $User, $credPath)
-            $credential = New-Object System.Management.Automation.PSCredential $User,$credPassword                
-        }
+        $private:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
+        $private:cred = $critCred.GetCredential()
+        $private:username = $cred.UserName
+        $private:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
+        $cred = $null
+        return New-Object System.Management.Automation.PSCredential $username, $securePassword
     }
-    
-    end
+    else
     {
-        $credential
+        Write-Verbose ("No credentials found in Windows Credential Manager for TargetName: '{0}' with Type '{1}'" -f $TargetName, $Type)
     }
 }

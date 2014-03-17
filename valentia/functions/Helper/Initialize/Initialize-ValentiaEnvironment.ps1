@@ -228,7 +228,7 @@ read production-hoge.ps1 from c:\test.
             else
             {
                 "Create Deploy user credential .pass" | Write-ValentiaVerboseDebug
-                New-ValentiaCredential
+                Set-ValentiaCredential
             }
         }
         

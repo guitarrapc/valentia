@@ -34,12 +34,14 @@
     <Compile Include="example\Deployment\Deploygroup\localhost.ps1" />
     <Compile Include="example\Deployment\Upload\test.csv" />
     <Compile Include="example\Deployment\Upload\test.txt" />
+    <Compile Include="functions\Helper\Credential\Add-ValentiaTypeMemberDefinition.ps1" />
+    <Compile Include="functions\Helper\Credential\Get-ValentiaCredential.ps1" />
+    <Compile Include="functions\Helper\Credential\Set-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\Task\Get-ValentiaTask.ps1" />
     <Compile Include="functions\Helper\Task\ConvertTo-ValentiaTask.ps1" />
     <Compile Include="functions\Helper\Windows\Disable-ValentiaEnhancedIESecutiry.ps1" />
     <Compile Include="functions\Helper\Config\Edit-ValentiaConfig.ps1" />
     <Compile Include="functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
-    <Compile Include="functions\Helper\Credential\Get-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" />
     <Compile Include="functions\Helper\Group\Get-ValentiaGroup.ps1" />
     <Compile Include="functions\Helper\Windows\Get-ValentiaRebootRequiredStatus.ps1" />
@@ -58,7 +60,6 @@
     <Compile Include="functions\Invokation\Sync\Invoke-ValentiaSync.ps1" />
     <Compile Include="functions\Invokation\Upload\Invoke-ValentiaUpload.ps1" />
     <Compile Include="functions\Invokation\Upload\Invoke-ValentiaUploadList.ps1" />
-    <Compile Include="functions\Helper\Credential\New-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1" />
     <Compile Include="functions\Helper\Folder\New-ValentiaFolder.ps1" />
     <Compile Include="functions\Helper\Group\New-ValentiaGroup.ps1" />

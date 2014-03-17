@@ -189,7 +189,7 @@ You can prepare script file to run, and specify path.
         # Obtain Remote Login Credential (No need if clients are same user/pass)
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
             $SuccessStatus += $true
         }
         catch

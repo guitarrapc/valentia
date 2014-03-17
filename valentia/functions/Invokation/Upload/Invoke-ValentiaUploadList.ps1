@@ -117,7 +117,7 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
         # Obtain Remote Login Credential
         try
         {
-            $Credential = Get-ValentiaCredential
+            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
             $SuccessStatus += $true
         }
         catch
