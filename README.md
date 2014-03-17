@@ -9,14 +9,20 @@ Valentia inspired from [capistrano](https://github.com/capistrano/capistrano) an
 
 # Latest Change
 
-- version : 0.3.6
+- version : 0.3.7
 	
 	[ author : guitarrapc ]
 	
-	[ Feb 13, 2013 ]
+	[ Mar 17, 2014 ]
 	
-	* fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.
-
+	* fix number of maxRunSpacePool. Now Concurrency is more efficient than previous release.
+	* Added -quiet switch to Ping-ValentiaGroup function. You can suppress host display with this switch.
+	* Added Set-ValentiaWSManMaxProcessesPerShell for Initialize-ValentiaEnvironment. Now more number of process will run.
+	* Added Set-ValentiaCredential. This will store your credential in Windows Credential Manager.
+	* New-ValentiaCredential is now deprecated. Valentia Credential will no longer keep your credential in SecureString File format. Please use Set-ValentiaCredential to manage your credential.
+	* Test-ValentiaConnection is now deprecated. Use Ping-ValentiaGroup for test connection.
+	* Invoke-ValentiaParallel is now deprecated. As Workflow is not useful in many deployemnt cases, valentia no longer support workflow.
+	* As Workflow ristrection is taken away, you can use full PowerShell code. (Since Workflow blocks some cmdlet like Write-Host to use in InlineScript, but Workflow will never use in valentia.)
 	
 # Valid OS and PowerShell Verstion
 
@@ -102,36 +108,39 @@ Get-command -module valentia
 
 |CommandType|Name|ModuleName|
 |----|----|----
-|Function|ConvertTo-ValentiaTask|valentia|
-|Function|Edit-ValentiaConfig|valentia|
-|Function|Get-ValentiaCredential|valentia|
-|Function|Get-ValentiaFileEncoding|valentia|
-|Function|Get-ValentiaGroup|valentia|
-|Function|Get-ValentiaRebootRequiredStatus|valentia|
-|Function|Get-ValentiaTask|valentia|
-|Function|Initialize-ValentiaEnvironment|valentia|
-|Function|Invoke-Valentia|valentia|
-|Function|Invoke-ValentiaAsync|valentia|
-|Function|Invoke-ValentiaClean|valentia|
-|Function|Invoke-ValentiaCommand|valentia|
-|Function|Invoke-valentiaDeployGroupRemark|valentia|
-|Function|Invoke-ValentiaDeployGroupUnremark|valentia|
-|Function|Invoke-ValentiaDownload|valentia|
-|Function|Invoke-ValentiaParallel|valentia|
-|Function|Invoke-ValentiaSync|valentia|
-|Function|Invoke-ValentiaUpload|valentia|
-|Function|Invoke-ValentiaUploadList|valentia|
-|Function|New-ValentiaCredential|valentia|
-|Function|New-ValentiaFolder|valentia|
-|Function|New-ValentiaGroup|valentia|
-|Function|Ping-ValentiaGroupAsync|valentia|
-|Function|Set-ValentiaHostName|valentia|
-|Function|Set-ValentiaLocation|valentia|
-|Function|Show-ValentiaConfig|valentia|
-|Function|Show-ValentiaGroup|valentia|
-|Function|Show-ValentiaPromptForChoice|valentia|
-|Function|Test-ValentiaGroupConnection|valentia|
-|Workflow|Invoke-ValentiaCommandParallel|valentia|
+|Function    |ConvertTo-ValentiaTask             |valentia|  
+|Function    |Edit-ValentiaConfig                |valentia|  
+|Function    |Get-ValentiaCredential             |valentia|  
+|Function    |Get-ValentiaFileEncoding           |valentia|  
+|Function    |Get-ValentiaGroup                  |valentia|  
+|Function    |Get-ValentiaRebootRequiredStatus   |valentia|  
+|Function    |Get-ValentiaTask                   |valentia|  
+|Function    |Initialize-ValentiaEnvironment     |valentia|  
+|Function    |Invoke-Valentia                    |valentia|  
+|Function    |Invoke-ValentiaAsync               |valentia|  
+|Function    |Invoke-ValentiaClean               |valentia|  
+|Function    |Invoke-ValentiaCommand             |valentia|  
+|Function    |Invoke-ValentiaDeployGroupRemark   |valentia|  
+|Function    |Invoke-ValentiaDeployGroupUnremark |valentia|  
+|Function    |Invoke-ValentiaDownload            |valentia|  
+|Function    |Invoke-ValentiaSed                 |valentia|  
+|Function    |Invoke-ValentiaSync                |valentia|  
+|Function    |Invoke-ValentiaUpload              |valentia|  
+|Function    |Invoke-ValentiaUploadList          |valentia|  
+|Function    |New-ValentiaDynamicParamMulti      |valentia|  
+|Function    |New-ValentiaFolder                 |valentia|  
+|Function    |New-ValentiaGroup                  |valentia|  
+|Function    |Ping-ValentiaGroupAsync            |valentia|  
+|Function    |Set-ValentiaCredential             |valentia|  
+|Function    |Set-ValentiaHostName               |valentia|  
+|Function    |Set-ValentiaLocation               |valentia|  
+|Function    |Show-ValentiaConfig                |valentia|  
+|Function    |Show-ValentiaGroup                 |valentia|  
+|Function    |Show-ValentiaPromptForChoice       |valentia|  
+|Filter      |Write-ValentiaVerboseDebug         |valentia|  
+
+
+
 
 # valentia Alias
 
@@ -150,8 +159,8 @@ Get-Alias | where ModuleName -eq "valentia"
 |Alias|Download|Invoke-ValentiaDownload|Valentia|
 |Alias|Go|Set-ValentiaLocation|Valentia|
 |Alias|Initial|Initialize-ValentiaEnvironment|Valentia|
-|Alias|ipremark|Invoke-valentiaDeployGroupRemark|Valentia|
-|Alias|ipunremark|Invoke-ValentiaDeployGroupUnremark|Valentia|
+|Alias|IPRemark|Invoke-valentiaDeployGroupRemark|Valentia|
+|Alias|IPUnremark|Invoke-ValentiaDeployGroupUnremark|Valentia|
 |Alias|PingAsync|Ping-ValentiaGroupAsync|Valentia|
 |Alias|Rename|Set-ValentiaHostName|Valentia|
 |Alias|Sync|Invoke-ValentiaSync|Valentia|
@@ -182,23 +191,7 @@ You have 2 choice executing command to host.
 |2.|Task File|```vale DeployGroup .\Taskfile.ps1```|
 
 
-## 2. valep : PowerShell WorkFlow InlineScript exection.
-
-> **valep** is Alias of ```Invoke-ValentiaParallel```. This will execute Command to deploy group as PowreShell WorkFlow.
-> This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.
-> However if command execute in same PSHost process then valep can be fastest way of execution. It means if valep use same session as previous.
-
-You have 2 choice executing command to host.
-
-|#|Run|Expression|
-|----|----|----|
-|1.|ScriptBlock|```valep Deploygroup {ScriptBlock}```|
-|2.|Task File|```valep DeployGroup .\Taskfile.ps1```|
-
-#### NOTE: You can not call ```valep``` from C# calling valentia. This is limitation of PSWorkflow.
-
-
-## 3. valea : Asynchronous RunSpace Command invokation.
+## 2. valea : Asynchronous RunSpace Command invokation.
 
 > **valea** is Alias of ```Invoke-ValentiaAsync```. This will execute Command to deploy group as RunSpacePooling.
 > valea is the asynchronous way of valentia Command execution to the host, and quite fast in most of the cases.
@@ -369,34 +362,32 @@ Initialize-ValentiaEnvironment -Client -TrustedHosts "*" -NoOSUser
 ```
 
 
-### 3. New-ValentiaCredential : Create New Credential secure file
+### 3. Set-ValentiaCredential : Set Credential into Windows Credential Manager
 
-- Following command will make secure string file to save your credential.
+- This function will store your credential to authorize PSRemoting into Windows Credential Manager.
 
-> If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section.
-> 
-> However if you want to revise saved secure Password, then use this function to revise save file.
-
+> - If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section.
+> - User name for the credential will be used as define in config file.
 
 ```PowerShell
 New-ValentiaCredential
 ```
 
-- or you can select user for credential.
+> NOTE: Once you execute command, you will got prompt to save secure strings of user.
+
+
+### 4. Get-ValentiaCredential :Read Credential from Windows Credential Manager
+
+- This function will read your credential from Windows Credential Manager, and return PSCredential Type.
 
 ```PowerShell
-New-ValentiaCredential -User hogehoge
+Get-ValentiaCredential
 ```
 
-> NOTE: Once you execute command, you will got prompt to save secure strings of user.
-> 
-> Default user is sat as ec2-user, it will use if no -user had input.
+### 5. Initialize-ValentiaGroup : Create New deploygroup file
 
-
-### 4. Initialize-ValentiaGroup : Create New deploygroup file
-
-- To execute deployment command to multiple hosts, you don't need to input hosts everytime. Just list them up in file.
-- The file you specified will be output in following path.
+> - To execute deployment command to multiple hosts, you don't need to input hosts everytime. Just list them up in file.
+> - The file you specified will be output in following path.
 
 ```
 C:\Deployment\Deploygroup\ *****.ps1
@@ -430,7 +421,7 @@ New-ValentiaGroup -DeployClients "10.0.0.1","10.0.0.2" -FileName sample.ps1
 
 ex) if you sat file name as "new.ps1" then use it by "new".
 
-### 5. Invoke-valentiaDeployGroupRemark : Remark ipaddress for deploygroup file inside deploygroup
+### 6. Invoke-valentiaDeployGroupRemark : Remark ipaddress for deploygroup file inside deploygroup
 
 - There would be many time to remark some deploy target inside deploygroup file. This is easy work but boring to check which file contains target deploy ip.
 
@@ -467,7 +458,7 @@ Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.102 -Verbose
 ```
  
 
-### 6. Invoke-valentiaDeployGroupUnremark : Unremark ipaddress for deploygroup file inside deploygroup
+### 7. Invoke-valentiaDeployGroupUnremark : Unremark ipaddress for deploygroup file inside deploygroup
 
 - if you remark ipaddresses in deploygroup file, then you want to unremark it:) This function will ease you unremark target ipaddresses and check how change.
 

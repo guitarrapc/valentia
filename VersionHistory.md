@@ -7,11 +7,27 @@ This indicate Version History for valentia.
 
 ## Version 0.3.x
 
+- version : 0.3.7
+	
+	[ author : guitarrapc ]
+	
+	[ Mar 17, 2014 ]
+	
+	* fix number of maxRunSpacePool. Now Concurrency is more efficient than previous release.
+	* Added -quiet switch to Ping-ValentiaGroup function. You can suppress host display with this switch.
+	* Added Set-ValentiaWSManMaxProcessesPerShell for Initialize-ValentiaEnvironment. Now more number of process will run.
+	* Added Set-ValentiaCredential. This will store your credential in Windows Credential Manager.
+	* New-ValentiaCredential is now deprecated. Valentia Credential will no longer keep your credential in SecureString File format. Please use Set-ValentiaCredential to manage your credential.
+	* Test-ValentiaConnection is now deprecated. Use Ping-ValentiaGroup for test connection.
+	* Invoke-ValentiaParallel is now deprecated. As Workflow is not useful in many deployemnt cases, valentia no longer support workflow.
+	* As Workflow ristrection is taken away, you can use full PowerShell code. (Since Workflow blocks some cmdlet like Write-Host to use in InlineScript, but Workflow will never use in valentia.)
+	 
+	
 - version : 0.3.6
 	
 	[ author : guitarrapc ]
 	
-	[ Feb 13, 2013 ]
+	[ Feb 13, 2014 ]
 	
 	* fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.
 
@@ -19,7 +35,7 @@ This indicate Version History for valentia.
 	
 	[ author : guitarrapc ]
 	
-	[ Feb 13, 2013 ]
+	[ Feb 13, 2014 ]
 	
 	* fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.
 	* tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently
@@ -29,7 +45,7 @@ This indicate Version History for valentia.
 	
 	[ author : guitarrapc ]
 	
-	[ Fev 4, 2013 ]
+	[ Fev 4, 2014 ]
 	
 	* Remove non use function Get-ValentiaModuleReload
 	* Added function ```ConvertTo-ValentiaTask```. Now you can convert your powershell script to valentia task easier. 
