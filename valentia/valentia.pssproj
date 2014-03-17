@@ -51,7 +51,6 @@
     <Compile Include="functions\Invokation\RunSpacePool\Invoke-ValentiaAsyncCommand.ps1" />
     <Compile Include="functions\Helper\CleanupVariables\Invoke-ValentiaClean.ps1" />
     <Compile Include="functions\Invokation\Job\Invoke-ValentiaCommand.ps1" />
-    <Compile Include="functions\Invokation\WorkFlow\Invoke-ValentiaCommandParallel.ps1" />
     <Compile Include="functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1" />
     <Compile Include="functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1" />
     <Compile Include="functions\Invokation\Download\Invoke-ValentiaDownload.ps1" />
