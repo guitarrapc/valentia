@@ -47,14 +47,21 @@ This module set will optimize your work for deploy Commands or files to remote s
 
 <ul>
 <li>
-<p>version : 0.3.6</p>
+<p>version : 0.3.7</p>
 
 <p>[ author : guitarrapc ]</p>
 
-<p>[ Feb 13, 2013 ]</p>
+<p>[ Mar 17, 2014 ]</p>
 
 <ul>
-<li>fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.</li>
+<li>fix number of maxRunSpacePool. Now Concurrency is more efficient than previous release.</li>
+<li>Added -quiet switch to Ping-ValentiaGroup function. You can suppress host display with this switch.</li>
+<li>Added Set-ValentiaWSManMaxProcessesPerShell for Initialize-ValentiaEnvironment. Now more number of process will run.</li>
+<li>Added Set-ValentiaCredential. This will store your credential in Windows Credential Manager.</li>
+<li>New-ValentiaCredential is now deprecated. Valentia Credential will no longer keep your credential in SecureString File format. Please use Set-ValentiaCredential to manage your credential.</li>
+<li>Test-ValentiaConnection is now deprecated. Use Ping-ValentiaGroup for test connection.</li>
+<li>Invoke-ValentiaParallel is now deprecated. As Workflow is not useful in many deployemnt cases, valentia no longer support workflow.</li>
+<li>As Workflow ristrection is taken away, you can use full PowerShell code. (Since Workflow blocks some cmdlet like Write-Host to use in InlineScript, but Workflow will never use in valentia.)</li>
 </ul>
 </li>
 </ul><h1>
@@ -243,7 +250,7 @@ This module set will optimize your work for deploy Commands or files to remote s
 </tr>
 <tr>
 <td>Function</td>
-<td>Invoke-valentiaDeployGroupRemark</td>
+<td>Invoke-ValentiaDeployGroupRemark</td>
 <td>valentia</td>
 </tr>
 <tr>
@@ -258,7 +265,7 @@ This module set will optimize your work for deploy Commands or files to remote s
 </tr>
 <tr>
 <td>Function</td>
-<td>Invoke-ValentiaParallel</td>
+<td>Invoke-ValentiaSed</td>
 <td>valentia</td>
 </tr>
 <tr>
@@ -278,7 +285,7 @@ This module set will optimize your work for deploy Commands or files to remote s
 </tr>
 <tr>
 <td>Function</td>
-<td>New-ValentiaCredential</td>
+<td>New-ValentiaDynamicParamMulti</td>
 <td>valentia</td>
 </tr>
 <tr>
@@ -294,6 +301,11 @@ This module set will optimize your work for deploy Commands or files to remote s
 <tr>
 <td>Function</td>
 <td>Ping-ValentiaGroupAsync</td>
+<td>valentia</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Set-ValentiaCredential</td>
 <td>valentia</td>
 </tr>
 <tr>
@@ -322,13 +334,8 @@ This module set will optimize your work for deploy Commands or files to remote s
 <td>valentia</td>
 </tr>
 <tr>
-<td>Function</td>
-<td>Test-ValentiaGroupConnection</td>
-<td>valentia</td>
-</tr>
-<tr>
-<td>Workflow</td>
-<td>Invoke-ValentiaCommandParallel</td>
+<td>Filter</td>
+<td>Write-ValentiaVerboseDebug</td>
 <td>valentia</td>
 </tr>
 </tbody>
@@ -382,13 +389,13 @@ This module set will optimize your work for deploy Commands or files to remote s
 </tr>
 <tr>
 <td>Alias</td>
-<td>ipremark</td>
+<td>IPRemark</td>
 <td>Invoke-valentiaDeployGroupRemark</td>
 <td>Valentia</td>
 </tr>
 <tr>
 <td>Alias</td>
-<td>ipunremark</td>
+<td>IPUnremark</td>
 <td>Invoke-ValentiaDeployGroupUnremark</td>
 <td>Valentia</td>
 </tr>
@@ -487,39 +494,7 @@ vale is the standard way of valentia Command execution to the host, and quite fa
 </tr>
 </tbody>
 </table><h2>
-<a name="2-valep--powershell-workflow-inlinescript-exection" class="anchor" href="#2-valep--powershell-workflow-inlinescript-exection"><span class="octicon octicon-link"></span></a>2. valep : PowerShell WorkFlow InlineScript exection.</h2>
-
-<blockquote>
-<p><strong>valep</strong> is Alias of <code>Invoke-ValentiaParallel</code>. This will execute Command to deploy group as PowreShell WorkFlow.
-This function have limitation of PSWorkflow as it can only execute 5 commands at once, next 5 will execute when previous set was completed.
-However if command execute in same PSHost process then valep can be fastest way of execution. It means if valep use same session as previous.</p>
-</blockquote>
-
-<p>You have 2 choice executing command to host.</p>
-
-<table>
-<thead><tr>
-<th>#</th>
-<th>Run</th>
-<th>Expression</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>1.</td>
-<td>ScriptBlock</td>
-<td><code>valep Deploygroup {ScriptBlock}</code></td>
-</tr>
-<tr>
-<td>2.</td>
-<td>Task File</td>
-<td><code>valep DeployGroup .\Taskfile.ps1</code></td>
-</tr>
-</tbody>
-</table><h4>
-<a name="note-you-can-not-call-valep-from-c-calling-valentia-this-is-limitation-of-psworkflow" class="anchor" href="#note-you-can-not-call-valep-from-c-calling-valentia-this-is-limitation-of-psworkflow"><span class="octicon octicon-link"></span></a>NOTE: You can not call <code>valep</code> from C# calling valentia. This is limitation of PSWorkflow.</h4>
-
-<h2>
-<a name="3-valea--asynchronous-runspace-command-invokation" class="anchor" href="#3-valea--asynchronous-runspace-command-invokation"><span class="octicon octicon-link"></span></a>3. valea : Asynchronous RunSpace Command invokation.</h2>
+<a name="2-valea--asynchronous-runspace-command-invokation" class="anchor" href="#2-valea--asynchronous-runspace-command-invokation"><span class="octicon octicon-link"></span></a>2. valea : Asynchronous RunSpace Command invokation.</h2>
 
 <blockquote>
 <p><strong>valea</strong> is Alias of <code>Invoke-ValentiaAsync</code>. This will execute Command to deploy group as RunSpacePooling.
@@ -751,37 +726,43 @@ This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadv
 </pre></div>
 
 <h3>
-<a name="3-new-valentiacredential--create-new-credential-secure-file" class="anchor" href="#3-new-valentiacredential--create-new-credential-secure-file"><span class="octicon octicon-link"></span></a>3. New-ValentiaCredential : Create New Credential secure file</h3>
+<a name="3-set-valentiacredential--set-credential-into-windows-credential-manager" class="anchor" href="#3-set-valentiacredential--set-credential-into-windows-credential-manager"><span class="octicon octicon-link"></span></a>3. Set-ValentiaCredential : Set Credential into Windows Credential Manager</h3>
 
 <ul>
-<li>Following command will make secure string file to save your credential.</li>
+<li>This function will store your credential to authorize PSRemoting into Windows Credential Manager.</li>
 </ul><blockquote>
-<p>If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section.</p>
-
-<p>However if you want to revise saved secure Password, then use this function to revise save file.</p>
+<ul>
+<li>If you ran Initialize-ValentiaServer without -NoSavePass switch, then you can skip this section.</li>
+<li>User name for the credential will be used as define in config file.</li>
+</ul>
 </blockquote>
 
 <div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaCredential</span>
 </pre></div>
 
-<ul>
-<li>or you can select user for credential.</li>
-</ul><div class="highlight highlight-PowerShell"><pre><span class="nb">New-ValentiaCredential</span> <span class="n">-User</span> <span class="n">hogehoge</span>
-</pre></div>
-
 <blockquote>
 <p>NOTE: Once you execute command, you will got prompt to save secure strings of user.</p>
-
-<p>Default user is sat as ec2-user, it will use if no -user had input.</p>
 </blockquote>
 
 <h3>
-<a name="4-initialize-valentiagroup--create-new-deploygroup-file" class="anchor" href="#4-initialize-valentiagroup--create-new-deploygroup-file"><span class="octicon octicon-link"></span></a>4. Initialize-ValentiaGroup : Create New deploygroup file</h3>
+<a name="4-get-valentiacredential-read-credential-from-windows-credential-manager" class="anchor" href="#4-get-valentiacredential-read-credential-from-windows-credential-manager"><span class="octicon octicon-link"></span></a>4. Get-ValentiaCredential :Read Credential from Windows Credential Manager</h3>
 
+<ul>
+<li>This function will read your credential from Windows Credential Manager, and return PSCredential Type.</li>
+</ul><div class="highlight highlight-PowerShell"><pre><span class="nb">Get-ValentiaCredential</span>
+</pre></div>
+
+<h3>
+<a name="5-initialize-valentiagroup--create-new-deploygroup-file" class="anchor" href="#5-initialize-valentiagroup--create-new-deploygroup-file"><span class="octicon octicon-link"></span></a>5. Initialize-ValentiaGroup : Create New deploygroup file</h3>
+
+<blockquote>
 <ul>
 <li>To execute deployment command to multiple hosts, you don't need to input hosts everytime. Just list them up in file.</li>
 <li>The file you specified will be output in following path.</li>
-</ul><pre><code>C:\Deployment\Deploygroup\ *****.ps1
+</ul>
+</blockquote>
+
+<pre><code>C:\Deployment\Deploygroup\ *****.ps1
 </code></pre>
 
 <ul>
@@ -809,7 +790,7 @@ This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadv
 </ul><p>ex) if you sat file name as "new.ps1" then use it by "new".</p>
 
 <h3>
-<a name="5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#5-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>5. Invoke-valentiaDeployGroupRemark : Remark ipaddress for deploygroup file inside deploygroup</h3>
+<a name="6-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#6-invoke-valentiadeploygroupremark--remark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>6. Invoke-valentiaDeployGroupRemark : Remark ipaddress for deploygroup file inside deploygroup</h3>
 
 <ul>
 <li>There would be many time to remark some deploy target inside deploygroup file. This is easy work but boring to check which file contains target deploy ip.</li>
@@ -841,7 +822,7 @@ This function wrapps FastCopy.exe inside and you need install FastCopy.exe inadv
 </pre></div>
 
 <h3>
-<a name="6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#6-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>6. Invoke-valentiaDeployGroupUnremark : Unremark ipaddress for deploygroup file inside deploygroup</h3>
+<a name="7-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup" class="anchor" href="#7-invoke-valentiadeploygroupunremark--unremark-ipaddress-for-deploygroup-file-inside-deploygroup"><span class="octicon octicon-link"></span></a>7. Invoke-valentiaDeployGroupUnremark : Unremark ipaddress for deploygroup file inside deploygroup</h3>
 
 <ul>
 <li>if you remark ipaddresses in deploygroup file, then you want to unremark it:) This function will ease you unremark target ipaddresses and check how change.</li>
