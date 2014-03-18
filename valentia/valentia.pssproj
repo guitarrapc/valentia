@@ -27,6 +27,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="cs\CredRead.cs" />
+    <Compile Include="cs\CredWrite.cs" />
     <Compile Include="example\readme.md" />
     <Compile Include="example\Deployment\Application\task-GetProcess.bat" />
     <Compile Include="example\Deployment\Application\task-GetProcess.ps1" />
@@ -89,6 +91,7 @@
     <Folder Include="example\" />
     <Folder Include="example\Deployment\" />
     <Folder Include="example\Deployment\Application\" />
+    <Folder Include="example\Deployment\Application\execute\" />
     <Folder Include="example\Deployment\Deploygroup\" />
     <Folder Include="example\Deployment\Upload\" />
     <Folder Include="functions\" />
@@ -121,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\valentia-config.ps1" />
+    <Content Include="example\Deployment\Application\execute\execute.ps1" />
+    <Content Include="example\Deployment\Application\Task-InstallChocolatey.bat" />
     <Content Include="example\Deployment\Application\task-GetProcess.bat" />
     <Content Include="example\Deployment\Application\task-GetProcess.ps1" />
     <Content Include="example\Deployment\Application\Task-InstallChocolatey.ps1" />
