@@ -79,7 +79,6 @@ $valentia.fastcopy = New-Object psobject -property @{
 $valentia.RootPath                      = "C:\Deployment"
 $valentia.BranchFolder = New-Object psobject -property @{
     Application                         = "Application";
-    Bin                                 = "Bin";
     Deploygroup                         = "DeployGroup";
     Download                            = "Download";
     Maintenance                         = "Maintenance";
