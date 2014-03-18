@@ -8,6 +8,33 @@
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
     <Name>valentia</Name>
+    <ManifestFileName>valentia.psd1</ManifestFileName>
+    <AliasesToExport>'Task', 'Vale', 'Valea', 'Upload', 'UploadL', 'Sync', 'Download', 'Go', 'Clean', 'Reload', 'Target', 'PingAsync', 'Sed', 'ipremark', 'ipunremark', 'Cred', 'Rename', 'DynamicParameter', 'Initial'</AliasesToExport>
+    <Author>guitarrapc</Author>
+    <ClrVersion />
+    <CmdletsToExport />
+    <CompanyName />
+    <Copyright>(c) 2014 guitarrapc. All rights reserved.</Copyright>
+    <Description>PowerShell Remote deployment library for Windows Servers</Description>
+    <FormatsToProcess>
+    </FormatsToProcess>
+    <FunctionsToProcess>'ConvertTo-ValentiaTask', 'Edit-ValentiaConfig', 'Get-ValentiaCredential', 'Get-ValentiaFileEncoding', 'Get-ValentiaGroup', 'Get-ValentiaRebootRequiredStatus', 'Get-ValentiaTask', 'Initialize-ValentiaEnvironment', 'Invoke-Valentia', 'Invoke-ValentiaAsync', 'Invoke-ValentiaClean', 'Invoke-ValentiaCommand', 'Invoke-ValentiaDeployGroupRemark', 'Invoke-ValentiaDeployGroupUnremark', 'Invoke-ValentiaDownload', 'Invoke-ValentiaSed', 'Invoke-ValentiaSync', 'Invoke-ValentiaUpload', 'Invoke-ValentiaUploadList', 'New-ValentiaGroup', 'New-ValentiaFolder', 'New-ValentiaDynamicParamMulti', 'Ping-ValentiaGroupAsync', 'Set-ValentiaCredential', 'Set-ValentiaHostName', 'Set-ValentiaLocation', 'Show-ValentiaConfig', 'Show-ValentiaGroup', 'Show-ValentiaPromptForChoice', 'Write-ValentiaVerboseDebug'</FunctionsToProcess>
+    <Guid>9743de3b-4dc7-4057-91a8-fc606bc957b6</Guid>
+    <ModuleList />
+    <ModuleToProcess />
+    <NestedModules>valentia.psm1</NestedModules>
+    <PowerShellHostVersion />
+    <PowerShellVersion />
+    <ProcessorArchitecture />
+    <RequiredAssemblies />
+    <RequiredModules />
+    <ScriptsToProcess />
+    <TypesToProcess />
+    <VariablesToExport>valentia</VariablesToExport>
+    <Version>0.3.7</Version>
+    <CodeSigningCert />
+    <OutputDirectory>valentia\</OutputDirectory>
+    <SignOutput>False</SignOutput>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -88,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="config\" />
+    <Folder Include="cs\" />
     <Folder Include="example\" />
     <Folder Include="example\Deployment\" />
     <Folder Include="example\Deployment\Application\" />

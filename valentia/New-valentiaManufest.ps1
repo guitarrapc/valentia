@@ -1,9 +1,10 @@
 ﻿$script:module = "valentia"
-$script:moduleVersion = "0.3.6"
+$script:moduleVersion = "0.3.7"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
 $script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1008" or "4.0.30319.1" , "4.0.30319.17929" (Win8/2012)
+$script:ExportPath = Split-Path $PSCommandPath -Parent
 
 $script:functionToExport = @(
     "ConvertTo-ValentiaTask",
@@ -57,7 +58,7 @@ $script:AliasesToExport = @(
 )
 
 $script:moduleManufest = @{
-    Path = "$module.psd1";
+    Path = "{0}\{1}.psd1" -f $ExportPath, $module
     Author = "guitarrapc";
     CompanyName = "guitarrapc"
     Copyright = ""; 
