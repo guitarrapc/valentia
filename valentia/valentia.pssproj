@@ -83,7 +83,6 @@
     <Compile Include="functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1" />
     <Compile Include="functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1" />
     <Compile Include="functions\Invokation\Download\Invoke-ValentiaDownload.ps1" />
-    <Compile Include="functions\Invokation\WorkFlow\Invoke-ValentiaParallel.ps1" />
     <Compile Include="functions\Helper\Sed\Invoke-ValentiaSed.ps1" />
     <Compile Include="functions\Invokation\Sync\Invoke-ValentiaSync.ps1" />
     <Compile Include="functions\Invokation\Upload\Invoke-ValentiaUpload.ps1" />
@@ -148,6 +147,8 @@
     <Folder Include="functions\Invokation\RunSpacePool\" />
     <Folder Include="functions\Invokation\WorkFlow\" />
     <Folder Include="functions\Helper\" />
+    <Folder Include="Test\" />
+    <Folder Include="Test\Credential\" />
     <Folder Include="valentia-Help\" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,10 @@
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
     <Content Include="New-valentiaManufest.ps1" />
+    <Content Include="Test\Credential\Import-Module.ps1" />
+    <Content Include="Test\Credential\Target.ps1" />
+    <Content Include="Test\Credential\PingAsync.ps1" />
+    <Content Include="Test\Credential\Credential.ps1" />
     <Content Include="valentia.psd1" />
     <Content Include="valentia.psm1" />
   </ItemGroup>
