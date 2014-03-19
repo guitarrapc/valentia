@@ -1,5 +1,7 @@
 ﻿#Requires -Version 2.0
 
+# Windows 7 and later is requires.
+
 function Main
 {
     [CmdletBinding()]
@@ -24,6 +26,10 @@ function Main
         Write-Warning "$modulepath not found. creating module path."
         New-ModulePath -modulepath $modulepath
     }
+    else
+    {
+        Write-Warning "$modulepath already exist. Escape from creating module Directory."
+    }
 
     $moduleName = Get-ModuleName -path $path
     if ($moduleName)
@@ -37,8 +43,8 @@ function Main
 
     $destinationtfolder = Copy-Module -path $path -destination $modulepath
     Write-Host ("Installation Completed. Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
-
 }
+
 Function Get-OperatingSystemVersion
 {
     [System.Environment]::OSVersion.Version
@@ -81,7 +87,6 @@ Function New-ModulePath{
     {         
         Write-Verbose "Creating Module Home at $modulepath"
         New-Item -Path $modulepath -ItemType directory > $null
-        Write-Verbose "$modulepath already exist. Escape from creating module Directory."
     }
 }
 
