@@ -51,19 +51,18 @@ replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^
         $encoding = $valentia.fileEncode
     )
 
-    Get-ChildItem -Path (Join-Path $valentia.RootPath $valentia.BranchFolder.Deploygroup) -Recurse `
-        | where {!$_.PSISContainer } `
-        | %{
-            foreach ($unremarkIPAddress in $unremarkIPAddresses)
+    Get-ChildItem -Path (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)) -Recurse `
+    | where {-not $_.PSISContainer } `
+    | %{foreach ($unremarkIPAddress in $unremarkIPAddresses)
+        {
+            if ($overWrite)
             {
-                if ($overWrite)
-                {
-                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding -overWrite
-                }
-                else
-                {
-                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding
-                }
+                Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding -overWrite
+            }
+            else
+            {
+                Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding
             }
         }
+    }
 }

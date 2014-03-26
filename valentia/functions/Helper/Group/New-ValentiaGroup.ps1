@@ -46,7 +46,7 @@ write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
             Mandatory = 0,
             HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
         [string]
-        $DeployGroupsFolder = (Join-Path $Script:valentia.RootPath $($valentia.BranchFolder).Deploygroup),
+        $DeployGroupsFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
         [Parameter(
             Position = 3,

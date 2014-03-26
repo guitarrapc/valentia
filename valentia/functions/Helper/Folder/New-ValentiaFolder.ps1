@@ -37,31 +37,39 @@ create as default
         [Parameter(
             Position = 1,
             Mandatory = 0,
-            HelpMessage = "Branch Folder path.")]
-        [string[]]
-        $BranchFolder,
+            HelpMessage = "Branch Path path.")]
+        [ValentiaBranchPath[]]
+        $BranchPath,
 
         [Parameter(
             Position = 2,
             Mandatory = 0,
             HelpMessage = "Log Folder path.")]
-        $LogFolder = $valentia.Log.path
+        $LogFolder = $valentia.Log.path,
+
+        [Parameter(
+            Position = 3,
+            Mandatory = 0,
+            HelpMessage = "Suppress output directory create info.")]
+        [switch]
+        $Quiet
     )
 
     begin
     {
         # Create Fullpath String
-        if ($BranchFolder.Length -eq 0)
+        if ($BranchPath.Length -eq 0)
         {
-            "BranchFolder detected as empty. using $($valentia.BranchFolder) for BranchFolder name" | Write-ValentiaVerboseDebug
-            $pname = $valentia.BranchFolder | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name
-            $DeployFolders = $pname | %{Join-Path $RootPath $_}
+            "BranchPath detected as empty. using '{0}'." -f ([Enum]::GetNames([ValentiaBranchPath]) -join ", ") | Write-ValentiaVerboseDebug
+            $DeployFolders = [Enum]::GetNames([ValentiaBranchPath]) | %{Join-Path $RootPath $_}
         }
         else
         {
-            ("BranchFolder detected as {0}" -f $BranchFolder) | Write-ValentiaVerboseDebug
-            $DeployFolders = $BranchFolder | %{Join-Path $RootPath $_}
+            ("BranchPath detected as {0}" -f $BranchFolder) | Write-ValentiaVerboseDebug
+            $DeployFolders = $BranchPath | %{Join-Path $RootPath $_}
         }
+
+        $directories = New-Object System.Collections.Generic.List[System.IO.DirectoryInfo]
     }
 
     process
@@ -69,10 +77,11 @@ create as default
         # Check each Fupllpath and create if not exist.
         foreach ($Deployfolder in $DeployFolders)
         {
-            if(!(Test-Path $DeployFolder))
+            if(-not (Test-Path $DeployFolder))
             {
                 ("{0} not exist, creating {1}." -f $DeployFolder, $DeployFolder) | Write-ValentiaVerboseDebug
-                New-Item -Path $DeployFolder -ItemType directory -Force > $null
+                $output = New-Item -Path $DeployFolder -ItemType directory -Force
+                $directories.Add($output)
             }
             else
             {
@@ -81,25 +90,24 @@ create as default
         }
 
         # Check Log Folder and create if not exist 
-        if(!(Test-Path $LogFolder))
+        if(-not (Test-Path $LogFolder))
         {
             ("{0} not exist, creating {1}." -f $LogFolder, $LogFolder) | Write-ValentiaVerboseDebug
-            New-Item -Path $LogFolder -ItemType directory -Force > $null
+            $output = New-Item -Path $LogFolder -ItemType directory -Force
+            $directories.Add($output)
         }
         else
         {
             ("{0} already exist, skip create {1}." -f $LogFolder, $LogFolder) | Write-ValentiaVerboseDebug
         }
-
     }
 
     end
     {
-        Write-Warning ("`nDisplay all deployFolders existing at [ {0} ]" -f $RootPath)
-        (Get-ChildItem -Path $RootPath).FullName
-
-        Write-Warning ("`nDisplay Logfolders existing at [ {0} ]" -f $LogFolder)
-        (Get-ChildItem -Path $LogFolder).FullName
+        if (-not $Quiet)
+        {
+            $directories
+        }
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean

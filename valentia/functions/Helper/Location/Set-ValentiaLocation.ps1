@@ -19,19 +19,14 @@ Author: guitarrapc
 Created: 13/Jul/2013
 
 .EXAMPLE
-go -BrachPath BranchPathName
---------------------------------------------
-Move location to valentia root path
-
-.EXAMPLE
 go
 --------------------------------------------
-just move to root path
+just move to root deployment path.
 
 .EXAMPLE
 go application
 --------------------------------------------
-change location to BranchPath c:\deployment\application (in default)
+change location to BranchPath c:\deployment\application (in default configuration.)
 
 #>
 
@@ -42,49 +37,40 @@ change location to BranchPath c:\deployment\application (in default)
             Position = 0,
             Mandatory = 0,
             HelpMessage = "Select branch deploy folder to change directory.")]
-        [validateSet(
-            "Application",
-            "Bin",
-            "DeployGroup",
-            "Download",
-            "Maintenance",
-            "Upload",
-            "Utils")]
-        [string]
+        [ValentiaBranchPath]
         $BranchPath
     )
 
-    $prevLocation = (Get-Location).Path
-
-    # replace \ to \\ for regexpression
-    $valentiaroot = $valentia.RootPath -replace "\\","\\"
-
-    # Create target path
-    $newlocation = (Join-Path $valentia.RootPath $valentia.BranchFolder.$BranchPath)
-
-    # Move to BrachPath if exist
-    ("{0} : {1}" -f $BranchPath, $newlocation) | Write-ValentiaVerboseDebug
-    if (Test-Path $newlocation)
+    begin
     {
-        switch ($BranchPath) {
-            $valentia.BranchFolder.$BranchPath {Set-Location $newlocation}
-            default {}
+        $prevLocation = (Get-Location).Path
+        $newlocation = Join-Path $valentia.RootPath ([ValentiaBranchPath]::$BranchPath)
+    }
+
+    process
+    {
+        # Move to BrachPath if exist
+        ("{0} : {1}" -f $BranchPath, $newlocation) | Write-ValentiaVerboseDebug
+        if (Test-Path $newlocation)
+        {
+            Set-Location $newlocation
+        }
+        else
+        {
+            throw "{0} not found exception! Make sure {1} is exist." -f $newlocation, $newlocation
         }
     }
-    else
-    {
-        throw "{0} not found exception! Make sure {1} is exist." -f $newlocation, $newlocation
-    }
 
-    # Show current Loacation
-    ("(Get-Location).Path : {0}" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
-    ("prevLocation : {0}" -f $prevLocation) | Write-ValentiaVerboseDebug
-    if ((Get-Location).Path -eq $prevLocation)
+    end
     {
-        Write-Warning "Location not changed."
-    }
-    else
-    {
-        ("Location change to {0}" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
+        ("currentLocation : '{0}', previous Location : '{1}'" -f (Get-Location).Path, $prevLocation) | Write-ValentiaVerboseDebug
+        if ((Get-Location).Path -ne $prevLocation)
+        {
+            ("Location change to {0}" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
+        }
+        else
+        {
+            Write-Warning "Location not changed."
+        }
     }
 }

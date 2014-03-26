@@ -21,37 +21,6 @@ $valentia.context.push(
     }
 )
 
-# contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.config_default = New-Object PSObject -property @{
-    TaskFileName                        = "default.ps1";
-    TaskFileDir                         = $valentia.BranchFolder.Application;
-    taskNameFormat                      = "Executing {0}";
-    verboseError                        = $false;
-    modules                             = $null;
-}
-
-# contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
-$valentia.poolSize = New-Object psobject -property @{
-    minPoolSize                         = 1;
-    maxPoolSize                         = ([int]$env:NUMBER_OF_PROCESSORS * 30);
-}
-
-# contains wait Limit settings for Asynchronous cmdlet (Invoke-ValentiaAsync)
-$valentia.async = New-Object psobject -property @{
-    sleepMS                             = 10;
-    limitCount                          = 30000;
-}
-
-# contains ping property
-$valentia.ping = New-Object psobject -property @{
-    timeout                             = 10;
-    buffer                              = 16;
-    pingOption                              = @{
-        ttl                                     = 64;
-        dontFragment                            = $false;
-    }
-}
-
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.users = New-Object psobject -property @{
     CurrentUser                         = $env:USERNAME;
@@ -69,29 +38,21 @@ $valentia.prefix = New-Object psobject -property @{
     ipstring                            = "ip";
 }
 
-# Define External program path
-$valentia.fastcopy = New-Object psobject -property @{
-    folder                              = "C:\Program Files\FastCopy";
-    exe                                 = "FastCopy.exe";
-}
-
-# contains default Path configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.RootPath                      = "C:\Deployment"
-$valentia.BranchFolder = New-Object psobject -property @{
-    Application                         = "Application";
-    Deploygroup                         = "DeployGroup";
-    Download                            = "Download";
-    Maintenance                         = "Maintenance";
-    Upload                              = "Upload";
-    Utils                               = "Utils";
-}
-
-# Set Valentia Log
-$valentia.log = New-Object psobject -property @{
-    path                                = "C:\Logs\Deployment";
-    name                                = "deploy";
-    extension                           = ".log";
-}
+# contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
+$valentia.config_default                = New-Object PSObject -property ([ordered]@{
+    TaskFileName                        = "default.ps1";
+    TaskFileDir                         = [ValentiaBranchPath]::Application;
+    taskNameFormat                      = "Executing {0}";
+    verboseError                        = $false;
+    modules                             = $null;
+    PSDrive                             = $valentia.PSDrive;
+    deployextension                     = $valentia.deployextension;
+    prefix                              = $valentia.prefix;
+    fastcopy                            = $valentia.fastcopy;
+    RootPath                            = $valentia.RootPath;
+    BranchFolder                        = [Enum]::GetNames([ValentiaBranchPath]);
+    log                                 = $valentia.log;
+})
 
 # Set Valentia prompt for choice messages
 $valentia.promptForChoice = New-Object psobject -property @{

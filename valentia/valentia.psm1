@@ -45,6 +45,19 @@ Add-Type -TypeDefinition @"
     }
 "@
 
+#-- PublicEnum for Location Type --#
+Add-Type -TypeDefinition @"
+    public enum ValentiaBranchPath
+    {
+        Application       = 1,
+        Deploygroup       = 2,
+        Download          = 3,
+        Maintenance       = 4,
+        Upload            = 5,
+        Utils             = 6
+    }
+"@
+
 #-- Public Loading Module Custom Configuration Functions --#
 
 function Import-ValentiaConfigration
@@ -276,15 +289,6 @@ $valentia.context.push(
 
 #-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
 
-# contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.config_default = New-Object PSObject -property @{
-    TaskFileName                        = "default.ps1";
-    TaskFileDir                         = $valentia.BranchFolder.Application;
-    taskNameFormat                      = "Executing {0}";
-    verboseError                        = $false;
-    modules                             = $null;
-}
-
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
 $valentia.poolSize = New-Object psobject -property @{
     minPoolSize                         = 1;
@@ -330,16 +334,8 @@ $valentia.fastcopy = New-Object psobject -property @{
     exe                                 = "FastCopy.exe";
 }
 
-# contains default Path configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
+# contains default deployment Path configuration.
 $valentia.RootPath                      = "C:\Deployment"
-$valentia.BranchFolder = New-Object psobject -property @{
-    Application                         = "Application";
-    Deploygroup                         = "DeployGroup";
-    Download                            = "Download";
-    Maintenance                         = "Maintenance";
-    Upload                              = "Upload";
-    Utils                               = "Utils";
-}
 
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
@@ -361,21 +357,20 @@ $valentia.promptForChoice = New-Object psobject -property @{
 }
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.config_default                = New-Object PSObject -property @{
+$valentia.config_default                = New-Object PSObject -property ([ordered]@{
     TaskFileName                        = "default.ps1";
-    TaskFileDir                         = $valentia.BranchFolder.Application;
+    TaskFileDir                         = [ValentiaBranchPath]::Application;
     taskNameFormat                      = "Executing {0}";
     verboseError                        = $false;
     modules                             = $null;
     PSDrive                             = $valentia.PSDrive;
     deployextension                     = $valentia.deployextension;
-    wsmanSessionlimit                   = $valentia.wsmanSessionlimit;
     prefix                              = $valentia.prefix;
     fastcopy                            = $valentia.fastcopy;
     RootPath                            = $valentia.RootPath;
-    BranchFolder                        = $valentia.BranchFolder;
+    BranchFolder                        = [Enum]::GetNames([ValentiaBranchPath]);
     log                                 = $valentia.log;
-}
+})
 
 #-- Set Alias for public valentia commands --#
 
