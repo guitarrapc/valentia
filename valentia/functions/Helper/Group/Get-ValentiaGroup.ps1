@@ -46,7 +46,7 @@ read production-hoge.ps1 from c:\test.
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [ValidateNotNullOrEmpty()]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup)
+        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup))
     )
 
     process
@@ -57,11 +57,8 @@ read production-hoge.ps1 from c:\test.
             ('Set DeployGroupFile Extension as "$valentia.deployextension" : {0}' -f $valentia.deployextension) | Write-ValentiaVerboseDebug
             $DeployExtension = $valentia.deployextension
 
-            foreach ($DeployGroup in $DeployGroups)
-            {
-                'Read DeployGroup and return $DeployMemebers' | Write-ValentiaVerboseDebug
-                Read-ValentiaGroup -DeployGroup $DeployGroup
-            }
+            'Read DeployGroup and return $DeployMemebers' | Write-ValentiaVerboseDebug
+            Read-ValentiaGroup -DeployGroup $DeployGroup
         }
     }
 
@@ -73,43 +70,21 @@ read production-hoge.ps1 from c:\test.
             [CmdletBinding()]
             param
             (
-                [Parameter(Position = 0,Mandatory)]
+                [Parameter(Position = 0, Mandatory)]
                 [string]
                 $DeployGroup
             )
 
             if ($DeployGroup.EndsWith($DeployExtension)) # if DeployGroup last letter = Extension is same as $DeployExtension
             {
-                ("Creating Deploy Path with DeployFolder [{0}] and DeployGroup [{1}] ." -f $DeployFolder, $DeployGroup) | Write-ValentiaVerboseDebug
-                $DeployGroupPath = Join-Path $DeployFolder $DeployGroup
+                $DeployGroupPath = Join-Path $DeployFolder $DeployGroup -Resolve
 
-                ("Check DeployGroupPath {0}" -f $DeployGroupPath) | Write-ValentiaVerboseDebug
-                if(Test-Path $DeployGroupPath)
-                {
-                    # Obtain IP only by selecting leter start from decimal
-                    ("Read DeployGroupPath {0} where letter not contain # inline." -f $DeployGroupPath) | Write-ValentiaVerboseDebug
-                    return (Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern "\w" -Encoding $valentia.fileEncode).line
-                }
-                else
-                {
-                    $errorDetail = [PSCustomObject]@{
-                        ErrorMessageDetail = ("DeployGroup '{0}' not found in DeployFolder path '{1}'." -f $DeployGroup, $DeployFolder)
-                        SuccessStatus = $false
-                    }
-
-                    throw $errorDetail.ErrorMessageDetail
-                }
+                ("Read DeployGroupPath {0} where letter not contain # inline." -f $DeployGroupPath) | Write-ValentiaVerboseDebug
+                return (Select-String -path $DeployGroupPath -Pattern ".*#.*" -notmatch -Encoding $valentia.fileEncode | Select-String -Pattern "\w" -Encoding $valentia.fileEncode).line
             }
             else
             {
-                if (-not [string]::IsNullOrWhiteSpace($DeployGroup))
-                {
-                    return $DeployGroup
-                }
-                else
-                {
-                    throw ("DeployGroup '{0}' was white space. Cancel execution." -f $DeployGroup)
-                }
+                return $DeployGroup
             }
         }
     }

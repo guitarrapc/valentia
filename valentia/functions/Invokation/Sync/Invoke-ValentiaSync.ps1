@@ -62,7 +62,7 @@ Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete it
             Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed.")]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup),
+        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
         [Parameter(
             Mandatory = 0,

@@ -86,7 +86,7 @@ You can prepare script file to run, and specify path.
             HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
         [ValidateNotNullOrEmpty()]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup),
+        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
         [Parameter(
             Position = 3, 

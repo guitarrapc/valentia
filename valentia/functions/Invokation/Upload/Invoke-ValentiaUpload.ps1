@@ -95,7 +95,7 @@ upload files in target to Directory as Background Async job for hosts written in
             Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup)
+        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup))
     )
 
     try

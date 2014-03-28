@@ -85,7 +85,7 @@ download remote sourthdirectory items to local destinationfolder in backgroud jo
             Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.DeployGroup),
+        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
         [Parameter(
             Position = 6,
