@@ -317,6 +317,10 @@ $valentia.users = New-Object psobject -property @{
     deployUser                          = "deployment";
 }
 $valentia.group                         = "Administrators"
+$valentia.userFlag                      = "0X10040"         # #UserFlag for password (ex. infinity & No change Password)
+
+# contains valentia execution policy for initial setup
+$valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
 
 # contains valentia configuration Information
 $valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping

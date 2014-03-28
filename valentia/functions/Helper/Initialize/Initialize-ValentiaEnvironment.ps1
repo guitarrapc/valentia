@@ -12,21 +12,25 @@ function Initialize-ValentiaEnvironment
 Initializing valentia PSRemoting environment for Deploy Server and client.
 
 .DESCRIPTION
-Run as Admin Priviledge. 
+Make sure to Run as Admin Priviledge. 
+This function will execute followings.
 
-Set-ExecutionPolicy (Default : RemoteSigned)
-Enable-PSRemoting
-Add hosts to trustedHosts  (Default : *)
-Set MaxShellsPerUser from 25 to 100
-Add PowerShell Remoting Inbound rule to Firewall (Default : TCP 5985)
-Disable Enhanced Security for Internet Explorer (Default : True)
-Create OS user for Deploy connection. (Default : ec2-user)
-Create Windows PowerShell Module Folder for DeployUser (Default : $home\Documents\WindowsPowerShell\Modules)
-Create/Revise Deploy user credential secure file. (Server Only / Default : True)
-Create Deploy Folders (Server Only / Default : True)
-Set HostName as format (white-$HostUsage-IP)
-Get Status for Reboot Status
-
+1. Set-ExecutionPolicy (Default : RemoteSigned)
+2. Add PowerShell Remoting Inbound rule to Firewall
+3. Network Connection Profile Setup
+4. Enable-PSRemoting
+5. Add hosts to trustedHosts
+6. Enable CredSSP for trustedHosts
+7. Set WSMan MaxShellsPerUser from 25 to 100
+8. Set WSMan MaxMBPerUser unlimited.
+9. Set WSMan MaxProccessesPerShell unlimited.
+10. Restart Service WinRM
+11. Disable Enhanced Security for Internet Explorer
+12. Create OS user for Deploy connection.
+13. Server Only : Create Deploy Folders
+14. Server Only : Create/Revise Deploy user credential secure file.
+15. Set HostName for the windows.
+16. Get Status for Reboot Status and decide.
 
 .NOTES
 Author: guitarrapc
@@ -112,6 +116,20 @@ read production-hoge.ps1 from c:\test.
 
     )
 
+    process
+    {
+        ExecutionPolicy
+        FirewallNetWorkProfile
+        PSRemotingCredSSP -SkipEnablePSRemoting $SkipEnablePSRemoting -TrustedHosts $TrustedHosts
+        WSManConfiguration
+        IESettings
+        $credential = CredentialCheck -NoOSUser $NoOSUser -NoPassSave $NoPassSave
+        OSUserSetup -NoOSUser $NoOSUser -credential $credential
+        ServerSetup -server $Server -credential $credential
+        HostnameSetup -NoSetHostName $NoSetHostName -HostUsage $HostUsage
+        RebootCheck -NoReboot $NoReboot -ForceReboot $ForceReboot
+    }
+    
     begin
     {
         $ErrorActionPreference = $valentia.errorPreference
@@ -136,130 +154,158 @@ read production-hoge.ps1 from c:\test.
             "Current session is already elevated, continue setup environment." | Write-ValentiaVerboseDebug
         }
 
-    }
 
-    process
-    {
-        "setup ScriptFile Reading" | Write-ValentiaVerboseDebug
-        Set-ExecutionPolicy RemoteSigned -Force
-
-        # Add Firewall Policy
-        if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.1.0.0))
+        function ExecutionPolicy
         {
-            "Enble WindowsPowerShell Remoting Firewall Rule" | Write-ValentiaVerboseDebug
-            New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985
-
-            "Set FireWall Status from Public to Private." | Write-ValentiaVerboseDebug
-            Set-NetConnectionProfile -NetworkCategory Private
-        }
-        else
-        {
-            Write-Warning "Your computer detected  lowere than 'Windows 8' or 'Windows Server 2012'. Skip setting Firewall rule and Network location."
-        }
-
-        if (-not($SkipEnablePSRemoting))
-        {
-            "setup PSRemoting" | Write-ValentiaVerboseDebug
-            Enable-PSRemoting -Force
-        }
-
-        "Add $TrustedHosts hosts to trustedhosts" | Write-ValentiaVerboseDebug
-        Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts
-
-        "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'" | Write-ValentiaVerboseDebug
-        # default 25 change to 100
-        Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100
-
-        "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue." | Write-ValentiaVerboseDebug
-        # default 1024 change to 0 means unlimited
-        Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0
-
-        "Configure WSMan MaxProccessesPerShell to improve performance" | Write-ValentiaVerboseDebug
-        # default 100 change to 0 means unlimited
-        Set-ValentiaWsManMaxProccessesPerShell -MaxProccessesPerShell 0
-
-        # Restart WinRM to change take effect
-        Write-Verbose "Restart-Service WinRM -PassThru"
-        Restart-Service WinRM -PassThru
-
-        "Disable Enhanced Security for Internet Explorer" | Write-ValentiaVerboseDebug
-        Disable-ValentiaEnhancedIESecutiry
-
-        "Add valentia connection user" | Write-ValentiaVerboseDebug
-        if ($NoOSUser)
-        {
-            "NoOSUser switch was enabled, skipping create OSUser." | Write-ValentiaVerboseDebug
-        }
-        else
-        {
-            New-ValentiaOSUser
-        }
-
-        "Create PowerShell ModulePath" | Write-ValentiaVerboseDebug
-        $users = $valentia.users
-        if ($users -is [System.Management.Automation.PSCustomObject])
-        {
-            $pname = $users | Get-Member -MemberType Properties | ForEach-Object{ $_.Name }
-
-            foreach ($p in $pname)
+            "setup ScriptFile Reading only if execution policy is restricted." | Write-ValentiaVerboseDebug
+            $executionPolicy = Get-ExecutionPolicy
+            if ($executionPolicy -eq "Restricted")
             {
-                $PSModulePath = "C:\Users\$($Users.$p)\Documents\WindowsPowerShell\Modules"
-                if (-not(Test-Path $PSModulePath))
+                Set-ExecutionPolicy $valentia.ExecutionPolicy -Force
+            }
+        }
+
+        function FirewallNetWorkProfile
+        {
+            if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.1.0.0))
+            {
+                "Enble WindowsPowerShell Remoting Firewall Rule" | Write-ValentiaVerboseDebug
+                New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985
+
+                "Set FireWall Status from Public to Private." | Write-ValentiaVerboseDebug
+                if ((Get-NetConnectionProfile).NetworkCategory -ne "DomainAuthenticated")
                 {
-                    "Create Module path" | Write-ValentiaVerboseDebug
-                    New-Item -Path $PSModulePath -ItemType Directory -Force
+                    Set-NetConnectionProfile -NetworkCategory Private
+                }
+            }
+            else
+            {
+                Write-Warning "Your computer detected  lowere than 'Windows 8' or 'Windows Server 2012'. Skip setting Firewall rule and Network location."
+            }
+        }
+
+        function PSRemotingCredSSP ($SkipEnablePSRemoting, $TrustedHosts)
+        {
+            if (-not($SkipEnablePSRemoting))
+            {
+                "setup PSRemoting" | Write-ValentiaVerboseDebug
+                Enable-PSRemoting -Force
+
+                "Add $TrustedHosts hosts to trustedhosts" | Write-ValentiaVerboseDebug
+                Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts
+
+                "Enable CredSSP for $TrustedHosts" | Write-ValentiaVerboseDebug
+                try
+                {
+                    Enable-WSManCredSSP -Role Client -DelegateComputer * -Force
+                }
+                catch
+                {
+                    WSManCredSSP -Role Client -DelegateComputer * -Force
+                }
+                Get-WSManCredSSP
+            }
+        
+        }
+
+        function WSManConfiguration
+        {
+            "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'" | Write-ValentiaVerboseDebug
+            # default 25 change to 100
+            Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100
+
+            "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue." | Write-ValentiaVerboseDebug
+            # default 1024 change to 0 means unlimited
+            Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0
+
+            "Configure WSMan MaxProccessesPerShell to improve performance" | Write-ValentiaVerboseDebug
+            # default 100 change to 0 means unlimited
+            Set-ValentiaWsManMaxProccessesPerShell -MaxProccessesPerShell 0
+
+            "Restart-Service WinRM -PassThru" | Write-ValentiaVerboseDebug
+            Restart-Service WinRM -PassThru
+        }
+
+        function IESettings
+        {
+            "Disable Enhanced Security for Internet Explorer" | Write-ValentiaVerboseDebug
+            Disable-ValentiaEnhancedIESecutiry
+        }
+
+        function CredentialCheck ($NoOSUser, $NoPassSave)
+        {
+            if ((-not $NoOSUser) -or (-not $NoPassSave))
+            {
+                return (Get-Credential -Credential $valentia.users.deployUser)
+            }
+        }
+
+        function OSUserSetup ($NoOSUser, $credential)
+        {
+            "Add valentia connection user" | Write-ValentiaVerboseDebug
+            if ($NoOSUser)
+            {
+                "NoOSUser switch was enabled, skipping create OSUser." | Write-ValentiaVerboseDebug
+            }
+            else
+            {
+                New-ValentiaOSUser -Credential $credential
+            }
+        }
+
+        function ServerSetup ($server, $credential)
+        {
+            if ($Server)
+            {
+                "Create Deploy Folder" | Write-ValentiaVerboseDebug
+                New-ValentiaFolder
+            
+                if ($NoPassSave)
+                {
+                    "NoPassSave switch was enabled, skipping Create/Revise secure password file." | Write-ValentiaVerboseDebug
                 }
                 else
                 {
-                    ("{0} already exist. Nothing had changed. `n" -f $PSModulePath) | Write-ValentiaVerboseDebug
+                    "Create Deploy user credential .pass" | Write-ValentiaVerboseDebug
+                    Set-ValentiaCredential -Credential $credential
                 }
             }
         }
 
-        if ($Server)
+        function HostnameSetup ($NoSetHostName, $HostUsage)
         {
-            "Create Deploy Folder" | Write-ValentiaVerboseDebug
-            New-ValentiaFolder
-            
-            if ($NoPassSave)
+            "Checking for HostName Status is follow rule and set if not correct." | Write-ValentiaVerboseDebug
+            if ($NoSetHostName)
             {
-                "NoPassSave switch was enabled, skipping Create/Revise secure password file." | Write-ValentiaVerboseDebug
+                "NoSetHostName switch was enabled, skipping Set HostName." | Write-ValentiaVerboseDebug
             }
             else
             {
-                "Create Deploy user credential .pass" | Write-ValentiaVerboseDebug
-                Set-ValentiaCredential
+                Set-ValentiaHostName -HostUsage $HostUsage
             }
         }
-        
-        "Checking for HostName Status is follow rule and set if not correct." | Write-ValentiaVerboseDebug
-        if ($NoSetHostName)
+
+        function RebootCheck ($NoReboot, $ForceReboot)
         {
-            "NoSetHostName switch was enabled, skipping Set HostName." | Write-ValentiaVerboseDebug
-        }
-        else
-        {
-            Set-ValentiaHostName -HostUsage $HostUsage
-        }
-        
-        "Checking for Reboot Status, if pending then prompt for reboot confirmation." | Write-ValentiaVerboseDebug
-        if(Get-ValentiaRebootRequiredStatus)
-        {
-            if ($NoReboot)
+            "Checking for Reboot Status, if pending then prompt for reboot confirmation." | Write-ValentiaVerboseDebug
+            if(Get-ValentiaRebootRequiredStatus)
             {
-                'NoReboot switch was enabled, skipping reboot.' | Write-ValentiaVerboseDebug
-            }
-            elseif ($ForceReboot)
-            {
-                Restart-Computer -Force
-            }
-            else
-            {
-                Restart-Computer -Force -Confirm
+                if ($NoReboot)
+                {
+                    'NoReboot switch was enabled, skipping reboot.' | Write-ValentiaVerboseDebug
+                }
+                elseif ($ForceReboot)
+                {
+                    Restart-Computer -Force
+                }
+                else
+                {
+                    Restart-Computer -Force -Confirm
+                }
             }
         }
     }
-    
+
     end
     {
         # Cleanup valentia Environment

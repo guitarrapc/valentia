@@ -29,6 +29,7 @@ $script:functionToExport = @(
     "New-ValentiaGroup",
     "New-ValentiaFolder",
     "New-ValentiaDynamicParamMulti",
+    "New-ValentiaOSUser",
     "Ping-ValentiaGroupAsync",
     "Set-ValentiaCredential", 
     "Set-ValentiaHostName",

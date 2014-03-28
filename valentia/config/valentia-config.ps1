@@ -28,6 +28,9 @@ $valentia.users = New-Object psobject -property @{
 }
 $valentia.group                         = "Administrators"
 
+# contains valentia execution policy for initial setup
+$valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
+
 # contains valentia configuration Information
 $valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
 $valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension

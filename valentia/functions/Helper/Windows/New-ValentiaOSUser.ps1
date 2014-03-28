@@ -80,134 +80,57 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
 
 #>
 
-    [CmdletBinding(DefaultParameterSetName = 'Secret')]
+    [CmdletBinding()]
     param
     (
         [parameter(
-            mandatory　= 0,
-            HelpMessage = "User account Name.")]
-        $Users = $valentia.users.deployuser,
-
-        [parameter(
+            position  = 0,
             mandatory = 0,
-            ParameterSetName = 'Secret',
-            HelpMessage = "User account Password.")]
-        [ValidateNotNullOrEmpty()]
-        [Security.SecureString]
-        $SecuredPassword,
+            HelpMessage = "PSCredential for New OS User setup.")]
+        [PSCredential]
+        $credential = (Get-Credential -Credential $valentia.users.deployUser),
 
         [parameter(
-            mandatory = 0,
-            ParameterSetName = 'Plain',
-            HelpMessage = "User account Password.")]
-        [ValidateNotNullOrEmpty()]
-        [String]
-        $Password,
-
-        [parameter(
+            position  = 1,
             mandatory = 0,
             HelpMessage = "User account belonging UserGroup.")]
         [string]
-        $Group = $valentia.group
+        $Group = $valentia.group,
+
+        [parameter(
+            position  = 2,
+            mandatory = 0,
+            HelpMessage = "User flag bit to set.")]
+        [string]
+        $UserFlag = $valentia.userFlag
     )
 
     begin
     {
         $HostPC = [System.Environment]::MachineName
         $DirectoryComputer = New-Object System.DirectoryServices.DirectoryEntry("WinNT://" + $HostPC + ",computer")
-        $ExistingUsers = Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount='true'"
-
-        if ($Password)
-        {
-            $SecretPassword = $Password | ConvertTo-SecureString -AsPlainText -Force
-        }
-        elseif ($SecuredPassword)
-        {
-            $SecretPassword = $SecuredPassword
-        }
-        else
-        {
-            $SecretPassword = (Get-Credential -UserName $users -Message "Type your valentia execusion user password").Password
-        }
+        $IsUserExist = Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount='true'" | where Name -eq $credential.UserName
+        $user = $credential.UserName
     }
 
     process
     {
-        
-        "Checking type of users variables to retrieve property" | Write-ValentiaVerboseDebug
-        if ($Users -is [System.Management.Automation.PSCustomObject])
+        if (-not $IsUserExist)
         {
-            ("Get properties for Parameter '{0}'." -f $Users) | Write-ValentiaVerboseDebug
-            $pname = $Users | Get-Member -MemberType Properties | ForEach-Object{ $_.Name }
+            ("{0} not exist, start creating user." -f $user) | Write-ValentiaVerboseDebug
+            $newuser = $DirectoryComputer.Create("user", $user)
+            $newuser.SetPassword(($credential.GetNetworkCredential().password))
+            $newuser.SetInfo()
 
-            ("Foreach each Users in {0}" -f $Users) | Write-ValentiaVerboseDebug
-            foreach ($p in $pname)
-            {
-                if ($users.$p -notin $ExistingUsers.Name)
-                {
-                    # Create User
-                    ("{0} not exist, start creating user." -f $Users.$p) | Write-ValentiaVerboseDebug
-                    $newuser = $DirectoryComputer.Create("user", $Users.$p)
-                    $newuser.SetPassword([System.Runtime.InteropServices.marshal]::PtrToStringAuto([System.Runtime.InteropServices.marshal]::SecureStringToBSTR($SecretPassword)))
-                    $newuser.SetInfo()
+            "Set user flag to define account as bor '{0}'" -f $valentia.userFlag | Write-ValentiaVerboseDebug
+            $userFlags = $newuser.Get("UserFlags")
+            $userFlags = $userFlags -bor $UserFlag 
+            $newuser.Put("UserFlags", $userFlags)
+            $newuser.SetInfo()
 
-                    # Get Account UserFlag to set
-                    $userFlags = $newuser.Get("UserFlags")
-
-                    #UserFlag for password (ex. infinity & No change Password)
-                    "Define user flag to define account" | Write-ValentiaVerboseDebug
-                    $userFlags = $userFlags -bor 0X10040
-
-                    "Put user flag to define account" | Write-ValentiaVerboseDebug
-                    $newuser.Put("UserFlags", $userFlags)
-
-                    "Set user flag to define account" | Write-ValentiaVerboseDebug
-                    $newuser.SetInfo()
-
-                    #Assign Group for this user
-                    ("Assign User to UserGroup {0}" -f $UserGroup) | Write-ValentiaVerboseDebug
-                    $DirectoryGroup = $DirectoryComputer.GetObject("group", $Group)
-                    $DirectoryGroup.Add("WinNT://" + $HostPC + "/" + $Users.$p)
-                }
-                else
-                {
-                    ("UserName {0} already exist. Nothing had changed." -f $Users.$p) | Write-ValentiaVerboseDebug
-                }
-            }
-        }
-        elseif($Users -is [System.String])
-        {
-            ("Execute with only a user defined in {0}" -f $users) | Write-ValentiaVerboseDebug
-            if ($users -notin $ExistingUsers.Name)
-            {
-                # Create User
-                ("{0} not exist, start creating user." -f $users) | Write-ValentiaVerboseDebug
-                $newuser = $DirectoryComputer.Create("user", $Users)
-                $newuser.SetPassword([System.Runtime.InteropServices.marshal]::PtrToStringAuto([System.Runtime.InteropServices.marshal]::SecureStringToBSTR($SecretPassword)))
-                $newuser.SetInfo()
-
-                # Get Account UserFlag to set
-                $userFlags = $newuser.Get("UserFlags")
-
-                #UserFlag for password (ex. infinity & No change Password)
-                "Define user flag to define account" | Write-ValentiaVerboseDebug
-                $userFlags = $userFlags -bor 0X10040
-
-                "Put user flag to define account" | Write-ValentiaVerboseDebug
-                $newuser.Put("UserFlags", $userFlags)
-
-                "Set user flag to define account" | Write-ValentiaVerboseDebug
-                $newuser.SetInfo()
-
-                #Assign Group for this user
-                ("Assign User to UserGroup {0}" -f $UserGroup) | Write-ValentiaVerboseDebug
-                $DirectoryGroup = $DirectoryComputer.GetObject("group", $Group)
-                $DirectoryGroup.Add("WinNT://" + $HostPC + "/" + $Users)
-            }
-        }
-        else
-        {
-            throw ("Users must passed as string or custom define in {0}" -f $valentia.defaultconfigurationfile)
+            ("Assign User to UserGroup {0}" -f $UserGroup) | Write-ValentiaVerboseDebug
+            $DirectoryGroup = $DirectoryComputer.GetObject("group", $Group)
+            $DirectoryGroup.Add("WinNT://" + $HostPC + "/" + $user)
         }
     }
 }
