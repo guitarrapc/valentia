@@ -56,15 +56,3 @@ $valentia.config_default                = New-Object PSObject -property ([ordere
     BranchFolder                        = [Enum]::GetNames([ValentiaBranchPath]);
     log                                 = $valentia.log;
 })
-
-# Set Valentia prompt for choice messages
-$valentia.promptForChoice = New-Object psobject -property @{
-    title                               = "Select item from prompt choices.";
-    questions                           = @("Yes", "No");
-    defaultChoiceYes                    = "y";
-    defaultChoiceNo                     = "n";
-    helpMessage                         = "Enter '{0}' to select '{1}'."
-    message                             = "Type alphabet you want to choose.";
-    additionalMessage                   = $null;
-    defaultIndex                        = 0;
-}

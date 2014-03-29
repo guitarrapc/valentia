@@ -258,36 +258,18 @@ $valentia.supportWindows                = @(6,1,0,0)                          # 
 $valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]"utf8"
 $valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
 
+# contains PS Build-in Preference status
 $valentia.originalErrorActionPreference = $ErrorActionPreference
 $valentia.errorPreference               = "Stop"
 $valentia.originalDebugPreference       = $DebugPreference
 $valentia.debugPreference               = "SilentlyContinue"
 
-#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
-
-# contains context for default.
-$valentia.context.push(
-    @{
-        executedTasks                   = New-Object System.Collections.Stack;
-        callStack                       = New-Object System.Collections.Stack;
-        originalEnvPath                 = $env:Path;
-        originalDirectory               = Get-Location;
-        originalErrorActionPreference   = $valentia.originalErrorActionPreference;
-        ErrorActionPreference           = $valentia.errorPreference;
-        originalDebugPreference         = $valentia.originalDebugPreference;
-        debugPreference                 = $valentia.debugPreference;
-        name                            = $valentia.name;
-        modulePath                      = $valentia.modulePath;
-        helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
-        supportWindows                  = $valentia.supportWindows;
-        fileEncode                      = $valentia.fileEncode
-        tasks                           = @{};
-        includes                        = New-Object System.Collections.Queue;
-    }
-)
-
-
-#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
+# contains WSman value to set by initialization
+$valentia.waman = New-Object psobject -property @{
+    MaxShellsPerUser                    = 100; # default 25 change to 100                 : "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'"
+    MaxMemoryPerShellMB                 =   0; # default 1024 change to 0 means unlimited : "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue."
+    MaxProccessesPerShell               =   0; # default 100 change to 0 means unlimited  : "Configure WSMan MaxProccessesPerShell to improve performance"
+}
 
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
 $valentia.poolSize = New-Object psobject -property @{
@@ -309,27 +291,6 @@ $valentia.ping = New-Object psobject -property @{
         ttl                                     = 64;
         dontFragment                            = $false;
     }
-}
-
-# contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.users = New-Object psobject -property @{
-    CurrentUser                         = $env:USERNAME;
-    deployUser                          = "deployment";
-}
-$valentia.group                         = "Administrators"
-$valentia.userFlag                      = "0X10040"         # #UserFlag for password (ex. infinity & No change Password)
-
-# contains valentia execution policy for initial setup
-$valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
-
-# contains valentia configuration Information
-$valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
-$valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
-
-# Define Prefix for Deploy Client NetBIOS name
-$valentia.prefix = New-Object psobject -property @{
-    hostName                            = "web";
-    ipstring                            = "ip";
 }
 
 # Define External program path
@@ -358,6 +319,52 @@ $valentia.promptForChoice = New-Object psobject -property @{
     message                             = "Type alphabet you want to choose.";
     additionalMessage                   = $null;
     defaultIndex                        = 0;
+}
+
+#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
+
+# contains context for default.
+$valentia.context.push(
+    @{
+        executedTasks                   = New-Object System.Collections.Stack;
+        callStack                       = New-Object System.Collections.Stack;
+        originalEnvPath                 = $env:Path;
+        originalDirectory               = Get-Location;
+        originalErrorActionPreference   = $valentia.originalErrorActionPreference;
+        ErrorActionPreference           = $valentia.errorPreference;
+        originalDebugPreference         = $valentia.originalDebugPreference;
+        debugPreference                 = $valentia.debugPreference;
+        name                            = $valentia.name;
+        modulePath                      = $valentia.modulePath;
+        helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
+        supportWindows                  = $valentia.supportWindows;
+        fileEncode                      = $valentia.fileEncode
+        tasks                           = @{};
+        includes                        = New-Object System.Collections.Queue;
+    }
+)
+
+#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
+
+# contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
+$valentia.users = New-Object psobject -property @{
+    CurrentUser                         = $env:USERNAME;
+    deployUser                          = "deployment";
+}
+$valentia.group                         = "Administrators"
+$valentia.userFlag                      = "0X10040"         # #UserFlag for password (ex. infinity & No change Password)
+
+# contains valentia execution policy for initial setup
+$valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
+
+# contains valentia configuration Information
+$valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
+$valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
+
+# Define Prefix for Deploy Client NetBIOS name
+$valentia.prefix = New-Object psobject -property @{
+    hostName                            = "web";
+    ipstring                            = "ip";
 }
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script

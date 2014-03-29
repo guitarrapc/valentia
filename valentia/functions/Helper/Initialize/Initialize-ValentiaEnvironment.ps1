@@ -61,63 +61,86 @@ read production-hoge.ps1 from c:\test.
     [CmdletBinding(DefaultParameterSetName = "Server")]
     param
     (
-        [parameter(
-            HelpMessage = "Select this switch If you don't want to initialize Deploy User.")]
-        [switch]
-        $NoOSUser = $false,
-
-        [parameter(
-            ParameterSetName = "Server",
-            HelpMessage = "Select this switch If you don't want to Save/Revise password.")]
-        [switch]
-        $NoPassSave = $false,
-
-        [parameter(
-            ParameterSetName = "Server",
-            HelpMessage = "Select this switch to Initialize setup for Deploy Server.")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(HelpMessage = "Select this switch to Initialize setup for Deploy Server.")]
         [switch]
         $Server,
 
-        [parameter(
-            ParameterSetName = "Client",
-            HelpMessage = "Select this switch to Initialize setup for Deploy Client.")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(HelpMessage = "Select this switch to Initialize setup for Deploy Client.")]
         [switch]
         $Client,
 
-        [Parameter(
-            HelpMessage = "Select this switch If you don't want to Set HostName.")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(HelpMessage = "Select this switch If you don't want to initialize Deploy User.")]
         [switch]
-        $NoSetHostName = $false,
+        $NoOSUser = $false,
 
-        [Parameter(
-            HelpMessage = "set usage for the host.")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(HelpMessage = "Select this switch If you don't want to Save/Revise password.")]
+        [switch]
+        $NoPassSave = $false,
+
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(ParameterSetName = "HostName")]
+        [Parameter(HelpMessage = "Select this switch If you don't want to Set HostName.")]
+        [switch]
+        $NoSetHostName = $true,
+
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(ParameterSetName = "HostName")]
+        [Parameter(HelpMessage = "set usage for the host.")]
         [string]
         $HostUsage,
 
-        [parameter(
-            HelpMessage = "Select this switch If you don't want to REboot.")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(ParameterSetName = "HostName")]
+        [parameter(HelpMessage = "Select this switch If you don't want to REboot.")]
         [switch]
-        $NoReboot = $false,
+        $NoReboot = $true,
 
-        [parameter(
-            HelpMessage = "Select this switch If you want to Forece Restart without prompt.")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(ParameterSetName = "HostName")]
+        [parameter(HelpMessage = "Select this switch If you want to Forece Restart without prompt.")]
         [switch]
         $ForceReboot = $false,
 
-        [parameter(
-            HelpMessage = "Input Trusted Hosts you want to enable. Default : ""*"" ")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(HelpMessage = "Input Trusted Hosts you want to enable. Default : ""*"" ")]
         [string]
         $TrustedHosts = "*",
 
-        [parameter(
-            HelpMessage = "Select this switch If you want to skip setup PSRemoting.")]
+        [parameter(ParameterSetName = "Server")]
+        [parameter(ParameterSetName = "Client")]
+        [parameter(HelpMessage = "Select this switch If you want to skip setup PSRemoting.")]
         [switch]
         $SkipEnablePSRemoting = $false
-
     )
 
     process
     {
+        if ($PSBoundParameters.Verbose.IsPresent)
+        {
+            [ordered]@{
+                Server               = $Server
+                Client               = $Client
+                NoOSUser             = $NoOSUser
+                NoPassSave           = $NoPassSave
+                NoSetHostName        = $NoSetHostName
+                HostUsage            = $HostUsage
+                NoReboot             = $NoReboot
+                ForceReboot          = $ForceReboot
+                TrustedHosts         = $TrustedHosts
+                SkipEnablePSRemoting = $SkipEnablePSRemoting
+            }
+        }
+
         ExecutionPolicy
         FirewallNetWorkProfile
         PSRemotingCredSSP -SkipEnablePSRemoting $SkipEnablePSRemoting -TrustedHosts $TrustedHosts
@@ -134,7 +157,15 @@ read production-hoge.ps1 from c:\test.
     {
         $ErrorActionPreference = $valentia.errorPreference
 
-        # Check -HostUsage parameter is null or emptry
+        if(-not(Test-ValentiaPowerShellElevated))
+        {
+            throw "Your PowerShell Console is not elevated! Must start PowerShell as an elevated to run this function because of UAC."
+        }
+        else
+        {
+            "Current session is already elevated, continue setup environment." | Write-ValentiaVerboseDebug
+        }
+
         if ($NoSetHostName -eq $false)
         {
             if ([string]::IsNullOrEmpty($HostUsage))
@@ -143,21 +174,9 @@ read production-hoge.ps1 from c:\test.
             }
         }
 
-        # Check Elevated or not
-        "checking is this user elevated or not." | Write-ValentiaVerboseDebug
-        if(-not(Test-ValentiaPowerShellElevated))
-        {
-            throw "To run this Cmdlet on UAC 'Windows Vista, 7, 8, Windows Server 2008, 2008 R2, 2012 and later versions of Windows' must start an elevated PowerShell console."
-        }
-        else
-        {
-            "Current session is already elevated, continue setup environment." | Write-ValentiaVerboseDebug
-        }
-
-
         function ExecutionPolicy
         {
-            "setup ScriptFile Reading only if execution policy is restricted." | Write-ValentiaVerboseDebug
+            "Set ExecutionPolicy to '{0}' only if execution policy is restricted." -f $valentia.ExecutionPolicy | Write-ValentiaVerboseDebug
             $executionPolicy = Get-ExecutionPolicy
             if ($executionPolicy -eq "Restricted")
             {
@@ -169,7 +188,7 @@ read production-hoge.ps1 from c:\test.
         {
             if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.1.0.0))
             {
-                "Enble WindowsPowerShell Remoting Firewall Rule" | Write-ValentiaVerboseDebug
+                "Enable WindowsPowerShell Remoting Firewall Rule" | Write-ValentiaVerboseDebug
                 New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985
 
                 "Set FireWall Status from Public to Private." | Write-ValentiaVerboseDebug
@@ -180,7 +199,7 @@ read production-hoge.ps1 from c:\test.
             }
             else
             {
-                Write-Warning "Your computer detected  lowere than 'Windows 8' or 'Windows Server 2012'. Skip setting Firewall rule and Network location."
+                Write-Warning ("Your OS Version detected as '{0}', which is lower than 'Windows 8' or 'Windows Server 2012'. Skip setting Firewall rule and Network location." -f [System.Environment]::OSVersion.Version)
             }
         }
 
@@ -188,7 +207,7 @@ read production-hoge.ps1 from c:\test.
         {
             if (-not($SkipEnablePSRemoting))
             {
-                "setup PSRemoting" | Write-ValentiaVerboseDebug
+                "Setup PSRemoting" | Write-ValentiaVerboseDebug
                 Enable-PSRemoting -Force
 
                 "Add $TrustedHosts hosts to trustedhosts" | Write-ValentiaVerboseDebug
@@ -210,20 +229,7 @@ read production-hoge.ps1 from c:\test.
 
         function WSManConfiguration
         {
-            "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'" | Write-ValentiaVerboseDebug
-            # default 25 change to 100
-            Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100
-
-            "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue." | Write-ValentiaVerboseDebug
-            # default 1024 change to 0 means unlimited
-            Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0
-
-            "Configure WSMan MaxProccessesPerShell to improve performance" | Write-ValentiaVerboseDebug
-            # default 100 change to 0 means unlimited
-            Set-ValentiaWsManMaxProccessesPerShell -MaxProccessesPerShell 0
-
-            "Restart-Service WinRM -PassThru" | Write-ValentiaVerboseDebug
-            Restart-Service WinRM -PassThru
+            Set-ValetntiaWSManConfiguration
         }
 
         function IESettings
