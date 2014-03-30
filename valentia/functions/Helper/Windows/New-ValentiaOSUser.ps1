@@ -112,11 +112,11 @@ function New-ValentiaOSUser
             New-User @paramUser
         }
 
+        $Domain= Get-DomainName
         $paramUserFlag = @{
             targetUser = New-Object System.DirectoryServices.DirectoryEntry(("WinNT://{0}/{1}/{2}" -f $Domain, $HostPC, $user))
             UserFlag   = $UserFlag
         }
-
         Set-UserFlag @paramUserFlag
         
         if ((Get-UserAndGroup @paramUserAndGroup).Groups -ne $Group)
@@ -136,7 +136,6 @@ function New-ValentiaOSUser
 
         $HostPC = [System.Environment]::MachineName
         $user = $credential.UserName
-        $Domain = (Get-CimInstance -ClassName win32_computersystem).Domain
         $DirectoryComputer = New-Object System.DirectoryServices.DirectoryEntry(("WinNT://{0},computer" -f $HostPC))
         $IsUserExist = Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount='true'" | where Name -eq $user
 
@@ -155,6 +154,19 @@ function New-ValentiaOSUser
         $paramUserAndGroup = @{
             DirectoryComputer = $DirectoryComputer
             user              = $user
+        }
+
+        function Get-DomainName
+        {
+            if ((Get-WMIObject Win32_ComputerSystem).PartOfDomain)
+            {
+                $dn = (Get-CimInstance -ClassName win32_computersystem).Domain
+                return (Get-CimInstance -ClassName Win32_NTDomain | where DNSForestName -eq $dn).DomainName
+            }
+            else
+            {
+                return (Get-CimInstance -ClassName win32_computersystem).Domain
+            }
         }
 
         function New-User ($user, $HostPC, $credential)
