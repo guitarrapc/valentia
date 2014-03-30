@@ -2,10 +2,7 @@
 
 #-- Helper Function --#
 
-function ConvertTo-ValentiaTask
-{
 <#
-
 .SYNOPSIS 
 Convert PowerShell script to Valentia Task format
 
@@ -26,9 +23,9 @@ Convert PowerShell Script written in inputFilePath into valentia Task file.
 ConvertTo-ValentiaTask -scriptBlock {ps} -taskName test -outputFilePath d:\test.ps1
 --------------------------------------------
 Convert ScriptBlock into valentia Task file.
-
 #>
-
+function ConvertTo-ValentiaTask
+{
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (

@@ -3,9 +3,6 @@
 #-- Helper for valentia --#
 
 # clean
-function Invoke-ValentiaClean
-{
-
 <#
 .SYNOPSIS 
 Clean up valentia task variables.
@@ -22,9 +19,9 @@ Created: 13/Jul/2013
 Invoke-ValentiaClean
 --------------------------------------------
 Clean up valentia variables stacked in the $valentia variables.
-
 #>
-
+function Invoke-ValentiaClean
+{
     [CmdletBinding()]
     param
     (

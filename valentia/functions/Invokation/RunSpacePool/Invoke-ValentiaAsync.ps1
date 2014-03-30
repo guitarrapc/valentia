@@ -3,11 +3,8 @@
 #-- Public Module Asynchronous / Functions for Remote Execution --#
 
 # valea
-function Invoke-ValentiaAsync
-{
 
 <#
-
 .SYNOPSIS 
 Run Asynchronous valentia execution to remote host
 
@@ -48,10 +45,9 @@ Specify DeployGroupFile and ScriptBlock
   valea DeployGroupFile.ps1 .\default.ps1
 --------------------------------------------
 You can prepare script file to run, and specify path.
-
 #>
-
-
+function Invoke-ValentiaAsync
+{
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
     param
     (

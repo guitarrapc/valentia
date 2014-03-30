@@ -2,11 +2,7 @@
 
 #-- Private Module Job / Functions for Remote Execution --#
 
-function Invoke-ValentiaCommand
-{
-
 <#
-
 .SYNOPSIS 
 Invoke Command as Job to remote host
 
@@ -20,22 +16,18 @@ Created: 20/June/2013
 
 .EXAMPLE
   Invoke-ValentiaCommand -ScriptToRun $ScriptToRun
---------------------------------------------
 
 .EXAMPLE
   Invoke-ValentiaCommand -ScriptToRun {ls}
---------------------------------------------
 
 .EXAMPLE
   Invoke-ValentiaCommand -ScriptToRun {ls | where {$_.extensions -eq ".txt"}}
---------------------------------------------
 
 .EXAMPLE
   Invoke-ValentiaCommand {test-connection localhost}
---------------------------------------------
-
 #>
-
+function Invoke-ValentiaCommand
+{
     [CmdletBinding(DefaultParameterSetName = "All")]
     param
     (

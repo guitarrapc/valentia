@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Set-ValentiaWsManMaxProccessesPerShell
-{
-
 <#
-
 .SYNOPSIS 
 Set WsMan Max Proccesses Per Shell. 
 
@@ -22,9 +18,9 @@ Created: 15/Feb/2014
 Set-ValentiaWsManMaxProccessesPerShell -MaxProccessesPerShell 0
 --------------------------------------------
 set as 100
-
 #>
-
+function Set-ValentiaWsManMaxProccessesPerShell
+{
     [CmdletBinding()]
     param
     (

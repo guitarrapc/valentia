@@ -2,10 +2,7 @@
 
 #-- Helper Functions --#
 
-function Get-ValentiaFileEncoding
-{
 <#
-
 .SYNOPSIS 
 Get encoding from the file your tried to read.
 
@@ -21,9 +18,9 @@ Created: 19/Nov/2013
 Get-ValentiaFileEncoding -Path hogehoge.ps1
 --------------------------------------------
 Get encoding of hogehoge.ps1
-
 #>
-
+function Get-ValentiaFileEncoding
+{
     [CmdletBinding()]
     param
     (

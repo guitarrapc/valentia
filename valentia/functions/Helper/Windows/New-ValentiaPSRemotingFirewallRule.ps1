@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function New-ValentiaPSRemotingFirewallRule
-{
-
 <#
-
 .SYNOPSIS 
 Create New Firewall Rule for PowerShell Remoting
 
@@ -21,10 +17,9 @@ Created: 18/Jul/2013
 Enable-PSRemotingFirewallRule
 --------------------------------------------
 Add PowerShellRemoting-In accessible rule to Firewall.
-
 #>
-
-
+function New-ValentiaPSRemotingFirewallRule
+{
     [CmdletBinding()]
     param
     (

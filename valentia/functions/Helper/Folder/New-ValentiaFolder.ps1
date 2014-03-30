@@ -2,11 +2,7 @@
 
 #-- Prerequisite Deploy Setting Module Functions --#
 
-function New-ValentiaFolder
-{
-
 <#
-
 .SYNOPSIS 
 Configure Deployment Path
 
@@ -21,9 +17,9 @@ Created: 18/Jul/2013
 New-valentiaFolder
 --------------------------------------------
 create as default
-
 #>
-
+function New-ValentiaFolder
+{
     [CmdletBinding()]
     param
     (
@@ -60,12 +56,10 @@ create as default
         # Create Fullpath String
         if ($BranchPath.Length -eq 0)
         {
-            "BranchPath detected as empty. using '{0}'." -f ([Enum]::GetNames([ValentiaBranchPath]) -join ", ") | Write-ValentiaVerboseDebug
             $DeployFolders = [Enum]::GetNames([ValentiaBranchPath]) | %{Join-Path $RootPath $_}
         }
         else
         {
-            ("BranchPath detected as {0}" -f $BranchFolder) | Write-ValentiaVerboseDebug
             $DeployFolders = $BranchPath | %{Join-Path $RootPath $_}
         }
 
@@ -79,26 +73,30 @@ create as default
         {
             if(-not (Test-Path $DeployFolder))
             {
-                ("{0} not exist, creating {1}." -f $DeployFolder, $DeployFolder) | Write-ValentiaVerboseDebug
+                ("'{0}' not exist, creating." -f $DeployFolder) | Write-ValentiaVerboseDebug
                 $output = New-Item -Path $DeployFolder -ItemType directory -Force
                 $directories.Add($output)
             }
             else
             {
-                ("{0} already exist, skip create {1}." -f $DeployFolder, $DeployFolder) | Write-ValentiaVerboseDebug
+                ("'{0}' already exist, skip." -f $DeployFolder) | Write-ValentiaVerboseDebug
+                $output = Get-Item -Path $DeployFolder
+                $directories.Add($output)
             }
         }
 
         # Check Log Folder and create if not exist 
         if(-not (Test-Path $LogFolder))
         {
-            ("{0} not exist, creating {1}." -f $LogFolder, $LogFolder) | Write-ValentiaVerboseDebug
+            ("'{0}' not exist, creating." -f $LogFolder) | Write-ValentiaVerboseDebug
             $output = New-Item -Path $LogFolder -ItemType directory -Force
             $directories.Add($output)
         }
         else
         {
-            ("{0} already exist, skip create {1}." -f $LogFolder, $LogFolder) | Write-ValentiaVerboseDebug
+            ("'{0}' already exist, skip." -f $LogFolder) | Write-ValentiaVerboseDebug
+            $output = Get-Item -Path $LogFolder
+            $directories.Add($output)
         }
     }
 

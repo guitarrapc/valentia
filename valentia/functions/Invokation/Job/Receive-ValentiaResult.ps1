@@ -2,11 +2,7 @@
 
 #-- Private Module Job / Functions for Remote Execution --#
 
-function Receive-ValentiaResult
-{
-
 <#
-
 .SYNOPSIS 
 Receives a results of one or more jobs.
 
@@ -19,9 +15,9 @@ Created: 14/Feb/2014
 
 .EXAMPLE
   Receive-ValentiaResult -listJob $listJob
---------------------------------------------
 #>
-
+function Receive-ValentiaResult
+{
     [CmdletBinding()]
     param
     (

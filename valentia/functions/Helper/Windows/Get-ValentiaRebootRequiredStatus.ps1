@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Get-ValentiaRebootRequiredStatus
-{
-
 <#
-
 .SYNOPSIS 
 Get reboot require status for client
 
@@ -22,9 +18,9 @@ Created: 18/Jul/2013
 Get-ValentiaRebootRequiredStatus
 --------------------------------------------
 Obtain reboot required status.
-
 #>
-
+function Get-ValentiaRebootRequiredStatus
+{
     [CmdletBinding()]
     param
     (

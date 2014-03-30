@@ -2,11 +2,7 @@
 
 #-- Deploy Folder/File Module Functions --#
 
-function Show-ValentiaGroup
-{
-
 <#
-
 .SYNOPSIS 
 Show valentia deploygroup file (.ps1) list
 
@@ -22,7 +18,8 @@ Show-ValentiaGroup
 --------------------------------------------
 show files in $valentia.Root\([ValentiaBranchPath]::Deploygroup) folder.
 #>
-
+function Show-ValentiaGroup
+{
     [CmdletBinding()]
     param
     (

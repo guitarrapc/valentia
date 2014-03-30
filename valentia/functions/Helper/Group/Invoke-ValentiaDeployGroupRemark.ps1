@@ -3,8 +3,6 @@
 #-- Deploy Folder/File Module Functions --#
 
 # ipremark
-function Invoke-ValentiaDeployGroupRemark
-{
 
 <#
 .SYNOPSIS 
@@ -26,7 +24,8 @@ Invoke-valentiaDeployGroupRemark -remarkIPAddresses 10.0.0.10,10.0.0.11 -Verbose
 --------------------------------------------
 replace 10.0.0.10 and 10.0.0.11 with #10.0.0.10 and #10.0.0.11 (like sed -f "s/^10.0.0.10$/#10.0.0.10")
 #>
-
+function Invoke-ValentiaDeployGroupRemark
+{
     [CmdletBinding()]
     param
     (

@@ -2,9 +2,6 @@
 
 #-- Private Module Function for Async execution --#
 
-function Receive-ValentiaAsyncStatus
-{
-
 <#
 .SYNOPSIS 
 Receives one or more Asynchronous pipeline State.
@@ -23,7 +20,8 @@ Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines
 --------------------------------------------
 Above will retrieve Async Result
 #>
-
+function Receive-ValentiaAsyncStatus
+{
     [Cmdletbinding()]
     Param
     (

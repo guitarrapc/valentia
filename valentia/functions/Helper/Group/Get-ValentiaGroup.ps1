@@ -3,8 +3,6 @@
 #-- Deploy Folder/File Module Functions --#
 
 # target
-function Get-ValentiaGroup
-{
 
 <#
 .SYNOPSIS 
@@ -27,7 +25,8 @@ target production-hoge.ps1 c:\test
 --------------------------------------------
 read production-hoge.ps1 from c:\test.
 #>
-
+function Get-ValentiaGroup
+{
     [CmdletBinding()]
     param
     (

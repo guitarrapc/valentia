@@ -2,11 +2,7 @@
 
 #-- Deploy Folder/File Module Functions --#
 
-function New-ValentiaGroup
-{
-
 <#
-
 .SYNOPSIS 
 Create new DeployGroup File written "target PC IP/hostname" for PS-RemoteSession
 
@@ -21,9 +17,9 @@ Created: 18/Jul/2013
 New-valentiaGroup -DeployClients "10.0.4.100","10.0.4.101" -FileName new.ps1
 --------------------------------------------
 write 10.0.4.100 and 10.0.4.101 to create deploy group file as "new.ps1".
-
 #>
-
+function New-ValentiaGroup
+{
     [CmdletBinding()]
     param
     (

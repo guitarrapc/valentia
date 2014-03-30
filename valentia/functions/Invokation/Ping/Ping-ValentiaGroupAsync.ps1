@@ -3,8 +3,6 @@
 #-- ping Connection to the host --#
 
 # PingAsync
-function Ping-ValentiaGroupAsync
-{
 
 <#
 .SYNOPSIS 
@@ -21,9 +19,9 @@ Created: 03/Feb/2014
 Ping-ValentiaGroupAsync production-hoge.ps1
 --------------------------------------------
 Ping production-hoge.ps1 from deploy group branch path
-
 #>
-
+function Ping-ValentiaGroupAsync
+{
     [CmdletBinding()]
     param
     (

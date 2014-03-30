@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function New-ValentiaOSUser
-{
-
 <#
-
 .SYNOPSIS 
 Create New Local User for Deployment
 
@@ -77,9 +73,9 @@ New-valentiaOSUser -Password "1231231qawerqwe87$%"
 --------------------------------------------
 NOT-Recommend - Unsecure Input
 Visible prompt will up and non-mask your PASSWORD input as *****.
-
 #>
-
+function New-ValentiaOSUser
+{
     [CmdletBinding()]
     param
     (
@@ -131,7 +127,7 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
 
     end
     {
-        Get-UserAndGroup @paramGroup
+        Get-UserAndGroup @paramUserAndGroup
     }
 
     begin

@@ -2,7 +2,6 @@
 
 #-- Public Functions for WSMan Parameter Configuration --#
 
-# vale
 function Set-ValetntiaWSManConfiguration
 {
     [CmdletBinding()]

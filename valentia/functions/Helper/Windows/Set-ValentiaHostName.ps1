@@ -3,11 +3,8 @@
 #-- Prerequisite OS Setting Module Functions --#
 
 # rename
-function Set-ValentiaHostName
-{
 
 <#
-
 .SYNOPSIS 
 Change Computer name as specified usage.
 
@@ -22,9 +19,9 @@ Created: 18/Jul/2013
 Set-valentiaHostName -HostUsage web
 --------------------------------------------
 Change Hostname as web-$PrefixHostName-$PrefixIpString-Ip1-Ip2-Ip3-Ip4
-
 #>
-
+function Set-ValentiaHostName
+{
     [CmdletBinding()]  
     param
     (

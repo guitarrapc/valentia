@@ -3,11 +3,8 @@
 #-- Running prerequisite Initialize OS Setting Module Functions --#
 
 # Initial
-function Initialize-ValentiaEnvironment
-{
 
 <#
-
 .SYNOPSIS 
 Initializing valentia PSRemoting environment for Deploy Server and client.
 
@@ -55,9 +52,9 @@ Setup Client Environment and Skip Deploy OSUser creattion
 Setup Server Environment withour OSUser and Credential file revise
 --------------------------------------------
 read production-hoge.ps1 from c:\test.
-
 #>
-
+function Initialize-ValentiaEnvironment
+{
     [CmdletBinding(DefaultParameterSetName = "Server")]
     param
     (
@@ -153,6 +150,12 @@ read production-hoge.ps1 from c:\test.
         RebootCheck -NoReboot $NoReboot -ForceReboot $ForceReboot
     }
     
+    end
+    {
+        # Cleanup valentia Environment
+        Invoke-ValentiaClean
+    }
+
     begin
     {
         $ErrorActionPreference = $valentia.errorPreference
@@ -176,6 +179,7 @@ read production-hoge.ps1 from c:\test.
 
         function ExecutionPolicy
         {
+            Write-Host "Configuring ExecutionPolicy." -ForegroundColor Cyan
             "Set ExecutionPolicy to '{0}' only if execution policy is restricted." -f $valentia.ExecutionPolicy | Write-ValentiaVerboseDebug
             $executionPolicy = Get-ExecutionPolicy
             if ($executionPolicy -eq "Restricted")
@@ -186,9 +190,10 @@ read production-hoge.ps1 from c:\test.
 
         function FirewallNetWorkProfile
         {
+            Write-Host "Configuring Firewall to accept PowerShell Remoting." -ForegroundColor Cyan
             if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.1.0.0))
             {
-                "Enable WindowsPowerShell Remoting Firewall Rule" | Write-ValentiaVerboseDebug
+                "Enable WindowsPowerShell Remoting Firewall Rule." | Write-ValentiaVerboseDebug
                 New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985
 
                 "Set FireWall Status from Public to Private." | Write-ValentiaVerboseDebug
@@ -205,23 +210,18 @@ read production-hoge.ps1 from c:\test.
 
         function PSRemotingCredSSP ($SkipEnablePSRemoting, $TrustedHosts)
         {
+            Write-Host "Enabling PSRemoting and CredSSP" -ForegroundColor Cyan
             if (-not($SkipEnablePSRemoting))
             {
                 "Setup PSRemoting" | Write-ValentiaVerboseDebug
                 Enable-PSRemoting -Force
 
                 "Add $TrustedHosts hosts to trustedhosts" | Write-ValentiaVerboseDebug
-                Enable-WsManTrustedHosts -TrustedHosts $TrustedHosts
+                Enable-ValentiaWsManTrustedHosts -TrustedHosts $TrustedHosts
 
                 "Enable CredSSP for $TrustedHosts" | Write-ValentiaVerboseDebug
-                try
-                {
-                    Enable-WSManCredSSP -Role Client -DelegateComputer * -Force
-                }
-                catch
-                {
-                    WSManCredSSP -Role Client -DelegateComputer * -Force
-                }
+                Enable-ValentiaWsManCredSSP -TrustedHosts $TrustedHosts
+                
                 Get-WSManCredSSP
             }
         
@@ -229,11 +229,13 @@ read production-hoge.ps1 from c:\test.
 
         function WSManConfiguration
         {
+            Write-Host "Configure WSMan parameter." -ForegroundColor Cyan
             Set-ValetntiaWSManConfiguration
         }
 
         function IESettings
         {
+            Write-Host "Disable Enganced Security for Ineternet Explorer." -ForegroundColor Cyan
             "Disable Enhanced Security for Internet Explorer" | Write-ValentiaVerboseDebug
             Disable-ValentiaEnhancedIESecutiry
         }
@@ -242,19 +244,21 @@ read production-hoge.ps1 from c:\test.
         {
             if ((-not $NoOSUser) -or (-not $NoPassSave))
             {
+                Write-Host "Obtain PSCredential to set Credential information." -ForegroundColor Cyan
                 return (Get-Credential -Credential $valentia.users.deployUser)
             }
         }
 
         function OSUserSetup ($NoOSUser, $credential)
         {
-            "Add valentia connection user" | Write-ValentiaVerboseDebug
+            Write-Host "Adding Deploy User." -ForegroundColor Cyan
             if ($NoOSUser)
             {
                 "NoOSUser switch was enabled, skipping create OSUser." | Write-ValentiaVerboseDebug
             }
             else
             {
+                "Add valentia connection user" | Write-ValentiaVerboseDebug
                 New-ValentiaOSUser -Credential $credential
             }
         }
@@ -263,9 +267,11 @@ read production-hoge.ps1 from c:\test.
         {
             if ($Server)
             {
+                "Add valentia DeployFolder." | Write-ValentiaVerboseDebug
                 "Create Deploy Folder" | Write-ValentiaVerboseDebug
                 New-ValentiaFolder
             
+                "Set Valentia credential in Windows Credential Manager." | Write-ValentiaVerboseDebug
                 if ($NoPassSave)
                 {
                     "NoPassSave switch was enabled, skipping Create/Revise secure password file." | Write-ValentiaVerboseDebug
@@ -280,20 +286,21 @@ read production-hoge.ps1 from c:\test.
 
         function HostnameSetup ($NoSetHostName, $HostUsage)
         {
-            "Checking for HostName Status is follow rule and set if not correct." | Write-ValentiaVerboseDebug
+            "Check HostName configuration." | Write-ValentiaVerboseDebug
             if ($NoSetHostName)
             {
                 "NoSetHostName switch was enabled, skipping Set HostName." | Write-ValentiaVerboseDebug
             }
             else
             {
+                "Update HostName." | Write-ValentiaVerboseDebug
                 Set-ValentiaHostName -HostUsage $HostUsage
             }
         }
 
         function RebootCheck ($NoReboot, $ForceReboot)
         {
-            "Checking for Reboot Status, if pending then prompt for reboot confirmation." | Write-ValentiaVerboseDebug
+            "Check Reboot status." | Write-ValentiaVerboseDebug
             if(Get-ValentiaRebootRequiredStatus)
             {
                 if ($NoReboot)
@@ -302,19 +309,15 @@ read production-hoge.ps1 from c:\test.
                 }
                 elseif ($ForceReboot)
                 {
+                    "Start Restart Force." | Write-ValentiaVerboseDebug
                     Restart-Computer -Force
                 }
                 else
                 {
+                    "Start Restart with confirmation." | Write-ValentiaVerboseDebug
                     Restart-Computer -Force -Confirm
                 }
             }
         }
-    }
-
-    end
-    {
-        # Cleanup valentia Environment
-        Invoke-ValentiaClean
     }
 }

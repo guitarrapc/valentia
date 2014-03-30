@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Set-ValentiaWsManMaxShellsPerUser
-{
-
 <#
-
 .SYNOPSIS 
 Set WsMan Max Shells Per user to prevent "The WS-Management service cannot process the request. 
 
@@ -22,9 +18,9 @@ Created: 18/Jul/2013
 Set-ValentiaWsManMaxShellsPerUser -ShellsPerUser 100
 --------------------------------------------
 set as 100
-
 #>
-
+function Set-ValentiaWsManMaxShellsPerUser
+{
     [CmdletBinding()]
     param
     (

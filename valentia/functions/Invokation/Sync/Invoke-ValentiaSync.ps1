@@ -3,8 +3,6 @@
 #-- Public Module Functions for Sync Files or Directories--#
 
 # Sync
-function Invoke-ValentiaSync
-{
 
 <#
 .SYNOPSIS 
@@ -32,7 +30,8 @@ Sync -Source c:\upload.txt -Destination c:\share\ -DeployGroup 192.168.1.100,192
 --------------------------------------------
 Sync c:\upload.txt file and c:\share directory in Diff mode. (Will not delete items but only update to add new)
 #>
-
+function Invoke-ValentiaSync
+{
     [CmdletBinding()]
     param
     (

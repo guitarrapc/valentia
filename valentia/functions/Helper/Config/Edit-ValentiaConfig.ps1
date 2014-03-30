@@ -1,5 +1,5 @@
-﻿function Edit-ValentiaConfig
-{
+﻿#Requires -Version 3.0
+
 <#
 .Synopsis
    Edit Valentia Config in Console
@@ -8,7 +8,9 @@
 .EXAMPLE
    Edit-ValentiaConfig
 #>
-
+function Edit-ValentiaConfig
+{
+    [CmdletBinding()]
     param
     (
         [parameter(

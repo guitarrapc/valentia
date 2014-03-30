@@ -3,9 +3,6 @@
 #-- Helper for valentia --#
 
 # go
-function Set-ValentiaLocation
-{
-
 <#
 .SYNOPSIS 
 Move location to valentia folder
@@ -27,9 +24,9 @@ just move to root deployment path.
 go application
 --------------------------------------------
 change location to BranchPath c:\deployment\application (in default configuration.)
-
 #>
-
+function Set-ValentiaLocation
+{
     [CmdletBinding()]
     param
     (

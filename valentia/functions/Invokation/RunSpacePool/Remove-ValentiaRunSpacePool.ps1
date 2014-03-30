@@ -2,9 +2,6 @@
 
 #-- Private Module Function for Async execution --#
 
-function Remove-ValentiaRunSpacePool
-{
-
 <#
 .SYNOPSIS 
 Close and Dispose PowerShell Runspace Pool.
@@ -19,7 +16,8 @@ Created: 14/Feb/2014
 .EXAMPLE
 Remove-ValentiaRunspacePool -RunSpacePool $pool
 #>
-
+function Remove-ValentiaRunSpacePool
+{
     [Cmdletbinding()]
     Param
     (

@@ -3,8 +3,6 @@
 #-- Public Module Functions for Download Files --#
 
 # download
-function Invoke-ValentiaDownload
-{
 
 <#
 .SYNOPSIS 
@@ -34,7 +32,8 @@ download -SourcePath c:\logs\white\20130716 -DestinationFolder c:\test -DeployGr
 --------------------------------------------
 download remote sourthdirectory items to local destinationfolder in backgroud job. Omit parameter name.
 #>
-
+function Invoke-ValentiaDownload
+{
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (

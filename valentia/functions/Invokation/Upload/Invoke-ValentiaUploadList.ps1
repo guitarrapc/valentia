@@ -3,8 +3,6 @@
 #-- Public Module Functions for Upload Listed Files --#
 
 # uploadL
-function Invoke-ValentiaUploadList
-{
 
 <#
 .SYNOPSIS 
@@ -41,9 +39,9 @@ upload sourthfile to destinationfile as define in csv for hosts written in Deplo
 #    Source, Destination
 #    C:\Deployment\Upload\Upload.txt,C$\hogehoge\Upload.txt
 #    C:\Deployment\Upload\DownLoad.txt,C$\hogehoge\DownLoad.txt
-
 #>
-
+function Invoke-ValentiaUploadList
+{
     [CmdletBinding()]
     param
     (

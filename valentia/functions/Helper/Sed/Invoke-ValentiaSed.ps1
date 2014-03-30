@@ -2,9 +2,6 @@
 
 #-- Deploy Folder/File Module Functions --#
 
-function Invoke-ValentiaSed
-{
-
 <#
 .SYNOPSIS 
 PowerShell Sed alternate function
@@ -26,7 +23,8 @@ Invoke-ValentiaSed -path D:\Deploygroup\*.ps1 -searchPattern "^#10.0.0.10$" -rep
 --------------------------------------------
 replace regex ^10.0.0.10$ with # 10.0.0.10 and not replace file.
 #>
-
+function Invoke-ValentiaSed
+{
     [CmdletBinding()]
     param
     (

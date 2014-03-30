@@ -2,9 +2,6 @@
 
 #-- Private Module Function for Async execution --#
 
-function New-ValentiaRunSpacePool
-{
-
 <#
 .SYNOPSIS 
 Create a PowerShell Runspace Pool.
@@ -23,9 +20,9 @@ $pool = New-ValentiaRunspacePool -minPoolSize 50 -maxPoolSize 50
 
 --------------------------------------------
 Above will creates a pool of 10 runspaces
-
 #>
-
+function New-ValentiaRunSpacePool
+{
     [Cmdletbinding()]
     Param
     (

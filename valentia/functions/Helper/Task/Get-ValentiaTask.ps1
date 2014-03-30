@@ -3,11 +3,8 @@
 #-- Public Module Functions to load Task --#
 
 # Task
-function Get-ValentiaTask
-{
 
 <#
-
 .SYNOPSIS 
 Load Task File format into $valentia.context.tasks.$taskname hashtable.
 
@@ -27,10 +24,9 @@ This is format sample.
 task lstest -Action { Get-ChildItem c:\ }
 --------------------------------------------
 Above example will create taskkey as lstest, run "Get-ChildItem c:\" when invoke.
-
 #>
-
-
+function Get-ValentiaTask
+{
     [CmdletBinding()]  
     param
     (

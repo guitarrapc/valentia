@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Disable-ValentiaEnhancedIESecutiry
-{
-
 <#
-
 .SYNOPSIS 
 Disable EnhancedIESecutiry for Internet Explorer
 
@@ -22,9 +18,9 @@ Created: 18/Jul/2013
 Disable-ValentiaEnhancedIESecutiry
 --------------------------------------------
 Disable IEEnhanced security.
-
 #>
-
+function Disable-ValentiaEnhancedIESecutiry
+{
     [CmdletBinding()]
     param
     (

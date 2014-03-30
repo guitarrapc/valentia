@@ -1,5 +1,5 @@
-﻿function Show-ValentiaConfig
-{
+﻿#Requires -Version 3.0
+
 <#
 .Synopsis
    Show Valentia Config in Console
@@ -8,6 +8,8 @@
 .EXAMPLE
    Show-ValentiaConfig
 #>
+function Show-ValentiaConfig
+{
     [CmdletBinding()]
     param
     (

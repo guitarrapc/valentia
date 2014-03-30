@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Set-ValentiaWsManMaxMemoryPerShellMB
-{
-
 <#
-
 .SYNOPSIS 
 Set WsMan Max Memory Per user to prevent PowerShell failed with large memory usage. 
 
@@ -22,9 +18,9 @@ Created: 15/Feb/2014
 Set-ValentiaWsManMaxMemoryPerShellMB -MaxMemoryPerShellMB 0
 --------------------------------------------
 set as unlimited
-
 #>
-
+function Set-ValentiaWsManMaxMemoryPerShellMB
+{
     [CmdletBinding()]
     param
     (

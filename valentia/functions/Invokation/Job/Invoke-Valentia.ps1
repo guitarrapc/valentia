@@ -3,11 +3,8 @@
 #-- Public Module Job / Functions for Remote Execution --#
 
 # vale
-function Invoke-Valentia
-{
 
 <#
-
 .SYNOPSIS 
 1 of invoking valentia by PowerShell Backgroud Job execution to remote host
 
@@ -47,9 +44,9 @@ Specify DeployGroupFile and ScriptBlock
   vale DeployGroupFile.ps1 .\default.ps1
 --------------------------------------------
 You can prepare script file to run, and specify path.
-
 #>
-
+function Invoke-Valentia
+{
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
     param
     (

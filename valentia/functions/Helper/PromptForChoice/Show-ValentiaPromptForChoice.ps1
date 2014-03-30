@@ -2,10 +2,7 @@
 
 # -- helper function -- #
 
-function Show-ValentiaPromptForChoice
-{
 <#
-
 .SYNOPSIS 
 Show valentia Prompt For Choice description and will return item you passed.
 
@@ -26,9 +23,9 @@ Show-ValentiaPromptForChoice -questionHelps $(Show-ValentiaGroup).Name
 --------------------------------------------
 Will check valentia deploy folder and get deploygroup files.
 You can see choice description for each deploygroup file, and will get which item was selected.
-
 #>
-
+function Show-ValentiaPromptForChoice
+{
     [CmdletBinding()]
     param
     (

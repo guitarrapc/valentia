@@ -2,8 +2,6 @@
 
 #-- function helper for Dynamic Param --#
 
-function New-ValentiaDynamicParamMulti
-{
 <#
 .SYNOPSIS 
 This cmdlet will return Dynamic param dictionary
@@ -49,7 +47,8 @@ function Show-DynamicParamMulti
 
 Show-DynamicParamMulti -hoge fuga -foo bar
 #>
-
+function New-ValentiaDynamicParamMulti
+{
     [CmdletBinding()]
     param
     (
@@ -117,8 +116,7 @@ Show-DynamicParamMulti -hoge fuga -foo bar
     }
 }
 
-function New-ValentiaDynamicParamList
-{
+
 <#
 .SYNOPSIS 
 This cmdlet will return Dynamic param list item for dictionary
@@ -165,6 +163,8 @@ function Show-DynamicParamMulti
 
 Show-DynamicParamMulti -hoge fuga -foo bar
 #>
+function New-ValentiaDynamicParamList
+{
     [CmdletBinding()]
     param
     (

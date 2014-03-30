@@ -4,9 +4,6 @@
 
 #-- Check Current PowerShell session is elevated or not --#
 
-function Test-ValentiaPowerShellElevated
-{
-
 <#
 .SYNOPSIS
     Retrieve elavated status of PowerShell Console.
@@ -23,17 +20,14 @@ function Test-ValentiaPowerShellElevated
 
 .EXAMPLE
     C:\PS> Test-ValentiaPowerShellElevated
-
-        true
+    true
 
 .EXAMPLE
     C:\PS> Test-ValentiaPowerShellElevated
-
-        false
-        
+    false        
 #>
-
-
+function Test-ValentiaPowerShellElevated
+{
     [CmdletBinding()]
     param
     (

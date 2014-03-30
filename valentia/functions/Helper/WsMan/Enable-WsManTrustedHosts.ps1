@@ -2,11 +2,7 @@
 
 #-- Prerequisite OS Setting Module Functions --#
 
-function Enable-WsManTrustedHosts
-{
-
 <#
-
 .SYNOPSIS 
 Enable WsMan Trusted hosts
 
@@ -21,9 +17,9 @@ Created: 18/Jul/2013
 Enable-WsManTrustedHosts
 --------------------------------------------
 allow all hosts as * 
-
 #>
-
+function Enable-ValentiaWsManTrustedHosts
+{
     [CmdletBinding()]
     param
     (

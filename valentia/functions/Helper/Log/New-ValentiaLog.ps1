@@ -3,11 +3,7 @@
 #-- Helper for valentia --#
 #-- Log Settings -- #
 
-function New-ValentiaLog
-{
-
 <#
-
 .SYNOPSIS 
 Setup Valentia Log Folder
 
@@ -27,9 +23,9 @@ This is format sample.
 New-ValentiaLog
 --------------------------------------------
 As New-ValentiaLog have default value in parameter, you do not required to specify log information
-
 #>
-
+function New-ValentiaLog
+{
     [CmdletBinding()]
     param
     (

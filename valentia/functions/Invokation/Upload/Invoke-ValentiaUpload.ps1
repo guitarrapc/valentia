@@ -3,8 +3,6 @@
 #-- Public Module Functions for Upload Files --#
 
 # upload
-function Invoke-ValentiaUpload
-{
 
 <#
 .SYNOPSIS 
@@ -42,7 +40,8 @@ upload C:\hogehoge* c:\ production-first -Directory production-fist.ps1 -Async
 --------------------------------------------
 upload files in target to Directory as Background Async job for hosts written in production-first.ps1
 #>
-
+function Invoke-ValentiaUpload
+{
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (

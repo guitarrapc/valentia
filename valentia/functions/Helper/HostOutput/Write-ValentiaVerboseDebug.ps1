@@ -2,9 +2,6 @@
 
 #-- helper for write verbose and debug --#
 
-filter Write-ValentiaVerboseDebug
-{
-
 <#
 .SYNOPSIS 
 Pass to write-verbose / debug for input.
@@ -21,6 +18,8 @@ Created: 16/Feb/2014
 --------------------------------------------
 Will show both Verbose message and Debug.
 #>
+filter Write-ValentiaVerboseDebug
+{
     Write-Verbose -Message $_
     Write-Debug -Message $_
 }

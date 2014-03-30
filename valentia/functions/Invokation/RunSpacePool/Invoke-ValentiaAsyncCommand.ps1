@@ -2,9 +2,6 @@
 
 #-- Private Module Function for Async execution --#
 
-function Invoke-ValentiaAsyncCommand
-{
-
 <#
 .SYNOPSIS 
 Creating a PowerShell pipeline then executes a ScriptBlock Asynchronous with Remote Host.
@@ -27,9 +24,9 @@ Invoke-ValeinaAsyncCommand -RunspacePool $(New-ValentiaRunspacePool 10) `
 
 --------------------------------------------
 Above example will concurrently running with 10 processes for each Computers.
-
 #>
-
+function Invoke-ValentiaAsyncCommand
+{
     [Cmdletbinding()]
     Param
     (
