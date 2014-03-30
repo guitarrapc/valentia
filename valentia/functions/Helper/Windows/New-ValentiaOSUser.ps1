@@ -105,32 +105,107 @@ Visible prompt will up and non-mask your PASSWORD input as *****.
         $UserFlag = $valentia.userFlag
     )
 
-    begin
-    {
-        $HostPC = [System.Environment]::MachineName
-        $DirectoryComputer = New-Object System.DirectoryServices.DirectoryEntry("WinNT://" + $HostPC + ",computer")
-        $IsUserExist = Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount='true'" | where Name -eq $credential.UserName
-        $user = $credential.UserName
-    }
-
     process
     {
-        if (-not $IsUserExist)
+        if ($IsUserExist)
         {
-            ("{0} not exist, start creating user." -f $user) | Write-ValentiaVerboseDebug
-            $newuser = $DirectoryComputer.Create("user", $user)
-            $newuser.SetPassword(($credential.GetNetworkCredential().password))
-            $newuser.SetInfo()
+            Set-UserPassword @paramUser
+        }
+        else
+        {
+            New-User @paramUser
+        }
 
-            "Set user flag to define account as bor '{0}'" -f $valentia.userFlag | Write-ValentiaVerboseDebug
-            $userFlags = $newuser.Get("UserFlags")
+        $paramUserFlag = @{
+            targetUser = New-Object System.DirectoryServices.DirectoryEntry(("WinNT://{0}/{1}/{2}" -f $Domain, $HostPC, $user))
+            UserFlag   = $UserFlag
+        }
+
+        Set-UserFlag @paramUserFlag
+        
+        if ((Get-UserAndGroup @paramUserAndGroup).Groups -ne $Group)
+        {
+            Add-UserToUserGroup @paramGroup
+        }
+    }
+
+    end
+    {
+        Get-UserAndGroup @paramGroup
+    }
+
+    begin
+    {
+        $ErrorActionPreference = $valentia.errorPreference
+
+        $HostPC = [System.Environment]::MachineName
+        $user = $credential.UserName
+        $Domain = (Get-CimInstance -ClassName win32_computersystem).Domain
+        $DirectoryComputer = New-Object System.DirectoryServices.DirectoryEntry(("WinNT://{0},computer" -f $HostPC))
+        $IsUserExist = Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount='true'" | where Name -eq $user
+
+        $paramUser = @{
+            user       = $user
+            HostPC     = $HostPC
+            Credential = $credential
+        }
+
+        $paramGroup = @{
+            Group  = $Group
+            HostPC = $HostPC
+            user   = $user
+        }
+
+        $paramUserAndGroup = @{
+            DirectoryComputer = $DirectoryComputer
+            user              = $user
+        }
+
+        function New-User ($user, $HostPC, $credential)
+        {
+            ("User '{0}' not exist, start creating user." -f $user) | Write-ValentiaVerboseDebug
+            $NewUser = $DirectoryComputer.Create("user", $user)
+            $NewUser.SetPassword(($credential.GetNetworkCredential().password))
+            $NewUser.SetInfo()
+        }
+
+        function Set-UserPassword ($user, $HostPC, $credential)
+        {
+            ("User '{0}' already exist, start reset password." -f $user) | Write-ValentiaVerboseDebug
+            $SetUser = New-Object System.DirectoryServices.DirectoryEntry(("WinNT://{0}/{1}" -f $HostPC, $user))
+            $SetUser.psbase.invoke('SetPassword', $credential.GetNetworkCredential().Password)
+        }
+
+        function Set-UserFlag ($targetUser, $UserFlag)
+        {
+            "Set userflag to define account as bor '{0}'" -f $UserFlag | Write-ValentiaVerboseDebug
+            $userFlags = $targetUser.Get("UserFlags")
             $userFlags = $userFlags -bor $UserFlag 
-            $newuser.Put("UserFlags", $userFlags)
-            $newuser.SetInfo()
+            $targetUser.Put("UserFlags", $userFlags)
+            $targetUser.SetInfo()
+        }
 
-            ("Assign User to UserGroup {0}" -f $UserGroup) | Write-ValentiaVerboseDebug
+        function Add-UserToUserGroup ($Group, $HostPC, $user)
+        {
+            ("Assign User to UserGroup '{0}'" -f $Group) | Write-ValentiaVerboseDebug
             $DirectoryGroup = $DirectoryComputer.GetObject("group", $Group)
-            $DirectoryGroup.Add("WinNT://" + $HostPC + "/" + $user)
+            $DirectoryGroup.Add(("WinNT://{0}/{1}" -f $HostPC, $user))
+        }
+
+        function Get-UserAndGroup ($DirectoryComputer, $user)
+        {
+            $DirectoryComputer.Children `
+            | where SchemaClassName -eq 'user' `
+            | where Name -eq $user `
+            | %{ 
+                $groups = $_.Groups() | %{$_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)}
+                $_ | %{
+                    [PSCustomObject]@{
+                        UserName = $_.Name
+                        Groups   = $groups
+                    }
+                }
+            }
         }
     }
 }
