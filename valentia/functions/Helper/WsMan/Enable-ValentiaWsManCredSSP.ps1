@@ -23,7 +23,7 @@ function Enable-ValentiaWsManCredSSP
     }
     catch
     {
-        WSManCredSSP -Role Client -DelegateComputer $TrustedHosts -Force
+        Enable-WSManCredSSP -Role Client -DelegateComputer $TrustedHosts -Force
     }
     finally
     {
