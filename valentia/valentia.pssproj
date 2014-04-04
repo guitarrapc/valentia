@@ -163,6 +163,7 @@
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
     <Content Include="functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
+    <Content Include="functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
     <Content Include="New-valentiaManufest.ps1" />
