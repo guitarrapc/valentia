@@ -17,7 +17,7 @@ function Edit-ValentiaConfig
             mandatory = 0,
             position = 0)]
         [string]
-        $configPath = (Join-Path $valentia.modulePath $valentia.defaultconfigurationfile),
+        $configPath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file),
 
         [parameter(
             mandatory = 0,

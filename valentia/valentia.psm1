@@ -1,6 +1,6 @@
 ﻿#Requires -Version 3.0
 
-Write-Verbose "Loading valentia.psm1"
+Write-Verbose 'Loading valentia.psm1'
 
 # valentia
 #
@@ -67,23 +67,20 @@ function Import-ValentiaConfigration
     param
     (
         [string]
-        $configdir = $PSScriptRoot
+        $valentiaConfigFilePath
     )
-
-    $valentiaConfigFilePath = (Join-Path $configdir $valentia.defaultconfigurationfile)
 
     if (Test-Path $valentiaConfigFilePath -pathType Leaf) 
     {
         try 
-        {
-            
+        {        
             Write-Verbose $valeWarningMessages.warn_load_currentConfigurationOrDefault
             $config = Get-CurrentConfigurationOrDefault
             . $valentiaConfigFilePath
         } 
         catch 
         {
-            throw ("Error Loading Configuration from {0}: " -f $valentia.defaultconfigurationfile) + $_
+            throw ('Error Loading Configuration from {0}: ' -f $valentia.defaultconfigurationfile) + $_
         }
     }
 }
@@ -160,7 +157,7 @@ function Import-ValentiaModules
                 }
             }
         }
-        "" # blank line for next entry
+        '' # blank line for next entry
     }
 }
 
@@ -249,20 +246,26 @@ ConvertFrom-StringData @'
 
 # contains default base configuration, may not be override without version update.
 $Script:valentia                        = @{}
-$valentia.name                          = "valentia"                          # contains the Name of Module
+$valentia.name                          = 'valentia'                                                             # contains the Name of Module
 $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
-$valentia.helpersPath                   = "\functions\*"
-$valentia.defaultconfigurationfile      = "\config\valentia-config.ps1"       # default configuration file name within valentia.psm1
-$valentia.cSharpPath                    = "\cs\"
-$valentia.supportWindows                = @(6,1,0,0)                          # higher than windows 7 or windows 2008 R2
-$valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]"utf8"
-$valentia.context                       = New-Object System.Collections.Stack # holds onto the current state of all variables
+$valentia.helpersPath                   = '\functions\*'
+$valentia.cSharpPath                    = '\cs\'
+$valentia.supportWindows                = @(6,1,0,0)                                                             # higher than windows 7 or windows 2008 R2
+$valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
+$valentia.context                       = New-Object System.Collections.Stack                                    # holds onto the current state of all variables
+
+# contains valentia default configuration path
+$valentia.defaultconfiguration = New-Object psobject -property @{
+    original  = '\config\valentia-config.ps1'         # original configuration file name (Will be delete after initial installation completed.)
+    dir       = Join-Path $env:APPDATA $valentia.name # default configuration path
+    file      = 'valentia-config.ps1'                 # default configuration file name to read
+}
 
 # contains PS Build-in Preference status
 $valentia.originalErrorActionPreference = $ErrorActionPreference
-$valentia.errorPreference               = "Stop"
+$valentia.errorPreference               = 'Stop'
 $valentia.originalDebugPreference       = $DebugPreference
-$valentia.debugPreference               = "SilentlyContinue"
+$valentia.debugPreference               = 'SilentlyContinue'
 
 # contains WSman value to set by initialization
 $valentia.waman = New-Object psobject -property @{
@@ -295,28 +298,28 @@ $valentia.ping = New-Object psobject -property @{
 
 # Define External program path
 $valentia.fastcopy = New-Object psobject -property @{
-    folder                              = "C:\Program Files\FastCopy";
-    exe                                 = "FastCopy.exe";
+    folder                              = 'C:\Program Files\FastCopy';
+    exe                                 = 'FastCopy.exe';
 }
 
 # contains default deployment Path configuration.
-$valentia.RootPath                      = "C:\Deployment"
+$valentia.RootPath                      = 'C:\Deployment'
 
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
-    path                                = "C:\Logs\Deployment";
-    name                                = "deploy";
-    extension                           = ".log";
+    path                                = 'C:\Logs\Deployment';
+    name                                = 'deploy';
+    extension                           = '.log';
 }
 
 # Set Valentia prompt for choice messages
 $valentia.promptForChoice = New-Object psobject -property @{
-    title                               = "Select item from prompt choices.";
-    questions                           = @("Yes", "No");
-    defaultChoiceYes                    = "y";
-    defaultChoiceNo                     = "n";
+    title                               = 'Select item from prompt choices.';
+    questions                           = @('Yes', 'No');
+    defaultChoiceYes                    = 'y';
+    defaultChoiceNo                     = 'n';
     helpMessage                         = "Enter '{0}' to select '{1}'."
-    message                             = "Type alphabet you want to choose.";
+    message                             = 'Type alphabet you want to choose.';
     additionalMessage                   = $null;
     defaultIndex                        = 0;
 }
@@ -349,29 +352,29 @@ $valentia.context.push(
 # contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.users = New-Object psobject -property @{
     CurrentUser                         = $env:USERNAME;
-    deployUser                          = "deployment";
+    deployUser                          = 'deployment';
 }
-$valentia.group                         = "Administrators"
-$valentia.userFlag                      = "0X10040"         # #UserFlag for password (ex. infinity & No change Password)
+$valentia.group                         = 'Administrators'
+$valentia.userFlag                      = '0X10040'         # #UserFlag for password (ex. infinity & No change Password)
 
 # contains valentia execution policy for initial setup
 $valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
 
 # contains valentia configuration Information
-$valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
-$valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
+$valentia.PSDrive                       = 'V:';             # Set Valentia Mapping Drive with SMBMapping
+$valentia.deployextension               = '.ps1';           # contains default DeployGroup file extension
 
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
-    hostName                            = "web";
-    ipstring                            = "ip";
+    hostName                            = 'web';
+    ipstring                            = 'ip';
 }
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.config_default                = New-Object PSObject -property ([ordered]@{
-    TaskFileName                        = "default.ps1";
+    TaskFileName                        = 'default.ps1';
     TaskFileDir                         = [ValentiaBranchPath]::Application;
-    taskNameFormat                      = "Executing {0}";
+    taskNameFormat                      = 'Executing {0}';
     verboseError                        = $false;
     modules                             = $null;
     PSDrive                             = $valentia.PSDrive;
@@ -385,7 +388,7 @@ $valentia.config_default                = New-Object PSObject -property ([ordere
 
 #-- Set Alias for public valentia commands --#
 
-Write-Verbose "Set Alias for valentia Cmdlets."
+Write-Verbose 'Set Alias for valentia Cmdlets.'
 
 New-Alias -Name Task             -Value Get-ValentiaTask
 New-Alias -Name Valep            -Value Invoke-ValentiaParallel
@@ -412,14 +415,14 @@ New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 # grab functions from files
 
 Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
-| where { -not ($_.FullName.Contains(".Tests.")) } `
-| where Extension -eq ".ps1" `
+| where { -not ($_.FullName.Contains('.Tests.')) } `
+| where Extension -eq '.ps1' `
 | % {. $_.FullName}
 
 #-- Loading Internal Function when loaded --#
 
 Import-ValentiaModules
-Import-ValentiaConfigration
+Import-ValentiaConfigration -valentiaConfigFilePath (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file)
 
 #-- Export Modules when loading this module --#
 

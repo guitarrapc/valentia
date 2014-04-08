@@ -42,7 +42,17 @@ function Main
     }
 
     $destinationtfolder = Copy-Module -path $path -destination $modulepath
-    Write-Host ("Installation Completed. Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
+    Write-Host ("Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
+
+    $moduleName = (Get-Item $path).Name
+    Test-ImportModule -ModuleName $moduleName
+    Write-Host ("Imported Module '{0}'" -f $moduleName) -ForegroundColor Green
+
+    $moduleVariable = (Get-Variable -Name $moduleName).Value
+    $originalDefaultConfigPath = Join-Path $moduleVariable.modulePath $moduleVariable.defaultconfiguration.original -Resolve
+    Set-DefaultConfig -defaultConfigPath $originalDefaultConfigPath -ExportConfigDir $moduleVariable.defaultconfiguration.dir
+    Remove-OriginalDefaultConfig -defaultConfigPath $originalDefaultConfigPath
+    Write-Host ("Default configuration file created in '{0}'" -f $moduleVariable.defaultconfiguration.dir) -ForegroundColor Green
 }
 
 Function Get-OperatingSystemVersion
@@ -52,7 +62,6 @@ Function Get-OperatingSystemVersion
 
 Function Test-ModulePath
 {
-
     [CmdletBinding()]
     param
     (
@@ -179,6 +188,75 @@ Function Copy-Module
     else
     {
         throw "{0} not found exception!" -f $path
+    }
+}
+
+Function Test-ImportModule
+{
+    [CmdletBinding()]
+    param
+    (
+        [parameter(
+            mandatory,
+            position = 0)]
+        [string]
+        $ModuleName
+    )
+
+    if(Get-Module -ListAvailable | where Name -eq $moduleName)
+    {
+        Import-Module -Name $moduleName -Force -PassThru
+    }
+}
+
+Function Set-DefaultConfig
+{
+    [CmdletBinding()]
+    param
+    (
+        [parameter(
+            mandatory,
+            position = 0)]
+        [validateScript({Test-Path $_})]
+        [string]
+        $defaultConfigPath,
+
+        [parameter(
+            mandatory,
+            position = 1)]
+        [string]
+        $ExportConfigDir
+    )
+
+    if(Test-Path $defaultConfigPath)
+    {
+        if (-not (Test-Path $ExportConfigDir))
+        {
+            New-Item -Path $ExportConfigDir -ItemType Directory -Force > $null
+        }
+        
+        $configName = Split-Path $defaultConfigPath -Leaf
+        $configPath = Join-Path $ExportConfigDir $configName
+        Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
+    }
+}
+
+Function Remove-OriginalDefaultConfig
+{
+    [CmdletBinding()]
+    param
+    (
+        [parameter(
+            mandatory,
+            position = 0)]
+        [validateScript({Test-Path $_})]
+        [string]
+        $defaultConfigPath
+    )
+
+    if(Test-Path $defaultConfigPath)
+    {
+        Remove-Item -Path (Split-Path $defaultConfigPath -Parent) -Force -Recurse
     }
 }
 
