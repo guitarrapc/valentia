@@ -237,7 +237,14 @@ Function Set-DefaultConfig
         
         $configName = Split-Path $defaultConfigPath -Leaf
         $configPath = Join-Path $ExportConfigDir $configName
-        Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
+        if (-not(Test-Path $configPath))
+        {
+            Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
+        }
+        else
+        {
+            Write-Warning ("Configuration file already exist in '{0}'. Skip creating configuration file." -f $configPath)
+        }
     }
 }
 
