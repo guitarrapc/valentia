@@ -52,7 +52,6 @@ function Main
     $originalDefaultConfigPath = Join-Path $moduleVariable.modulePath $moduleVariable.defaultconfiguration.original -Resolve
     Set-DefaultConfig -defaultConfigPath $originalDefaultConfigPath -ExportConfigDir $moduleVariable.defaultconfiguration.dir
     Remove-OriginalDefaultConfig -defaultConfigPath $originalDefaultConfigPath
-    Write-Host ("Default configuration file created in '{0}'" -f $moduleVariable.defaultconfiguration.dir) -ForegroundColor Green
 }
 
 Function Get-OperatingSystemVersion
@@ -239,6 +238,7 @@ Function Set-DefaultConfig
         $configPath = Join-Path $ExportConfigDir $configName
         if (-not(Test-Path $configPath))
         {
+            Write-Host ("Default configuration file created in '{0}'" -f $configPath) -ForegroundColor Green
             Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
         }
         else
