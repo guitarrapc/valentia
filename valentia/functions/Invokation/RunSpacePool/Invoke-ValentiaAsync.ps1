@@ -119,7 +119,7 @@ function Invoke-ValentiaAsync
 
         # Import default Configurations
         $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
-        Import-valentiaConfigration 
+        Import-ValentiaConfiguration 
 
         # Import default Modules
         $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug

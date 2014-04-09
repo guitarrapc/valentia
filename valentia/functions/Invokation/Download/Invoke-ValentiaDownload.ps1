@@ -116,7 +116,7 @@ function Invoke-ValentiaDownload
         {
             # Import default Configurations
             $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
-            Import-valentiaConfigration -Verbose
+            Import-ValentiaConfiguration -Verbose
 
             # Import default Modules
             $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
@@ -124,7 +124,7 @@ function Invoke-ValentiaDownload
         }
         else
         {
-            Import-valentiaConfigration
+            Import-ValentiaConfiguration
             Import-valentiaModules
         }
         
