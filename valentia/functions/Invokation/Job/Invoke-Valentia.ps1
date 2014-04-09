@@ -96,7 +96,14 @@ function Invoke-Valentia
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [switch]
-        $quiet
+        $quiet,
+
+        [Parameter(
+            Position = 5, 
+            Mandatory = 0,
+            HelpMessage = "Hide execution progress.")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]
+        $Authentication = $valentia.Authentication
     )
 
     #region Begin
@@ -214,10 +221,11 @@ function Invoke-Valentia
 
         # Splatting
         $param = @{
-            ComputerNames = $DeployMembers
-            ScriptToRun   = $ScriptToRun
-            Credential    = $Credential
-            TaskParameter = $TaskParameter
+            ComputerNames  = $DeployMembers
+            ScriptToRun    = $ScriptToRun
+            Credential     = $Credential
+            TaskParameter  = $TaskParameter
+            Authentication = $Authentication
         }
 
         # Run ScriptBlock as Sequence for each DeployMember

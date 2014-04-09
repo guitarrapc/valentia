@@ -63,7 +63,14 @@ function Invoke-ValentiaAsyncCommand
             Mandatory = 1,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [HashTable]
-        $TaskParameterHash
+        $TaskParameterHash,
+
+        [Parameter(
+            Position  = 5,
+            Mandatory = 1,
+            HelpMessage = "Input Authentication for credential.")]
+        [HashTable]
+        $AuthenticationHash
     )
 
 
@@ -75,14 +82,16 @@ function Invoke-ValentiaAsyncCommand
                 $ScriptToRunHash,
                 $ComputerName,
                 $CredentialHash,
-                $TaskParameterHash
+                $TaskParameterHash,
+                $AuthenticationHash
             )
 
             $param = @{
-                ScriptBlock  = $($ScriptToRunHash.Values)
-                ComputerName = $($ComputerName.Values)
-                Credential   = $($CredentialHash.Values)
-                ArgumentList = $($TaskParameterHash.Values)
+                ScriptBlock    = $($ScriptToRunHash.Values)
+                ComputerName   = $($ComputerName.Values)
+                Credential     = $($CredentialHash.Values)
+                ArgumentList   = $($TaskParameterHash.Values)
+                Authentication = $($AuthenticationHash.Values)
             }
 
             Invoke-Command @param
@@ -97,12 +106,19 @@ function Invoke-ValentiaAsyncCommand
 
         # Add Script and Parameter arguments from Hashtables
         "Adding Script and Arguments Hastables to PowerShell Instance" | Write-ValentiaVerboseDebug
-        Write-Verbose ('Add InvokeCommand Script : {0}'                          -f $InvokeCommand)
-        Write-Verbose ("Add ScriptBlock Argument..... Keys : {0}, Values : {1}"  -f $($ScriptToRunHash.Keys)  , $($ScriptToRunHash.Values))
-        Write-Verbose ("Add ComputerName Argument..... Keys : {0}, Values : {1}" -f $($ComputerName.Keys)     , $($ComputerName.Values))
-        Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}"   -f $($CredentialHash.Keys)   , $($CredentialHash.Values))
-        Write-Verbose ("Add ArgumentList Argument..... Keys : {0}, Values : {1}" -f $($TaskParameterHash.Keys), $($TaskParameterHash.Values))
-        $Pipeline.AddScript($InvokeCommand).AddArgument($ScriptToRunHash).AddArgument($ComputerName).AddArgument($CredentialHash).AddArgument($TaskParameterHash) > $null
+        Write-Verbose ('Add InvokeCommand Script : {0}'                          -f   $InvokeCommand)
+        Write-Verbose ("Add ScriptBlock Argument..... Keys : {0}, Values : {1}"  -f   $($ScriptToRunHash.Keys)   , $($ScriptToRunHash.Values))
+        Write-Verbose ("Add ComputerName Argument..... Keys : {0}, Values : {1}" -f   $($ComputerName.Keys)      , $($ComputerName.Values))
+        Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}"   -f   $($CredentialHash.Keys)    , $($CredentialHash.Values))
+        Write-Verbose ("Add ArgumentList Argument..... Keys : {0}, Values : {1}" -f   $($TaskParameterHash.Keys) , $($TaskParameterHash.Values))
+        Write-Verbose ("Add Authentication Argument..... Keys : {0}, Values : {1}" -f $($AuthenticationHash.Keys), $($AuthenticationHash.Values))
+        $Pipeline.
+            AddScript($InvokeCommand).
+            AddArgument($ScriptToRunHash).
+            AddArgument($ComputerName).
+            AddArgument($CredentialHash).
+            AddArgument($TaskParameterHash).
+            AddArgument($AuthenticationHash) > $null
 
         # Add RunSpacePool to PowerShell Instance
         ("Adding Runspaces {0}" -f $RunspacePool) | Write-ValentiaVerboseDebug

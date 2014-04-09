@@ -368,6 +368,9 @@ $valentia.userFlag                      = '0X10040'         # #UserFlag for pass
 # contains valentia execution policy for initial setup
 $valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
 
+# contains valentia remote invokation authentication mechanism
+$valentia.Authentication                = [System.Management.Automation.Runspaces.AuthenticationMechanism]::Negotiate
+
 # contains valentia configuration Information
 $valentia.PSDrive                       = 'V:';             # Set Valentia Mapping Drive with SMBMapping
 $valentia.deployextension               = '.ps1';           # contains default DeployGroup file extension

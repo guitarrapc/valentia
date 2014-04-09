@@ -63,7 +63,14 @@ function Invoke-ValentiaCommand
             Mandatory = 0,
             HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [string[]]
-        $TaskParameter
+        $TaskParameter,
+
+        [Parameter(
+            Position = 4, 
+            Mandatory = 0,
+            HelpMessage = "Input Authentication for credential.")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]
+        $Authentication
     )
 
     begin
@@ -86,7 +93,7 @@ function Invoke-ValentiaCommand
                 Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
                 Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
                 ("Running ScriptBlock to {0} as Job" -f $computerName) | Write-ValentiaVerboseDebug
-                $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -AsJob
+                $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -AsJob -Authentication $Authentication
                 $list.Add($job)
             }
         }

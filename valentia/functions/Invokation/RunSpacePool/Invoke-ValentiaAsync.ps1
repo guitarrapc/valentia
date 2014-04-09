@@ -97,7 +97,14 @@ function Invoke-ValentiaAsync
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
         [switch]
-        $quiet
+        $quiet,
+
+        [Parameter(
+            Position = 5, 
+            Mandatory = 0,
+            HelpMessage = "Hide execution progress.")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]
+        $Authentication = $valentia.Authentication
     )
 
     #region Begin
@@ -216,10 +223,11 @@ function Invoke-ValentiaAsync
         # Execute Async Job
         Write-Verbose ("Target Computers : [{0}]" -f ($DeployMembers -join ", "))
         $param = @{
-            RunSpacePool      = $pool
-            ScriptToRunHash   = @{ScriptBlock   = $ScriptToRun}
-            credentialHash    = @{Credential    = $Credential}
-            TaskParameterHash = @{TaskParameter = $TaskParameter}
+            RunSpacePool       = $pool
+            ScriptToRunHash    = @{ScriptBlock    = $ScriptToRun}
+            credentialHash     = @{Credential     = $Credential}
+            TaskParameterHash  = @{TaskParameter  = $TaskParameter}
+            AuthenticationHash = @{Authentication = $Authentication}
         }
 
         $AsyncPipelines = New-Object System.Collections.Generic.List[AsyncPipeline]
