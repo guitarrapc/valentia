@@ -60,14 +60,14 @@ Add-Type -TypeDefinition @"
 
 #-- Public Loading Module Custom Configuration Functions --#
 
-function Import-ValentiaConfigration
+function Import-ValentiaConfiguration
 {
 
     [CmdletBinding()]
     param
     (
         [string]
-        $valentiaConfigFilePath
+        $valentiaConfigFilePath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file)
     )
 
     if (Test-Path $valentiaConfigFilePath -pathType Leaf) 
@@ -268,10 +268,18 @@ $valentia.originalDebugPreference       = $DebugPreference
 $valentia.debugPreference               = 'SilentlyContinue'
 
 # contains WSman value to set by initialization
-$valentia.waman = New-Object psobject -property @{
+$valentia.wsman = New-Object psobject -property @{
     MaxShellsPerUser                    = 100; # default 25 change to 100                 : "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'"
     MaxMemoryPerShellMB                 =   0; # default 1024 change to 0 means unlimited : "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue."
     MaxProccessesPerShell               =   0; # default 100 change to 0 means unlimited  : "Configure WSMan MaxProccessesPerShell to improve performance"
+    TrustedHosts                        = "*";
+}
+
+$valentia.credssp = New-Object psobject -property @{
+    AllowFreshCredentialsWhenNTLMOnly       = @{
+        Key                                 = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly'
+        Value                               = ($valentia.wsmanTrustedHosts | %{"wsman/$_"}) -join ", "
+    }
 }
 
 # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
@@ -422,7 +430,7 @@ Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
 #-- Loading Internal Function when loaded --#
 
 Import-ValentiaModules
-Import-ValentiaConfigration -valentiaConfigFilePath (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file)
+Import-ValentiaConfiguration
 
 #-- Export Modules when loading this module --#
 

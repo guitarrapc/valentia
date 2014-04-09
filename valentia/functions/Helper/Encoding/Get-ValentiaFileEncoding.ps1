@@ -25,7 +25,7 @@ function Get-ValentiaFileEncoding
     param
     (
         [parameter(
-            mandatory,
+            mandatory = 1,
             position = 0)]
         [string]
         $path

@@ -1,33 +1,34 @@
 #Requires -Version 3.0
 
-#-- Public Functions for WSMan Parameter Configuration --#
+#-- Public Functions for CredSSP Configuration --#
 
-function Enable-ValentiaWsManCredSSP
+function Enable-ValentiaCredSSP
 {
     [CmdletBinding()]
     param
     (
         [Parameter(
             Position = 0,
-            Mandatory = 1)]
+            Mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]
-        $TrustedHosts
+        $TrustedHosts = $valentia.wsman.TrustedHosts
     )
 
     $ErrorActionPreference = $valentia.errorPreference
 
     try
     {
-        Disable-WSManCredSSP -Role Client
+        Enable-WSManCredSSP -Role Server -Force
         Enable-WSManCredSSP -Role Client -DelegateComputer $TrustedHosts -Force
     }
     catch
     {
+        # Unfortunately you need to repeat cpmmand again to enable Client Role.
         Enable-WSManCredSSP -Role Client -DelegateComputer $TrustedHosts -Force
     }
     finally
     {
-        $regKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Credssp\PolicyDefaults\AllowFreshCredentialsDomain"
-        Set-ItemProperty $regKey -Name WSMan -Value "WSMAN/*"
+        Get-WSManCredSSP
     }
 }

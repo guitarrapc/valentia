@@ -11,22 +11,25 @@ function Set-ValetntiaWSManConfiguration
             Position = 0,
             Mandatory = 0,
             HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
+        [ValidateNotNullOrEmpty()]
         [int]
-        $ShellsPerUser = $valentia.waman.MaxShellsPerUser,
+        $ShellsPerUser = $valentia.wsman.MaxShellsPerUser,
 
         [Parameter(
             Position = 1,
             Mandatory = 0,
             HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
+        [ValidateNotNullOrEmpty()]
         [int]
-        $MaxMemoryPerShellMB = $valentia.waman.MaxMemoryPerShellMB,
+        $MaxMemoryPerShellMB = $valentia.wsman.MaxMemoryPerShellMB,
 
         [Parameter(
             Position = 2,
             Mandatory = 0,
             HelpMessage = "Configure WSMan MaxProccessesPerShell to improve performance")]
+        [ValidateNotNullOrEmpty()]
         [int]
-        $MaxProccessesPerShell = $valentia.waman.MaxProccessesPerShell
+        $MaxProccessesPerShell = $valentia.wsman.MaxProccessesPerShell
     )
 
     "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'" | Write-ValentiaVerboseDebug

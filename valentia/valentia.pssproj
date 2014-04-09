@@ -70,6 +70,7 @@
     <Compile Include="functions\Helper\Task\ConvertTo-ValentiaTask.ps1" />
     <Compile Include="functions\Helper\Windows\Disable-ValentiaEnhancedIESecutiry.ps1" />
     <Compile Include="functions\Helper\Config\Edit-ValentiaConfig.ps1" />
+    <Compile Include="functions\Helper\CredSSP\Enable-ValentiaCredSSP.ps1" />
     <Compile Include="functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
     <Compile Include="functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" />
     <Compile Include="functions\Helper\Group\Get-ValentiaGroup.ps1" />
@@ -124,6 +125,7 @@
     <Folder Include="functions\" />
     <Folder Include="functions\Helper\Config\" />
     <Folder Include="functions\Helper\Credential\" />
+    <Folder Include="functions\Helper\CredSSP\" />
     <Folder Include="functions\Helper\Encoding\" />
     <Folder Include="functions\Helper\Group\" />
     <Folder Include="functions\Helper\Initialize\" />
@@ -162,7 +164,10 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Helper\CredSSP\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
+    <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKey.ps1" />
+    <Content Include="functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />

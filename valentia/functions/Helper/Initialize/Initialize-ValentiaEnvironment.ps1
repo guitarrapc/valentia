@@ -15,19 +15,20 @@ This function will execute followings.
 1. Set-ExecutionPolicy (Default : RemoteSigned)
 2. Add PowerShell Remoting Inbound rule to Firewall
 3. Network Connection Profile Setup
-4. Enable-PSRemoting
-5. Add hosts to trustedHosts
-6. Enable CredSSP for trustedHosts
+4. Disable PSRemoting and CredSSP for reset
+5. Enable-PSRemoting
+6. Add hosts to trustedHosts
 7. Set WSMan MaxShellsPerUser from 25 to 100
 8. Set WSMan MaxMBPerUser unlimited.
 9. Set WSMan MaxProccessesPerShell unlimited.
-10. Restart Service WinRM
-11. Disable Enhanced Security for Internet Explorer
-12. Create OS user for Deploy connection.
-13. Server Only : Create Deploy Folders
-14. Server Only : Create/Revise Deploy user credential secure file.
-15. Set HostName for the windows.
-16. Get Status for Reboot Status and decide.
+10. Enable CredSSP for trustedHosts.
+11. Restart Service WinRM
+12. Disable Enhanced Security for Internet Explorer
+13. Create OS user for Deploy connection.
+14. Server Only : Create Deploy Folders
+15. Server Only : Create/Revise Deploy user credential secure file.
+16. Set HostName for the windows.
+17. Get Status for Reboot Status and decide.
 
 .NOTES
 Author: guitarrapc
@@ -61,12 +62,12 @@ function Initialize-ValentiaEnvironment
         [parameter(ParameterSetName = "Server")]
         [parameter(HelpMessage = "Select this switch to Initialize setup for Deploy Server.")]
         [switch]
-        $Server,
+        $Server = $true,
 
         [parameter(ParameterSetName = "Client")]
         [parameter(HelpMessage = "Select this switch to Initialize setup for Deploy Client.")]
         [switch]
-        $Client,
+        $Client = $false,
 
         [parameter(ParameterSetName = "Server")]
         [parameter(ParameterSetName = "Client")]
@@ -111,7 +112,7 @@ function Initialize-ValentiaEnvironment
         [parameter(ParameterSetName = "Client")]
         [parameter(HelpMessage = "Input Trusted Hosts you want to enable. Default : ""*"" ")]
         [string]
-        $TrustedHosts = "*",
+        $TrustedHosts = $valentia.wsman.TrustedHosts,
 
         [parameter(ParameterSetName = "Server")]
         [parameter(ParameterSetName = "Client")]
@@ -140,8 +141,13 @@ function Initialize-ValentiaEnvironment
 
         ExecutionPolicy
         FirewallNetWorkProfile
-        PSRemotingCredSSP -SkipEnablePSRemoting $SkipEnablePSRemoting -TrustedHosts $TrustedHosts
-        WSManConfiguration
+        if (-not($SkipEnablePSRemoting))
+        {
+            DisablePSRemotingCredSSP
+            EnablePSRemoting -SkipEnablePSRemoting $SkipEnablePSRemoting -TrustedHosts $TrustedHosts
+            WSManConfiguration
+            EnableCredSSP -TrustedHosts $TrustedHosts
+        }
         IESettings
         $credential = CredentialCheck -NoOSUser $NoOSUser -NoPassSave $NoPassSave
         OSUserSetup -NoOSUser $NoOSUser -credential $credential
@@ -208,29 +214,46 @@ function Initialize-ValentiaEnvironment
             }
         }
 
-        function PSRemotingCredSSP ($SkipEnablePSRemoting, $TrustedHosts)
+        function DisablePSRemotingCredSSP
         {
-            Write-Host "Enabling PSRemoting and CredSSP" -ForegroundColor Cyan
-            if (-not($SkipEnablePSRemoting))
-            {
-                "Setup PSRemoting" | Write-ValentiaVerboseDebug
-                Enable-PSRemoting -Force
+            Write-Host "Disabling PSRemoting and CredSSP" -ForegroundColor Cyan
+            Start-Service winrm -PassThru 
+            winrm invoke restore winrm/config
 
-                "Add $TrustedHosts hosts to trustedhosts" | Write-ValentiaVerboseDebug
-                Enable-ValentiaWsManTrustedHosts -TrustedHosts $TrustedHosts
+            Disable-PSRemoting -Force
+            Disable-WSManCredSSP -Role Client
+            Disable-WSManCredSSP -Role Server
+            Stop-Service winrm
+        }
 
-                "Enable CredSSP for $TrustedHosts" | Write-ValentiaVerboseDebug
-                Enable-ValentiaWsManCredSSP -TrustedHosts $TrustedHosts
-                
-                Get-WSManCredSSP
-            }
-        
+        function EnablePSRemoting ($TrustedHosts)
+        {
+            Write-Host "Enabling PSRemoting" -ForegroundColor Cyan
+            "Setup PSRemoting" | Write-ValentiaVerboseDebug
+            Start-Service winrm -PassThru 
+            Enable-PSRemoting -Force
+
+            "Add $TrustedHosts hosts to trustedhosts" | Write-ValentiaVerboseDebug
+            Enable-ValentiaWsManTrustedHosts -TrustedHosts $TrustedHosts
+
+            "show winrm configuration result" | Write-ValentiaVerboseDebug
+            winrm enumerate winrm/config/listener
         }
 
         function WSManConfiguration
         {
             Write-Host "Configure WSMan parameter." -ForegroundColor Cyan
             Set-ValetntiaWSManConfiguration
+        }
+
+        function EnableCredSSP ($TrustedHosts)
+        {
+            Write-Host "Enabling CredSSP" -ForegroundColor Cyan
+            "Enable CredSSP for $TrustedHosts" | Write-ValentiaVerboseDebug
+            Enable-ValentiaCredSSP -TrustedHosts $TrustedHosts
+            
+            "Enable winrm/Trustedhosts to registry AllowFreshCredentialsWhenNTLMOnly" | Write-ValentiaVerboseDebug
+            Add-ValentiaCredSSPDelegateRegKey -TrustedHosts $TrustedHosts
         }
 
         function IESettings
@@ -267,8 +290,7 @@ function Initialize-ValentiaEnvironment
         {
             if ($Server)
             {
-                "Add valentia DeployFolder." | Write-ValentiaVerboseDebug
-                "Create Deploy Folder" | Write-ValentiaVerboseDebug
+                Write-Host "Add valentia DeployFolder." -ForegroundColor Cyan
                 New-ValentiaFolder
             
                 "Set Valentia credential in Windows Credential Manager." | Write-ValentiaVerboseDebug
@@ -286,7 +308,7 @@ function Initialize-ValentiaEnvironment
 
         function HostnameSetup ($NoSetHostName, $HostUsage)
         {
-            "Check HostName configuration." | Write-ValentiaVerboseDebug
+            Write-Host "Check HostName configuration." -ForegroundColor Cyan
             if ($NoSetHostName)
             {
                 "NoSetHostName switch was enabled, skipping Set HostName." | Write-ValentiaVerboseDebug
@@ -300,20 +322,22 @@ function Initialize-ValentiaEnvironment
 
         function RebootCheck ($NoReboot, $ForceReboot)
         {
-            "Check Reboot status." | Write-ValentiaVerboseDebug
+            Write-Host "Check Reboot status." -ForegroundColor Cyan
             if(Get-ValentiaRebootRequiredStatus)
             {
                 if ($NoReboot)
                 {
-                    'NoReboot switch was enabled, skipping reboot.' | Write-ValentiaVerboseDebug
+                    Write-Host 'NoReboot switch was enabled, skipping reboot.' -ForegroundColor Cyan
                 }
                 elseif ($ForceReboot)
                 {
+                    Write-Host "Start Restart Force." -ForegroundColor Cyan
                     "Start Restart Force." | Write-ValentiaVerboseDebug
                     Restart-Computer -Force
                 }
                 else
                 {
+                    Write-Host "Start Restart with confirmation." -ForegroundColor Cyan
                     "Start Restart with confirmation." | Write-ValentiaVerboseDebug
                     Restart-Computer -Force -Confirm
                 }
