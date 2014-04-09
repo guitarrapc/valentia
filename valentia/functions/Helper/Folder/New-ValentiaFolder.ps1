@@ -104,7 +104,7 @@ function New-ValentiaFolder
     {
         if (-not $Quiet)
         {
-            $directories
+            ($directories).FullName
         }
 
         # Cleanup valentia Environment
