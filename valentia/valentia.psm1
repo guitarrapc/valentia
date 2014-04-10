@@ -286,7 +286,7 @@ $valentia.credssp = New-Object psobject -property @{
 # contains certificate configuration
 $valentia.certificate = New-Object psobject -property @{
     ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
-    FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cert"
+    FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"
     CN                                  = [System.Net.DNS]::GetHostByName("").HostName.ToString() # change to Deploy Server if needed.
     export                              = @{
         CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine
