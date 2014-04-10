@@ -286,12 +286,16 @@ $valentia.credssp = New-Object psobject -property @{
 # contains certificate configuration
 $valentia.certificate = New-Object psobject -property @{
     ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
-    FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                     # cer save location
-    CN                                  = [System.Net.DNS]::GetHostByName("").HostName.ToString()                          # cer subject name you want to export from and import to
+    CN                                  = "dsc"                                                                            # cer subject name you want to export from and import to
+    FilePath                            = @{
+        Cert                               = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                  # cer save location
+        PFX                                = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.pfx"                  # pfx save location
+    }
     export                              = @{
         CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from
         CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name export from
-        Type                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert        # export Type should be cer, as pfx not supported
+        CertType                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert    # export Type should be cert
+        PFXType                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx      # export Type should be pfx
     }
     import                              = @{
         CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location import to

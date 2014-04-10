@@ -2,7 +2,7 @@
 
 #-- Helper for certificate --#
 
-function Export-ValentiaCertificate
+function Export-ValentiaCertificatePFX
 {
     [CmdletBinding()]
     param
@@ -14,7 +14,7 @@ function Export-ValentiaCertificate
             ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]
-        $cert,
+        $pfx,
 
         [parameter(
             mandatory = 0,
@@ -28,14 +28,14 @@ function Export-ValentiaCertificate
             position  = 2)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $exportFilePath = $valentia.certificate.FilePath.Cert,
-
+        $exportFilePath = $valentia.certificate.FilePath.PFX,
+        
         [parameter(
             mandatory = 0,
             position  = 3)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.X509ContentType]
-        $certType = $valentia.certificate.export.CertType
+        $PFXType = $valentia.certificate.export.PFXType
     )
     
     begin
@@ -51,6 +51,9 @@ function Export-ValentiaCertificate
         {
             Remove-Item -Path $FilePath -Confirm -Force
         }
+
+        "Get pfx password to export." | Write-ValentiaVerboseDebug
+        $credential = Get-Credential -Credential "INPUT Password FOR PFX export."
     }
 
     process
@@ -61,14 +64,9 @@ function Export-ValentiaCertificate
         }
         else
         {
-            "Export cert '{0}' to '{1}'." -f $cert.ThumbPrint ,$FilePath | Write-ValentiaVerboseDebug
-            $certToExportInBytes = $cert.Export($certType)
-            [System.IO.File]::WriteAllBytes($FilePath, $certToExportInBytes)
+            "Export pfx '{0}' as object." -f $cert.ThumbPrint | Write-ValentiaVerboseDebug
+            $pfxToExportInBytes = $pfx.Export($PFXType, $credential.GetNetworkCredential().Password)
+            [System.IO.File]::WriteAllBytes($FilePath, $pfxToExportInBytes)
         }
-    }
-
-    end
-    {
-        Get-Item $FilePath
     }
 }

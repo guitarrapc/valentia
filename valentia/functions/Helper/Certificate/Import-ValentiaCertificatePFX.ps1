@@ -2,7 +2,7 @@
 
 #-- Helper for certificate --#
 
-function Import-ValentiaCertificate
+function Import-ValentiaCertificatePFX
 {
     [CmdletBinding()]
     param
@@ -13,7 +13,7 @@ function Import-ValentiaCertificate
         [ValidateNotNullOrEmpty()]
         [string]
         $CN = $valentia.certificate.CN,
-        
+
         [parameter(
             mandatory = 0,
             position  = 1)]
@@ -35,34 +35,37 @@ function Import-ValentiaCertificate
             ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $importFilePath = $valentia.certificate.FilePath.Cert
+        $importFilePath = $valentia.certificate.FilePath.PFX
     )
     
     begin
     {
-        "obtain cert." | Write-ValentiaVerboseDebug
+        "obtain pfx." | Write-ValentiaVerboseDebug
         $FilePath = ($importFilePath -f $CN)
         if (-not (Test-Path $FilePath))
         {
             throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath
         }
 
-        "Cert identification." | Write-ValentiaVerboseDebug
-        $CertToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath
-        $CertStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
+        "Get pfx password to export." | Write-ValentiaVerboseDebug
+        $credential = Get-Credential -Credential "INPUT Password FOR PFX export."
+
+        "PFX identification." | Write-ValentiaVerboseDebug
+        $PFXToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, $credential.GetNetworkCredential().Password
+        $PFXStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 
     process
     {
         try
         {
-            "Import certificate '{0}' to CertStore '{1}'" -f $FilePath, (Get-Item ("cert:{0}\{1}" -f $certStore.Location, $certStore.Name)).PSPath | Write-ValentiaVerboseDebug
-            $CertStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
-            $CertStore.Add($CertToImport)
+            "Import certificate PFX '{0}' to CertStore '{1}'" -f $FilePath, (Get-Item ("cert:{0}\{1}" -f $certStore.Location, $certStore.Name)).PSPath | Write-ValentiaVerboseDebug
+            $PFXStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
+            $PFXStore.Add($PFXToImport)
         }
         finally
         {
-            $CertStore.Close()
+            $PFXStore.Close()
         }
     }
 }

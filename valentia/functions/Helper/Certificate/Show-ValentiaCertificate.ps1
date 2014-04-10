@@ -47,13 +47,18 @@ function Show-ValentiaCertificate
             position  = 5)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $FilePath = $valentia.certificate.FilePath
+        $CertFilePath = $valentia.certificate.FilePath.Cert,
+
+        [parameter(
+            mandatory = 0,
+            position  = 6)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $PFXFilePath = $valentia.certificate.FilePath.PFX
     )
     
     "Obtain CERT from export CertStoreLocation." | Write-ValentiaVerboseDebug
-    $certStoreLocationPathExport = Join-Path "cert:" $certStoreLocationExport -Resolve
-    $certStoreFullPathExport = Join-Path $certStoreLocationPathExport $certStoreNameExport -Resolve
-    $certExport = (Get-ChildItem $certStoreFullPathExport | where Subject -eq "CN=$cn") | select -First 1
+    $certExport = Get-ValentiaCertificateFromCert
     if ($null -eq $certExport)
     {
         Write-Warning ("Certificate for CN '{0}' not found." -f $CN)
@@ -68,8 +73,8 @@ function Show-ValentiaCertificate
         Write-Warning ("Certificate for CN '{0}' not found." -f $CN)
     }
 
-    "Export Path setup." | Write-ValentiaVerboseDebug
-    $certPath = $FilePath -f $CN
+    "Obtain Cer file." | Write-ValentiaVerboseDebug
+    $certPath = $CertFilePath -f $CN
     if (Test-Path $certPath)
     {
         $certFile = Get-Item $certPath
@@ -79,9 +84,21 @@ function Show-ValentiaCertificate
         Write-Warning ("Certificate file not found '{0}'." -f $certPath)
     }
 
+    "Obtain PFX file." | Write-ValentiaVerboseDebug
+    $pfxPath = $PFXFilePath -f $CN
+    if (Test-Path $pfxPath)
+    {
+        $pfxFile = Get-Item $pfxPath
+    }
+    else
+    {
+        Write-Warning ("PFX file not found '{0}'." -f $pfxPath)
+    }
+
     return [PSCustomObject]@{
         ExportCert = $certExport
         ImportCert = $certImport
         CertFile   = $certFile
+        PFXFile    = $pfxFile
     }
 }

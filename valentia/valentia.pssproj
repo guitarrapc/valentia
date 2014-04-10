@@ -63,6 +63,7 @@
     <Compile Include="example\Deployment\Deploygroup\localhost.ps1" />
     <Compile Include="example\Deployment\Upload\test.csv" />
     <Compile Include="example\Deployment\Upload\test.txt" />
+    <Compile Include="functions\Helper\Certificate\Show-ValentiaCertificate.ps1" />
     <Compile Include="functions\Helper\Credential\Add-ValentiaTypeMemberDefinition.ps1" />
     <Compile Include="functions\Helper\Credential\Get-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\Credential\Set-ValentiaCredential.ps1" />
@@ -165,6 +166,7 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" />
     <Content Include="functions\Helper\Certificate\Import-ValentiaCertificate.ps1" />
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />
     <Content Include="functions\Helper\CredSSP\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
