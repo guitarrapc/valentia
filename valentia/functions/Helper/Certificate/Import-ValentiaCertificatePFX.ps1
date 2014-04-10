@@ -51,7 +51,8 @@ function Import-ValentiaCertificatePFX
         $credential = Get-Credential -Credential "INPUT Password FOR PFX export."
 
         "PFX identification." | Write-ValentiaVerboseDebug
-        $PFXToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, $credential.GetNetworkCredential().Password
+        $flags = [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
+        $PFXToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, $credential.GetNetworkCredential().Password, $flags
         $PFXStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 
@@ -60,7 +61,7 @@ function Import-ValentiaCertificatePFX
         try
         {
             "Import certificate PFX '{0}' to CertStore '{1}'" -f $FilePath, (Get-Item ("cert:{0}\{1}" -f $certStore.Location, $certStore.Name)).PSPath | Write-ValentiaVerboseDebug
-            $PFXStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
+            $PFXStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::MaxAllowed)
             $PFXStore.Add($PFXToImport)
         }
         finally

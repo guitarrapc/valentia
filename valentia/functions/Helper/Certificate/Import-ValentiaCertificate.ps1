@@ -48,7 +48,8 @@ function Import-ValentiaCertificate
         }
 
         "Cert identification." | Write-ValentiaVerboseDebug
-        $CertToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath
+        $flags = [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
+        $CertToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, "", $flags
         $CertStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 
@@ -57,7 +58,7 @@ function Import-ValentiaCertificate
         try
         {
             "Import certificate '{0}' to CertStore '{1}'" -f $FilePath, (Get-Item ("cert:{0}\{1}" -f $certStore.Location, $certStore.Name)).PSPath | Write-ValentiaVerboseDebug
-            $CertStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
+            $CertStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::MaxAllowed)
             $CertStore.Add($CertToImport)
         }
         finally
