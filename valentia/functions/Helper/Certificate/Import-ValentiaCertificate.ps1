@@ -1,0 +1,66 @@
+﻿#Requires -Version 3.0
+
+#-- Helper for certificate --#
+
+function Import-ValentiaCertificate
+{
+    [CmdletBinding()]
+    param
+    (
+        [parameter(
+            mandatory = 0,
+            position  = 0)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $CN = $valentia.certificate.CN,
+        
+        [parameter(
+            mandatory = 0,
+            position  = 1)]
+        [ValidateNotNullOrEmpty()]
+        [System.Security.Cryptography.X509Certificates.StoreLocation]
+        $certStoreLocation = $valentia.certificate.import.CertStoreLocation,
+
+        [parameter(
+            mandatory = 0,
+            position  = 2)]
+        [ValidateNotNullOrEmpty()]
+        [System.Security.Cryptography.X509Certificates.StoreName]
+        $certStoreName = $valentia.certificate.import.CertStoreName,
+
+        [parameter(
+            mandatory = 0,
+            position  = 3)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $importPath = $valentia.certificate.FilePath
+    )
+    
+    begin
+    {
+        "obtain cert" | Write-ValentiaVerboseDebug
+        $FilePath = ($importPath -f $CN)
+        if (-not (Test-Path $FilePath))
+        {
+            throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath
+        }
+
+        "Cert identification." | Write-ValentiaVerboseDebug
+        $CertToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath
+        $CertStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
+    }
+
+    process
+    {
+        try
+        {
+            "Import certificate '{0}' to CertStore '{1}'" -f $FilePath, (Get-Item ("cert:{0}\{1}" -f $certStore.Location, $certStore.Name)).PSPath | Write-ValentiaVerboseDebug
+            $CertStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
+            $CertStore.Add($CertToImport)
+        }
+        finally
+        {
+            $CertStore.Close()
+        }
+    }
+}

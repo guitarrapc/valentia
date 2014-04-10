@@ -9,11 +9,13 @@ $script:ExportPath = Split-Path $PSCommandPath -Parent
 $script:functionToExport = @(
     "ConvertTo-ValentiaTask",
     "Edit-ValentiaConfig",
+    "Export-ValentiaCertificate",
     "Get-ValentiaCredential",
     "Get-ValentiaFileEncoding",
     "Get-ValentiaGroup", 
     "Get-ValentiaRebootRequiredStatus",
     "Get-ValentiaTask", 
+    "Import-ValentiaCertificate",
     "Initialize-ValentiaEnvironment",
     "Invoke-Valentia",
     "Invoke-ValentiaAsync",

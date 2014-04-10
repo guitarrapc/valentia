@@ -275,10 +275,27 @@ $valentia.wsman = New-Object psobject -property @{
     TrustedHosts                        = "*";
 }
 
+# contains CredSSP configuration
 $valentia.credssp = New-Object psobject -property @{
     AllowFreshCredentialsWhenNTLMOnly       = @{
         Key                                 = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly'
         Value                               = ($valentia.wsmanTrustedHosts | %{"wsman/$_"}) -join ", "
+    }
+}
+
+# contains certificate configuration
+$valentia.certificate = New-Object psobject -property @{
+    ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
+    FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cert"
+    CN                                  = [System.Net.DNS]::GetHostByName("").HostName.ToString() # change to Deploy Server if needed.
+    export                              = @{
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My
+        Type                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert
+    }
+    import                              = @{
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root
     }
 }
 
@@ -306,16 +323,16 @@ $valentia.ping = New-Object psobject -property @{
 
 # Define External program path
 $valentia.fastcopy = New-Object psobject -property @{
-    folder                              = 'C:\Program Files\FastCopy';
+    folder                              = '{0}\Program Files\FastCopy';
     exe                                 = 'FastCopy.exe';
 }
 
 # contains default deployment Path configuration.
-$valentia.RootPath                      = 'C:\Deployment'
+$valentia.RootPath                      = '{0}\Deployment' -f $env:SystemDrive;
 
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
-    path                                = 'C:\Logs\Deployment';
+    path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
     name                                = 'deploy';
     extension                           = '.log';
 }
