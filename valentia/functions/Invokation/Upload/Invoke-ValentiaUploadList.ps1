@@ -130,7 +130,7 @@ function Invoke-ValentiaUploadList
         $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
         
         # Set SourcePath to retrieve target File full path (default Upload folder of deployment)
-        $SourceFolder = Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.Upload
+        $SourceFolder = Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Upload)
 
         if (-not(Test-Path $SourceFolder))
         {

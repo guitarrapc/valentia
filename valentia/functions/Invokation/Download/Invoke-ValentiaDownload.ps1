@@ -235,7 +235,7 @@ function Invoke-ValentiaDownload
                 # Set Destination with date and DeproyMemberName
                 if ($DestinationFolder -eq $null)
                 {
-                    $DestinationFolder = $(Join-Path $Script:valentia.RootPath $Script:valentia.BranchFolder.Download)
+                    $DestinationFolder = $(Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Download))
                 }
 
                 $Date = (Get-Date).ToString("yyyyMMdd")
