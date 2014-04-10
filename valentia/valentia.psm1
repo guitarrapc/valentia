@@ -289,13 +289,13 @@ $valentia.certificate = New-Object psobject -property @{
     FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                     # cer save location
     CN                                  = [System.Net.DNS]::GetHostByName("").HostName.ToString()                          # cer subject name you want to export from and import to
     export                              = @{
-        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location to export
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name to ex@prt
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name export from
         Type                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert        # export Type should be cer, as pfx not supported
     }
     import                              = @{
-        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location to import
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root              # cer Store Name to import
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location import to
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root              # cer Store Name import to
     }
 }
 

@@ -37,6 +37,7 @@ $script:functionToExport = @(
     "Set-ValentiaHostName",
     "Set-ValentiaLocation", 
     "Set-ValetntiaWSManConfiguration",
+    "Show-ValentiaCertificate",
     "Show-ValentiaConfig",
     "Show-ValentiaGroup",
     "Show-ValentiaPromptForChoice",
