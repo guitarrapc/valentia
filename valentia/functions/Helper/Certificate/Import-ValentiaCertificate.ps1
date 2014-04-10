@@ -33,13 +33,13 @@ function Import-ValentiaCertificate
             position  = 3)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $importPath = $valentia.certificate.FilePath
+        $importFilePath = $valentia.certificate.FilePath
     )
     
     begin
     {
         "obtain cert" | Write-ValentiaVerboseDebug
-        $FilePath = ($importPath -f $CN)
+        $FilePath = ($importFilePath -f $CN)
         if (-not (Test-Path $FilePath))
         {
             throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath

@@ -33,7 +33,7 @@ function Export-ValentiaCertificate
             position  = 3)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $outputPath = $valentia.certificate.FilePath,
+        $exportFilePath = $valentia.certificate.FilePath,
 
         [parameter(
             mandatory = 0,
@@ -55,7 +55,7 @@ function Export-ValentiaCertificate
         }
 
         "Export Path setup." | Write-ValentiaVerboseDebug
-        $FilePath = $outputPath -f $CN
+        $FilePath = $exportFilePath -f $CN
         $dir      = Split-Path $FilePath -Parent
         if (-not (Test-Path $dir))
         {
