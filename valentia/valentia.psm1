@@ -286,16 +286,16 @@ $valentia.credssp = New-Object psobject -property @{
 # contains certificate configuration
 $valentia.certificate = New-Object psobject -property @{
     ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
-    FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"
-    CN                                  = [System.Net.DNS]::GetHostByName("").HostName.ToString() # change to Deploy Server if needed.
+    FilePath                            = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                     # cer save location
+    CN                                  = [System.Net.DNS]::GetHostByName("").HostName.ToString()                          # cer subject name you want to export from and import to
     export                              = @{
-        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My
-        Type                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location to export
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name to ex@prt
+        Type                                = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert        # export Type should be cer, as pfx not supported
     }
     import                              = @{
-        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location to import
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root              # cer Store Name to import
     }
 }
 
@@ -323,7 +323,7 @@ $valentia.ping = New-Object psobject -property @{
 
 # Define External program path
 $valentia.fastcopy = New-Object psobject -property @{
-    folder                              = '{0}\Program Files\FastCopy';
+    folder                              = '{0}\Program Files\FastCopy' -f $env:ProgramFiles;
     exe                                 = 'FastCopy.exe';
 }
 
