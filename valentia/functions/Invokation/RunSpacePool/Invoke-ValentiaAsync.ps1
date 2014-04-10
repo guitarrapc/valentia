@@ -329,10 +329,16 @@ function Invoke-ValentiaAsync
     #region End
 
         # Dispose RunspacePool
-        Remove-ValentiaRunSpacePool -Pool $pool
+        if (-not ($null -eq $pool))
+        {
+            Remove-ValentiaRunSpacePool -Pool $pool
+        }
 
         # Dispose variables
-        if (-not ($null -eq $AsyncPipelines)){$AsyncPipelines = $null}
+        if (-not ($null -eq $AsyncPipelines))
+        {
+            $AsyncPipelines = $null
+        }
 
         # reverse Error Action Preference
         $script:ErrorActionPreference = $valentia.originalErrorActionPreference
