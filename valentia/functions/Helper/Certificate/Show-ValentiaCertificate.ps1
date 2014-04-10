@@ -56,7 +56,7 @@ function Show-ValentiaCertificate
     $certExport = (Get-ChildItem $certStoreFullPathExport | where Subject -eq "CN=$cn") | select -First 1
     if ($null -eq $certExport)
     {
-        Write-Warning "Certificate for CN '{0}' not found." -f $CN
+        Write-Warning ("Certificate for CN '{0}' not found." -f $CN)
     }
 
     "Obtain CERT from Import CertStoreLocation." | Write-ValentiaVerboseDebug
@@ -65,7 +65,7 @@ function Show-ValentiaCertificate
     $certImport = (Get-ChildItem $certStoreFullPathImport | where Subject -eq "CN=$cn") | select -First 1
     if ($null -eq $certImport)
     {
-        Write-Warning "Certificate for CN '{0}' not found." -f $CN
+        Write-Warning ("Certificate for CN '{0}' not found." -f $CN)
     }
 
     "Export Path setup." | Write-ValentiaVerboseDebug
@@ -76,7 +76,7 @@ function Show-ValentiaCertificate
     }
     else
     {
-        Write-Warning "Certificate file not found '{0}'." -f $certPath
+        Write-Warning ("Certificate file not found '{0}'." -f $certPath)
     }
 
     return [PSCustomObject]@{
