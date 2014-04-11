@@ -253,7 +253,9 @@ function Initialize-ValentiaEnvironment
             Enable-ValentiaCredSSP -TrustedHosts $TrustedHosts
             
             "Enable winrm/Trustedhosts to registry AllowFreshCredentialsWhenNTLMOnly" | Write-ValentiaVerboseDebug
-            Add-ValentiaCredSSPDelegateRegKey -TrustedHosts $TrustedHosts
+            Add-ValentiaCredSSPDelegateReg
+            Add-ValentiaCredSSPDelegateRegKey
+            Add-ValentiaCredSSPDelegateRegKeyProperty
         }
 
         function IESettings

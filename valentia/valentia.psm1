@@ -279,7 +279,7 @@ $valentia.wsman = New-Object psobject -property @{
 $valentia.credssp = New-Object psobject -property @{
     AllowFreshCredentialsWhenNTLMOnly       = @{
         Key                                 = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly'
-        Value                               = ($valentia.wsmanTrustedHosts | %{"wsman/$_"}) -join ", "
+        Value                               = ($valentia.wsman.TrustedHosts | %{"wsman/$_"}) -join ", "
     }
 }
 

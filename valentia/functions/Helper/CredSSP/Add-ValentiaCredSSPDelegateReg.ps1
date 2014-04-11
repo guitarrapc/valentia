@@ -2,13 +2,13 @@
 
 #-- Public Functions for CredSSP Configuration --#
 
-function Add-ValentiaCredSSPDelegateRegKey
+function Add-ValentiaCredSSPDelegateReg
 {
     [CmdletBinding()]
     param
     (
         [Parameter(
-            Position = 0,
+            Position = 1,
             Mandatory = 0)]
         [ValidateNotNullOrEmpty()]
         [string]
@@ -20,11 +20,17 @@ function Add-ValentiaCredSSPDelegateRegKey
     $param = @{
         Path  = (Split-Path $keys -Parent)
         Name  = (Split-Path $keys -Leaf)
+        Value = 1
         Force = $true
     }
-    $result = Get-ValentiaCredSSPDelegateRegKey -Keys $Keys
-    if ($null -eq $result.property)
+
+    $result = Get-ValentiaCredSSPDelegateReg -Keys $Keys
+    if ($result.Value -ne 1)
     {
-        New-Item @param
+        Set-ItemProperty @param -PassThru
+    }
+    elseif ($null -eq $result)
+    {
+        New-ItemProperty @param
     }
 }

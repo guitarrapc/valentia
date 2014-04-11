@@ -2,7 +2,7 @@
 
 #-- Public Functions for CredSSP Configuration --#
 
-function Get-ValentiaCredSSPDelegateRegKey
+function Get-ValentiaCredSSPDelegateReg
 {
     [CmdletBinding()]
     param
@@ -18,12 +18,12 @@ function Get-ValentiaCredSSPDelegateRegKey
     $ErrorActionPreference = $valentia.errorPreference
     $path = (Split-Path $keys -Parent)
     $name = (Split-Path $keys -Leaf)
-    Get-Item -Path $path `
+    Get-ItemProperty -Path $path `
     | %{
         [PSCustomObject]@{
-            name      = $name
-            Property = ($_ | where Name -eq $name).Property
-            pspath   = $path
+            Name    = $name
+            Value   = $_.$name
+            Path    = $path
         }
     }
 }
