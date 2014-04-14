@@ -166,9 +166,17 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1" />
+    <Content Include="functions\Helper\Certificate\Remove-ValentiaCertificate.ps1" />
+    <Content Include="functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1" />
+    <Content Include="functions\Helper\Certificate\Import-ValentiaCertificatePFX.ps1" />
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" />
     <Content Include="functions\Helper\Certificate\Import-ValentiaCertificate.ps1" />
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />
+    <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
+    <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateReg.ps1" />
+    <Content Include="functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
+    <Content Include="functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateReg.ps1" />
     <Content Include="functions\Helper\CredSSP\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
     <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKey.ps1" />
