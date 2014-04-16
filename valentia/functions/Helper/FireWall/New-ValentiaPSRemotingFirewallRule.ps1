@@ -52,6 +52,9 @@ function New-ValentiaPSRemotingFirewallRule
         $Group = "Windows Remote Management"
     )
 
+    $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
+
     if (-not((Get-NetFirewallRule | where Name -eq $Name) -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort)))
     {
         Write-Verbose ("Windows PowerShell Remoting port TCP $PSRemotePort was not opend. Set new rule '{1}'" -f $PSRemotePort, $Name)

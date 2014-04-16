@@ -16,6 +16,7 @@ function Add-ValentiaCredSSPDelegateReg
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
 
     $param = @{
         Path  = (Split-Path $keys -Parent)

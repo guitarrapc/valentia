@@ -16,6 +16,7 @@ function Add-ValentiaCredSSPDelegateRegKey
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
 
     $param = @{
         Path  = (Split-Path $keys -Parent)
@@ -23,7 +24,7 @@ function Add-ValentiaCredSSPDelegateRegKey
         Force = $true
     }
     $result = Get-ValentiaCredSSPDelegateRegKey -Keys $Keys
-    if ($null -eq $result.property)
+    if ($result -eq $false)
     {
         New-Item @param
     }

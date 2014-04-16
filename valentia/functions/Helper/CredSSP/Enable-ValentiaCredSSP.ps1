@@ -16,6 +16,7 @@ function Enable-ValentiaCredSSP
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
 
     try
     {

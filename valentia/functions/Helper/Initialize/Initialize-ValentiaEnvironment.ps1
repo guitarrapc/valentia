@@ -165,6 +165,7 @@ function Initialize-ValentiaEnvironment
     begin
     {
         $ErrorActionPreference = $valentia.errorPreference
+        Set-StrictMode -Version latest
 
         if(-not(Test-ValentiaPowerShellElevated))
         {

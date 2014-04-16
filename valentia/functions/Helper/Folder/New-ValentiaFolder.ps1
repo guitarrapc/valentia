@@ -27,6 +27,7 @@ function New-ValentiaFolder
             Position = 0,
             Mandatory = 0,
             HelpMessage = "Root Folder path.")]
+        [ValidateNotNullOrEmpty()]
         [string]
         $RootPath = $valentia.RootPath,
 
@@ -34,13 +35,15 @@ function New-ValentiaFolder
             Position = 1,
             Mandatory = 0,
             HelpMessage = "Branch Path path.")]
+        [ValidateNotNullOrEmpty()]
         [ValentiaBranchPath[]]
-        $BranchPath,
+        $BranchPath = [Enum]::GetNames([ValentiaBranchPath]),
 
         [Parameter(
             Position = 2,
             Mandatory = 0,
             HelpMessage = "Log Folder path.")]
+        [ValidateNotNullOrEmpty()]
         $LogFolder = $valentia.Log.path,
 
         [Parameter(
@@ -53,12 +56,11 @@ function New-ValentiaFolder
 
     begin
     {
+        $ErrorActionPreference = $valentia.errorPreference
+        Set-StrictMode -Version latest
+
         # Create Fullpath String
-        if ($BranchPath.Length -eq 0)
-        {
-            $DeployFolders = [Enum]::GetNames([ValentiaBranchPath]) | %{Join-Path $RootPath $_}
-        }
-        else
+        if (($BranchPath).count -ne 0)
         {
             $DeployFolders = $BranchPath | %{Join-Path $RootPath $_}
         }

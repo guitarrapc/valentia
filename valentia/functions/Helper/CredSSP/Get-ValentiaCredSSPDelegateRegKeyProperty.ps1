@@ -16,7 +16,9 @@ function Get-ValentiaCredSSPDelegateRegKeyProperty
     )
 
     $ErrorActionPreference = $valentia.errorPreference
-    $regProperty = Get-ItemProperty -Path $Keys
+    Set-StrictMode -Version latest
+
+    $regProperty = Get-ItemProperty -Path $keys
     if ($regProperty)
     {
         $regProperty `

@@ -39,6 +39,9 @@ function Set-ValentiaWsManMaxProccessesPerShell
         $MaxProccessesPerShellPath = "WSMan:\localhost\Shell\MaxProcessesPerShell"
     )
     
+    $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
+
     if (-not((Get-ChildItem $MaxProccessesPerShellPath).Value -eq $MaxProccessesPerShell))
     {
         Set-Item -Path $MaxProccessesPerShellPath -Value $MaxProccessesPerShell -Force -PassThru

@@ -30,6 +30,7 @@ function Remove-ValentiaCredSSPDelegateRegKey
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
 
     $result = Get-ValentiaCredSSPDelegateRegKey -TrustedHosts $TrustedHosts -Keys $Keys
     if ($result.Value -contains $regValue)

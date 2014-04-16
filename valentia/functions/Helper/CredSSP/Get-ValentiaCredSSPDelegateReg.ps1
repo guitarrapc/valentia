@@ -16,14 +16,26 @@ function Get-ValentiaCredSSPDelegateReg
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
+
     $path = (Split-Path $keys -Parent)
     $name = (Split-Path $keys -Leaf)
     Get-ItemProperty -Path $path `
     | %{
-        [PSCustomObject]@{
+        $hashtable = @{
             Name    = $name
-            Value   = $_.$name
             Path    = $path
         }
+
+        if ($_ | Get-Member | where MemberType -eq NoteProperty | where Name -eq $name)
+        {
+            $hashtable.Add("Value", $_.$name)
+        }
+        else
+        {
+            $hashtable.Add("Value", $null)
+        }
+        
+        [PSCustomObject]$hashtable
     }
 }

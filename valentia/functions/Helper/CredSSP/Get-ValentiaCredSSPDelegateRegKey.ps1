@@ -16,14 +16,24 @@ function Get-ValentiaCredSSPDelegateRegKey
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
+
     $path = (Split-Path $keys -Parent)
     $name = (Split-Path $keys -Leaf)
-    Get-Item -Path $path `
+    Get-ChildItem -Path $path `
     | %{
-        [PSCustomObject]@{
-            name      = $name
-            Property = ($_ | where Name -eq $name).Property
-            pspath   = $path
+        $hashtable = @{
+            Name    = $name
+            PSPath  = $path
+        }
+
+        if ($_ | where name -eq $name)
+        {
+            $true
+        }
+        else
+        {
+            $false
         }
     }
 }

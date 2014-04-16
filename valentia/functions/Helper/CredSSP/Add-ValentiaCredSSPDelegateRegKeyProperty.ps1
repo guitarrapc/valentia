@@ -23,6 +23,8 @@ function Add-ValentiaCredSSPDelegateRegKeyProperty
     )
 
     $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
+
     $param = @{
         Path  = $keys
         Value = $regValue

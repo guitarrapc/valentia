@@ -133,6 +133,7 @@ function New-ValentiaOSUser
     begin
     {
         $ErrorActionPreference = $valentia.errorPreference
+        Set-StrictMode -Version latest
 
         $HostPC = [System.Environment]::MachineName
         $user = $credential.UserName

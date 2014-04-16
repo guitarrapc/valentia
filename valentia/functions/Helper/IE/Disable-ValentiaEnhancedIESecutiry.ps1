@@ -39,6 +39,9 @@ function Disable-ValentiaEnhancedIESecutiry
         $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
     )
 
+    $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
+
     # get os version, Windows 7 will be "6 1 0 0"
     $osversion = [Environment]::OSVersion.Version
 
@@ -60,6 +63,10 @@ function Disable-ValentiaEnhancedIESecutiry
                 $IsstatusChanged = $false
             }
         }
+        else
+        {
+            $IsstatusChanged = $false
+        }
 
         if (Test-Path $UserKey)
         {
@@ -72,6 +79,10 @@ function Disable-ValentiaEnhancedIESecutiry
             {
                 $IsstatusChanged = $false
             }
+        }
+        else
+        {
+            $IsstatusChanged = $false
         }
 
         if ($IsstatusChanged)

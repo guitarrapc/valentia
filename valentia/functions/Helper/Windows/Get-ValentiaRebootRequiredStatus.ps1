@@ -28,6 +28,9 @@ function Get-ValentiaRebootRequiredStatus
 
     begin
     {
+        $ErrorActionPreference = $valentia.errorPreference
+        Set-StrictMode -Version latest
+
         $WindowsUpdateRebootStatus = $false
         $FileRenameRebootStatus = $false
         $WindowsUpdateRebootPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired"
@@ -42,7 +45,7 @@ function Get-ValentiaRebootRequiredStatus
         }
 
 
-        if ((Get-ItemProperty -Path $FileRenameRebootPath).PendingFileRenameOperations)
+        if (Get-ItemProperty -Path $FileRenameRebootPath | Get-Member -MemberType NoteProperty | where Name -eq "PendingFileRenameOperations")
         {
             $FileRenameRebootStatus = $True
         }
@@ -61,4 +64,3 @@ function Get-ValentiaRebootRequiredStatus
     }
 
 }
-

@@ -38,6 +38,8 @@ function Enable-ValentiaWsManTrustedHosts
         $TrustedHostsPath = "WSman:localhost\client\TrustedHosts"
     )
 
+    $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
 
     if (-not((Get-ChildItem $TrustedHostsPath).Value -eq $TrustedHosts))
     {

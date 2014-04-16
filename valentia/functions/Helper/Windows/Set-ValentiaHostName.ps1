@@ -35,19 +35,12 @@ function Set-ValentiaHostName
         [Parameter(
             Position = 1,
             Mandatory = 0,
-            HelpMessage = "Set Prefix String for hostname if required.")]
-        [string]
-        $PrefixHostName = $valentia.prefix.hostname,
-
-        [Parameter(
-            Position = 2,
-            Mandatory = 0,
             HelpMessage = "Set Prefix IpString for hostname if required.")]
         [string]
         $PrefixIpString = $valentia.prefic.ipstring,
 
         [Parameter(
-            Position = 3,
+            Position = 2,
             Mandatory = 0,
             HelpMessage = "Set this switch to check whatif.")]
         [switch]
@@ -56,6 +49,9 @@ function Set-ValentiaHostName
 
     begin
     {
+        $ErrorActionPreference = $valentia.errorPreference
+        Set-StrictMode -Version latest
+
         # Get IpAddress
         $ipAddress = ([Net.Dns]::GetHostAddresses('').IPAddressToString | Select-String -Pattern "^\d*.\.\d*.\.\d*.\.\d*.").line
 
@@ -63,7 +59,7 @@ function Set-ValentiaHostName
         $ipAddressString = $ipAddress -replace "\.","-"
 
         # Create New Host Name
-        $newHostName = $PrefixHostName + "-" + $HostUsage + "-" + $PrefixIpString + $ipAddressString
+        $newHostName = $HostUsage + "-" + $PrefixIpString + $ipAddressString
 
         $currentHostName = [Net.Dns]::GetHostName()
     }

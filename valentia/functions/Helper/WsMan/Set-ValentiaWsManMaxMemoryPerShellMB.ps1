@@ -38,6 +38,9 @@ function Set-ValentiaWsManMaxMemoryPerShellMB
         [string]
         $MaxMemoryPerShellMBPath = "WSMan:\localhost\Shell\MaxMemoryPerShellMB"
     )
+
+    $ErrorActionPreference = $valentia.errorPreference
+    Set-StrictMode -Version latest
     
     if (-not((Get-ChildItem $MaxMemoryPerShellMBPath).Value -eq $MaxMemoryPerShellMB))
     {

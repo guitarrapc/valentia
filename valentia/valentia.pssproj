@@ -69,7 +69,7 @@
     <Compile Include="functions\Helper\Credential\Set-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\Task\Get-ValentiaTask.ps1" />
     <Compile Include="functions\Helper\Task\ConvertTo-ValentiaTask.ps1" />
-    <Compile Include="functions\Helper\Windows\Disable-ValentiaEnhancedIESecutiry.ps1" />
+    <Compile Include="functions\Helper\IE\Disable-ValentiaEnhancedIESecutiry.ps1" />
     <Compile Include="functions\Helper\Config\Edit-ValentiaConfig.ps1" />
     <Compile Include="functions\Helper\CredSSP\Enable-ValentiaCredSSP.ps1" />
     <Compile Include="functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
@@ -93,8 +93,8 @@
     <Compile Include="functions\Helper\Folder\New-ValentiaFolder.ps1" />
     <Compile Include="functions\Helper\Group\New-ValentiaGroup.ps1" />
     <Compile Include="functions\Helper\Log\New-ValentiaLog.ps1" />
-    <Compile Include="functions\Helper\Windows\New-ValentiaOSUser.ps1" />
-    <Compile Include="functions\Helper\Windows\New-ValentiaPSRemotingFirewallRule.ps1" />
+    <Compile Include="functions\Helper\User\New-ValentiaOSUser.ps1" />
+    <Compile Include="functions\Helper\FireWall\New-ValentiaPSRemotingFirewallRule.ps1" />
     <Compile Include="functions\Invokation\RunSpacePool\New-ValentiaRunSpacePool.ps1" />
     <Compile Include="functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1" />
     <Compile Include="functions\readme.md" />
@@ -137,6 +137,9 @@
     <Folder Include="functions\Helper\Location\" />
     <Folder Include="functions\Helper\HostOutput\" />
     <Folder Include="functions\Helper\Certificate\" />
+    <Folder Include="functions\Helper\FireWall\" />
+    <Folder Include="functions\Helper\IE\" />
+    <Folder Include="functions\Helper\User\" />
     <Folder Include="functions\Helper\PromptForChoice\" />
     <Folder Include="functions\Helper\Task\" />
     <Folder Include="functions\Helper\Windows\" />

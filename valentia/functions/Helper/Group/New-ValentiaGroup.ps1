@@ -70,6 +70,7 @@ function New-ValentiaGroup
     begin
     {
         $ErrorActionPreference = $valentia.errorPreference
+        Set-StrictMode -Version latest
 
         # check FileName is null or empty
         try
