@@ -123,7 +123,7 @@ function Initialize-ValentiaEnvironment
 
     process
     {
-        if ($PSBoundParameters.Verbose.IsPresent)
+        if ($PSBoundParameters.ContainsKey("Verbose"))
         {
             [ordered]@{
                 Server               = $Server

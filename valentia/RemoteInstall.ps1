@@ -134,7 +134,7 @@ function New-ZipExtract
     begin
     {
         # only run with Verbose mode
-        if ($PSBoundParameters.Verbose.IsPresent)
+        if ($PSBoundParameters.ContainsKey("Verbose"))
         {
             # start Stopwatch
             $sw = [System.Diagnostics.Stopwatch]::StartNew()
@@ -269,7 +269,7 @@ function New-ZipExtract
     end
     {
         # only run with Verbose mode
-        if ($PSBoundParameters.Verbose.IsPresent)
+        if ($PSBoundParameters.ContainsKey("Verbose"))
         {
             # end Stopwatch
             $endsw = $sw.Elapsed.TotalMilliseconds
