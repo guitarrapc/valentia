@@ -80,7 +80,7 @@ function Import-ValentiaConfiguration
         } 
         catch 
         {
-            throw ('Error Loading Configuration from {0}: ' -f $valentia.defaultconfigurationfile) + $_
+            throw ('Error Loading Configuration from {0}: ' -f $valentia.defaultconfiguration.file) + $_
         }
     }
 }

@@ -329,13 +329,13 @@ function Invoke-ValentiaAsync
     #region End
 
         # Dispose RunspacePool
-        if (-not ($null -eq $pool))
+        if (Get-Variable | where Name -eq "pool")
         {
             Remove-ValentiaRunSpacePool -Pool $pool
         }
 
         # Dispose variables
-        if (-not ($null -eq $AsyncPipelines))
+        if (Get-Variable | where Name -eq "AsyncPipelines")
         {
             $AsyncPipelines = $null
         }
