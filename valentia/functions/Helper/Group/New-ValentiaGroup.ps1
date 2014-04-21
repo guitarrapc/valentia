@@ -24,15 +24,17 @@ function New-ValentiaGroup
     param
     (
         [Parameter(
-            Position = 0,
-            Mandatory,
-            HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.")]
+            Position  = 0,
+            Mandatory = 1,
+            HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.",
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
         [string[]]
         $DeployClients,
 
         [Parameter(
             Position = 1,
-            Mandatory,
+            Mandatory = 1,
             HelpMessage = "Input filename to output DeployClients")]
         [string]
         $FileName,
@@ -47,9 +49,9 @@ function New-ValentiaGroup
         [Parameter(
             Position = 3,
             Mandatory = 0,
-            HelpMessage = "If you want to write into ReadOnly file.")]
+            HelpMessage = "If you want to add item to exist file.")]
         [switch]
-        $Force,
+        $Add,
 
         [Parameter(
             Position = 4,
@@ -61,11 +63,22 @@ function New-ValentiaGroup
         [Parameter(
             Position = 5,
             Mandatory = 0,
-            HelpMessage = "If you want to confiem what will happen.")]
+            HelpMessage = "If you want to Show file information when operation executed.")]
         [switch]
-        $WhatIf
-
+        $PassThru
     )
+
+    process
+    {
+        if($PSBoundParameters.ContainsKey('Add'))
+        {
+            $DeployClients | Add-Content @param
+        }
+        else
+        {
+            $DeployClients | Set-Content @param
+        }
+    }
 
     begin
     {
@@ -93,60 +106,10 @@ function New-ValentiaGroup
         $param = @{
             path     = $DeployPath
             Encoding = $valentia.fileEncode
+            Force    = $true
+            Confirm  = $PSBoundParameters.ContainsKey('Confirm')
+            PassThru = $PSBoundParameters.ContainsKey('PassThru')
         }
-
-        function Get-Force
-        {
-            if($WhatIf)
-            {
-                $DeployClients | Add-Content @param -WhatIf -Force
-            }
-            else
-            {
-                $DeployClients | Add-Content @param -Force -PassThru
-            }
-        }
-
-        function Get-WhatifConfirm
-        {
-            if($WhatIf)
-            {
-                $DeployClients | Add-Content @param -Whatif -Confirm
-            }
-            else
-            {
-                $DeployClients | Add-Content @param -Confirm -PassThru
-            }
-        }
-
-        function Get-Whatif
-        {
-            if($WhatIf)
-            {
-                $DeployClients | Add-Content @param -Whatif
-            }
-            else
-            {
-                $DeployClients | Add-Content @param -PassThru
-            }
-        }
-    }
-
-    process
-    {
-        if ($force)
-        {
-            Get-Force
-        }
-        if ($Confirm)
-        {
-            Get-WhatifConfirm
-        }
-        else
-        {
-            Get-Whatif
-        }
-
     }
 
     end
