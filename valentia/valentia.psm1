@@ -256,9 +256,9 @@ $valentia.context                       = New-Object System.Collections.Stack   
 
 # contains valentia default configuration path
 $valentia.defaultconfiguration = New-Object psobject -property @{
-    original  = '\config\valentia-config.ps1'         # original configuration file name (Will be delete after initial installation completed.)
-    dir       = Join-Path $env:APPDATA $valentia.name # default configuration path
-    file      = 'valentia-config.ps1'                 # default configuration file name to read
+    original  = '\config\{0}-config.ps1' -f $valentia.name # original configuration file name (Will be delete after initial installation completed.)
+    dir       = Join-Path $env:APPDATA $valentia.name      # default configuration path
+    file      = '{0}-config.ps1' -f $valentia.name         # default configuration file name to read
 }
 
 # contains PS Build-in Preference status
@@ -327,7 +327,7 @@ $valentia.ping = New-Object psobject -property @{
 
 # Define External program path
 $valentia.fastcopy = New-Object psobject -property @{
-    folder                              = '{0}\Program Files\FastCopy' -f $env:ProgramFiles;
+    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
     exe                                 = 'FastCopy.exe';
 }
 
