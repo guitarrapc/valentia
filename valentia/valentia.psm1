@@ -245,7 +245,7 @@ ConvertFrom-StringData @'
 #-- Private Loading Module Parameters --#
 
 # contains default base configuration, may not be override without version update.
-$Script:valentia                        = @{}
+$Script:valentia                        = [ordered]@{}
 $valentia.name                          = 'valentia'                                                             # contains the Name of Module
 $valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
 $valentia.helpersPath                   = '\functions\*'
