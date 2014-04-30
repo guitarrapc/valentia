@@ -17,18 +17,26 @@ function Main
             Position = 1,
             Mandatory = 0)]
         [string]
-        $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))})
+        $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
+
+        [Parameter(
+            Position = 2,
+            Mandatory = 0)]
+        [bool]
+        $reNew = $false
     )
 
     Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $modulepath)
+    if($reNew -and (Test-ModulePath -modulepath $modulepath))
+    {
+        Write-Warning "$modulepath already exist. Escape from creating module Directory."
+        Remove-ModulePath -path $modulepath -Verbose
+    }
+
     if(-not(Test-ModulePath -modulepath $modulepath))
     {
         Write-Warning "$modulepath not found. creating module path."
         New-ModulePath -modulepath $modulepath
-    }
-    else
-    {
-        Write-Warning "$modulepath already exist. Escape from creating module Directory."
     }
 
     $moduleName = Get-ModuleName -path $path
@@ -40,7 +48,7 @@ function Main
     {
         Write-Host ("Copying scripts in '{0}' to Module path '{1}'." -f $path , "$modulepath") -ForegroundColor Green
     }
-
+    
     $destinationtfolder = Copy-Module -path $path -destination $modulepath
     Write-Host ("Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
 
@@ -79,7 +87,8 @@ Function Test-ModulePath
     }
 }
 
-Function New-ModulePath{
+Function New-ModulePath
+{
 
     [CmdletBinding()]
     param
@@ -98,7 +107,8 @@ Function New-ModulePath{
     }
 }
 
-Function Get-ModuleName{
+Function Get-ModuleName
+{
 
     [CmdletBinding()]
     param
@@ -117,6 +127,24 @@ Function Get-ModuleName{
     }
 }
 
+Function Remove-ModulePath
+{
+
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(
+            Position = 0,
+            Mandatory = 1)]
+        [string]
+        $path
+    )
+
+    if (Test-Path $path)
+    {
+        Remove-Item -Path $path -Recurse -Force
+    }
+}
 
 Function Copy-Module
 {
@@ -267,4 +295,4 @@ Function Remove-OriginalDefaultConfig
     }
 }
 
-. Main
+. Main -reNew $true
