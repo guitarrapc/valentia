@@ -35,7 +35,7 @@ function New-ValentiaPSRemotingFirewallRule
             Mandatory = 0,
             HelpMessage = "Input Name of Firewall rule for PowerShellRemoting-In.")]
         [string]
-        $Name = "PowerShellRemoting-In",
+        $Name = "Windows Remote Management (HTTP-In)",
 
         [Parameter(
             Position = 2,
