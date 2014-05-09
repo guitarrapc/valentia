@@ -26,13 +26,6 @@ function Main
         $reNew = $false
     )
 
-    Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $modulepath)
-    if($reNew -and (Test-ModulePath -modulepath $modulepath))
-    {
-        Write-Warning "$modulepath already exist. Escape from creating module Directory."
-        Remove-ModulePath -path $modulepath -Verbose
-    }
-
     if(-not(Test-ModulePath -modulepath $modulepath))
     {
         Write-Warning "$modulepath not found. creating module path."
@@ -40,6 +33,14 @@ function Main
     }
 
     $moduleName = Get-ModuleName -path $path
+    $dir = Join-Path $modulepath $moduleName
+    Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $dir)
+    if($reNew -and (Test-ModulePath -modulepath $dir))
+    {
+        Write-Warning ("'{0}' already exist. Escape from creating module Directory." -f $dir)
+        Remove-ModulePath -path $dir -Verbose
+    }
+
     if ($moduleName)
     {
         Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, "$modulepath") -ForegroundColor Cyan
