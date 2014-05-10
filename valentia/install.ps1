@@ -233,7 +233,7 @@ Function Test-ImportModule
 
     if(Get-Module -ListAvailable | where Name -eq $moduleName)
     {
-        Import-Module -Name $moduleName -Force -PassThru
+        Import-Module (Join-Path (Join-Path $modulepath $moduleName) ("{0}.psd1" -f $moduleName)) -PassThru -Force
     }
 }
 
