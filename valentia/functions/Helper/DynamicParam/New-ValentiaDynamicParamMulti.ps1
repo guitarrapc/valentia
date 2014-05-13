@@ -10,28 +10,47 @@ This cmdlet will return Dynamic param dictionary
 You can use this cmdlet to define Dynamic Param
 
 .NOTES
-Author: guitarrapc
+Author: guitrrapc
 Created: 02/03/2014
 
 .EXAMPLE
-function Show-DynamicParamMulti
+function Show-ValentiaDynamicParamMulti
 {
     [CmdletBinding()]
-    param()
+    param(
+        [parameter(position = 6)]
+        $nyao
+    )
     
     dynamicParam
     {
-        $parameters = (
-            @{name         = "hoge"
-              options      = "fuga"
+        $dynamicParams = (
+            @{Mandatory    = $true
+              name         = "hoge"
+              Options      = "hoge","piyo"
+              position     = 0
+              Type         = "System.String[]"
               validateSet  = $true
-              position     = 0},
+              valueFromPipelineByPropertyName = $true},
+              
+              @{Mandatory    = $true
+              name         = "foo"
+              Options      = 1,2,3,4,5
+              position     = 1
+              Type         = "System.Int32[]"
+              validateSet  = $true},
 
-            @{name         = "foo"
-              options      = "bar"
-              position     = 1})
+              @{DefaultValue = (4,2,5)
+              Mandatory    = $false
+              name         = "bar"
+              Options      = 1,2,3,4,5
+              position     = 2
+              Type         = "System.Int32[]"
+              validateSet  = $false}
+        )
 
-        New-ValentiaDynamicParamMulti -dynamicParams $parameters
+        $dynamic = New-ValentiaDynamicParamMulti -dynamicParams $dynamicParams
+        return $dynamic
     }
 
     begin
@@ -41,12 +60,26 @@ function Show-DynamicParamMulti
     {
         $PSBoundParameters.hoge
         $PSBoundParameters.foo
+        if ($PSBoundParameters.ContainsKey('bar'))
+        {
+            $PSBoundParameters.bar
+            $PSBoundParameters.bar.GetType().FullName
+        }
+        else
+        {
+            $bar = $dynamic.bar.Value
+            $bar
+            $bar.GetType().FullName
+        }
     }
-
 }
 
-Show-DynamicParamMulti -hoge fuga -foo bar
+"Test 1 ---------------------"
+Show-ValentiaDynamicParamMulti -hoge hoge -foo 1,2,3,4
+"Test 2 ---------------------"
+Show-ValentiaDynamicParamMulti -hoge piyo -foo 2 -bar 2
 #>
+
 function New-ValentiaDynamicParamMulti
 {
     [CmdletBinding()]
@@ -101,8 +134,63 @@ function New-ValentiaDynamicParamMulti
                 $attributesCollection.Add($validateSetAttributes)
             }
 
+            # Set default type or get from dynamicparam
+            # Priority
+            # 1. Type KV
+            # 2. Type of DefaultValue
+            # 3. System.Object[]
+            if ($dynamicParamList.type)
+            {
+                $type = [Type]::GetType($dynamicParamList.Type)
+            }
+            else
+            {
+                if ($dynamicParamList.defaultValue)
+                {
+                    $DefaultValueType = $dynamicParamList.defaultValue.GetType().FullName
+                    $type = [Type]::GetType($DefaultValueType)
+                }
+                else
+                {
+                    $type = [Type]::GetType("System.Object[]")
+                }
+            }
+
+            if ($null -eq $type)
+            {
+                throw "type not defined or Null exception! Make sure you have set fullname for the type : '{0}'" -f $dynamicParamList.type
+            }
+
             # create RuntimeDefinedParameter
-            $runtimeDefinedParameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter @($dynamicParamList.name, [System.String], $attributesCollection)
+            $runtimeDefinedParameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter @($dynamicParamList.name, $type, $attributesCollection)
+
+            # Set Default Value if passed
+            if ($dynamicParamList.defaultValue)
+            {
+                if ($dynamicParamList.defaultValue -is $type)
+                {
+                    $runtimeDefinedParameter.Value = $dynamicParamList.defaultValue
+                }
+                elseif ($dynamicParamList.defaultValue -as $type)
+                {
+                    Write-Verbose ("Convert Type for ParameterName '{0}'. DefaultValue '{1}' convert from '{2}' to '{3}'" `
+                        -f 
+                            $dynamicParamList.name,
+                            $dynamicParamLists.defaultValue,
+                            $dynamicParamList.defaultValue.GetType().FullName,
+                            $type)
+                    $runtimeDefinedParameter.Value = $dynamicParamList.defaultValue -as $type
+                }
+                else
+                {
+                    throw "Cannot convert Type for ParameterName '{0}'. DefaultValue '{1}' could not convert from '{2}' to '{3}'" `
+                        -f 
+                            $dynamicParamList.name,
+                            $dynamicParamLists.defaultValue,
+                            $dynamicParamList.defaultValue.GetType().FullName,
+                            $type
+                }
+            }
 
             # create Dictionary
             $dictionary.Add($dynamicParamList.name, $runtimeDefinedParameter)
@@ -123,45 +211,6 @@ This cmdlet will return Dynamic param list item for dictionary
 
 .DESCRIPTION
 You can pass this list to DynamicPramMulti to create Dynamic Param
-
-.NOTES
-Author: guitarrapc
-Created: 02/03/2014
-
-.EXAMPLE
-function Show-DynamicParamMulti
-{
-    [CmdletBinding()]
-    param()
-    
-    dynamicParam
-    {
-        $parameters = (
-            @{name         = "hoge"
-              options      = "fuga"
-              validateSet  = $true
-              position     = 0},
-
-            @{name         = "foo"
-              options      = "bar"
-              position     = 1})
-
-        $dynamicParamLists = New-ValentiaDynamicParamList -dynamicParams $parameters
-        New-ValentiaDynamicParamMulti -dynamicParamLists $dynamicParamLists
-    }
-
-    begin
-    {
-    }
-    process
-    {
-        $PSBoundParameters.hoge
-        $PSBoundParameters.foo
-    }
-
-}
-
-Show-DynamicParamMulti -hoge fuga -foo bar
 #>
 function New-ValentiaDynamicParamList
 {
@@ -183,7 +232,7 @@ function New-ValentiaDynamicParamList
         $list = New-Object System.Collections.Generic.List[HashTable]
 
         # create key check array
-        [string[]]$keyCheckInputItems = "helpMessage", "mandatory", "name", "parameterSetName", "options", "position", "valueFromPipeline", "valueFromPipelineByPropertyName", "valueFromRemainingArguments", "validateSet"
+        [string[]]$keyCheckInputItems = "helpMessage", "mandatory", "name", "parameterSetName", "options", "position", "valueFromPipeline", "valueFromPipelineByPropertyName", "valueFromRemainingArguments", "validateSet", "Type", "DefaultValue"
 
         $keyCheckList = New-Object System.Collections.Generic.List[String]
         $keyCheckList.AddRange($keyCheckInputItems)
@@ -196,7 +245,7 @@ function New-ValentiaDynamicParamList
     {
         foreach ($dynamicParam in $newDynamicParams)
         {
-            $invalidParamter = $dynamicParam.Keys | Where {$_ -notin $keyCheckList}
+            $invalidParamter = $dynamicParam.Keys | where {$_ -notin $keyCheckList}
             if ($($invalidParamter).count -ne 0)
             {
                 throw ("Invalid parameter '{0}' found. Please use parameter from '{1}'" -f $invalidParamter, ("$keyCheckInputItems" -replace " "," ,"))
@@ -257,13 +306,13 @@ function Sort-ValentiaDynamicParamHashTable
             # temp posision for null item. This set as (max + number of collection items)
             $num = $max + $parameters.Length
         }{
-            ("position is '{0}'." -f $position) | Write-ValentiaVerboseDebug
+            Write-Verbose ("position is '{0}'." -f $position)
             $position = $_.position
             
             #region null check
             if ($null -eq $position)
             {
-                ("position is '{0}'. set current max index '{1}'" -f $position, $num) | Write-ValentiaVerboseDebug
+                Write-Verbose ("position is '{0}'. set current max index '{1}'" -f $position, $num)
                 $position = $num
                 $num++
             }
@@ -272,7 +321,7 @@ function Sort-ValentiaDynamicParamHashTable
             #region dupricate check
             if ($position -notin $history)
             {
-                ("position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", ")) | Write-ValentiaVerboseDebug
+                Write-Verbose ("position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", "))
                 $history.Add($position)
             }
             else
@@ -280,17 +329,17 @@ function Sort-ValentiaDynamicParamHashTable
                 $changed = $false
                 while ($position -in $history)
                 {
-                    ("position '{0}' found in '{1}'. Start increment." -f $position, ($history -join ", ")) | Write-ValentiaVerboseDebug
+                    Write-Verbose ("position '{0}' found in '{1}'. Start increment." -f $position, ($history -join ", "))
                     $position++
                     $changed = $true
                 }
-                (" incremented position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", ")) | Write-ValentiaVerboseDebug
+                Write-Verbose (" incremented position '{0}' not found in '{1}'. Add to history." -f $position, ($history -join ", "))
                 if ($changed){$history.Add($position)}
             }
             #endregion
 
             #region set temp hash
-            ("Set position '{0}' as name of temp hash." -f $position) | Write-ValentiaVerboseDebug
+            Write-Verbose ("Set position '{0}' as name of temp hash." -f $position)
             $hash."$position" = $_
             #endregion
         }{[PSCustomObject]$hash}
