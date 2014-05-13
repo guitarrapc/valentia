@@ -1,7 +1,6 @@
 ﻿#Requires -Version 2.0
 
 # Windows 7 and later is requires.
-
 function Main
 {
     [CmdletBinding()]
