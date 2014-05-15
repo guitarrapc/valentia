@@ -1,9 +1,39 @@
 # Version History
 This indicate Version History for valentia.
 
-
 # Update detail
 
+## Version 0.4.x
+
+- version : 0.4.0
+	
+	[ author : guitarrapc ]
+	
+	[ May 16, 2014 ]
+	
+	#### Enhancement
+	* Get-ValentiaGroup now supports Pipeline input.
+	* Now valentia OS User Initialization can control userflag in valentia-config.ps1
+	* Now valentia supports ActiveDirectory User authentication when create Local User in domain joined server.
+	* Enhanced [#60](https://github.com/guitarrapc/valentia/issues/60), now valentia config will move to %AppData%\valentia.
+	* Now CredSSP is supported. Change Authentication mode in valentia-config.ps1. Default is default.$valentia.Authentication
+	* Added Certificate import/export/show functions. ```Export-ValentiaCertificate.ps1```, ```Import-ValentiaCertificate.ps1``` and ```Show-ValentiaCerticate```
+	* PFX is supported as well as Cert.
+	* Set-RestictionMode support in ```Initialize-ValentiaEnvironemt```
+	* Support DynamicParam for Initial Value and Type with ```New-ValentiaDynamicParamMulti```
+	* Add NuGet package support.
+	
+	#### Changes
+	* BranchPath now change to enum. Now you can call by [ValentiaBranchPath]
+	* valentia functions now move into valentia\functions\ with role of functions.
+	* Now installer will not overwrite exsiting configuration.
+	* Move Installer path from root to valentia\Tools
+	* Now FastCopy path is change to chocolatey installation path.
+
+	#### Bug fix
+	* Correct some error messages
+	* fix installer issue.
+	* change Firewall rule name to Windows Standard
 
 ## Version 0.3.x
 
