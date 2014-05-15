@@ -40,7 +40,7 @@ function Main
     Write-Verbose ("Installing {0} to the computer" -f $gitHubURI.repository)
     $installer = "Install.bat"
     $toolFolder = Join-Path $destination ("{0}-Master\{0}" -f $gitHubURI.repository)
-    $InstallerPath = Join-Path $toolFolder ("Tools" + "Install.bat")
+    $InstallerPath = Join-Path $toolFolder ("Tools" + "\" + "Install.bat")
     Install-Repogisty -installerPath $InstallerPath
 
     # Clean up
