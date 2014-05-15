@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>valentia</id>
+    <version>0.3.7.4</version>
+    <authors>guitarrapc</authors>
+    <owners>guitarrapc</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/guitarrapc/valentia</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>PowerShell Remote deployment library for Windows Servers</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>PSGet PowerShell</tags>
+  </metadata>
+  <files> 
+        <file src="..\valentia\config\valentia-config.ps1" target="valentia\config\valentia-config.ps1" />
+        <file src="..\valentia\cs\CredRead.cs" target="valentia\cs\CredRead.cs" />
+        <file src="..\valentia\cs\CredWrite.cs" target="valentia\cs\CredWrite.cs" />
+        <file src="..\valentia\example\Deployment\Application\execute\execute.ps1" target="valentia\example\Deployment\Application\execute\execute.ps1" />
+        <file src="..\valentia\example\Deployment\Application\task-GetProcess.bat" target="valentia\example\Deployment\Application\task-GetProcess.bat" />
+        <file src="..\valentia\example\Deployment\Application\task-GetProcess.ps1" target="valentia\example\Deployment\Application\task-GetProcess.ps1" />
+        <file src="..\valentia\example\Deployment\Application\Task-InstallChocolatey.bat" target="valentia\example\Deployment\Application\Task-InstallChocolatey.bat" />
+        <file src="..\valentia\example\Deployment\Application\Task-InstallChocolatey.ps1" target="valentia\example\Deployment\Application\Task-InstallChocolatey.ps1" />
+        <file src="..\valentia\example\Deployment\Deploygroup\localhost.ps1" target="valentia\example\Deployment\Deploygroup\localhost.ps1" />
+        <file src="..\valentia\example\Deployment\Upload\test.csv" target="valentia\example\Deployment\Upload\test.csv" />
+        <file src="..\valentia\example\Deployment\Upload\test.txt" target="valentia\example\Deployment\Upload\test.txt" />
+        <file src="..\valentia\example\readme.md" target="valentia\example\readme.md" />
+        <file src="..\valentia\functions\Helper\Certificate\Export-ValentiaCertificate.ps1" target="valentia\functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" target="valentia\functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1" target="valentia\functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Import-ValentiaCertificate.ps1" target="valentia\functions\Helper\Certificate\Import-ValentiaCertificate.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Import-ValentiaCertificatePFX.ps1" target="valentia\functions\Helper\Certificate\Import-ValentiaCertificatePFX.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Remove-ValentiaCertificate.ps1" target="valentia\functions\Helper\Certificate\Remove-ValentiaCertificate.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1" target="valentia\functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1" />
+        <file src="..\valentia\functions\Helper\Certificate\Show-ValentiaCertificate.ps1" target="valentia\functions\Helper\Certificate\Show-ValentiaCertificate.ps1" />
+        <file src="..\valentia\functions\Helper\CleanupVariables\Invoke-ValentiaClean.ps1" target="valentia\functions\Helper\CleanupVariables\Invoke-ValentiaClean.ps1" />
+        <file src="..\valentia\functions\Helper\Config\Edit-ValentiaConfig.ps1" target="valentia\functions\Helper\Config\Edit-ValentiaConfig.ps1" />
+        <file src="..\valentia\functions\Helper\Config\Show-ValentiaConfig.ps1" target="valentia\functions\Helper\Config\Show-ValentiaConfig.ps1" />
+        <file src="..\valentia\functions\Helper\Credential\Add-ValentiaTypeMemberDefinition.ps1" target="valentia\functions\Helper\Credential\Add-ValentiaTypeMemberDefinition.ps1" />
+        <file src="..\valentia\functions\Helper\Credential\Get-ValentiaCredential.ps1" target="valentia\functions\Helper\Credential\Get-ValentiaCredential.ps1" />
+        <file src="..\valentia\functions\Helper\Credential\Set-ValentiaCredential.ps1" target="valentia\functions\Helper\Credential\Set-ValentiaCredential.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateReg.ps1" target="valentia\functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateReg.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKey.ps1" target="valentia\functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKey.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" target="valentia\functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Enable-ValentiaCredSSP.ps1" target="valentia\functions\Helper\CredSSP\Enable-ValentiaCredSSP.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateReg.ps1" target="valentia\functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateReg.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKey.ps1" target="valentia\functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKey.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1" target="valentia\functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
+        <file src="..\valentia\functions\Helper\CredSSP\Remove-ValentiaCredSSPDelegateRegKey.ps1" target="valentia\functions\Helper\CredSSP\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
+        <file src="..\valentia\functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1" target="valentia\functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1" />
+        <file src="..\valentia\functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" target="valentia\functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" />
+        <file src="..\valentia\functions\Helper\FireWall\New-ValentiaPSRemotingFirewallRule.ps1" target="valentia\functions\Helper\FireWall\New-ValentiaPSRemotingFirewallRule.ps1" />
+        <file src="..\valentia\functions\Helper\Folder\New-ValentiaFolder.ps1" target="valentia\functions\Helper\Folder\New-ValentiaFolder.ps1" />
+        <file src="..\valentia\functions\Helper\Group\Get-ValentiaGroup.ps1" target="valentia\functions\Helper\Group\Get-ValentiaGroup.ps1" />
+        <file src="..\valentia\functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1" target="valentia\functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1" />
+        <file src="..\valentia\functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1" target="valentia\functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1" />
+        <file src="..\valentia\functions\Helper\Group\New-ValentiaGroup.ps1" target="valentia\functions\Helper\Group\New-ValentiaGroup.ps1" />
+        <file src="..\valentia\functions\Helper\Group\Show-ValentiaGroup.ps1" target="valentia\functions\Helper\Group\Show-ValentiaGroup.ps1" />
+        <file src="..\valentia\functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" target="valentia\functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
+        <file src="..\valentia\functions\Helper\IE\Disable-ValentiaEnhancedIESecutiry.ps1" target="valentia\functions\Helper\IE\Disable-ValentiaEnhancedIESecutiry.ps1" />
+        <file src="..\valentia\functions\Helper\Initialize\Initialize-ValentiaEnvironment.ps1" target="valentia\functions\Helper\Initialize\Initialize-ValentiaEnvironment.ps1" />
+        <file src="..\valentia\functions\Helper\Location\Set-ValentiaLocation.ps1" target="valentia\functions\Helper\Location\Set-ValentiaLocation.ps1" />
+        <file src="..\valentia\functions\Helper\Log\New-ValentiaLog.ps1" target="valentia\functions\Helper\Log\New-ValentiaLog.ps1" />
+        <file src="..\valentia\functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1" target="valentia\functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1" />
+        <file src="..\valentia\functions\Helper\Sed\Invoke-ValentiaSed.ps1" target="valentia\functions\Helper\Sed\Invoke-ValentiaSed.ps1" />
+        <file src="..\valentia\functions\Helper\Task\ConvertTo-ValentiaTask.ps1" target="valentia\functions\Helper\Task\ConvertTo-ValentiaTask.ps1" />
+        <file src="..\valentia\functions\Helper\Task\Get-ValentiaTask.ps1" target="valentia\functions\Helper\Task\Get-ValentiaTask.ps1" />
+        <file src="..\valentia\functions\Helper\User\New-ValentiaOSUser.ps1" target="valentia\functions\Helper\User\New-ValentiaOSUser.ps1" />
+        <file src="..\valentia\functions\Helper\Windows\Get-ValentiaRebootRequiredStatus.ps1" target="valentia\functions\Helper\Windows\Get-ValentiaRebootRequiredStatus.ps1" />
+        <file src="..\valentia\functions\Helper\Windows\Set-ValentiaHostName.ps1" target="valentia\functions\Helper\Windows\Set-ValentiaHostName.ps1" />
+        <file src="..\valentia\functions\Helper\Windows\Test-ValentiaPowerShellElevated.ps1" target="valentia\functions\Helper\Windows\Test-ValentiaPowerShellElevated.ps1" />
+        <file src="..\valentia\functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" target="valentia\functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
+        <file src="..\valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxMemoryPerShellMB.ps1" target="valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxMemoryPerShellMB.ps1" />
+        <file src="..\valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxProccessesPerShell.ps1" target="valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxProccessesPerShell.ps1" />
+        <file src="..\valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxShellsPerUser.ps1" target="valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxShellsPerUser.ps1" />
+        <file src="..\valentia\functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" target="valentia\functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
+        <file src="..\valentia\functions\Invokation\Download\Invoke-ValentiaDownload.ps1" target="valentia\functions\Invokation\Download\Invoke-ValentiaDownload.ps1" />
+        <file src="..\valentia\functions\Invokation\Job\Invoke-Valentia.ps1" target="valentia\functions\Invokation\Job\Invoke-Valentia.ps1" />
+        <file src="..\valentia\functions\Invokation\Job\Invoke-ValentiaCommand.ps1" target="valentia\functions\Invokation\Job\Invoke-ValentiaCommand.ps1" />
+        <file src="..\valentia\functions\Invokation\Job\Receive-ValentiaResult.ps1" target="valentia\functions\Invokation\Job\Receive-ValentiaResult.ps1" />
+        <file src="..\valentia\functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1" target="valentia\functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1" />
+        <file src="..\valentia\functions\Invokation\RunSpacePool\Invoke-ValentiaAsync.ps1" target="valentia\functions\Invokation\RunSpacePool\Invoke-ValentiaAsync.ps1" />
+        <file src="..\valentia\functions\Invokation\RunSpacePool\Invoke-ValentiaAsyncCommand.ps1" target="valentia\functions\Invokation\RunSpacePool\Invoke-ValentiaAsyncCommand.ps1" />
+        <file src="..\valentia\functions\Invokation\RunSpacePool\New-ValentiaRunSpacePool.ps1" target="valentia\functions\Invokation\RunSpacePool\New-ValentiaRunSpacePool.ps1" />
+        <file src="..\valentia\functions\Invokation\RunSpacePool\Receive-ValentiaAsyncResults.ps1" target="valentia\functions\Invokation\RunSpacePool\Receive-ValentiaAsyncResults.ps1" />
+        <file src="..\valentia\functions\Invokation\RunSpacePool\Receive-ValentiaAsyncStatus.ps1" target="valentia\functions\Invokation\RunSpacePool\Receive-ValentiaAsyncStatus.ps1" />
+        <file src="..\valentia\functions\Invokation\RunSpacePool\Remove-ValentiaRunSpacePool.ps1" target="valentia\functions\Invokation\RunSpacePool\Remove-ValentiaRunSpacePool.ps1" />
+        <file src="..\valentia\functions\Invokation\Sync\Invoke-ValentiaSync.ps1" target="valentia\functions\Invokation\Sync\Invoke-ValentiaSync.ps1" />
+        <file src="..\valentia\functions\Invokation\Upload\Invoke-ValentiaUpload.ps1" target="valentia\functions\Invokation\Upload\Invoke-ValentiaUpload.ps1" />
+        <file src="..\valentia\functions\Invokation\Upload\Invoke-ValentiaUploadList.ps1" target="valentia\functions\Invokation\Upload\Invoke-ValentiaUploadList.ps1" />
+        <file src="..\valentia\functions\readme.md" target="valentia\functions\readme.md" />
+        <file src="..\valentia\Test\Credential\Credential.ps1" target="valentia\Test\Credential\Credential.ps1" />
+        <file src="..\valentia\Test\Credential\Import-Module.ps1" target="valentia\Test\Credential\Import-Module.ps1" />
+        <file src="..\valentia\Test\Credential\PingAsync.ps1" target="valentia\Test\Credential\PingAsync.ps1" />
+        <file src="..\valentia\Test\Credential\Target.ps1" target="valentia\Test\Credential\Target.ps1" />
+        <file src="..\valentia\install.bat" target="valentia\Tools\install.bat" />
+        <file src="..\valentia\install.ps1" target="valentia\Tools\install.ps1" />
+        <file src="..\valentia\New-valentiaManufest.ps1" target="valentia\Tools\New-valentiaManufest.ps1" />
+        <file src="..\valentia\RemoteInstall.ps1" target="valentia\Tools\RemoteInstall.ps1" />
+        <file src="..\valentia\valentia-Help\valentia.psm1.xml" target="valentia\valentia-Help\valentia.psm1.xml" />
+        <file src="..\valentia\valentia.psd1" target="valentia\valentia.psd1" />
+        <file src="..\valentia\valentia.psm1" target="valentia\valentia.psm1" />
+  </files>
+</package>
