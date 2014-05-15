@@ -40,7 +40,7 @@ function Main
     Write-Verbose ("Installing {0} to the computer" -f $gitHubURI.repository)
     $installer = "Install.bat"
     $toolFolder = Join-Path $destination ("{0}-Master\{0}" -f $gitHubURI.repository)
-    $InstallerPath = Join-Path $toolFolder "Install.bat"
+    $InstallerPath = Join-Path $toolFolder ("Tools" + "Install.bat")
     Install-Repogisty -installerPath $InstallerPath
 
     # Clean up
@@ -314,7 +314,7 @@ function Remove-Directory
 # To run this function paste below in PowerShell or Command Prompt(cmd)
 
 # 1. x not prefered : raw.github.com
-# powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/RemoteInstall.ps1'))"
+# powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/valentia/Tools/RemoteInstall.ps1'))"
 
 # 2. o prefered : api.github.com
-# powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1").Content))).Remove(0,1)'
+# powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/Tools/RemoteInstall.ps1").Content))).Remove(0,1)'

@@ -86,3 +86,11 @@ $script:moduleManufest = @{
 }
 
 New-ModuleManifest @moduleManufest
+
+# As Installer place on ModuleName\Tools.
+$psd1 = "$module.psd1"
+if (Test-Path -Path $psd1)
+{
+    Get-Content -Path ".\$psd1" -Encoding UTF8 -Raw -Force | Out-File -FilePath "..\$psd1" -Encoding default -Force
+    Remove-Item -Path ".\$psd1" -Force
+}

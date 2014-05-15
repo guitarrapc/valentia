@@ -53,7 +53,7 @@ Valentia inspired from [capistrano](https://github.com/capistrano/capistrano) an
 
 ||
 |----|
-|**powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm 'https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1').Content))).Remove(0,1)"**|
+|**powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/Tools/RemoteInstall.ps1").Content))).Remove(0,1)'**|
 
 After the installation complete, you will find valentia installed into your user's Module folder.
 

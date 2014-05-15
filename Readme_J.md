@@ -53,7 +53,7 @@ valentia は、 [capistrano](https://github.com/capistrano/capistrano) と [psak
 
 ||
 |----|
-|**powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm 'https://api.github.com/repos/guitarrapc/valentia/contents/valentia/RemoteInstall.ps1').Content))).Remove(0,1)"**|
+|**powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/valentia/Tools/RemoteInstall.ps1").Content))).Remove(0,1)'**|
 
 
 インストール完了後、valentia がユーザーフォルダにインストールされます。

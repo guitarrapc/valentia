@@ -94,10 +94,10 @@
         <file src="..\valentia\Test\Credential\Import-Module.ps1" target="valentia\Test\Credential\Import-Module.ps1" />
         <file src="..\valentia\Test\Credential\PingAsync.ps1" target="valentia\Test\Credential\PingAsync.ps1" />
         <file src="..\valentia\Test\Credential\Target.ps1" target="valentia\Test\Credential\Target.ps1" />
-        <file src="..\valentia\install.bat" target="valentia\Tools\install.bat" />
-        <file src="..\valentia\install.ps1" target="valentia\Tools\install.ps1" />
-        <file src="..\valentia\New-valentiaManufest.ps1" target="valentia\Tools\New-valentiaManufest.ps1" />
-        <file src="..\valentia\RemoteInstall.ps1" target="valentia\Tools\RemoteInstall.ps1" />
+        <file src="..\valentia\Tools\install.bat" target="valentia\Tools\install.bat" />
+        <file src="..\valentia\Tools\install.ps1" target="valentia\Tools\install.ps1" />
+        <file src="..\valentia\Tools\New-valentiaManufest.ps1" target="valentia\Tools\New-valentiaManufest.ps1" />
+        <file src="..\valentia\Tools\RemoteInstall.ps1" target="valentia\Tools\RemoteInstall.ps1" />
         <file src="..\valentia\valentia-Help\valentia.psm1.xml" target="valentia\valentia-Help\valentia.psm1.xml" />
         <file src="..\valentia\valentia.psd1" target="valentia\valentia.psd1" />
         <file src="..\valentia\valentia.psm1" target="valentia\valentia.psm1" />

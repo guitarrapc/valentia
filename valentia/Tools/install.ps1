@@ -10,7 +10,7 @@ function Main
             Position = 0,
             Mandatory = 0)]
         [string]
-        $path = $(Split-Path $PSCommandPath -Parent),
+        $path = (Split-Path (Resolve-Path -Path $pwd) -Parent),
 
         [Parameter(
             Position = 1,
@@ -52,10 +52,8 @@ function Main
     $destinationtfolder = Copy-Module -path $path -destination $modulepath
     Write-Host ("Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
 
-    $moduleName = (Get-Item $path).Name
     Test-ImportModule -ModuleName $moduleName
     Write-Host ("Imported Module '{0}'" -f $moduleName) -ForegroundColor Green
-
     $moduleVariable = (Get-Variable -Name $moduleName).Value
     $originalDefaultConfigPath = Join-Path $moduleVariable.modulePath $moduleVariable.defaultconfiguration.original -Resolve
     Set-DefaultConfig -defaultConfigPath $originalDefaultConfigPath -ExportConfigDir $moduleVariable.defaultconfiguration.dir
