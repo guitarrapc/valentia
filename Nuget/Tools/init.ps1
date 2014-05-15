@@ -1,4 +1,4 @@
-﻿#Requires -Version 2.0
+#Requires -Version 2.0
 
 # Windows 7 and later is requires.
 function Main
@@ -21,7 +21,9 @@ function Main
 
     $ErrorActionPreference = "Stop"
 
-    $path = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
+    $parent = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
+    $child  = $parent.name.split(".")[0]
+    $path = Join-Path $parent $child
 
     if(-not(Test-ModulePath -modulepath $modulepath))
     {
@@ -35,6 +37,7 @@ function Main
     if($reNew -and (Test-ModulePath -modulepath $dir))
     {
         Write-Warning ("'{0}' already exist. Escape from creating module Directory." -f $dir)
+        Write-Warning $dir
         Remove-ModulePath -path $dir -Verbose
     }
 
