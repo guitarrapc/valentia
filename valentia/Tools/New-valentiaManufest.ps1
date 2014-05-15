@@ -1,5 +1,5 @@
 ﻿$script:module = "valentia"
-$script:moduleVersion = "0.3.8"
+$script:moduleVersion = "0.4.0"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
