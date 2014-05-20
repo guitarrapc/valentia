@@ -31,14 +31,14 @@ function Add-ValentiaTypeMemberDefinition
         $PassThru
     )
 
-    $script:guid = [Guid]::NewGuid().ToString().Replace("-", "_")
-    $script:addType = @{
+    $private:guid = [Guid]::NewGuid().ToString().Replace("-", "_")
+    $private:addType = @{
         MemberDefinition = $MemberDefinition
         Namespace        = $NameSpace 
         Name             = $Name + $guid
     }
 
-    $script:result = Add-Type @addType -PassThru
+    $private:result = Add-Type @addType -PassThru
     if ($PSBoundParameters.PassThru.IsPresent)
     {
         return $result

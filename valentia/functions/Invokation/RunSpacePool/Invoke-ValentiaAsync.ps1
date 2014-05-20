@@ -82,7 +82,7 @@ function Invoke-ValentiaAsync
             HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
         [ValidateNotNullOrEmpty()]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+        $DeployFolder = (Join-Path $script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
         [Parameter(
             Position = 3, 
@@ -112,7 +112,7 @@ function Invoke-ValentiaAsync
     try
     {
         # Preference
-        $script:ErrorActionPreference = $valentia.errorPreference
+        $private:ErrorActionPreference = $valentia.errorPreference
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -341,7 +341,7 @@ function Invoke-ValentiaAsync
         }
 
         # reverse Error Action Preference
-        $script:ErrorActionPreference = $valentia.originalErrorActionPreference
+        $private:ErrorActionPreference = $valentia.originalErrorActionPreference
 
         # obtain Result
         $CommandResult = [ordered]@{

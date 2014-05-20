@@ -30,6 +30,33 @@ This function will execute followings.
 16. Set HostName for the windows.
 17. Get Status for Reboot Status and decide.
 
+.PARAMETER Server
+   Select this switch to Initialize setup for Deploy Server. (Ristricted with Client)
+
+.PARAMETER Client
+   Select this switch to Initialize setup for Deploy Client. (Ristricted with Server)
+
+.PARAMETER NoOSUser
+   Select this switch If you don't want to initialize Deploy User. (Ristricted with Server)
+
+.PARAMETER NoPassSave
+   Select this switch If you don't want to Save/Revise password. (Ristricted with Server)
+
+.PARAMETER HostUsage
+   set usage for the host. (Ristricted with Server)
+
+.PARAMETER NoReboot
+   Select this switch If you don't want to Reboot.
+
+.PARAMETER Force
+   Select this switch If you want to Forece Restart without prompt.
+
+.PARAMETER TrustedHosts
+   Input Trusted Hosts you want to enable. Default : "*"
+
+.PARAMETER SkipEnablePSRemoting
+   Select this switch If you want to skip setup PSRemoting.
+
 .NOTES
 Author: guitarrapc
 Created: 18/Jul/2013
@@ -60,65 +87,39 @@ function Initialize-ValentiaEnvironment
     param
     (
         [parameter(ParameterSetName = "Server")]
-        [parameter(HelpMessage = "Select this switch to Initialize setup for Deploy Server.")]
         [switch]
         $Server = $true,
 
         [parameter(ParameterSetName = "Client")]
-        [parameter(HelpMessage = "Select this switch to Initialize setup for Deploy Client.")]
         [switch]
         $Client = $false,
 
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(HelpMessage = "Select this switch If you don't want to initialize Deploy User.")]
-        [switch]
-        $NoOSUser = $false,
-
-        [parameter(ParameterSetName = "Server")]
-        [parameter(HelpMessage = "Select this switch If you don't want to Save/Revise password.")]
-        [switch]
-        $NoPassSave = $false,
-
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(ParameterSetName = "HostName")]
-        [Parameter(HelpMessage = "Select this switch If you don't want to Set HostName.")]
-        [switch]
-        $NoSetHostName = $true,
-
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(ParameterSetName = "HostName")]
-        [Parameter(HelpMessage = "set usage for the host.")]
         [string]
-        $HostUsage,
+        $HostUsage = "",
 
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(ParameterSetName = "HostName")]
-        [parameter(HelpMessage = "Select this switch If you don't want to REboot.")]
-        [switch]
-        $NoReboot = $true,
+        [PSCredential]
+        $Credential = $null,
 
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(ParameterSetName = "HostName")]
-        [parameter(HelpMessage = "Select this switch If you want to Forece Restart without prompt.")]
-        [switch]
-        $ForceReboot = $false,
-
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(HelpMessage = "Input Trusted Hosts you want to enable. Default : ""*"" ")]
         [string]
         $TrustedHosts = $valentia.wsman.TrustedHosts,
 
-        [parameter(ParameterSetName = "Server")]
-        [parameter(ParameterSetName = "Client")]
-        [parameter(HelpMessage = "Select this switch If you want to skip setup PSRemoting.")]
         [switch]
-        $SkipEnablePSRemoting = $false
+        $Force = $false,
+
+        [switch]
+        $NoOSUser = $false,
+
+        [switch]
+        $NoPassSave = $false,
+
+        [switch]
+        $NoReboot = $true,
+
+        [switch]
+        $SkipEnablePSRemoting = $false,
+
+        [switch]
+        $CredSSP = $false
     )
 
     process
@@ -130,12 +131,13 @@ function Initialize-ValentiaEnvironment
                 Client               = $Client
                 NoOSUser             = $NoOSUser
                 NoPassSave           = $NoPassSave
-                NoSetHostName        = $NoSetHostName
                 HostUsage            = $HostUsage
                 NoReboot             = $NoReboot
-                ForceReboot          = $ForceReboot
+                Force                = $Force
                 TrustedHosts         = $TrustedHosts
                 SkipEnablePSRemoting = $SkipEnablePSRemoting
+                CredSSP              = $CredSSP
+                Credential           = $Credential
             }
         }
 
@@ -143,17 +145,25 @@ function Initialize-ValentiaEnvironment
         FirewallNetWorkProfile
         if (-not($SkipEnablePSRemoting))
         {
-            DisablePSRemotingCredSSP
+            if ($CredSSP)
+            {
+                DisablePSRemotingCredSSP
+            }
+
             EnablePSRemoting -SkipEnablePSRemoting $SkipEnablePSRemoting -TrustedHosts $TrustedHosts
             WSManConfiguration
-            EnableCredSSP -TrustedHosts $TrustedHosts
+
+            if ($CredSSP)
+            {
+                EnableCredSSP -TrustedHosts $TrustedHosts
+            }
         }
         IESettings
-        $credential = CredentialCheck -NoOSUser $NoOSUser -NoPassSave $NoPassSave
-        OSUserSetup -NoOSUser $NoOSUser -credential $credential
-        ServerSetup -server $Server -credential $credential
-        HostnameSetup -NoSetHostName $NoSetHostName -HostUsage $HostUsage
-        RebootCheck -NoReboot $NoReboot -ForceReboot $ForceReboot
+        $cred = CredentialCheck -NoOSUser $NoOSUser -NoPassSave $NoPassSave -credential $credential
+        OSUserSetup -NoOSUser $NoOSUser -credential $cred
+        ServerSetup -server $Server -credential $cred
+        HostnameSetup -HostUsage $HostUsage
+        RebootCheck -NoReboot $NoReboot -Force $Force
     }
     
     end
@@ -174,14 +184,6 @@ function Initialize-ValentiaEnvironment
         else
         {
             "Current session is already elevated, continue setup environment." | Write-ValentiaVerboseDebug
-        }
-
-        if ($NoSetHostName -eq $false)
-        {
-            if ([string]::IsNullOrEmpty($HostUsage))
-            {
-                throw "HostUsage parameter was null or empty. Set HostUsage is required to Set HostName."
-            }
         }
 
         function ExecutionPolicy
@@ -266,12 +268,20 @@ function Initialize-ValentiaEnvironment
             Disable-ValentiaEnhancedIESecutiry
         }
 
-        function CredentialCheck ($NoOSUser, $NoPassSave)
+        function CredentialCheck ($NoOSUser, $NoPassSave, [PSCredential]$credential = $null)
         {
             if ((-not $NoOSUser) -or (-not $NoPassSave))
             {
-                Write-Host "Obtain PSCredential to set Credential information." -ForegroundColor Cyan
-                return (Get-Credential -Credential $valentia.users.deployUser)
+                if ($null -ne $credential)
+                {
+                    Write-Host "Credential information already passed. Skip Credential prompt." -ForegroundColor Cyan
+                    return $credential
+                }
+                else
+                {
+                    Write-Host "Obtain PSCredential to set Credential information." -ForegroundColor Cyan
+                    return (Get-Credential -Credential $valentia.users.deployUser)
+                }
             }
         }
 
@@ -299,7 +309,11 @@ function Initialize-ValentiaEnvironment
                 "Set Valentia credential in Windows Credential Manager." | Write-ValentiaVerboseDebug
                 if ($NoPassSave)
                 {
-                    "NoPassSave switch was enabled, skipping Create/Revise secure password file." | Write-ValentiaVerboseDebug
+                    "NoPassSave switch was enabled, skipping Create/Revise set password into Windows Credential Manager." | Write-ValentiaVerboseDebug
+                }
+                elseif ($null -eq $credential)
+                {
+                    "Credential was empty. Skipping Create/Revise set password into Windows Credential Manager." | Write-ValentiaVerboseDebug
                 }
                 else
                 {
@@ -309,12 +323,12 @@ function Initialize-ValentiaEnvironment
             }
         }
 
-        function HostnameSetup ($NoSetHostName, $HostUsage)
+        function HostnameSetup ($HostUsage)
         {
             Write-Host "Check HostName configuration." -ForegroundColor Cyan
-            if ($NoSetHostName)
+            if ($HostUsage -eq "")
             {
-                "NoSetHostName switch was enabled, skipping Set HostName." | Write-ValentiaVerboseDebug
+                "skipping Set HostName." | Write-ValentiaVerboseDebug
             }
             else
             {
@@ -323,7 +337,7 @@ function Initialize-ValentiaEnvironment
             }
         }
 
-        function RebootCheck ($NoReboot, $ForceReboot)
+        function RebootCheck ($NoReboot, $Force)
         {
             Write-Host "Check Reboot status." -ForegroundColor Cyan
             if(Get-ValentiaRebootRequiredStatus)
@@ -332,17 +346,17 @@ function Initialize-ValentiaEnvironment
                 {
                     Write-Host 'NoReboot switch was enabled, skipping reboot.' -ForegroundColor Cyan
                 }
-                elseif ($ForceReboot)
+                elseif ($Force)
                 {
                     Write-Host "Start Restart Force." -ForegroundColor Cyan
                     "Start Restart Force." | Write-ValentiaVerboseDebug
-                    Restart-Computer -Force
+                    Restart-Computer -Force:$Force
                 }
                 else
                 {
                     Write-Host "Start Restart with confirmation." -ForegroundColor Cyan
                     "Start Restart with confirmation." | Write-ValentiaVerboseDebug
-                    Restart-Computer -Force -Confirm
+                    Restart-Computer -Force:$Force -Confirm
                 }
             }
         }
