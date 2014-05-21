@@ -22,10 +22,10 @@ function Main
     Write-Debug "Donwloading zip file from repogitory."
     $source = Join-Path $tempDir "master.zip"
     $Download = @{
-        Source    = $uri.AbsoluteUri
-        Destination = $source
+        uri  = $uri
+        path = $source
     }
-    Download-File @Download
+    Invoke-DownloadFileEX @Download
 
     # Unzip
     Write-Debug "Unzipping dowmloaded zip file."
@@ -76,17 +76,25 @@ function New-Directory
     }
 }
 
-function Download-File
+function Invoke-DownloadFileEX ([uri]$uri, [string]$path)
 {
-    [CmdletBinding()]
-    param
-    (
-        [string]$Source,
-        [string]$Destination
-    )
-
-    Write-Verbose ("Downloading {0} to {1}" -f $uri, $source)
-    Start-BitsTransfer -Source $source -Destination $destination
+    try
+    {
+        Add-Type -AssemblyName System.Net.Http
+        $httpClient = New-Object Net.Http.HttpClient
+        $responseMessage = $httpClient.GetAsync($uri, [System.Net.Http.HttpCompletionOption]::ResponseContentRead)
+    
+        $fileStream = [System.IO.File]::Create($path)
+        $httpStream = $responseMessage.Result.Content.ReadAsStreamAsync()
+        $httpStream.ConfigureAwait($false) > $null
+        $httpStream.Result.CopyToAsync($fileStream).Wait()
+        $fileStream.Flush()
+    }
+    finally
+    {
+        $fileStream.Dispose()
+        $httpClient.Dispose()
+    }
 }
 
 function New-ZipExtract
