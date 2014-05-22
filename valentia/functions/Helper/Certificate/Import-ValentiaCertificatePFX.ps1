@@ -35,27 +35,16 @@ function Import-ValentiaCertificatePFX
             ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $importFilePath = $valentia.certificate.FilePath.PFX
+        $importFilePath = $valentia.certificate.FilePath.PFX,
+
+        [parameter(
+            mandatory = 0,
+            position  = 3)]
+        [ValidateNotNullOrEmpty()]
+        [PSCredential]
+        $Credential = $null
     )
     
-    begin
-    {
-        "obtain pfx." | Write-ValentiaVerboseDebug
-        $FilePath = ($importFilePath -f $CN)
-        if (-not (Test-Path $FilePath))
-        {
-            throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath
-        }
-
-        "Get pfx password to export." | Write-ValentiaVerboseDebug
-        $credential = Get-Credential -Credential "INPUT Password FOR PFX export."
-
-        "PFX identification." | Write-ValentiaVerboseDebug
-        $flags = [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
-        $PFXToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, $credential.GetNetworkCredential().Password, $flags
-        $PFXStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
-    }
-
     process
     {
         try
@@ -68,5 +57,38 @@ function Import-ValentiaCertificatePFX
         {
             $PFXStore.Close()
         }
+    }
+
+    begin
+    {
+        "obtain pfx." | Write-ValentiaVerboseDebug
+        $FilePath = ($importFilePath -f $CN)
+        if (-not (Test-Path $FilePath))
+        {
+            throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath
+        }
+
+        if ($certStoreLocation -eq [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine)
+        {
+            if(-not(Test-ValentiaPowerShellElevated))
+            {
+                throw "Your PowerShell Console is not elevated! Must start PowerShell as an elevated to run this function because of UAC."
+            }
+            else
+            {
+                "Current session is already elevated, continue setup environment." | Write-ValentiaVerboseDebug
+            }
+        }
+
+        "Get pfx password to export." | Write-ValentiaVerboseDebug
+        if ($null -eq $Credential)
+        {
+            $credential = Get-Credential -Credential "INPUT Password FOR PFX export."
+        }
+
+        "PFX identification." | Write-ValentiaVerboseDebug
+        $flags = [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
+        $PFXToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, $credential.GetNetworkCredential().Password, $flags
+        $PFXStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 }

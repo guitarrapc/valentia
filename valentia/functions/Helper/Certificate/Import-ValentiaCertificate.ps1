@@ -38,21 +38,6 @@ function Import-ValentiaCertificate
         $importFilePath = $valentia.certificate.FilePath.Cert
     )
     
-    begin
-    {
-        "obtain cert." | Write-ValentiaVerboseDebug
-        $FilePath = ($importFilePath -f $CN)
-        if (-not (Test-Path $FilePath))
-        {
-            throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath
-        }
-
-        "Cert identification." | Write-ValentiaVerboseDebug
-        $flags = [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
-        $CertToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, "", $flags
-        $CertStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
-    }
-
     process
     {
         try
@@ -65,5 +50,32 @@ function Import-ValentiaCertificate
         {
             $CertStore.Close()
         }
+    }
+
+    begin
+    {
+        "obtain cert." | Write-ValentiaVerboseDebug
+        $FilePath = ($importFilePath -f $CN)
+        if (-not (Test-Path $FilePath))
+        {
+            throw "Certificate not found in '{0}'. Make sure you have been already exported." -f $FilePath
+        }
+
+        if ($certStoreLocation -eq [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine)
+        {
+            if(-not(Test-ValentiaPowerShellElevated))
+            {
+                throw "Your PowerShell Console is not elevated! Must start PowerShell as an elevated to run this function because of UAC."
+            }
+            else
+            {
+                "Current session is already elevated, continue setup environment." | Write-ValentiaVerboseDebug
+            }
+        }
+
+        "Cert identification." | Write-ValentiaVerboseDebug
+        $flags = [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
+        $CertToImport = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath, "", $flags
+        $CertStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 }
