@@ -8,6 +8,8 @@ $script:ExportPath = Split-Path $PSCommandPath -Parent
 
 $script:functionToExport = @(
     "ConvertTo-ValentiaTask",
+    "Convert-ValentiaDecryptPassword",
+    "Convert-ValentiaEncryptPassword",
     "Edit-ValentiaConfig",
     "Export-ValentiaCertificate",
     "Export-ValentiaCertificatePFX",
@@ -23,7 +25,6 @@ $script:functionToExport = @(
     "Invoke-Valentia",
     "Invoke-ValentiaAsync",
     "Invoke-ValentiaClean",
-    "Invoke-ValentiaCommand",
     "Invoke-ValentiaDeployGroupRemark",
     "Invoke-ValentiaDeployGroupUnremark",
     "Invoke-ValentiaDownload",
@@ -39,7 +40,6 @@ $script:functionToExport = @(
     "Remove-ValentiaCertificate",
     "Remove-ValentiaCertificatePFX",
     "Set-ValentiaCredential", 
-    "Set-ValentiaHostName",
     "Set-ValentiaLocation", 
     "Set-ValetntiaWSManConfiguration",
     "Show-ValentiaCertificate",

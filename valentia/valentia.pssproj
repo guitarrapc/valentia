@@ -111,7 +111,6 @@
     <Compile Include="functions\Helper\Group\Show-ValentiaGroup.ps1" />
     <Compile Include="functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1" />
     <Compile Include="functions\Helper\Windows\Test-ValentiaPowerShellElevated.ps1" />
-    <Compile Include="RemoteInstall.ps1" />
     <Compile Include="valentia-Help\valentia.psm1.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +168,8 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Helper\Certificate\Convert-ValentiaDecryptPassword .ps1" />
+    <Content Include="functions\Helper\Certificate\Convert-ValentiaEncryptPassword .ps1" />
     <Content Include="functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1" />
     <Content Include="functions\Helper\Certificate\Remove-ValentiaCertificate.ps1" />
     <Content Include="functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1" />
@@ -185,13 +186,14 @@
     <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\CredSSP\Get-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
-    <Content Include="install.bat" />
-    <Content Include="install.ps1" />
-    <Content Include="New-valentiaManufest.ps1" />
     <Content Include="Test\Credential\Import-Module.ps1" />
     <Content Include="Test\Credential\Target.ps1" />
     <Content Include="Test\Credential\PingAsync.ps1" />
     <Content Include="Test\Credential\Credential.ps1" />
+    <Content Include="Tools\install.bat" />
+    <Content Include="Tools\install.ps1" />
+    <Content Include="Tools\New-valentiaManufest.ps1" />
+    <Content Include="Tools\RemoteInstall.ps1" />
     <Content Include="valentia.psd1" />
     <Content Include="valentia.psm1" />
   </ItemGroup>

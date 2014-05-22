@@ -38,6 +38,13 @@ function Export-ValentiaCertificate
         $certType = $valentia.certificate.export.CertType
     )
     
+    process
+    {
+        "Export cert '{0}' to '{1}'." -f $cert.ThumbPrint ,$FilePath | Write-ValentiaVerboseDebug
+        $certToExportInBytes = $cert.Export($certType)
+        [System.IO.File]::WriteAllBytes($FilePath, $certToExportInBytes)
+    }
+
     begin
     {
         "Export Path setup." | Write-ValentiaVerboseDebug
@@ -51,19 +58,10 @@ function Export-ValentiaCertificate
         {
             Remove-Item -Path $FilePath -Confirm -Force
         }
-    }
 
-    process
-    {
         if (Test-Path $FilePath)
         {
             throw "Certificate already exist in '{0}'. Make sure you have delete exist cert before export." -f $FilePath
-        }
-        else
-        {
-            "Export cert '{0}' to '{1}'." -f $cert.ThumbPrint ,$FilePath | Write-ValentiaVerboseDebug
-            $certToExportInBytes = $cert.Export($certType)
-            [System.IO.File]::WriteAllBytes($FilePath, $certToExportInBytes)
         }
     }
 

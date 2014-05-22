@@ -45,6 +45,30 @@ $valentia.prefix = New-Object psobject -property @{
     ipstring                            = "ip";
 }
 
+# contains certificate configuration
+$valentia.certificate = New-Object psobject -property @{
+    ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
+    CN                                  = "dsc"                                                                            # cer subject name you want to export from and import to
+    FilePath                            = @{
+        Cert                               = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                  # cer save location
+        PFX                                = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.pfx"                  # pfx save location
+    }
+    export                              = @{
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name export from
+        CertType                            = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert        # export Type should be cert
+        PFXType                             = [System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx         # export Type should be pfx
+    }
+    import                              = @{
+        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location import to
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root              # cer Store Name import to
+    }
+    Encrypt                             = @{
+        CertPath                            = "Cert:\LocalMachine\My"
+        ThumPrint                           = "INPUT THUMBPRINT YOU WANT TO USE"
+    }
+}
+
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.config_default                = New-Object PSObject -property ([ordered]@{
     TaskFileName                        = "default.ps1";
