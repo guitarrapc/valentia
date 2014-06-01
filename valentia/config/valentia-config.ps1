@@ -61,7 +61,7 @@ $valentia.certificate = New-Object psobject -property @{
     }
     import                              = @{
         CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location import to
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::Root              # cer Store Name import to
+        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name import to
     }
     Encrypt                             = @{
         CertPath                            = "Cert:\LocalMachine\My"
