@@ -65,7 +65,7 @@ $valentia.certificate = New-Object psobject -property @{
     }
     Encrypt                             = @{
         CertPath                            = "Cert:\LocalMachine\My"
-        ThumPrint                           = "INPUT THUMBPRINT YOU WANT TO USE"
+        ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
     }
 }
 

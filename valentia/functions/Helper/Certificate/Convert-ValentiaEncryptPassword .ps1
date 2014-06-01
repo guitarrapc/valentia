@@ -21,7 +21,7 @@ function Convert-ValentiaEncryptPassword
             ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $thumprint = $valentia.certificate.Encrypt.ThumPrint, 
+        $thumbprint = $valentia.certificate.Encrypt.ThumPrint, 
 
         [parameter(
             mandatory = 0,
@@ -54,7 +54,7 @@ function Convert-ValentiaEncryptPassword
         {
         }
 
-        $Path = Join-Path $certPath $thumprint
+        $Path = Join-Path $certPath $thumbprint
         if (Test-Path $Path)
         {
             $Cert = Get-Item $Path
