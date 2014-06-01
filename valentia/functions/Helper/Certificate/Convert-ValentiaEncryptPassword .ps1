@@ -21,7 +21,7 @@ function Convert-ValentiaEncryptPassword
             ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $thumbprint = $valentia.certificate.Encrypt.ThumPrint, 
+        $thumbprint = $valentia.certificate.Encrypt.ThumbPrint, 
 
         [parameter(
             mandatory = 0,
