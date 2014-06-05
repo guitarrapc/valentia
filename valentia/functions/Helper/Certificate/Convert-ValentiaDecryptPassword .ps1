@@ -34,13 +34,10 @@ function Convert-ValentiaDecryptPassword
 
     process
     {
-        foreach ($cred in $Credential)
-        {
-            $EnvelopedCms = New-Object Security.Cryptography.Pkcs.EnvelopedCms
-            $EnvelopedCms.Decode([convert]::FromBase64String($EncryptedKey))
-            $EnvelopedCms.Decrypt($Cert)
-            [Text.Encoding]::UTF8.GetString($EnvelopedCms.ContentInfo.Content)
-        }
+        $EnvelopedCms = New-Object Security.Cryptography.Pkcs.EnvelopedCms
+        $EnvelopedCms.Decode([convert]::FromBase64String($EncryptedKey))
+        $EnvelopedCms.Decrypt($Cert)
+        [Text.Encoding]::UTF8.GetString($EnvelopedCms.ContentInfo.Content)
     }
 
     begin
