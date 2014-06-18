@@ -75,7 +75,7 @@ function Invoke-ValentiaCommand
 
     begin
     {
-        $ErrorActionPreference = $valentia.errorPreference
+        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
         $list = New-Object System.Collections.Generic.List[System.Management.Automation.Job]
 
         # Set variable for output each task result

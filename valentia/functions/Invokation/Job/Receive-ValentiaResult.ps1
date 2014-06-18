@@ -33,7 +33,7 @@ function Receive-ValentiaResult
 
     begin
     {
-        $ErrorActionPreference = $valentia.errorPreference
+        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         # Set variable for output
         $task = @{}

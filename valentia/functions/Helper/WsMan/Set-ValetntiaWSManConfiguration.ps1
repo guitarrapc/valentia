@@ -32,7 +32,7 @@ function Set-ValetntiaWSManConfiguration
         $MaxProccessesPerShell = $valentia.wsman.MaxProccessesPerShell
     )
 
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     Set-StrictMode -Version latest
 
     "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'" | Write-ValentiaVerboseDebug

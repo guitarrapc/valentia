@@ -111,7 +111,7 @@ function Invoke-Valentia
     try
     {
         # Preference
-        $private:ErrorActionPreference = $valentia.errorPreference
+        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -260,7 +260,7 @@ function Invoke-Valentia
     #region End
 
         # reverse Error Action Preference
-        $private:ErrorActionPreference = $valentia.originalErrorActionPreference
+        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         # obtain Result
         $CommandResult = [ordered]@{

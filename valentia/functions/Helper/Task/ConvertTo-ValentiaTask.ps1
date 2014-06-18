@@ -70,7 +70,7 @@ function ConvertTo-ValentiaTask
 
     begin
     {
-        $ErrorActionPreference = $valentia.errorPreference
+        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         if ($PSBoundParameters.inputFilePath)
         {

@@ -7,10 +7,12 @@ $valentia.context.push(
         callStack                       = New-Object System.Collections.Stack;
         originalEnvPath                 = $env:Path;
         originalDirectory               = Get-Location;
-        originalErrorActionPreference   = $valentia.originalErrorActionPreference;
-        ErrorActionPreference           = $valentia.errorPreference;
-        originalDebugPreference         = $valentia.originalDebugPreference;
-        debugPreference                 = $valentia.debugPreference;
+        originalErrorActionPreference   = $valentia.preference.ErrorActionPreference.original;
+        errorActionPreference           = $valentia.preference.ErrorActionPreference.custom;
+        originalDebugPreference         = $valentia.preference.DebugPreference.original;
+        debugPreference                 = $valentia.preference.DebugPreference.custom;
+        originalProgressPreference      = $valentia.preference.ProgressPreference.original;
+        progressPreference              = $valentia.preference.ProgressPreference.custom;
         name                            = $valentia.name;
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;

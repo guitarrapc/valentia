@@ -20,7 +20,7 @@ function Get-ValentiaCredential
         $Type = [WindowsCredentialManagerType]::Generic
     )
  
-    $script:ErrorActionPreference = $valentia.errorPreference
+    $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
     $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
     $script:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve

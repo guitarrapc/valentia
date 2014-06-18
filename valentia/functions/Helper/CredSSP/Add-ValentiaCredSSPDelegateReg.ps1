@@ -15,7 +15,7 @@ function Add-ValentiaCredSSPDelegateReg
         $Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
 
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     Set-StrictMode -Version latest
 
     $param = @{

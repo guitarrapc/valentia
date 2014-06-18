@@ -78,7 +78,7 @@ function Ping-ValentiaGroupAsync
     begin
     {
         # Preference
-        $script:ErrorActionPreference = $valentia.errorPreference
+        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         # new object for event and job
         $pingOptions = New-Object Net.NetworkInformation.PingOptions($Ttl, $dontFragment)

@@ -262,10 +262,24 @@ $valentia.defaultconfiguration = New-Object psobject -property @{
 }
 
 # contains PS Build-in Preference status
-$valentia.originalErrorActionPreference = $ErrorActionPreference
-$valentia.errorPreference               = 'Stop'
-$valentia.originalDebugPreference       = $DebugPreference
-$valentia.debugPreference               = 'SilentlyContinue'
+$valentia.preference = @{
+    ErrorActionPreference = @{
+        original = $ErrorActionPreference
+        custom   = 'Stop'
+    }
+    DebugPreference       = @{
+        original = $DebugPreference
+        custom   = 'SilentlyContinue'
+    }
+    VerbosePreference     = @{
+        original = $VerbosePreference
+        custom   = 'SilentlyContinue'
+    }
+    ProgressPreference = @{
+        original = $ProgressPreference
+        custom   = 'SilentlyContinue'
+    }
+}
 
 # contains WSman value to set by initialization
 $valentia.wsman = New-Object psobject -property @{
@@ -342,10 +356,12 @@ $valentia.context.push(
         callStack                       = New-Object System.Collections.Stack;
         originalEnvPath                 = $env:Path;
         originalDirectory               = Get-Location;
-        originalErrorActionPreference   = $valentia.originalErrorActionPreference;
-        ErrorActionPreference           = $valentia.errorPreference;
-        originalDebugPreference         = $valentia.originalDebugPreference;
-        debugPreference                 = $valentia.debugPreference;
+        originalErrorActionPreference   = $valentia.preference.ErrorActionPreference.original;
+        errorActionPreference           = $valentia.preference.ErrorActionPreference.custom;
+        originalDebugPreference         = $valentia.preference.DebugPreference.original;
+        debugPreference                 = $valentia.preference.DebugPreference.custom;
+        originalProgressPreference      = $valentia.preference.ProgressPreference.original;
+        progressPreference              = $valentia.preference.ProgressPreference.custom;
         name                            = $valentia.name;
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;

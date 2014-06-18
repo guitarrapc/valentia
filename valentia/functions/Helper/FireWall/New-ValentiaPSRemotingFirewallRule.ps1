@@ -52,7 +52,7 @@ function New-ValentiaPSRemotingFirewallRule
         $Group = "Windows Remote Management"
     )
 
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     Set-StrictMode -Version latest
 
     if (-not((Get-NetFirewallRule | where Name -eq $Name) -and (Get-NetFirewallPortFilter -Protocol TCP | where Localport -eq $PSRemotePort)))

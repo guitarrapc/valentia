@@ -39,7 +39,7 @@ function Set-ValentiaWsManMaxShellsPerUser
         $MaxShellsPerUserPath = "WSMan:\localhost\Shell\MaxShellsPerUser"
     )
     
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     Set-StrictMode -Version latest
 
     if (-not((Get-ChildItem $MaxShellsPerUserPath).Value -eq $ShellsPerUser))

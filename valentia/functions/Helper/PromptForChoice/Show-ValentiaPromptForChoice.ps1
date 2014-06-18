@@ -65,7 +65,7 @@ function Show-ValentiaPromptForChoice
         $defaultIndex = $valentia.promptForChoice.defaultIndex
     )
 
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     
     try
     {

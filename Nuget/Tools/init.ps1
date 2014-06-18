@@ -16,7 +16,10 @@ function Main
             Position = 1,
             Mandatory = 0)]
         [bool]
-        $reNew = $false
+        $reNew = $false,
+
+        [switch]
+        $force = $false
     )
 
     $ErrorActionPreference = "Stop"
@@ -276,6 +279,12 @@ Function Set-DefaultConfig
             Write-Host ("Default configuration file created in '{0}'" -f $configPath) -ForegroundColor Green
             Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
         }
+        elseif ($force)
+        {
+            Write-Host ("Default configuration file overwrite in '{0}'" -f $configPath) -ForegroundColor Green
+            Rename-Item -Path $configPath -NewName ("{0}_{1}" -f (Get-Date).ToString("yyyyMMdd_HHmmss"), $configName)
+            Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
+        }
         else
         {
             Write-Warning ("Configuration file already exist in '{0}'. Skip creating configuration file." -f $configPath)
@@ -302,4 +311,4 @@ Function Remove-OriginalDefaultConfig
     }
 }
 
-. Main -reNew $true
+. Main -reNew $true -force

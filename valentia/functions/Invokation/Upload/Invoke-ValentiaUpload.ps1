@@ -102,7 +102,7 @@ function Invoke-ValentiaUpload
 
     ### Begin
 
-        $ErrorActionPreference = $valentia.errorPreference
+        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0

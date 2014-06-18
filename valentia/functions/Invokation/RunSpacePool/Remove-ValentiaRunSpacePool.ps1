@@ -31,7 +31,7 @@ function Remove-ValentiaRunSpacePool
 
     try
     {
-        $script:ErrorActionPreference = $valentia.errorPreference
+        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
         $Pool.Close()
         $Pool.Dispose()
     }

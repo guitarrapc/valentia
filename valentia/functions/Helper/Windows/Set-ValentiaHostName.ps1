@@ -49,7 +49,7 @@ function Set-ValentiaHostName
 
     begin
     {
-        $ErrorActionPreference = $valentia.errorPreference
+        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
         Set-StrictMode -Version latest
 
         # Get IpAddress

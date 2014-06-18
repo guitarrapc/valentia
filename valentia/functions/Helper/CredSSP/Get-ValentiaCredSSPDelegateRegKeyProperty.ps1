@@ -15,7 +15,7 @@ function Get-ValentiaCredSSPDelegateRegKeyProperty
         $Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
 
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     Set-StrictMode -Version latest
 
     $regProperty = Get-ItemProperty -Path $keys

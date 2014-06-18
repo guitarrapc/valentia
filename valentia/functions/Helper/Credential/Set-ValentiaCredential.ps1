@@ -27,7 +27,7 @@ function Set-ValentiaCredential
         $Type = [WindowsCredentialManagerType]::Generic
     )
 
-    $ErrorActionPreference = $valentia.errorPreference
+    $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
     Set-StrictMode -Version latest
 
     $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve

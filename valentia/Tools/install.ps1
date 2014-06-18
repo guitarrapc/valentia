@@ -286,6 +286,7 @@ function Main
                 elseif ($force)
                 {
                     Write-Host ("Default configuration file overwrite in '{0}'" -f $configPath) -ForegroundColor Green
+                    Rename-Item -Path $configPath -NewName ("{0}_{1}" -f (Get-Date).ToString("yyyyMMdd_HHmmss"), $configName)
                     Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
                 }
                 else
@@ -316,4 +317,4 @@ function Main
     }
 }
 
-. Main -reNew $true
+. Main -reNew $true -force
