@@ -151,10 +151,10 @@
     <Folder Include="functions\Invokation\Upload\" />
     <Folder Include="functions\Invokation\Sync\" />
     <Folder Include="functions\Invokation\RunSpacePool\" />
-    <Folder Include="functions\Invokation\WorkFlow\" />
     <Folder Include="functions\Helper\" />
     <Folder Include="Test\" />
     <Folder Include="Test\Credential\" />
+    <Folder Include="Tools\" />
     <Folder Include="valentia-Help\" />
   </ItemGroup>
   <ItemGroup>
