@@ -47,6 +47,22 @@ $valentia.prefix = New-Object psobject -property @{
     ipstring                            = "ip";
 }
 
+# Define External program path
+$valentia.fastcopy = New-Object psobject -property @{
+    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
+    exe                                 = 'FastCopy.exe';
+}
+
+# contains default deployment Path configuration.
+$valentia.RootPath                      = '{0}\Deployment' -f $env:SystemDrive;
+
+# Set Valentia Log
+$valentia.log = New-Object psobject -property @{
+    path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
+    name                                = 'deploy';
+    extension                           = '.log';
+}
+
 # contains certificate configuration
 $valentia.certificate = New-Object psobject -property @{
     ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"

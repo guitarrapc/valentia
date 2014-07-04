@@ -319,22 +319,6 @@ $valentia.ping = New-Object psobject -property @{
     }
 }
 
-# Define External program path
-$valentia.fastcopy = New-Object psobject -property @{
-    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
-    exe                                 = 'FastCopy.exe';
-}
-
-# contains default deployment Path configuration.
-$valentia.RootPath                      = '{0}\Deployment' -f $env:SystemDrive;
-
-# Set Valentia Log
-$valentia.log = New-Object psobject -property @{
-    path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
-    name                                = 'deploy';
-    extension                           = '.log';
-}
-
 # Set Valentia prompt for choice messages
 $valentia.promptForChoice = New-Object psobject -property @{
     title                               = 'Select item from prompt choices.';
@@ -396,6 +380,22 @@ $valentia.deployextension               = '.ps1';           # contains default D
 $valentia.prefix = New-Object psobject -property @{
     hostName                            = 'web';
     ipstring                            = 'ip';
+}
+
+# Define External program path
+$valentia.fastcopy = New-Object psobject -property @{
+    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
+    exe                                 = 'FastCopy.exe';
+}
+
+# contains default deployment Path configuration.
+$valentia.RootPath                      = '{0}\Deployment' -f $env:SystemDrive;
+
+# Set Valentia Log
+$valentia.log = New-Object psobject -property @{
+    path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
+    name                                = 'deploy';
+    extension                           = '.log';
 }
 
 # contains certificate configuration
