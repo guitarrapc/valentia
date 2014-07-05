@@ -47,23 +47,23 @@ function Set-ValentiaLocation
     process
     {
         # Move to BrachPath if exist
-        ("{0} : {1}" -f $BranchPath, $newlocation) | Write-ValentiaVerboseDebug
+        ("moving to new location as '{0}' : '{1}'" -f $BranchPath, $newlocation) | Write-ValentiaVerboseDebug
         if (Test-Path $newlocation)
         {
-            Set-Location $newlocation
+            Set-Location -Path $newlocation
         }
         else
         {
-            throw "{0} not found exception! Make sure {1} is exist." -f $newlocation, $newlocation
+            throw "Path not found exception! Make sure {0} is exist." -f $newlocation
         }
     }
 
     end
     {
-        ("currentLocation : '{0}', previous Location : '{1}'" -f (Get-Location).Path, $prevLocation) | Write-ValentiaVerboseDebug
+        ("moved Location : '{0}', previous Location : '{1}'" -f (Get-Location).Path, $prevLocation) | Write-ValentiaVerboseDebug
         if ((Get-Location).Path -ne $prevLocation)
         {
-            ("Location change to {0}" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
+            ("Location change to '{0}'" -f (Get-Location).Path) | Write-ValentiaVerboseDebug
         }
         else
         {
