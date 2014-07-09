@@ -17,12 +17,12 @@ function Get-ValentiaComputerName
             Position  = 0,
             ParameterSetName = "DotNet")]
         [switch]
-        $DodNet
+        $DotNet
     )
    
     end
     {
-        if ($DodNet)
+        if ($DotNet)
         {
             Write-Verbose "Objain Host Names from Syste.Net.DSC."
             $hostByName = [System.Net.DNS]::GetHostByName('')
@@ -33,28 +33,52 @@ function Get-ValentiaComputerName
         }
         else
         {
-            Write-Verbose "Objain Host Names from Registry Keys."
-            $HKLMComputerName = "registry::HKLM\SYSTEM\CurrentControlSet\Control\Computername"
-            $HKLMTcpip = "registry::HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
-            $HKLMWinLogon = "registry::HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-            $HKUWMSDK = "registry::HKU\.Default\Software\Microsoft\Windows Media\WMSDK\General"
-
-            CheckItemProperty -BasePath "$HKLMComputerName\Computername" -name "Computername"
-            CheckItemProperty -BasePath "$HKLMComputerName\ActiveComputername" -name "Computername"
-
-            CheckItemProperty -BasePath $HKLMTcpip -name "Hostname"
-            CheckItemProperty -BasePath $HKLMTcpip -name "NV Hostname"
-
-            CheckItemProperty -BasePath $HKLMWinLogon -name "AltDefaultDomainName"
-            CheckItemProperty -BasePath $HKLMWinLogon -name "DefaultDomainName"
-
-            CheckItemProperty -BasePath $HKUWMSDK -name "Computername"
+            $RegistryParam.GetEnumerator() | %{CheckItemProperty -BasePath $_.BasePath -name $_.Name}
         }
     }
 
     begin
     {
         Set-StrictMode -Version Latest
+
+        # HostName from Refistry
+        Write-Verbose "Obtain Host Names from Registry Keys."
+        $HKLMComputerName = "registry::HKLM\SYSTEM\CurrentControlSet\Control\Computername"
+        $HKLMTcpip = "registry::HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+        $HKLMWinLogon = "registry::HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+        $HKUWMSDK = "registry::HKU\.Default\Software\Microsoft\Windows Media\WMSDK\General"
+
+        $RegistryParam = (
+            @{
+                BasePath = "$HKLMComputerName\Computername"
+                name     ="Computername"
+            },
+            @{
+                BasePath = "$HKLMComputerName\ActiveComputername"
+                name ="Computername"
+            },
+            @{
+                BasePath = $HKLMTcpip
+                name     = "Hostname"
+            },
+            @{
+                BasePath = $HKLMTcpip
+                name     = "NV Hostname"
+            },
+            @{
+                BasePath = $HKLMWinLogon
+                name     = "AltDefaultDomainName"
+            },
+            @{
+                BasePath = $HKLMWinLogon
+                name     = "DefaultDomainName"
+            },
+            @{
+                BasePath = $HKUWMSDK
+                name     = "Computername"
+            }
+        )
+
         function CheckItemProperty ([string]$BasePath, [string]$Name)
         {
             $result = $null
