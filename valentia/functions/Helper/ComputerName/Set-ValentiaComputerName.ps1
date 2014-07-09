@@ -11,7 +11,10 @@ function Set-ValentiaComputerName
     (
         [parameter(
             Mandatory = 1,
-            Position  = 0)]
+            Position  = 0,
+            ValueFromPipeline = 1,
+            ValueFromPipelineByPropertyName = 1)]
+        [validateLength(1,15)]
         [string]
         $NewComputerName,
 
@@ -30,8 +33,15 @@ function Set-ValentiaComputerName
    
     end
     {
+        # InvalidCharactorChecl
+        if ($detect = GetContainsInvalidCharactor -ComputerName $NewComputerName)
+        {
+            throw ("NewComputerName '{0}' conrains invalid charactor : {1} . Make sure not to include following fault charactors. : {2}" -f $NewComputerName, (($detect | sort -Unique) -join ""), '`~!@#$%^&*()=+_[]{}\|;:.''",<>/?')
+        }
+
+        # Execute Change
         $RegistryParam.GetEnumerator() `
-        | %{CheckItemProperty -BasePath $_.BasePath -name $_.Name `
+        | %{CheckItemProperty -BasePath $_.BasePath -name $_.Name} `
         | where {$force -or $PSCmdlet.ShouldProcess($_.path, ("Change ComputerName on Registry PropertyName : '{1}', CurrentValue : '{2}', NewName : '{3}'" -f $_.path, $_.Property, $_.Value, $NewComputerName))} `
         | %{
             if ($_.Path -eq $HKLMTcpip)
@@ -41,19 +51,18 @@ function Set-ValentiaComputerName
             }
 
             Write-Verbose ("Setting New ComputerName on Registry : '{0}'" -f $_.path)
-            Set-ItemProperty -Path $_.path -Name $_.Property -Value $NewComputerName -PassThru:$passThru}
+            Set-ItemProperty -Path $_.path -Name $_.Property -Value $NewComputerName -PassThru:$passThru
         }
     }
 
     begin
     {
         Set-StrictMode -Version Latest
-        $list = New-Object 'System.Collections.Generic.List[PSCustomObject]'
         $PSBoundParameters.Remove('Force') > $null
-
+        $list = New-Object 'System.Collections.Generic.List[PSCustomObject]'
 
         # HostName from Refistry
-        Write-Verbose "Objain Host Names from Registry Keys."
+        Write-Verbose "Obtain Host Names from Registry Keys."
         $HKLMComputerName = "registry::HKLM\SYSTEM\CurrentControlSet\Control\Computername"
         $HKLMTcpip = "registry::HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
         $HKLMWinLogon = "registry::HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
@@ -64,7 +73,8 @@ function Set-ValentiaComputerName
                 BasePath = "$HKLMComputerName\Computername"
                 name     ="Computername"
             },
-                @{BasePath = "$HKLMComputerName\ActiveComputername"
+            @{
+                BasePath = "$HKLMComputerName\ActiveComputername"
                 name ="Computername"
             },
             @{
@@ -88,6 +98,15 @@ function Set-ValentiaComputerName
                 name     = "Computername"
             }
         )
+
+        function GetContainsInvalidCharactor ([string]$ComputerName)
+        {
+            $detectedChar = ""
+            # Invalid Charactor list described by MS : http://support.microsoft.com/kb/228275
+            $invalidCharactor = [System.Linq.Enumerable]::ToArray('`~!@#$%^&*()=+_[]{}\|;:.''",<>/?')
+            $detectedChar = [System.Linq.Enumerable]::ToArray($ComputerName) | where {$_ -in $invalidCharactor}
+            return $detectedChar
+        }
 
         function CheckItemProperty ([string]$BasePath, [string]$Name)
         {
