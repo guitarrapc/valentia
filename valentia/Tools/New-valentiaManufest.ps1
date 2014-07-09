@@ -1,5 +1,5 @@
 ﻿$script:module = "valentia"
-$script:moduleVersion = "0.4.1"
+$script:moduleVersion = "0.4.2"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
@@ -15,6 +15,7 @@ $script:functionToExport = @(
     "Export-ValentiaCertificatePFX",
     "Get-ValentiaCertificateFromCert",
     "Get-ValentiaCredential",
+    'Get-ValentiaComputerName',
     "Get-ValentiaFileEncoding",
     "Get-ValentiaGroup", 
     "Get-ValentiaRebootRequiredStatus",
@@ -43,6 +44,7 @@ $script:functionToExport = @(
     "Set-ValentiaLocation", 
     "Set-ValetntiaWSManConfiguration",
     "Show-ValentiaCertificate",
+    'Set-ValentiaComputerName',
     "Show-ValentiaConfig",
     "Show-ValentiaGroup",
     "Show-ValentiaPromptForChoice",
