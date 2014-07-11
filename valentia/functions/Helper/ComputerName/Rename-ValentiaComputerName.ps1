@@ -2,7 +2,7 @@
 
 #-- Helper for valentia --#
 
-function Set-ValentiaComputerName
+function Rename-ValentiaComputerName
 {
     [CmdletBinding(
         SupportsShouldProcess = $true,

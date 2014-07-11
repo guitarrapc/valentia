@@ -178,7 +178,7 @@
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" />
     <Content Include="functions\Helper\Certificate\Import-ValentiaCertificate.ps1" />
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />
-    <Content Include="functions\Helper\ComputerName\Set-ValentiaComputerName.ps1" />
+    <Content Include="functions\Helper\ComputerName\Rename-ValentiaComputerName.ps1" />
     <Content Include="functions\Helper\ComputerName\Get-ValentiaComputerName.ps1" />
     <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
     <Content Include="functions\Helper\CredSSP\Add-ValentiaCredSSPDelegateReg.ps1" />
