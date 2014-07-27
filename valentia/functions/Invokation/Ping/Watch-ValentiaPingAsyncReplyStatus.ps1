@@ -63,18 +63,31 @@ function Watch-ValentiaPingAsyncReplyStatus
         while ($true)
         {
             $date = Get-Date
-            $hash = Get-ValentiaGroup -DeployGroups $deploygroups `
-            | pingAsync `
+            $hash = pingAsync -HostNameOrAddresses $ipaddress `
             | %{
                 Add-Member -InputObject $_ -MemberType NoteProperty -Name Date -Value $date -Force -PassThru
             }
         
             Write-Verbose ("Filtering status as '{0}'" -f $DesiredStatus)
-            $count = ($hash | where IsSuccess -ne $DesiredStatus | measure).count
+            $hash `
+            | where IsSuccess -eq $DesiredStatus `
+            | where HostNameOrAddress -in $ipaddress.IPAddressToString `
+            | %{$result = $ipaddress.Remove($_.HostNameOrAddress)
+                if ($result -eq $false)
+                {
+                    throw "failed to remove ipaddress '{0}' from list" -f $_.HostNameOrAddress
+                }
+                else
+                {
+                    Write-Host ("ipaddress '{0}' turned to be DesiredStatus '{1}'" -f "$($_.HostNameOrAddress -join ', ')", $DesiredStatus) -ForegroundColor Green
+                }
+            }
+
+            $count = ($ipaddress | measure).count
 
             if ($count -eq 0)
             {
-                Write-Host ("HostnameOrAddress '{0}' IsSuccess : '{1}'. break monitoring" -f $($hash.HostNameOrAddress -join ","), $DesiredStatus) -ForegroundColor Cyan
+                Write-Host ("HostnameOrAddress '{0}' IsSuccess : '{1}'. break monitoring" -f $($hash.HostNameOrAddress -join ", "), $DesiredStatus) -ForegroundColor Cyan
                 $hash
                 break;
             }
@@ -107,5 +120,8 @@ function Watch-ValentiaPingAsyncReplyStatus
         $start = Get-Date
         $sw = New-Object System.Diagnostics.Stopwatch
         $sw.Start()
+
+        $ipaddress = New-Object 'System.Collections.Generic.List[ipaddress]'
+        Get-ValentiaGroup -DeployGroups $deploygroups | %{$ipaddress.Add($_)}
     }
 }
