@@ -48,6 +48,7 @@ $script:functionToExport = @(
     "Show-ValentiaConfig",
     "Show-ValentiaGroup",
     "Show-ValentiaPromptForChoice",
+    'Watch-ValentiaPingAsyncReplyStatus',
     "Write-ValentiaVerboseDebug"
 )
 
