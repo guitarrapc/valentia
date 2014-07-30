@@ -24,7 +24,6 @@ function Invoke-ValentiaCleanResult
     (
     )
 
-    $valentia.Result.Clear()
     $valentia.Result = [ordered]@{
         SuccessStatus         = @()
         TimeStart             = [datetime]::Now.DateTime

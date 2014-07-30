@@ -478,6 +478,7 @@ Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
 
 Import-ValentiaModules
 Import-ValentiaConfiguration
+Invoke-ValentiaCleanResult
 
 #-- Export Modules when loading this module --#
 
