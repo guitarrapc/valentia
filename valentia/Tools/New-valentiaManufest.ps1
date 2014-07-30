@@ -7,49 +7,100 @@ $script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1
 $script:ExportPath = Split-Path $PSCommandPath -Parent
 
 $script:functionToExport = @(
-    "ConvertTo-ValentiaTask",
-    "Convert-ValentiaDecryptPassword",
-    "Convert-ValentiaEncryptPassword",
-    "Edit-ValentiaConfig",
-    "Export-ValentiaCertificate",
-    "Export-ValentiaCertificatePFX",
-    "Get-ValentiaCertificateFromCert",
-    "Get-ValentiaCredential",
-    'Get-ValentiaComputerName',
-    "Get-ValentiaFileEncoding",
-    "Get-ValentiaGroup", 
-    "Get-ValentiaRebootRequiredStatus",
-    "Get-ValentiaTask", 
-    "Import-ValentiaCertificate",
-    "Import-ValentiaCertificatePFX",
-    "Initialize-ValentiaEnvironment",
-    "Invoke-Valentia",
-    "Invoke-ValentiaAsync",
-    "Invoke-ValentiaClean",
-    "Invoke-ValentiaDeployGroupRemark",
-    "Invoke-ValentiaDeployGroupUnremark",
-    "Invoke-ValentiaDownload",
-    "Invoke-ValentiaSed",
-    "Invoke-ValentiaSync",
-    "Invoke-ValentiaUpload", 
-    "Invoke-ValentiaUploadList", 
-    "New-ValentiaGroup",
-    "New-ValentiaFolder",
-    "New-ValentiaDynamicParamMulti",
-    "New-ValentiaOSUser",
-    "Ping-ValentiaGroupAsync",
-    "Remove-ValentiaCertificate",
-    "Remove-ValentiaCertificatePFX",
-    "Set-ValentiaCredential", 
-    "Set-ValentiaLocation", 
-    "Set-ValetntiaWSManConfiguration",
-    "Show-ValentiaCertificate",
-    'Rename-ValentiaComputerName',
-    "Show-ValentiaConfig",
-    "Show-ValentiaGroup",
-    "Show-ValentiaPromptForChoice",
-    'Watch-ValentiaPingAsyncReplyStatus',
-    "Write-ValentiaVerboseDebug"
+
+    # Invokation
+        # Invoke job
+        "Invoke-Valentia",
+
+        # Invoke RunSpacePool
+        "Invoke-ValentiaAsync",
+
+        # Download
+        "Invoke-ValentiaDownload",
+
+        # Ping
+        "Ping-ValentiaGroupAsync",
+        'Watch-ValentiaPingAsyncReplyStatus',
+
+        # Sync
+        "Invoke-ValentiaSync",
+
+        # Upload
+        "Invoke-ValentiaUpload", 
+        "Invoke-ValentiaUploadList", 
+
+    # Helper
+        # Certificate
+        "Convert-ValentiaDecryptPassword",
+        "Convert-ValentiaEncryptPassword",
+        "Export-ValentiaCertificate",
+        "Export-ValentiaCertificatePFX",
+        "Get-ValentiaCertificateFromCert",
+        "Import-ValentiaCertificate",
+        "Import-ValentiaCertificatePFX",
+        "Remove-ValentiaCertificate",
+        "Remove-ValentiaCertificatePFX",
+        "Show-ValentiaCertificate",
+
+        # CleanupVariables
+        "Invoke-ValentiaClean",
+
+        # ComputerName
+        'Get-ValentiaComputerName',
+        'Rename-ValentiaComputerName',
+
+        # Config
+        "Edit-ValentiaConfig",
+        "Show-ValentiaConfig",
+
+        # Credential
+        "Get-ValentiaCredential",
+        "Set-ValentiaCredential", 
+
+        # DNS
+        'Get-VelentiaHostEntryAsync',
+
+        # DynamicParam
+        "New-ValentiaDynamicParamMulti",
+
+        # Encoding
+        "Get-ValentiaFileEncoding",
+
+        # Folder
+        "New-ValentiaFolder",
+
+        # Group
+        "Get-ValentiaGroup", 
+        "Invoke-ValentiaDeployGroupRemark",
+        "Invoke-ValentiaDeployGroupUnremark",
+        "New-ValentiaGroup",
+        "Show-ValentiaGroup",
+
+        # HostOutput
+        "Write-ValentiaVerboseDebug",
+
+        # Initialize
+        "Initialize-ValentiaEnvironment",
+
+        # Location
+        "Set-ValentiaLocation", 
+
+        # PromptForChoice
+        "Show-ValentiaPromptForChoice",
+
+        # Sed
+        "Invoke-ValentiaSed",
+
+        # Task
+        "ConvertTo-ValentiaTask",
+        "Get-ValentiaTask", 
+
+        # User
+        "New-ValentiaOSUser",
+
+        # Windows
+        "Get-ValentiaRebootRequiredStatus",
+        "Set-ValetntiaWSManConfiguration"
 )
 
 $script:variableToExport = "valentia"

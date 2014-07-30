@@ -33,7 +33,7 @@ function Rename-ValentiaComputerName
    
     end
     {
-        # InvalidCharactorChecl
+        # InvalidCharactorCheck
         if ($detect = GetContainsInvalidCharactor -ComputerName $NewComputerName)
         {
             throw ("NewComputerName '{0}' conrains invalid charactor : {1} . Make sure not to include following fault charactors. : {2}" -f $NewComputerName, (($detect | sort -Unique) -join ""), '`~!@#$%^&*()=+_[]{}\|;:.''",<>/?')
