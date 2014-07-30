@@ -66,7 +66,7 @@ function Invoke-ValentiaRunspaceProcess
             {
                 $hash = [ordered]@{
                     Hostname = $_.host
-                    Value    = $_.result
+                    Values    = $_.result
                     Success  = $_.success
                 }
                 $valentia.Result.Result.Add([PSCustomObject]$hash)
