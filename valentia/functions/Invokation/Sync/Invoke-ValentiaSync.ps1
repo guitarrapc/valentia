@@ -64,12 +64,21 @@ function Invoke-ValentiaSync
         $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
         [Parameter(
+            Position = 4,
+            Mandatory = 0,
+            HelpMessage = "Return success result even if there are error.")]
+        [bool]
+        $SkipException = $false,
+
+        [Parameter(
+            Position = 5,
             Mandatory = 0,
             HelpMessage = "Input fastCopy.exe location folder if changed.")]
         [string]
         $FastCopyFolder = $valentia.fastcopy.folder,
         
         [Parameter(
+            Position = 6,
             Mandatory = 0,
             HelpMessage = "Input fastCopy.exe name if changed.")]
         [string]
@@ -252,7 +261,10 @@ function Invoke-ValentiaSync
     {
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
-        throw $_
+        if (-not $SkipException)
+        {
+            throw $_
+        }
     }
 
     finally
@@ -278,6 +290,7 @@ function Invoke-ValentiaSync
             TargetHosCount = $($DeployMembers.count)
             TargetHosts = "$DeployMembers"
             Result = $result
+            SkipException  = $SkipException
             ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
 

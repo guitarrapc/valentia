@@ -94,7 +94,14 @@ function Invoke-ValentiaUpload
             Mandatory = 0,
             HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup))
+        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+
+        [Parameter(
+            Position = 6,
+            Mandatory = 0,
+            HelpMessage = "Return success result even if there are error.")]
+        [bool]
+        $SkipException = $false
     )
 
     try
@@ -355,8 +362,10 @@ function Invoke-ValentiaUpload
 
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
-        throw $_
-
+        if (-not $SkipException)
+        {
+            throw $_
+        }
     }
     finally
     {
@@ -381,6 +390,7 @@ function Invoke-ValentiaUpload
             DeployGroup = "$DeployGroups"
             TargetHosCount = $($DeployMembers.count)
             TargetHosts = "$DeployMembers"
+            SkipException  = $SkipException
             ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
 

@@ -91,7 +91,14 @@ function Invoke-ValentiaDownload
             Mandatory = 0,
             HelpMessage = "Set this switch if you want to Force download. This will smbmap with source folder and Copy-Item -Force. (default is BitTransfer)")]
         [switch]
-        $force = $false
+        $force = $false,
+
+        [Parameter(
+            Position = 7,
+            Mandatory = 0,
+            HelpMessage = "Return success result even if there are error.")]
+        [bool]
+        $SkipException = $false
     )
 
     try
@@ -451,8 +458,10 @@ function Invoke-ValentiaDownload
 
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
-        throw $_
-
+        if (-not $SkipException)
+        {
+            throw $_
+        }
     }
     finally
     {
@@ -480,6 +489,7 @@ function Invoke-ValentiaDownload
             DeployGroup = "$DeployGroups"
             TargetHosCount = $($DeployMembers.count)
             TargetHosts = "$DeployMembers"
+            SkipException  = $SkipException
             ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
 

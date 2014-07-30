@@ -101,9 +101,16 @@ function Invoke-Valentia
         [Parameter(
             Position = 5, 
             Mandatory = 0,
-            HelpMessage = "Hide execution progress.")]
+            HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]
-        $Authentication = $valentia.Authentication
+        $Authentication = $valentia.Authentication,
+
+        [Parameter(
+            Position = 6,
+            Mandatory = 0,
+            HelpMessage = "Return success result even if there are error.")]
+        [bool]
+        $SkipException = $false
     )
 
     #region Begin
@@ -253,7 +260,10 @@ function Invoke-Valentia
     {
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
-        throw $_
+        if (-not $SkipException)
+        {
+            throw $_
+        }
     }
     finally
     {
@@ -277,6 +287,7 @@ function Invoke-Valentia
             TargetHosCount = $($DeployMembers.count)
             TargetHosts    = "$DeployMembers"
             Result         = $result
+            SkipException  = $SkipException
             ErrorMessage   = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
 

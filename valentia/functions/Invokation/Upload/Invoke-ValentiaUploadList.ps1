@@ -71,7 +71,14 @@ function Invoke-ValentiaUploadList
             Mandatory = 0,
             HelpMessage = "Set this switch to execute command as Async (Job).")]
         [switch]
-        $Async = $false
+        $Async = $false,
+
+        [Parameter(
+            Position = 4,
+            Mandatory = 0,
+            HelpMessage = "Return success result even if there are error.")]
+        [bool]
+        $SkipException = $false
     )
 
     try
@@ -246,7 +253,10 @@ function Invoke-ValentiaUploadList
     {
         $SuccessStatus += $false
         $ErrorMessageDetail += $_
-        $_
+        if (-not $SkipException)
+        {
+            throw $_
+        }
     }
     finally
     {
@@ -272,6 +282,7 @@ function Invoke-ValentiaUploadList
             DeployGroup = "$DeployGroups"
             TargetHosCount = $($DeployMembers.count)
             TargetHosts = "$DeployMembers"
+            SkipException  = $SkipException
             ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
         }
 
