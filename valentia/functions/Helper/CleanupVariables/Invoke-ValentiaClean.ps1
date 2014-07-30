@@ -37,5 +37,4 @@ function Invoke-ValentiaClean
         # Erase Context
         [void] $valentia.context.Clear()
     }
-
 }

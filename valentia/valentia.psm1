@@ -119,11 +119,11 @@ function New-ValentiaConfigurationForNewContext
     $previousConfig = Get-CurrentConfigurationOrDefault
 
     $config = New-Object psobject -property @{
-        buildFileName = $previousConfig.buildFileName;
-        framework = $previousConfig.framework;
+        buildFileName  = $previousConfig.buildFileName;
+        framework      = $previousConfig.framework;
         taskNameFormat = $previousConfig.taskNameFormat;
-        verboseError = $previousConfig.verboseError;
-        modules = $previousConfig.modules;
+        verboseError   = $previousConfig.verboseError;
+        modules        = $previousConfig.modules;
     }
 
     if ($buildFileName)
@@ -353,6 +353,7 @@ $valentia.context.push(
         fileEncode                      = $valentia.fileEncode
         tasks                           = @{};
         includes                        = New-Object System.Collections.Queue;
+        Result                          = $valentia.Result
     }
 )
 
@@ -396,6 +397,7 @@ $valentia.log = New-Object psobject -property @{
     path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
     name                                = 'deploy';
     extension                           = '.log';
+    fullPath                            = ""
 }
 
 # contains certificate configuration
@@ -425,6 +427,7 @@ $valentia.certificate = New-Object psobject -property @{
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.config_default                = New-Object PSObject -property ([ordered]@{
     TaskFileName                        = 'default.ps1';
+    Result                              = $valentia.Result
     TaskFileDir                         = [ValentiaBranchPath]::Application;
     taskNameFormat                      = 'Executing {0}';
     verboseError                        = $false;

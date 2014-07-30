@@ -60,8 +60,8 @@ function New-ValentiaRunSpacePool
     }
     catch
     {
-        $SuccessStatus += $false
-        $ErrorMessageDetail += $_
+        $valentia.Result.SuccessStatus += $false
+        $valentia.Result.ErrorMessageDetail += $_
         Write-Error $_
     }
 }

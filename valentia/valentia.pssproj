@@ -92,7 +92,7 @@
     <Compile Include="functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1" />
     <Compile Include="functions\Helper\Folder\New-ValentiaFolder.ps1" />
     <Compile Include="functions\Helper\Group\New-ValentiaGroup.ps1" />
-    <Compile Include="functions\Helper\Log\Private\New-ValentiaLog.ps1" />
+    <Compile Include="functions\Helper\Log\New-ValentiaLog.ps1" />
     <Compile Include="functions\Helper\User\New-ValentiaOSUser.ps1" />
     <Compile Include="functions\Helper\FireWall\Firewall\New-ValentiaPSRemotingFirewallRule.ps1" />
     <Compile Include="functions\Invokation\RunSpacePool\New-ValentiaRunSpacePool.ps1" />
@@ -185,6 +185,7 @@
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" />
     <Content Include="functions\Helper\Certificate\Import-ValentiaCertificate.ps1" />
     <Content Include="functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />
+    <Content Include="functions\Helper\CleanupVariables\Invoke-ValentiaCleanResult.ps1" />
     <Content Include="functions\Helper\ComputerName\Rename-ValentiaComputerName.ps1" />
     <Content Include="functions\Helper\ComputerName\Get-ValentiaComputerName.ps1" />
     <Content Include="functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
@@ -193,11 +194,18 @@
     <Content Include="functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateReg.ps1" />
     <Content Include="functions\Helper\CredSSP\Private\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\DNS\Get-VelentiaHostEntryAsync.ps1" />
+    <Content Include="functions\Helper\Log\Out-ValentiaResult.ps1" />
+    <Content Include="functions\Helper\Log\Private\WriteValentiaResultHost.ps1" />
     <Content Include="functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
     <Content Include="functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKey.ps1" />
     <Content Include="functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKey.ps1" />
+    <Content Include="functions\Helper\Log\Private\OutValentiaResultLog.ps1" />
+    <Content Include="functions\Helper\Log\Private\OutValentiaModuleLogHost.ps1" />
+    <Content Include="functions\Helper\Task\Push-ValentiaCurrentContextToTask.ps1" />
     <Content Include="functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
+    <Content Include="functions\Invokation\Job\Invoke-ValentiaJobProcess.ps1" />
     <Content Include="functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1" />
+    <Content Include="functions\Invokation\RunSpacePool\Invoke-ValentiaRunspaceProcess.ps1" />
     <Content Include="Test\Credential\Import-Module.ps1" />
     <Content Include="Test\Credential\Target.ps1" />
     <Content Include="Test\Credential\PingAsync.ps1" />

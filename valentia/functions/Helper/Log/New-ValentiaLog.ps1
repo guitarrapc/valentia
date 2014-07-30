@@ -54,8 +54,7 @@ function New-ValentiaLog
     try
     {
         "Defining LogFile full path." | Write-ValentiaVerboseDebug
-        $LogPath = Join-Path $LogFolder $LogFile
-        return $LogPath
+        $valentia.Log.fullPath = Join-Path $LogFolder $LogFile
     }
     catch
     {

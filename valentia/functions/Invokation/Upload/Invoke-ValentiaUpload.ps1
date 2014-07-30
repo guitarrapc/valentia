@@ -104,305 +104,293 @@ function Invoke-ValentiaUpload
         $SkipException = $false
     )
 
-    try
+    process
     {
-
-    ### Begin
-
-        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-    
-        # Initialize Stopwatch
-        [decimal]$TotalDuration = 0
-        $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
-            
-        # Initialize Errorstatus
-        $SuccessStatus = $ErrorMessageDetail = @()
-
-        # Get Start Time
-        $TimeStart = (Get-Date).DateTime
-
-        # Import default Configurations & Modules
-        if ($PSBoundParameters['Verbose'])
-        {
-            # Import default Configurations
-            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
-            Import-ValentiaConfiguration -Verbose
-
-            # Import default Modules
-            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
-            Import-valentiaModules -Verbose
-        }
-        else
-        {
-            Import-ValentiaConfiguration
-            Import-valentiaModules
-        }
-
-        # Log Setting
-        $LogPath = New-ValentiaLog     
-
-        # Obtain Remote Login Credential
         try
         {
-            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
-            $SuccessStatus += $true
+            #region Begin
+
+                # Initialize Stopwatch
+                $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
+            
+                # clear previous result
+                Invoke-ValentiaCleanResult
+
+                # Initialize Errorstatus
+                $valentia.Result.SuccessStatus = $valentia.Result.ErrorMessageDetail = @()
+
+                # Get Start Time
+                $valentia.Result.TimeStart = (Get-Date).DateTime
+
+                # Import default Configurations
+                $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
+                Import-ValentiaConfiguration
+
+                # Import default Modules
+                $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
+                Import-valentiaModules
+
+                # Log Setting
+                New-ValentiaLog
+
+                # Obtain Remote Login Credential (No need if clients are same user/pass)
+                try
+                {
+                    $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
+                    $valentia.Result.SuccessStatus += $true
+                }
+                catch
+                {
+                    $valentia.Result.SuccessStatus += $false
+                    $valentia.Result.ErrorMessageDetail += $_
+                    Write-Error $_
+                }
+
+
+                # Obtain DeployMember IP or Hosts for deploy
+                try
+                {
+                    "Get host addresses to connect." | Write-ValentiaVerboseDebug
+                    $valentia.Result.DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
+                }
+                catch
+                {
+                    $valentia.Result.SuccessStatus += $false
+                    $valentia.Result.ErrorMessageDetail += $_
+                    Write-Error $_
+                }
+
+                # Parse Network Destination Path
+                ("Parsing Network Destination Path {0} as :\ should change to $." -f $DestinationFolder) | Write-ValentiaVerboseDebug
+                $DestinationPath = "$DestinationPath".Replace(":","$")
+
+                # Show Stopwatch for Begin section
+                Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalstopwatchSession.Elapsed.TotalSeconds)
+
+            #endregion
+
+            #region Process
+
+            "Uploading {0} to Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers | Write-ValentiaVerboseDebug
+
+            # Stopwatch
+            [decimal]$DurationTotal = 0
+
+            # Create PSSession  for each DeployMember
+            foreach ($DeployMember in $valentia.Result.DeployMembers)
+            {
+                # Stopwatch
+                $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
+    
+                # Set Destination
+                $Destination = Join-Path "\\" $(Join-Path "$DeployMember" "$DestinationPath")
+
+                if ($Directory)
+                {
+                    # Set Source files in source
+                    try
+                    {
+                        # No recurse
+                        $SourceFiles = Get-ChildItem -Path $SourcePath
+                    }
+                    catch
+                    {
+                        $valentia.Result.SuccessStatus += $false
+                        $valentia.Result.ErrorMessageDetail += $_
+                        throw $_
+                    }
+                }
+                elseif ($File)
+                {
+                    # Set Source files in source
+                    try
+                    {
+                        # No recurse
+                        $SourceFiles = Get-Item -Path $SourcePath
+                    
+                        if ($SourceFiles.Attributes -eq "Directory")
+                        {
+                            $valentia.Result.SuccessStatus += $false
+                            $valentia.Result.ErrorMessageDetail += "Target is Directory, you must set Filename with -File Switch."
+                            throw "Target is Directory, you must set Filename with -File Switch."
+                        }
+                    }
+                    catch
+                    {
+                        $valentia.Result.SuccessStatus += $false
+                        $valentia.Result.ErrorMessageDetail += $_
+                        throw $_
+                    }
+                }
+                else
+                {
+                    $valentia.Result.SuccessStatus += $false
+                    $valentia.Result.ErrorMessageDetail += $_
+                    throw "Missing File or Directory switch. Please set -File or -Directory Switch to specify download type."
+                }
+
+                # Show Start-BitsTransfer Parameter
+                Write-Warning ("[{0}]:Uploading {1} to {2}." -f $DeployMember,"$($SourceFiles.Name)", $Destination)
+                Write-Verbose ("DestinationDeployFolder : {0}" -f $DeployFolder)
+                Write-Verbose ("Aync Mode : {0}" -f $Async)
+                if (Test-Path $SourcePath)
+                {
+                    try
+                    {
+                        switch ($true)
+                        {
+                            # Async Transfer
+                            $Async {                    
+                                $valentia.Result.ScriptTorun = "Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload"
+                                try
+                                {
+                                    foreach ($SourceFile in $SourceFiles)
+                                    {
+                                        try
+                                        {
+                                            # Run Job
+                                            ("Running Async Job upload to {0}" -f $DeployMember) | Write-ValentiaVerboseDebug
+                                            $Job = Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload
+
+                                            # Waiting for complete job
+                                            $Sleepms = 10
+                                        }
+                                        catch
+                                        {
+                                            $valentia.Result.SuccessStatus += $false
+                                            $valentia.Result.ErrorMessageDetail += $_
+                                            throw $_
+                                        }
+
+                                    }
+
+                                    $Sleepms = 10
+                                    # Retrieving transfer status and monitor for transfered
+                                    while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
+                                    { 
+                                        ("Current Job States was {0}, waiting for {1}ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count))) | Write-ValentiaVerboseDebug
+                                        Sleep -Milliseconds $Sleepms
+                                    }
+
+                                    # Retrieve all files when completed
+                                    Get-BitsTransfer | Complete-BitsTransfer
+                                }
+                                catch
+                                {
+                                    $valentia.Result.SuccessStatus += $false
+                                    $valentia.Result.ErrorMessageDetail += $_
+                                    throw $_
+                                }
+                                finally
+                                {
+                                    # Delete all not compelte job
+                                    Get-BitsTransfer | Remove-BitsTransfer
+
+                                    # Stopwatch
+                                    $Duration = $stopwatchSession.Elapsed.TotalSeconds
+                                    Write-Verbose ("Session duration Second : {0}" -f $Duration)
+                                    ""
+                                    $DurationTotal += $Duration
+                                }
+
+                            }
+                            # NOT Async Transfer
+                            default {
+                                $valentia.Result.ScriptTorun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType"
+
+                                try
+                                {
+                                    foreach($SourceFile in $SourceFiles)
+                                    {
+                                        #Only start upload for file.
+                                        if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
+                                        {
+                                            ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination) | Write-ValentiaVerboseDebug
+                                            Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential
+                                        }
+                                    }
+                                }
+                                catch [System.Management.Automation.ActionPreferenceStopException]
+                                {
+                                    $valentia.Result.SuccessStatus += $false
+                                    $valentia.Result.ErrorMessageDetail += $_
+
+                                    # Show Error Message
+                                    throw $_
+                                }
+                                finally
+                                {
+                                    # Delete all not compelte job
+                                    Get-BitsTransfer | Remove-BitsTransfer
+
+                                    # Stopwatch
+                                    $Duration = $stopwatchSession.Elapsed.TotalSeconds
+                                    Write-Verbose ("Session duration Second : {0}" -f $Duration)
+                                    ""
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                        # Show Error Message
+                        Write-Error $_
+
+                        # Set ErrorResult
+                        $valentia.Result.SuccessStatus += $false
+                        $valentia.Result.ErrorMessageDetail += $_
+
+                    }
+                }
+                else
+                {
+                    Write-Warning ("{0} could find from {1}. Skip to next." -f $Source, $DeployGroups)
+                }
+            }
+
+        ### End
+
         }
         catch
         {
-            Write-Error $_
-            $SuccessStatus += $false
-        }
 
-
-        # Obtain DeployMember IP or Hosts for BITsTransfer
-        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
-        $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-
-        # Parse Network Destination Path
-        ("Parsing Network Destination Path {0} as :\ should change to $." -f $DestinationFolder) | Write-ValentiaVerboseDebug
-        $DestinationPath = "$DestinationPath".Replace(":","$")
-
-        # Show Stopwatch for Begin section
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalDuration)
-        ""
-
-
-    ### Process
-
-        ("Uploading {0} to Target Computer : [{1}] `n" -f $SourcePath, $DeployMembers) | Write-ValentiaVerboseDebug
-
-        # Stopwatch
-        [decimal]$DurationTotal = 0
-
-        # Create PSSession  for each DeployMember
-        foreach ($DeployMember in $DeployMembers)
-        {
-            # Stopwatch
-            $stopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
-    
-            # Set Destination
-            $Destination = Join-Path "\\" $(Join-Path "$DeployMember" "$DestinationPath")
-
-            if ($Directory)
+            $valentia.Result.SuccessStatus += $false
+            $valentia.Result.ErrorMessageDetail += $_
+            if (-not $SkipException)
             {
-                # Set Source files in source
-                try
-                {
-                    # No recurse
-                    $SourceFiles = Get-ChildItem -Path $SourcePath
-                }
-                catch
-                {
-                    $SuccessStatus += $false
-                    $ErrorMessageDetail += $_
-                    throw $_
-                }
-            }
-            elseif ($File)
-            {
-                # Set Source files in source
-                try
-                {
-                    # No recurse
-                    $SourceFiles = Get-Item -Path $SourcePath
-                    
-                    if ($SourceFiles.Attributes -eq "Directory")
-                    {
-                        $SuccessStatus += $false
-                        $ErrorMessageDetail += "Target is Directory, you must set Filename with -File Switch."
-                        throw "Target is Directory, you must set Filename with -File Switch."
-                    }
-                }
-                catch
-                {
-                    $SuccessStatus += $false
-                    $ErrorMessageDetail += $_
-                    throw $_
-                }
-            }
-            else
-            {
-                $SuccessStatus += $false
-                $ErrorMessageDetail += $_
-                throw "Missing File or Directory switch. Please set -File or -Directory Switch to specify download type."
-            }
-
-
-            # Show Start-BitsTransfer Parameter
-            Write-Warning ("[{0}]:Uploading {1} to {2}." -f $DeployMember,"$($SourceFiles.Name)", $Destination)
-            Write-Verbose ("DestinationDeployFolder : {0}" -f $DeployFolder)
-            Write-Verbose ("Aync Mode : {0}" -f $Async)
-
-            if (Test-Path $SourcePath)
-            {
-                try
-                {
-                    switch ($true)
-                    {
-                        # Async Transfer
-                        $Async {                    
-                            $ScriptToRun = "Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload"
-                            try
-                            {
-                                foreach ($SourceFile in $SourceFiles)
-                                {
-                                    try
-                                    {
-                                        # Run Job
-                                        ("Running Async Job upload to {0}" -f $DeployMember) | Write-ValentiaVerboseDebug
-                                        $Job = Start-BitsTransfer -Source $(($Sourcefile).FullName) -Destination $Destination -Credential $Credential -Asynchronous -DisplayName $DeployMember -Priority High -TransferType Upload
-
-                                        # Waiting for complete job
-                                        $Sleepms = 10
-                                    }
-                                    catch
-                                    {
-                                        $SuccessStatus += $false
-                                        $ErrorMessageDetail += $_
-
-                                        # Show Error Message
-                                        throw $_
-                                    }
-
-                                }
-
-                                $Sleepms = 10
-                                # Retrieving transfer status and monitor for transffered
-                                while (((Get-BitsTransfer).JobState -contains "Transferring") -or ((Get-BitsTransfer).JobState -contains "Connecting") -or ((Get-BitsTransfer).JobState -contains "Queued")) `
-                                { 
-                                    ("Current Job States was {0}, waiting for {1}ms {2}" -f ((Get-BitsTransfer).JobState | sort -Unique), $Sleepms, (((Get-BitsTransfer | where JobState -eq "Transferred").count) / $((Get-BitsTransfer).count))) | Write-ValentiaVerboseDebug
-                                    Sleep -Milliseconds $Sleepms
-                                }
-
-                                # Retrieve all files when completed
-                                Get-BitsTransfer | Complete-BitsTransfer
-                            }
-                            catch
-                            {
-                                $SuccessStatus += $false
-                                $ErrorMessageDetail += $_
-
-                                # Show Error Message
-                                throw $_
-                            }
-                            finally
-                            {
-                                # Delete all not compelte job
-                                Get-BitsTransfer | Remove-BitsTransfer
-
-                                # Stopwatch
-                                $Duration = $stopwatchSession.Elapsed.TotalSeconds
-                                Write-Verbose ("Session duration Second : {0}" -f $Duration)
-                                ""
-                                $DurationTotal += $Duration
-                            }
-
-                        }
-                        # NOT Async Transfer
-                        default {
-                            $ScriptToRun = "Start-BitsTransfer -Source $(($SourceFiles).fullname) -Destination $Destination -Credential $Credential -TransferType"
-
-                            try
-                            {
-                                foreach($SourceFile in $SourceFiles)
-                                {
-                                    #Only start upload for file.
-                                    if (-not((Get-Item $SourceFile.fullname).Attributes -eq "Directory"))
-                                    {
-                                        ("Uploading {0} to {1}'s {2}" -f $(($SourceFile).fullname), $DeployMember, $Destination) | Write-ValentiaVerboseDebug
-                                        Start-BitsTransfer -Source $(($SourceFile).fullname) -Destination $Destination -Credential $Credential
-                                    }
-                                }
-                            }
-                            catch [System.Management.Automation.ActionPreferenceStopException]
-                            {
-                                $SuccessStatus += $false
-                                $ErrorMessageDetail += $_
-
-                                # Show Error Message
-                                throw $_
-                            }
-                            finally
-                            {
-                                # Delete all not compelte job
-                                Get-BitsTransfer | Remove-BitsTransfer
-
-                                # Stopwatch
-                                $Duration = $stopwatchSession.Elapsed.TotalSeconds
-                                Write-Verbose ("Session duration Second : {0}" -f $Duration)
-                                ""
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-
-                    # Show Error Message
-                    Write-Error $_
-
-                    # Set ErrorResult
-                    $SuccessStatus += $false
-                    $ErrorMessageDetail += $_
-
-                }
-            }
-            else
-            {
-                Write-Warning ("{0} could find from {1}. Skip to next." -f $Source, $DeployGroups)
+                throw $_
             }
         }
-
-    ### End
-
-    }
-    catch
-    {
-
-        $SuccessStatus += $false
-        $ErrorMessageDetail += $_
-        if (-not $SkipException)
+        finally
         {
-            throw $_
+            # obtain Result
+            $resultParam = @{
+                StopWatch     = $TotalstopwatchSession
+                Cmdlet        = $($MyInvocation.MyCommand.Name)
+                TaskFileName  = $TaskFileName
+                DeployGroups  = $DeployGroups
+                SkipException = $SkipException
+                Quiet         = $PSBoundParameters.ContainsKey("quiet")
+            }
+            Out-ValentiaResult @resultParam
+
+            # Cleanup valentia Environment
+            Invoke-ValentiaClean
+
         }
     }
-    finally
+
+    begin
     {
-        # Stopwatch
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
-        "" | Out-Default
-
-        # Get End Time
-        $TimeEnd = (Get-Date).DateTime
-
-        # obtain Result
-        $CommandResult = [ordered]@{
-            Success = !($SuccessStatus -contains $false)
-            TimeStart = $TimeStart
-            TimeEnd = $TimeEnd
-            TotalDuration = $TotalDuration
-            Module = "$($MyInvocation.MyCommand.Module)"
-            Cmdlet = "$($MyInvocation.MyCommand.Name)"
-            Alias = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
-            ScriptBlock = "$ScriptToRun"
-            DeployGroup = "$DeployGroups"
-            TargetHosCount = $($DeployMembers.count)
-            TargetHosts = "$DeployMembers"
-            SkipException  = $SkipException
-            ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
+        # Reset ErrorActionPreference
+        if ($PSBoundParameters.ContainsKey('ErrorAction'))
+        {
+            $originalErrorAction = $ErrorActionPreference
         }
-
-        # show result
-        [PSCustomObject]$CommandResult
-
-        # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048
-
-
-        # Cleanup valentia Environment
-        Invoke-ValentiaClean
-
+        else
+        {
+            $originalErrorAction = $ErrorActionPreference = $valentia.preference.ErrorActionPreference.original
+        }
     }
 }

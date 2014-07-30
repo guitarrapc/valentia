@@ -113,203 +113,124 @@ function Invoke-Valentia
         $SkipException = $false
     )
 
-    #region Begin
-
-    try
+    process
     {
-        # Preference
-        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-
-        # Initialize Stopwatch
-        [decimal]$TotalDuration = 0
-        $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
-
-        # Initialize Errorstatus
-        $SuccessStatus = $ErrorMessageDetail = @()
-
-        # Get Start Time
-        $TimeStart = (Get-Date).DateTime
-
-        # Import default Configurations
-        $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
-        Import-ValentiaConfiguration
-
-        # Import default Modules
-        $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
-        Import-valentiaModules
-
-        # Log Setting
-        $LogPath = New-ValentiaLog
-
-        # Swtich ScriptBlock or ScriptFile was selected
-        switch ($true)
-        {
-            {$ScriptBlock} {
-                # Assign ScriptBlock to run
-                ("ScriptBlock parameter [ {0} ] was selected." -f $ScriptBlock) | Write-ValentiaVerboseDebug
-                $taskkey = Task -name ScriptBlock -action $ScriptBlock
-
-                # Read Current Context
-                $currentContext = $valentia.context.Peek()
-
-                # Check Key duplicate or not
-                if ($currentContext.executedTasks.Contains($taskKey))
-                {
-                    $valeErrorMessages.error_duplicate_task_name -F $Name
-                }
-            }
-            {$TaskFileName} {
-                # check file exist or not
-                if (-not(Test-Path (Join-Path (Get-Location).Path $TaskFileName)))
-                {
-                    $TaskFileStatus = [PSCustomObject]@{
-                        ErrorMessageDetail = "TaskFileName '{0}' not found in '{1}' exception!!" -f $TaskFileName,(Join-Path (Get-Location).Path $TaskFileName)
-                        SuccessStatus = $false
-                    }             
-                    $SuccessStatus += $TaskFileStatus.SuccessStatus
-                    $ErrorMessageDetail += $TaskFileStatus.ErrorMessageDetail                    
-                }
-                
-                # Read Task File and get Action to run
-                ("TaskFileName parameter '{0}' was selected." -f $TaskFileName) | Write-ValentiaVerboseDebug
-
-                # run Task $TaskFileName inside functions and obtain scriptblock written in.
-                $taskkey = & $TaskFileName
-                $currentContext = $valentia.context.Peek()
-
-                # Check Key duplicate or not
-                if ($currentContext.executedTasks.Contains($taskKey))
-                {
-                    $valeErrorMessages.error_duplicate_task_name -F $Name
-                    $SuccessStatus += $false
-                }
-            }
-            default {
-                $SuccessStatus += $false
-                $ErrorMessageDetail += "TaskFile or ScriptBlock parameter must not be null"
-                throw "TaskFile or ScriptBlock parameter must not be null"
-            }
-        }
-  
-        # Set Task as CurrentContext with taskkey
-        $task = $currentContext.tasks.$taskKey
-        $ScriptToRun = $task.Action
-
-        # Cleanup previous Job before start
-        if ((Get-Job).count -gt 0)
-        {
-            "Clean up previous Job" | Write-ValentiaVerboseDebug
-            Get-Job | Remove-Job -Force -Verbose:$VerbosePreference
-        }
-
-        # Obtain Remote Login Credential (No need if clients are same user/pass)
         try
         {
-            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
-            $SuccessStatus += $true
+        #region Begin
+        
+            # Initialize Stopwatch
+            $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
+
+            # clear previous result
+            Invoke-ValentiaCleanResult
+
+            # Initialize Errorstatus
+            $valentia.Result.SuccessStatus = $valentia.Result.ErrorMessageDetail = @()
+
+            # Get Start Time
+            $valentia.Result.TimeStart = (Get-Date).DateTime
+
+            # Import default Configurations
+            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
+            Import-ValentiaConfiguration
+
+            # Import default Modules
+            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
+            Import-valentiaModules
+
+            # Log Setting
+            New-ValentiaLog
+
+            # Set Task and push CurrentContext
+            $task = Push-ValentiaCurrentContextToTask -ScriptBlock $scriptBlock -TaskFileName $TaskFileName
+  
+            # Set Task as CurrentContext with taskkey
+            $valentia.Result.ScriptTorun = $task.Action
+
+            # Obtain Remote Login Credential (No need if clients are same user/pass)
+            try
+            {
+                $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
+                $valentia.Result.SuccessStatus += $true
+            }
+            catch
+            {
+                $valentia.Result.SuccessStatus += $false
+                $valentia.Result.ErrorMessageDetail += $_
+                Write-Error $_
+            }
+
+            # Obtain DeployMember IP or Hosts for deploy
+            try
+            {
+                "Get host addresses to connect." | Write-ValentiaVerboseDebug
+                $valentia.Result.DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
+            }
+            catch
+            {
+                $valentia.Result.SuccessStatus += $false
+                $valentia.Result.ErrorMessageDetail += $_
+                Write-Error $_
+            }
+
+            # Show Stopwatch for Begin section
+            Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalstopwatchSession.Elapsed.TotalSeconds)
+
+        #endregion
+
+        #region Process
+
+            # Job execution
+            $param = @{
+                Credential      = $Credential
+                TaskParameter   = $TaskParameter
+                Authentication  = $Authentication
+                SkipException   = $SkipException
+                ErrorAction     = $originalErrorAction
+            }
+            Invoke-ValentiaJobProcess @param
+
+        #endregion
+
         }
         catch
         {
-            $SuccessStatus += $false
-            $ErrorMessageDetail += $_
-            Write-Error $_
-        }
-
-        # Obtain DeployMember IP or Hosts for deploy
-        "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
-        $DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-
-        # Show Stopwatch for Begin section
-        Write-Verbose ("`t`tDuration Second for Begin Section: {0}" -f $TotalstopwatchSession.Elapsed.TotalSeconds)
-
-    #endregion
-
-    #region Process
-
-        # Splatting
-        $param = @{
-            ComputerNames  = $DeployMembers
-            ScriptToRun    = $ScriptToRun
-            Credential     = $Credential
-            TaskParameter  = $TaskParameter
-            Authentication = $Authentication
-        }
-
-        # Run ScriptBlock as Sequence for each DeployMember
-        Write-Verbose ("Execute command : {0}" -f $param.ScriptToRun)
-        Write-Verbose ("Target Computers : '{0}'" -f ($param.ComputerNames -join ", "))
-
-        # Executing job
-        Invoke-ValentiaCommand @param  `
-        | %{$result = @{}}{
-            # Obtain parameter to show on log
-            $ErrorMessageDetail += $_.ErrorMessageDetail           # Get ErrorMessageDetail
-            $SuccessStatus += $_.SuccessStatus                     # Get success or error
-            if ($_.host -ne $null){$result.$($_.host) = $_.result} # Get Result
-
-            if(!$quiet)
+            $valentia.Result.SuccessStatus += $false
+            $valentia.Result.ErrorMessageDetail += $_
+            if ($ErrorActionPreference -eq 'Stop')
             {
-                "Show result for host '{0}'" -f $_.host | Write-ValentiaVerboseDebug
-                $_.result
+                throw $_
             }
         }
-
-    #endregion
-    }
-    catch
-    {
-        $SuccessStatus += $false
-        $ErrorMessageDetail += $_
-        if (-not $SkipException)
+        finally
         {
-            throw $_
+            # obtain Result
+            $resultParam = @{
+                StopWatch     = $TotalstopwatchSession
+                Cmdlet        = $($MyInvocation.MyCommand.Name)
+                TaskFileName  = $TaskFileName
+                DeployGroups  = $DeployGroups
+                SkipException = $SkipException
+                Quiet         = $PSBoundParameters.ContainsKey("quiet")
+            }
+            Out-ValentiaResult @resultParam
+
+            # Cleanup valentia Environment
+            Invoke-ValentiaClean
         }
     }
-    finally
+
+    begin
     {
-    #region End
-
-        # reverse Error Action Preference
-        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-
-        # obtain Result
-        $CommandResult = [ordered]@{
-            Success        = !($SuccessStatus -contains $false)
-            TimeStart      = $TimeStart
-            TimeEnd        = (Get-Date).DateTime
-            TotalDuration  = $TotalstopwatchSession.Elapsed.TotalSeconds
-            Module         = "$($MyInvocation.MyCommand.Module)"
-            Cmdlet         = "$($MyInvocation.MyCommand.Name)"
-            Alias          = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
-            TaskFileName   = $TaskFileName
-            ScriptBlock    = "$ScriptToRun"
-            DeployGroup    = "$DeployGroups"
-            TargetHosCount = $($DeployMembers.count)
-            TargetHosts    = "$DeployMembers"
-            Result         = $result
-            SkipException  = $SkipException
-            ErrorMessage   = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
-        }
-
-        # show result
-        if (-not $PSBoundParameters.quiet.IsPresent)
+        # Reset ErrorActionPreference
+        if ($PSBoundParameters.ContainsKey('ErrorAction'))
         {
-            # Show Stopwatch for Total section
-            Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $CommandResult.TotalDuration)
-
-            [PSCustomObject]$CommandResult
+            $originalErrorAction = $ErrorActionPreference
         }
         else
         {
-            ([PSCustomObject]$Commandresult).Success
+            $originalErrorAction = $ErrorActionPreference = $valentia.preference.ErrorActionPreference.original
         }
-
-        # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048
-
-        # Cleanup valentia Environment
-        Invoke-ValentiaClean
-
-    #endRegion
     }
 }

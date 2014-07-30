@@ -136,7 +136,7 @@ function Invoke-ValentiaDownload
         }
         
         # Log Setting
-        $LogPath = New-ValentiaLog
+        New-ValentiaLog
         
         # Obtain Remote Login Credential
         try
@@ -466,42 +466,18 @@ function Invoke-ValentiaDownload
     finally
     {
 
-        # Stopwatch
-        $TotalDuration = $TotalstopwatchSession.Elapsed.TotalSeconds
-        Write-Verbose ("`t`tTotal duration Second`t: {0}" -f $TotalDuration)
-        "" | Out-Default
-
-
-        # Get End Time
-        $TimeEnd = (Get-Date).DateTime
-
-
         # obtain Result
-        $CommandResult = [ordered]@{
-            Success = !($SuccessStatus -contains $false)
-            TimeStart = $TimeStart
-            TimeEnd = $TimeEnd
-            TotalDuration = $TotalDuration
-            Module = "$($MyInvocation.MyCommand.Module)"
-            Cmdlet = "$($MyInvocation.MyCommand.Name)"
-            Alias = "$((Get-Alias -Definition $MyInvocation.MyCommand.Name).Name)"
-            ScriptBlock = "$ScriptToRun"
-            DeployGroup = "$DeployGroups"
-            TargetHosCount = $($DeployMembers.count)
-            TargetHosts = "$DeployMembers"
-            SkipException  = $SkipException
-            ErrorMessage = $($ErrorMessageDetail | where {$_ -ne $null} | sort -Unique)
+        $resultParam = @{
+            StopWatch     = $TotalstopwatchSession
+            Cmdlet        = $($MyInvocation.MyCommand.Name)
+            TaskFileName  = $TaskFileName
+            DeployGroups  = $DeployGroups
+            SkipException = $SkipException
+            Quiet         = $PSBoundParameters.ContainsKey("quiet")
         }
-
-        # show result
-        [PSCustomObject]$CommandResult
-
-        # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048
+        Out-ValentiaResult @resultParam
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean
-
     }
-
 }

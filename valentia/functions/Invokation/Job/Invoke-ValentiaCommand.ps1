@@ -70,67 +70,50 @@ function Invoke-ValentiaCommand
             Mandatory = 0,
             HelpMessage = "Input Authentication for credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]
-        $Authentication
+        $Authentication,
+
+        [Parameter(
+            Position = 5, 
+            Mandatory = 0,
+            HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [bool]
+        $SkipException
     )
+
+    process
+    {
+        foreach ($computerName in $ComputerNames)
+        {
+            # Run ScriptBlock in Job
+            Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
+            Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
+            ("Running ScriptBlock to {0} as Job" -f $computerName) | Write-ValentiaVerboseDebug
+            $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -Authentication $Authentication -AsJob
+            $list.Add($job)
+        }
+
+        # receive job result
+        "Receive all job result." | Write-ValentiaVerboseDebug
+        $jobParam = @{
+            listJob       = $list
+            SkipException = $skipException
+            ErrorAction   = $ErrorActionPreference
+        }
+        Receive-ValentiaResult @jobParam
+    }
 
     begin
     {
-        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
         $list = New-Object System.Collections.Generic.List[System.Management.Automation.Job]
 
         # Set variable for output each task result
         $task = @{}
-    }
 
-    process
-    {
-        #region execute to host
-        try
+        # Cleanup previous Job before start
+        if ((Get-Job).count -gt 0)
         {
-            foreach ($computerName in $ComputerNames)
-            {
-                # Run ScriptBlock in Job
-                Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
-                Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
-                ("Running ScriptBlock to {0} as Job" -f $computerName) | Write-ValentiaVerboseDebug
-                $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -AsJob -Authentication $Authentication
-                $list.Add($job)
-            }
+            "Clean up previous Job" | Write-ValentiaVerboseDebug
+            Get-Job | Remove-Job -Force -Verbose:$VerbosePreference
         }
-        catch [System.Management.Automation.ActionPreferenceStopException]
-        {
-            # Show Error Message
-            Write-Error $_
-
-            # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
-            $task.SuccessStatus = $false
-            $task.ErrorMessageDetail = $_
-        }
-        catch [System.Management.Automation.Remoting.PSRemotingTransportException]
-        {
-            # Show Error Message
-            Write-Error $_
-
-            # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
-            $task.SuccessStatus = $false
-            $task.ErrorMessageDetail = $_
-        }
-        #endregion
-
-        #region monitor job status
-        "Waiting for job running complete." | Write-ValentiaVerboseDebug
-        Wait-Job -State Running            
-        #endregion
-
-        #region recieve job result
-        "Receive all job result." | Write-ValentiaVerboseDebug
-        Receive-ValentiaResult -listJob  $list
-        #endregion
-    }
-
-    end
-    {
-        # add blank line and reset format
-        "" | Out-Default
     }
 }

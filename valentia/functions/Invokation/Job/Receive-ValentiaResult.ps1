@@ -28,48 +28,68 @@ function Receive-ValentiaResult
             ValueFromPipelineByPropertyName = 1,
             HelpMessage = "Input list<job> to recieve result of each job.")]
         [System.Collections.Generic.List[System.Management.Automation.Job]]
-        $listJob
+        $listJob,
+
+        [Parameter(
+            Position = 1, 
+            Mandatory = 0,
+            HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [bool]
+        $SkipException
     )
-
-    begin
-    {
-        $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-
-        # Set variable for output
-        $task = @{}
-    }
 
     process
     {
+        # monitor job status
+        "Waiting for job running complete." | Write-ValentiaVerboseDebug
+        Wait-Job -Job $listJob -Force > $null
+
         foreach ($job in $listJob)
         {
-            try
-            {
-                ("Recieve ScriptBlock result from Job for '{0}'" -f $job.Location) | Write-ValentiaVerboseDebug
-                $task.host = $job.Location
-                $task.result = Receive-Job -Job $job
-            }
-            catch
-            {
-                # Show Error Message
-                Write-Error $_
+            # Obtain HostName
+            $task.host = $job.Location
 
-                # Set ErrorResult as CurrentContext with taskkey KV. This will allow you to check variables through functions.
+            ("Receive ScriptBlock result from Job for '{0}'" -f $job.Location) | Write-ValentiaVerboseDebug
+            if ($SkipException)
+            {
+                $task.result = Receive-Job -Job $job -ErrorAction SilentlyContinue -ErrorVariable ErrorVariable
+            }
+            else
+            {
+                $task.result = Receive-Job -Job $job -ErrorVariable ErrorVariable
+            }
+
+            # Error actions
+            if (($ErrorVariable | measure).Count -ne 0)
+            {
+                $task.ErrorMessageDetail += $ErrorVariable
                 $task.SuccessStatus = $false
-                $task.ErrorMessageDetail = $_
+                $task.success = $false
+
+                if (-not $SkipException)
+                {
+                    if ($ErrorActionPreference -eq 'Stop')
+                    {
+                        throw $ErrorVariable
+                    }
+                }
             }
-            finally
+            else
             {
-                # Output
-                $task
-
-                # initialize
-                $task.host = $null
-                $task.result = $null
-
-                ("Removing Job ID '{0}'" -f $job.id) | Write-ValentiaVerboseDebug
-                Remove-Job -Job $job -Force
+                $task.success = $true
             }
+
+            # output
+            $task
+
+            ("Removing Job ID '{0}'" -f $job.id) | Write-ValentiaVerboseDebug
+            Remove-Job -Job $job -Force
         }
+    }
+
+    begin
+    {
+        # Set variable for output
+        $task = @{}
     }
 }

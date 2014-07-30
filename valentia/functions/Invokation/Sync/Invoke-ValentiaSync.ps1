@@ -120,10 +120,8 @@ function Invoke-ValentiaSync
             Import-valentiaModules
         }
 
-
         # Log Setting
-        $LogPath = New-ValentiaLog
-
+        New-ValentiaLog
 
         # Obtain Remote Login Credential
         try
@@ -201,7 +199,7 @@ function Invoke-ValentiaSync
             $Destination = Join-Path "\\" $(Join-Path "$DeployMember" "$DestinationPath")
 
             # Set FastCopy.exe Argument for Sync
-            $FastCopyArgument = "/cmd=sync /bufsize=512 /speed=full /wipe_del=FALSE /acl /stream /reparse /force_close /estimate /error_stop=FALSE /log=True /logfile=""$LogPath"" ""$SourceFolder"" /to=""$Destination"""
+            $FastCopyArgument = "/cmd=sync /bufsize=512 /speed=full /wipe_del=FALSE /acl /stream /reparse /force_close /estimate /error_stop=FALSE /log=True /logfile=""$($valentia.log.fullPath)"" ""$SourceFolder"" /to=""$Destination"""
 
             # Run FastCopy
             Write-Warning ("[{0}]:Uploading {1} to {2}." -f $DeployMember ,$SourceFolder, $Destination)
@@ -239,9 +237,9 @@ function Invoke-ValentiaSync
     ### End
    
         "All Sync job complete." | Write-ValentiaVerboseDebug
-        if (Test-Path $LogPath)
+        if (Test-Path $valentia.log.fullPath)
         {
-            if (-not((Select-String -Path $LogPath -Pattern "No Errors").count -ge $DeployMembers.count))
+            if (-not((Select-String -Path $valentia.log.fullPath -Pattern "No Errors").count -ge $DeployMembers.count))
             {
                 $SuccessStatus += $false
                 $ErrorMessageDetail += ("One or more host was reachable with ping, but not authentiacate to DestinationFolder [ {0} ]" -f $DestinationFolder)
@@ -295,10 +293,10 @@ function Invoke-ValentiaSync
         }
 
         # show result
-        [PSCustomObject]$CommandResult
+        WriteValentiaResultHost -quiet $PSBoundParameters.ContainsKey("quiet") -CommandResult $CommandResult
 
         # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048 -Append
+        OutValentiaResultLog -CommandResult $CommandResult -Append
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean

@@ -117,7 +117,7 @@ function Invoke-ValentiaUploadList
         }
 
         # Log Setting
-        $LogPath = New-ValentiaLog
+        New-ValentiaLog
 
         # Obtain Remote Login Credential
         try
@@ -287,11 +287,10 @@ function Invoke-ValentiaUploadList
         }
 
         # show result
-        [PSCustomObject]$CommandResult
+        WriteValentiaResultHost -quiet $PSBoundParameters.ContainsKey("quiet") -CommandResult $CommandResult
 
         # output result
-        $CommandResult | ConvertTo-Json | Out-File -FilePath $LogPath -Encoding $valentia.fileEncode -Force -Width 1048
-
+        OutValentiaResultLog -CommandResult $CommandResult
 
         # Cleanup valentia Environment
         Invoke-ValentiaClean

@@ -76,14 +76,14 @@ $script:functionToExport = @(
         "New-ValentiaGroup",
         "Show-ValentiaGroup",
 
-        # HostOutput
-        "Write-ValentiaVerboseDebug",
-
         # Initialize
         "Initialize-ValentiaEnvironment",
 
         # Location
         "Set-ValentiaLocation", 
+
+        # Log
+        'New-ValentiaLog',
 
         # PromptForChoice
         "Show-ValentiaPromptForChoice",

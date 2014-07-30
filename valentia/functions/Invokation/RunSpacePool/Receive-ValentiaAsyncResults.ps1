@@ -37,16 +37,17 @@ function Receive-ValentiaAsyncResults
             Position = 1,
             Mandatory = 0,
             HelpMessage = "Hide execution progress.")]
-        [Switch]
-        $quiet
+        [bool]
+        $quiet,
+
+        [Parameter(
+            Position = 2, 
+            Mandatory = 0,
+            HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [bool]
+        $SkipException
     )
     
-    begin
-    {
-        # Inherite variable
-        [HashTable]$task = @{}
-    }
-
     process
     {
         foreach($Pipeline in $Pipelines)
@@ -55,7 +56,7 @@ function Receive-ValentiaAsyncResults
             {
                 # Get HostName of Pipeline
                 $task.host = $Pipeline.Pipeline.Commands.Commands.parameters.Value.ComputerName
-                if (-not $PSBoundParameters.quiet.IsPresent)
+                if (-not $quiet)
                 {
                     Write-Warning  -Message ("{0} Asynchronous execution done." -f $task.host)
                 }
@@ -66,9 +67,25 @@ function Receive-ValentiaAsyncResults
                 # Check status of stream
                 if($Pipeline.Pipeline.Streams.Error)
                 {
-                    $task.SuccessStatus += $false
-                    $task.ErrorMessageDetail += $_
-                    throw $Pipeline.Pipeline.Streams.Error
+                    $task.SuccessStatus = $false
+                    $task.ErrorMessageDetail = $Pipeline.Pipeline.Streams.Error
+                    $task.success = $false
+
+                    if (-not $SkipException)
+                    {
+                        if ($ErrorActionPreference -eq "Stop")
+                        {
+                            throw $Pipeline.Pipeline.Streams.Error
+                        }
+                        else
+                        {
+                            Write-Error "$($Pipeline.Pipeline.Streams.Error)"
+                        }
+                    }
+                }
+                else
+                {
+                    $task.success = $true
                 }
        
                 # Output $task variable to file. This will obtain by other cmdlet outside function.
@@ -86,5 +103,11 @@ function Receive-ValentiaAsyncResults
                 $Pipeline.Pipeline.Dispose()                
             }
         }
+    }
+
+    begin
+    {
+        # Inherite variable
+        [HashTable]$task = @{}
     }
 }
