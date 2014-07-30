@@ -30,7 +30,7 @@ function Invoke-ValentiaCleanResult
         TimeStart             = [datetime]::Now.DateTime
         ScriptToRun           = ""
         DeployMembers         = @()
-        Result                = $valentia.Result.Result = New-Object 'System.Collections.Generic.List[PSCustomObject]'
+        Result                = New-Object 'System.Collections.Generic.List[PSCustomObject]'
         ErrorMessageDetail    = @()
     }
 }
