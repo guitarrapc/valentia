@@ -62,7 +62,7 @@ function Receive-ValentiaResult
             # Error actions
             if (($ErrorVariable | measure).Count -ne 0)
             {
-                $task.ErrorMessageDetail += $ErrorVariable
+                $task.ErrorMessageDetail = $ErrorVariable
                 $task.SuccessStatus = $false
                 $task.success = $false
 

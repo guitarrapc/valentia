@@ -93,8 +93,8 @@ function Receive-ValentiaAsyncResults
             }
             catch 
             {
-                $task.SuccessStatus += $false
-                $task.ErrorMessageDetail += $_
+                $task.SuccessStatus = $false
+                $task.ErrorMessageDetail = $_
                 Write-Error $_
             }
             finally
