@@ -5,6 +5,22 @@ This indicate Version History for valentia.
 
 ## Version 0.4.x
 
+- version : 0.4.5
+	
+	[ author : guitarrapc ]
+	
+	[ Aug 1, 2014 ]
+	
+	#### Enhancement
+	* Added Credential Parameter for ```Invoke-ValentiaDownload```, ```Invoke-Valentia```, ```Invoke-ValentiaAsync```, ```Invoke-ValentiaSync```, ```Invoke-ValentiaUpload```, ```Invoke-ValentiaUploadList```
+
+	#### Changes
+	* Now ```Invoke-Valentia`` and ```Invoke-ValentiaAsync``` Prereqisite action is sharing.
+
+	#### Bug fix
+	* Fix ```Invoke-ValentiaAsync``` had memory leak since v0.4.3 had been fixed.
+
+
 - version : 0.4.3
 	
 	[ author : guitarrapc ]
@@ -32,6 +48,7 @@ This indicate Version History for valentia.
 
 	#### Bug fix
 	* Now Result will show Correct Json format as {host : HostName ; value : Value}. Previously it was Hostname : Value.
+
 
 - version : 0.4.0
 	
