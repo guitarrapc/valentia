@@ -85,7 +85,6 @@ function Import-ValentiaConfiguration
     }
 }
 
-
 function Get-CurrentConfigurationOrDefault
 {
 
@@ -103,8 +102,6 @@ function Get-CurrentConfigurationOrDefault
         return $valentia.config_default
     }
 }
-
-
 
 function New-ValentiaConfigurationForNewContext
 {
@@ -135,7 +132,6 @@ function New-ValentiaConfigurationForNewContext
 
 }
 
-
 function Import-ValentiaModules
 {
  
@@ -160,7 +156,6 @@ function Import-ValentiaModules
         '' # blank line for next entry
     }
 }
-
 
 #-- Private Loading Module Parameters --#
 

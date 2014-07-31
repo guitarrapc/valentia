@@ -74,7 +74,14 @@ function Invoke-ValentiaUploadList
         $Async = $false,
 
         [Parameter(
-            Position = 4,
+            Position = 4, 
+            Mandatory = 0,
+            HelpMessage = "Input PSCredential to use for wsman.")]
+        [PSCredential]
+        $Credential = (Get-ValentiaCredential),
+
+        [Parameter(
+            Position = 5,
             Mandatory = 0,
             HelpMessage = "Return success result even if there are error.")]
         [bool]
@@ -118,19 +125,6 @@ function Invoke-ValentiaUploadList
 
         # Log Setting
         New-ValentiaLog
-
-        # Obtain Remote Login Credential
-        try
-        {
-            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
-            $SuccessStatus += $true
-        }
-        catch
-        {
-            Write-Error $_
-            $SuccessStatus += $false
-        }
-
 
         # Obtain DeployMember IP or Hosts for BITsTransfer
         "Get hostaddresses to connect." | Write-ValentiaVerboseDebug

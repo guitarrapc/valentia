@@ -38,7 +38,7 @@ function Out-ValentiaResult
         Success         = !($valentia.Result.SuccessStatus -contains $false)
         TimeStart       = $valentia.Result.TimeStart
         TimeEnd         = (Get-Date).DateTime
-        TotalDuration   = $StopWatch.Elapsed.TotalSeconds
+        TotalDuration   = $stopwatch.Elapsed.TotalSeconds
         Module          = "$($MyInvocation.MyCommand.Module)"
         Cmdlet          = $Cmdlet
         Alias           = "$((Get-Alias | where ResolvedCommandName -eq $Cmdlet).Name)"

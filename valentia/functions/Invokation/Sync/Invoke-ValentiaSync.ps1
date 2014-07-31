@@ -71,14 +71,21 @@ function Invoke-ValentiaSync
         $SkipException = $false,
 
         [Parameter(
-            Position = 5,
+            Position = 5, 
+            Mandatory = 0,
+            HelpMessage = "Input PSCredential to use for wsman.")]
+        [PSCredential]
+        $Credential = (Get-ValentiaCredential),
+
+        [Parameter(
+            Position = 6,
             Mandatory = 0,
             HelpMessage = "Input fastCopy.exe location folder if changed.")]
         [string]
         $FastCopyFolder = $valentia.fastcopy.folder,
         
         [Parameter(
-            Position = 6,
+            Position = 7,
             Mandatory = 0,
             HelpMessage = "Input fastCopy.exe name if changed.")]
         [string]
@@ -123,18 +130,6 @@ function Invoke-ValentiaSync
         # Log Setting
         New-ValentiaLog
 
-        # Obtain Remote Login Credential
-        try
-        {
-            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
-            $SuccessStatus += $true
-        }
-        catch
-        {
-            Write-Error $_
-            $SuccessStatus += $false
-        }
-    
         # Check FastCopy.exe path
         "Checking FastCopy Folder is exist or not." | Write-ValentiaVerboseDebug
         if (-not(Test-Path $FastCopyFolder))

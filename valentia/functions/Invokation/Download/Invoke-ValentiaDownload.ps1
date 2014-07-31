@@ -98,7 +98,14 @@ function Invoke-ValentiaDownload
             Mandatory = 0,
             HelpMessage = "Return success result even if there are error.")]
         [bool]
-        $SkipException = $false
+        $SkipException = $false,
+
+        [Parameter(
+            Position = 8, 
+            Mandatory = 0,
+            HelpMessage = "Input PSCredential to use for wsman.")]
+        [PSCredential]
+        $Credential = (Get-ValentiaCredential)
     )
 
     try
@@ -137,19 +144,7 @@ function Invoke-ValentiaDownload
         
         # Log Setting
         New-ValentiaLog
-        
-        # Obtain Remote Login Credential
-        try
-        {
-            $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
-            $SuccessStatus += $true
-        }
-        catch
-        {
-            Write-Error $_
-            $SuccessStatus += $false
-        }
-        
+                
         # Obtain DeployMember IP or Hosts for BITsTransfer
         "Get hostaddresses to connect." | Write-ValentiaVerboseDebug
         $DeployMembers = Get-ValentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups

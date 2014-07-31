@@ -102,12 +102,19 @@ function Invoke-ValentiaAsync
         [Parameter(
             Position = 5, 
             Mandatory = 0,
+            HelpMessage = "Input PSCredential to use for wsman.")]
+        [PSCredential]
+        $Credential = (Get-ValentiaCredential),
+
+        [Parameter(
+            Position = 6, 
+            Mandatory = 0,
             HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]
         $Authentication = $valentia.Authentication,
 
         [Parameter(
-            Position = 6,
+            Position = 7,
             Mandatory = 0,
             HelpMessage = "Return success result even if there are error.")]
         [bool]
@@ -118,68 +125,18 @@ function Invoke-ValentiaAsync
     {
         try
         {
-        #region Begin
-
-            # Preference
-            $private:private:ProgressPreference = $valentia.preference.ProgressPreference.custom
-
-            # Initialize Stopwatch
-            $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
-
-            # clear previous result
-            Invoke-ValentiaCleanResult
-
-            # Initialize Error status
-            $valentia.Result.SuccessStatus = $valentia.Result.ErrorMessageDetail = @()
-
-            # Get Start Time
-            $valentia.Result.TimeStart = (Get-Date).DateTime
-
-            # Import default Configurations
-            $valeWarningMessages.warn_import_configuration | Write-ValentiaVerboseDebug
-            Import-ValentiaConfiguration 
-
-            # Import default Modules
-            $valeWarningMessages.warn_import_modules | Write-ValentiaVerboseDebug
-            Import-valentiaModules
-
-            # Log Setting
-            New-ValentiaLog
-
-            # Set Task and push CurrentContext
-            $task = $task = Push-ValentiaCurrentContextToTask -ScriptBlock $scriptBlock -TaskFileName $TaskFileName
+        #region Prerequisite
         
-            # Set Task as CurrentContext with task key
-            $valentia.Result.ScriptTorun = $task.Action
-  
-            # Obtain Remote Login Credential (No need if clients are same user/pass)
-            try
-            {
-                $Credential = Get-ValentiaCredential -Verbose:$VerbosePreference
-                $valentia.Result.SuccessStatus += $true
+            # Prerequisite setup
+            $prerequisiteParam = @{
+                Stopwatch     = $TotalstopwatchSession
+                DeployGroups  = $DeployGroups
+                TaskFileName  = $TaskFileName
+                ScriptBlock   = $ScriptBlock
+                DeployFolder  = $DeployFolder
+                TaskParameter = $TaskParameter
             }
-            catch
-            {
-                $valentia.Result.SuccessStatus += $false
-                $valentia.Result.ErrorMessageDetail += $_
-                Write-Error $_
-            }
-
-            # Obtain DeployMember IP or Hosts for deploy
-            try
-            {
-                "Get host addresses to connect." | Write-ValentiaVerboseDebug
-                $valentia.Result.DeployMembers = Get-valentiaGroup -DeployFolder $DeployFolder -DeployGroup $DeployGroups
-            }
-            catch
-            {
-                $valentia.Result.SuccessStatus += $false
-                $valentia.Result.ErrorMessageDetail += $_
-                Write-Error $_
-            }
-
-            # Show Stopwatch for Begin section
-            Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $TotalstopwatchSession.Elapsed.TotalSeconds)
+            Set-ValentiaInvokationPrerequisites @prerequisiteParam
 
         #endregion
 
@@ -228,6 +185,9 @@ function Invoke-ValentiaAsync
 
     begin
     {
+        # Initialize Stopwatch
+        $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
+
         # Reset ErrorActionPreference
         if ($PSBoundParameters.ContainsKey('ErrorAction'))
         {
