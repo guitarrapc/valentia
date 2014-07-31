@@ -91,14 +91,14 @@ function New-ValentiaOSUser
             mandatory = 0,
             HelpMessage = "User account belonging UserGroup.")]
         [string]
-        $Group = $valentia.group,
+        $Group = $valentia.group.Name,
 
         [parameter(
             position  = 2,
             mandatory = 0,
             HelpMessage = "User flag bit to set.")]
         [string]
-        $UserFlag = $valentia.userFlag
+        $UserFlag = $valentia.group.userFlag
     )
 
     process

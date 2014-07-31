@@ -129,7 +129,7 @@ function Invoke-ValentiaAsync
             # clear previous result
             Invoke-ValentiaCleanResult
 
-            # Initialize Errorstatus
+            # Initialize Error status
             $valentia.Result.SuccessStatus = $valentia.Result.ErrorMessageDetail = @()
 
             # Get Start Time
@@ -149,7 +149,7 @@ function Invoke-ValentiaAsync
             # Set Task and push CurrentContext
             $task = $task = Push-ValentiaCurrentContextToTask -ScriptBlock $scriptBlock -TaskFileName $TaskFileName
         
-            # Set Task as CurrentContext with taskkey
+            # Set Task as CurrentContext with task key
             $valentia.Result.ScriptTorun = $task.Action
   
             # Obtain Remote Login Credential (No need if clients are same user/pass)
@@ -210,18 +210,6 @@ function Invoke-ValentiaAsync
         }
         finally
         {
-            # Dispose RunspacePool
-            if (Get-Variable | where Name -eq "pool")
-            {
-                Remove-ValentiaRunSpacePool -Pool $pool
-            }
-
-            # Dispose variables
-            if (Get-Variable | where Name -eq "AsyncPipelines")
-            {
-                $AsyncPipelines = $null
-            }
-
             # obtain Result
             $resultParam = @{
                 StopWatch     = $TotalstopwatchSession

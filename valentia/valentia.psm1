@@ -292,21 +292,28 @@ $valentia.wsman = New-Object psobject -property @{
 # contains CredSSP configuration
 $valentia.credssp = New-Object psobject -property @{
     AllowFreshCredentialsWhenNTLMOnly       = @{
-        Key                                 = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly'
-        Value                               = ($valentia.wsman.TrustedHosts | %{"wsman/$_"}) -join ", "
+        Key                                 = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly';
+        Value                               = ($valentia.wsman.TrustedHosts | %{"wsman/$_"}) -join ", ";
     }
 }
 
-# contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
-$valentia.poolSize = New-Object psobject -property @{
-    minPoolSize                         = 1;
-    maxPoolSize                         = ([int]$env:NUMBER_OF_PROCESSORS * 30);
-}
-
-# contains wait Limit settings for Asynchronous cmdlet (Invoke-ValentiaAsync)
-$valentia.async = New-Object psobject -property @{
-    sleepMS                             = 10;
-    limitCount                          = 30000;
+# contains RunspacePoolExecution instance
+$valentia.runspace = New-Object psobject -property @{
+    # contains wait Limit settings for Asynchronous cmdlet (Invoke-ValentiaAsync)
+    async            = @{
+        sleepMS                             = 10;
+        limitCount                          = 30000;
+    }
+    
+    # contains instance of AsyncPipeline
+    asyncPipeline    = [System.Collections.Generic.List[AsyncPipeline]];
+    
+    # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
+    pool             = @{
+        minSize                             = 1;
+        maxSize                             = ([int]$env:NUMBER_OF_PROCESSORS * 30);
+        instance                            = $null
+    }
 }
 
 # contains ping property
@@ -350,22 +357,22 @@ $valentia.context.push(
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
         supportWindows                  = $valentia.supportWindows;
-        fileEncode                      = $valentia.fileEncode
+        fileEncode                      = $valentia.fileEncode;
         tasks                           = @{};
         includes                        = New-Object System.Collections.Queue;
-        Result                          = $valentia.Result
+        Result                          = $valentia.Result;
     }
 )
 
-#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
-
-# contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
+# contains default OS user configuration
 $valentia.users = New-Object psobject -property @{
     CurrentUser                         = $env:USERNAME;
-    deployUser                          = 'deployment';
+    deployUser                          = "deployment";
 }
-$valentia.group                         = 'Administrators'
-$valentia.userFlag                      = '0X10040'         # #UserFlag for password (ex. infinity & No change Password)
+$valentia.group = New-Object psobject -property @{
+    name                                = "Administrators";
+    userFlag                            = "0X10040";         # #UserFlag for password (ex. infinity & No change Password)
+}
 
 # contains valentia execution policy for initial setup
 $valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
@@ -374,30 +381,24 @@ $valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]
 $valentia.Authentication                = [System.Management.Automation.Runspaces.AuthenticationMechanism]::Negotiate
 
 # contains valentia configuration Information
-$valentia.PSDrive                       = 'V:';             # Set Valentia Mapping Drive with SMBMapping
-$valentia.deployextension               = '.ps1';           # contains default DeployGroup file extension
+$valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
+$valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
 
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
-    hostName                            = 'web';
-    ipstring                            = 'ip';
-}
-
-# Define External program path
-$valentia.fastcopy = New-Object psobject -property @{
-    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
-    exe                                 = 'FastCopy.exe';
+    hostName                            = "web";
+    ipstring                            = "ip";
 }
 
 # contains default deployment Path configuration.
-$valentia.RootPath                      = '{0}\Deployment' -f $env:SystemDrive;
+$valentia.RootPath                      = "{0}\Deployment" -f $env:SystemDrive;
 
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
-    path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
-    name                                = 'deploy';
-    extension                           = '.log';
-    fullPath                            = ""
+    path                                = "{0}\Logs\Deployment" -f $env:SystemDrive;
+    name                                = "deploy";
+    extension                           = ".log";
+    fullPath                            = "";
 }
 
 # contains certificate configuration
@@ -422,6 +423,12 @@ $valentia.certificate = New-Object psobject -property @{
         CertPath                            = "Cert:\LocalMachine\My"
         ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
     }
+}
+
+# Define External program path
+$valentia.fastcopy = New-Object psobject -property @{
+    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
+    exe                                 = 'FastCopy.exe';
 }
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script

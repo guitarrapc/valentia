@@ -1,11 +1,10 @@
-#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization)--#
+#-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
 
 # contains context for default.
 $valentia.context.push(
     @{
         executedTasks                   = New-Object System.Collections.Stack;
         callStack                       = New-Object System.Collections.Stack;
-        Result                          = $valentia.Result
         originalEnvPath                 = $env:Path;
         originalDirectory               = Get-Location;
         originalErrorActionPreference   = $valentia.preference.ErrorActionPreference.original;
@@ -18,19 +17,22 @@ $valentia.context.push(
         modulePath                      = $valentia.modulePath;
         helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
         supportWindows                  = $valentia.supportWindows;
-        fileEncode                      = $valentia.fileEncode
+        fileEncode                      = $valentia.fileEncode;
         tasks                           = @{};
         includes                        = New-Object System.Collections.Queue;
+        Result                          = $valentia.Result;
     }
 )
 
-# contains default OS user configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
+# contains default OS user configuration
 $valentia.users = New-Object psobject -property @{
     CurrentUser                         = $env:USERNAME;
     deployUser                          = "deployment";
 }
-$valentia.group                         = "Administrators"
-$valentia.userFlag                      = "0X10040"         # #UserFlag for password (ex. infinity & No change Password)
+$valentia.group = New-Object psobject -property @{
+    name                                = "Administrators";
+    userFlag                            = "0X10040";         # #UserFlag for password (ex. infinity & No change Password)
+}
 
 # contains valentia execution policy for initial setup
 $valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
@@ -48,21 +50,15 @@ $valentia.prefix = New-Object psobject -property @{
     ipstring                            = "ip";
 }
 
-# Define External program path
-$valentia.fastcopy = New-Object psobject -property @{
-    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
-    exe                                 = 'FastCopy.exe';
-}
-
 # contains default deployment Path configuration.
-$valentia.RootPath                      = '{0}\Deployment' -f $env:SystemDrive;
+$valentia.RootPath                      = "{0}\Deployment" -f $env:SystemDrive;
 
 # Set Valentia Log
 $valentia.log = New-Object psobject -property @{
-    path                                = '{0}\Logs\Deployment' -f $env:SystemDrive;
-    name                                = 'deploy';
-    extension                           = '.log';
-    fullPath                            = ""
+    path                                = "{0}\Logs\Deployment" -f $env:SystemDrive;
+    name                                = "deploy";
+    extension                           = ".log";
+    fullPath                            = "";
 }
 
 # contains certificate configuration
@@ -89,12 +85,18 @@ $valentia.certificate = New-Object psobject -property @{
     }
 }
 
+# Define External program path
+$valentia.fastcopy = New-Object psobject -property @{
+    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
+    exe                                 = 'FastCopy.exe';
+}
+
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
 $valentia.config_default                = New-Object PSObject -property ([ordered]@{
-    TaskFileName                        = "default.ps1";
+    TaskFileName                        = 'default.ps1';
     Result                              = $valentia.Result
     TaskFileDir                         = [ValentiaBranchPath]::Application;
-    taskNameFormat                      = "Executing {0}";
+    taskNameFormat                      = 'Executing {0}';
     verboseError                        = $false;
     modules                             = $null;
     PSDrive                             = $valentia.PSDrive;

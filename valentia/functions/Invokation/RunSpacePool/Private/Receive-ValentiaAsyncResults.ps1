@@ -15,7 +15,7 @@ Author: guitarrapc
 Created: 13/July/2013
 
 .EXAMPLE
-$AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $pool -ScriptToRun $ScriptToRun -Deploymember $DeployMember -Credential $credential -Verbose
+$AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $valentia.runspace.pool.instance  -ScriptToRun $ScriptToRun -Deploymember $DeployMember -Credential $credential -Verbose
 Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress
 
 --------------------------------------------

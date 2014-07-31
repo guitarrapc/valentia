@@ -14,7 +14,7 @@ Author: guitarrapc
 Created: 14/Feb/2014
 
 .EXAMPLE
-Remove-ValentiaRunspacePool -RunSpacePool $pool
+Remove-ValentiaRunspacePool -RunSpacePool $valentia.runspace.pool.instance
 #>
 function Remove-ValentiaRunSpacePool
 {
@@ -23,17 +23,21 @@ function Remove-ValentiaRunSpacePool
     (
         [Parameter(
             Position = 0,
-            Mandatory = 1,
+            Mandatory = 0,
             HelpMessage = "Specify RunSpace Pool to close and dispose.")]
         [System.Management.Automation.Runspaces.RunspacePool]
-        $Pool
+        $Pool = $valentia.runspace.pool.instance
     )
+
+    $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
     try
     {
-        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-        $Pool.Close()
-        $Pool.Dispose()
+        if ($Pool)
+        {
+            $Pool.Close()
+            $Pool.Dispose()
+        }
     }
     catch
     {
