@@ -193,7 +193,7 @@
     <Content Include="functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
     <Content Include="functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateReg.ps1" />
     <Content Include="functions\Helper\CredSSP\Private\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
-    <Content Include="functions\Helper\DNS\Get-VelentiaHostEntryAsync.ps1" />
+    <Content Include="functions\Helper\DNS\Get-ValentiaHostEntryAsync.ps1" />
     <Content Include="functions\Helper\Log\Out-ValentiaResult.ps1" />
     <Content Include="functions\Helper\Log\Private\WriteValentiaResultHost.ps1" />
     <Content Include="functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />

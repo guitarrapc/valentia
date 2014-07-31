@@ -29,7 +29,7 @@ Get-HostEntryAsync -HostNameOrAddress "google.com", "173.194.38.100", "hogemopge
 .LINK
     http://msdn.microsoft.com/en-US/library/system.net.dns.gethostentryasync(v=vs.110).aspx
 #>
-function Get-VelentiaHostEntryAsync
+function Get-ValentiaHostEntryAsync
 {
     [CmdletBinding()]
     param

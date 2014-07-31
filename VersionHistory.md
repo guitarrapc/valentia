@@ -5,6 +5,34 @@ This indicate Version History for valentia.
 
 ## Version 0.4.x
 
+- version : 0.4.3
+	
+	[ author : guitarrapc ]
+	
+	[ Jul 31, 2014 ]
+	
+	#### Enhancement
+	* Initialize-ValentiaEnvironment now supports Credential parameter
+	* Replace Bits Transfer to HttpClient for RemoteInstallation.
+	* Added Password Encrypt / Decrypt through Certificate pfx/cert
+	* Added Elevated check for CertStoreLocation "LocalMachine"
+	* Added Get-ValentiaComputerName functions to get/set current ComputerName  
+	* Added Watch-ValentiaPingAsyncReplyStatus
+	* Add Get-ValentiaHostEntryAsync to Retrieve DNS to IPAddress Entry
+	* Add $valentia.Result to preserve last command result.
+	* Support for ErrorActionPreference. Now default is Continue for Invoke-Valentia and Invoke-ValentiaAsync. You can set as Stop by -ErrorAction Stop.
+	* Now you can filter each host result by ``` $valentia.Result.Where{$_.Success -eq $true} 
+	* You can see progress for Invoke-ValentiaAsync in log file until execution finished.
+
+	#### Changes
+	* Remove unused command for public output function
+	* installer change
+	* change Set-ValentiaComputerName to Rename-ValentiaComputerName
+	* Re-factor Code
+
+	#### Bug fix
+	* Now Result will show Correct Json format as {host : HostName ; value : Value}. Previously it was Hostname : Value.
+
 - version : 0.4.0
 	
 	[ author : guitarrapc ]

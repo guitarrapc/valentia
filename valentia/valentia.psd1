@@ -12,10 +12,10 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '0.4.2'
+ModuleVersion = '0.4.3'
 
 # ID used to uniquely identify this module
-GUID = 'f09aefd6-f4c4-45a6-a7a4-bb884208f083'
+GUID = 'c6626563-89a1-4b7b-b0e9-214483f20c74'
 
 # Author of this module
 Author = 'guitarrapc'
@@ -78,7 +78,7 @@ FunctionsToExport = 'Invoke-Valentia', 'Invoke-ValentiaAsync', 'Invoke-ValentiaD
                'Get-ValentiaComputerName', 'Rename-ValentiaComputerName', 
                'Edit-ValentiaConfig', 'Show-ValentiaConfig', 
                'Get-ValentiaCredential', 'Set-ValentiaCredential', 
-               'Get-VelentiaHostEntryAsync', 'New-ValentiaDynamicParamMulti', 
+               'Get-ValentiaHostEntryAsync', 'New-ValentiaDynamicParamMulti', 
                'Get-ValentiaFileEncoding', 'New-ValentiaFolder', 'Get-ValentiaGroup', 
                'Invoke-ValentiaDeployGroupRemark', 
                'Invoke-ValentiaDeployGroupUnremark', 'New-ValentiaGroup', 

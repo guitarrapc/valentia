@@ -1,5 +1,5 @@
 ﻿$script:module = "valentia"
-$script:moduleVersion = "0.4.2"
+$script:moduleVersion = "0.4.3"
 $script:description = "PowerShell Remote deployment library for Windows Servers";
 $script:copyright = "28/June/2013 -"
 $script:RequiredModules = @()
@@ -58,7 +58,7 @@ $script:functionToExport = @(
         "Set-ValentiaCredential", 
 
         # DNS
-        'Get-VelentiaHostEntryAsync',
+        'Get-ValentiaHostEntryAsync',
 
         # DynamicParam
         "New-ValentiaDynamicParamMulti",
