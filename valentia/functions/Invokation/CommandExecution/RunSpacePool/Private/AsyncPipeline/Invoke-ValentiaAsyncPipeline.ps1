@@ -35,13 +35,11 @@ function Invoke-ValentiaAsyncPipeline
         TaskParameterHash  = @{TaskParameter  = $TaskParameter}
         AuthenticationHash = @{Authentication = $Authentication}
     }
-    $AsyncPipelines = New-Object 'System.Collections.Generic.List[AsyncPipeline]'
+    $valentia.runspace.asyncPipeline = New-Object 'System.Collections.Generic.List[AsyncPipeline]'
 
     foreach ($DeployMember in $valentia.Result.DeployMembers)
     {
         $AsyncPipeline = Invoke-ValentiaAsyncCommand @param -Deploymember $DeployMember
-        $AsyncPipelines.Add($AsyncPipeline)
+        $valentia.runspace.asyncPipeline.Add($AsyncPipeline)
     }
-
-    return $AsyncPipelines
 }

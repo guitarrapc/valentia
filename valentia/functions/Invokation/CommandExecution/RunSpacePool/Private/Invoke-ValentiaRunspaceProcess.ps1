@@ -47,17 +47,17 @@ function Invoke-ValentiaRunspaceProcess
                 TaskParameter  = $TaskParameter
                 Authentication = $Authentication
             }
-            [System.Collections.Generic.List[AsyncPipeline]]$valentia.runspace.asyncPipeline = Invoke-ValentiaAsyncPipeline @asyncPipelineparam
+            Invoke-ValentiaAsyncPipeline @asyncPipelineparam
 
             # Monitoring status for Async result (Even if no monitoring, but asynchronous result will obtain after all hosts available)
-            Watch-AsyncPipelineStatus -AsyncPipelines $valentia.runspace.asyncPipeline
+            Watch-ValentiaAsyncPipelineStatus -AsyncPipelines $valentia.runspace.asyncPipeline
         
             # Obtain Async Command Result
             $asyncResultParam = @{
-                Pipelines     = $valentia.runspace.asyncPipeline
-                quiet         = $quiet
-                ErrorAction   = $ErrorActionPreference
-                skipException = $skipException
+                AsyncPipelines = $valentia.runspace.asyncPipeline
+                quiet          = $quiet
+                ErrorAction    = $ErrorActionPreference
+                skipException  = $skipException
             }
             Receive-ValentiaAsyncResults @asyncResultParam `
             | %{$valentia.Result.Result = New-Object 'System.Collections.Generic.List[PSCustomObject]'

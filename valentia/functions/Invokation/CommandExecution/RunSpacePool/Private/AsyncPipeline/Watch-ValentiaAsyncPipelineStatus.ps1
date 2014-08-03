@@ -2,14 +2,14 @@
 
 #-- Private Module Function for AsyncPipelline monitor --#
 
-function Watch-AsyncPipelineStatus
+function Watch-ValentiaAsyncPipelineStatus
 {
     [Cmdletbinding()]
     Param
     (
         [Parameter(
-            Position=0,
-            Mandatory,
+            Position = 0,
+            Mandatory = 0,
             HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
         [System.Collections.Generic.List[AsyncPipeline]]
         $AsyncPipelines
@@ -17,7 +17,7 @@ function Watch-AsyncPipelineStatus
 
     process
     {
-        while ((($ReceiveAsyncStatus = (Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state,hostname -NoElement)) | where name -like "Running*").count -ne 0)
+        while ((($ReceiveAsyncStatus = (Receive-ValentiaAsyncStatus -Pipelines $AsyncPipelines | group state, hostname -NoElement)) | where name -like "Running*").count -ne 0)
         {
             $count++
             $completed     = $ReceiveAsyncStatus | where name -like "Completed*"

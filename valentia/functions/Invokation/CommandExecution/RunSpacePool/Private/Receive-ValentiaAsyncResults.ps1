@@ -16,7 +16,7 @@ Created: 13/July/2013
 
 .EXAMPLE
 $AsyncPipelines += Invoke-ValentiaAsyncCommand -RunspacePool $valentia.runspace.pool.instance  -ScriptToRun $ScriptToRun -Deploymember $DeployMember -Credential $credential -Verbose
-Receive-ValentiaAsyncResults -Pipelines $AsyncPipelines -ShowProgress
+Receive-ValentiaAsyncResults -AsyncPipelines $AsyncPipelines -ShowProgress
 
 --------------------------------------------
 Above will retrieve Async Result
@@ -31,7 +31,7 @@ function Receive-ValentiaAsyncResults
             Mandatory,
             HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
         [System.Collections.Generic.List[AsyncPipeline]]
-        $Pipelines,
+        $AsyncPipelines,
 
         [Parameter(
             Position = 1,
@@ -50,7 +50,7 @@ function Receive-ValentiaAsyncResults
     
     process
     {
-        foreach($Pipeline in $Pipelines)
+        foreach($Pipeline in $AsyncPipelines)
         {
             try
             {
