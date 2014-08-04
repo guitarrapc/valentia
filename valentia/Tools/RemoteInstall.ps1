@@ -120,19 +120,6 @@ function New-ZipExtract
 
         [parameter(
             mandatory = 0,
-            position = 2)]
-        [switch]
-        $quiet,
-
-        [parameter(
-            mandatory = 0,
-            position = 3,
-            ParameterSetName="safe")]
-        [switch]
-        $safe,
-
-        [parameter(
-            mandatory = 0,
             position = 3,
             ParameterSetName="force")]
         [switch]
@@ -184,49 +171,13 @@ function New-ZipExtract
         Write-Debug "check destination is already exist, ExtractToDirectory Method will fail with same name of destination file."
         if (Test-Path $destination)
         {
-            if ($safe)
+            Write-Warning ("force replacing old zip file {0}" -f $destination)
+            Remove-Item -Path $destination -Recurse -Force
+
+            if (Test-Path $destination)
             {
-                Write-Debug "safe output zip file to new destination path, avoiding destination zip name conflict."
-
-                # show warning for same destination exist.
-                Write-Verbose ("Detected destination name {0} is already exist. safe trying output to new destination zip name." -f $destination)
-
-                $olddestination = $destination
-
-                # get current destination information
-                $destinationRoot = [System.IO.Path]::GetDirectoryName($destination)
-                $destinationfile = [System.IO.Path]::GetFileNameWithoutExtension($destination)
-                $destinationExtension = [System.IO.Path]::GetExtension($destination)
-
-                # renew destination name with (2)...(x) until no more same name catch.
-                $count = 2
-                $destination = Join-Path $destinationRoot ($destinationfile + "(" + $count + ")" + $destinationExtension)
-                while (Test-Path $destination)
-                {
-                    ++$count
-                    $destination = Join-Path $destinationRoot ($destinationfile + "(" + $count + ")" + $destinationExtension)
-                }
-
-                # show warning as destination name had been changed due to escape error.
-                Write-Warning ("Safe old deistination {0} change to new name {1}" -f $olddestination, $destination)
-            }
-            else
-            {
-                if($force)
-                {
-                    Write-Warning ("force replacing old zip file {0}" -f $destination)
-                    Remove-Item -Path $destination -Recurse -Force
-                }
-                else
-                {
-                    Remove-Item -Path $destination -Recurse -Confirm
-                }
-
-                if (Test-Path $destination)
-                {
-                    Write-Warning "Cancelled removing item. Quit cmdlet execution."
-                    return
-                }
+                Write-Warning "Cancelled removing item. Quit cmdlet execution."
+                return
             }
         }
         else
@@ -251,17 +202,7 @@ function New-ZipExtract
             Write-Verbose ("destination : {0}" -f $destination)
 
             Write-Debug "Execute Main Process ExtractToDirectory."
-            if ($quiet)
-            {
-                [System.IO.Compression.ZipFileExtensions]::ExtractToDirectory($sourcezip,$destination) > $null
-                $?
-            }
-            else
-            {
-                [System.IO.Compression.ZipFileExtensions]::ExtractToDirectory($sourcezip,$destination)
-            }
-
-            $sourcezip.Dispose()
+            [System.IO.Compression.ZipFileExtensions]::ExtractToDirectory($sourcezip,$destination)
         }
         catch
         {
