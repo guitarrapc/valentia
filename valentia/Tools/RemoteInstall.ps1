@@ -34,7 +34,7 @@ function Main
         Source = $source
         Destination = $destination
     }
-    New-ZipExtract @Unzip -force
+    New-ZipExtract @Unzip
 
     # Install
     Write-Verbose ("Installing {0} to the computer" -f $gitHubURI.repository)
@@ -116,14 +116,7 @@ function New-ZipExtract
             valuefrompipeline,
             valuefrompipelinebypropertyname)]
         [string]
-        $destination,
-
-        [parameter(
-            mandatory = 0,
-            position = 3,
-            ParameterSetName="force")]
-        [switch]
-        $force
+        $destination
     )
 
     begin
