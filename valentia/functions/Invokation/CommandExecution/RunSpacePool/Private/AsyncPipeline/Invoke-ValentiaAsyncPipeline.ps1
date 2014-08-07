@@ -16,7 +16,7 @@ function Invoke-ValentiaAsyncPipeline
         $Credential,
 
         [parameter(Mandatory = 0)]
-        [string[]]
+        [hashtable]
         $TaskParameter,
 
         [parameter(Mandatory = 1)]
