@@ -86,9 +86,9 @@ function Invoke-Valentia
         [Parameter(
             Position = 3, 
             Mandatory = 0,
-            HelpMessage = "Input parameter pass into task's arg[0....x].")]
+            HelpMessage = "Input parameter pass into task's arg[0....x].values")]
         [ValidateNotNullOrEmpty()]
-        [string[]]
+        [hashtable]
         $TaskParameter,
 
         [Parameter(
