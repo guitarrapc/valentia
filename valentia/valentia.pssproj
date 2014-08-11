@@ -64,7 +64,7 @@
     <Compile Include="example\Deployment\Upload\test.csv" />
     <Compile Include="example\Deployment\Upload\test.txt" />
     <Compile Include="functions\Helper\Certificate\Show-ValentiaCertificate.ps1" />
-    <Compile Include="functions\Helper\Credential\Private\Add-ValentiaTypeMemberDefinition.ps1" />
+    <Compile Include="functions\Helper\Add-Memeber\Private\Add-ValentiaTypeMemberDefinition.ps1" />
     <Compile Include="functions\Helper\Credential\Get-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\Credential\Set-ValentiaCredential.ps1" />
     <Compile Include="functions\Helper\Task\Get-ValentiaTask.ps1" />
@@ -125,7 +125,6 @@
     <Folder Include="functions\" />
     <Folder Include="functions\Helper\Config\" />
     <Folder Include="functions\Helper\Credential\" />
-    <Folder Include="functions\Helper\Credential\Private\" />
     <Folder Include="functions\Helper\CredSSP\" />
     <Folder Include="functions\Helper\CredSSP\Private\" />
     <Folder Include="functions\Helper\Encoding\" />
@@ -145,6 +144,9 @@
     <Folder Include="functions\Helper\ComputerName\" />
     <Folder Include="functions\Helper\DNS\" />
     <Folder Include="functions\Helper\Log\Private\" />
+    <Folder Include="functions\Helper\Add-Memeber\" />
+    <Folder Include="functions\Helper\Add-Memeber\Private\" />
+    <Folder Include="functions\Helper\SymbolicLink\" />
     <Folder Include="functions\Helper\ScheduledTask\" />
     <Folder Include="functions\Helper\Prerequisites\" />
     <Folder Include="functions\Helper\Prerequisites\Private\" />
@@ -170,11 +172,15 @@
     <Folder Include="functions\Helper\" />
     <Folder Include="Test\" />
     <Folder Include="Test\Credential\" />
+    <Folder Include="Test\Get-ValentiaGroup\" />
+    <Folder Include="Test\PingAsync\" />
+    <Folder Include="Test\SymbolicLink\" />
     <Folder Include="Tools\" />
     <Folder Include="valentia-Help\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\valentia-config.ps1" />
+    <Content Include="cs\CreateSymLink.cs" />
     <Content Include="example\Deployment\Application\execute\execute.ps1" />
     <Content Include="example\Deployment\Application\Task-InstallChocolatey.bat" />
     <Content Include="example\Deployment\Application\task-GetProcess.bat" />
@@ -212,16 +218,19 @@
     <Content Include="functions\Helper\Prerequisites\Private\Set-ValentiaInvokationPrerequisites.ps1" />
     <Content Include="functions\Helper\Prerequisites\Private\Push-ValentiaCurrentContextToTask.ps1" />
     <Content Include="functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1" />
+    <Content Include="functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1" />
+    <Content Include="functions\Helper\SymbolicLink\Remove-ValentiaSymbolicLink.ps1" />
+    <Content Include="functions\Helper\SymbolicLink\Get-ValentiaSymbolicLink.ps1" />
     <Content Include="functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
     <Content Include="functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaJobProcess.ps1" />
     <Content Include="functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1" />
     <Content Include="functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Watch-ValentiaAsyncPipelineStatus.ps1" />
     <Content Include="functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Invoke-ValentiaAsyncPipeline.ps1" />
     <Content Include="functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaRunspaceProcess.ps1" />
-    <Content Include="Test\Credential\Import-Module.ps1" />
-    <Content Include="Test\Credential\Target.ps1" />
-    <Content Include="Test\Credential\PingAsync.ps1" />
+    <Content Include="Test\Get-ValentiaGroup\Target.ps1" />
+    <Content Include="Test\PingAsync\PingAsync.ps1" />
     <Content Include="Test\Credential\Credential.ps1" />
+    <Content Include="Test\SymbolicLink\PingAsync.ps1" />
     <Content Include="Tools\install.bat" />
     <Content Include="Tools\install.ps1" />
     <Content Include="Tools\New-valentiaManufest.ps1" />
