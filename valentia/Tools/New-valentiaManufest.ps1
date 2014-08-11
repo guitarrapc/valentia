@@ -94,6 +94,11 @@ $script:functionToExport = @(
         # Sed
         "Invoke-ValentiaSed",
 
+        # SymbolicLink
+        'Get-ValentiaSymbolicLink',
+        'Remove-ValentiaSymbolicLink',
+        'Set-ValentiaSymbolicLink',
+
         # Task
         "ConvertTo-ValentiaTask",
         "Get-ValentiaTask", 
