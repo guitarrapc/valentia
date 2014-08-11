@@ -145,6 +145,7 @@
     <Folder Include="functions\Helper\ComputerName\" />
     <Folder Include="functions\Helper\DNS\" />
     <Folder Include="functions\Helper\Log\Private\" />
+    <Folder Include="functions\Helper\ScheduledTask\" />
     <Folder Include="functions\Helper\Prerequisites\" />
     <Folder Include="functions\Helper\Prerequisites\Private\" />
     <Folder Include="functions\Helper\User\" />
@@ -210,6 +211,7 @@
     <Content Include="functions\Helper\Log\Private\OutValentiaModuleLogHost.ps1" />
     <Content Include="functions\Helper\Prerequisites\Private\Set-ValentiaInvokationPrerequisites.ps1" />
     <Content Include="functions\Helper\Prerequisites\Private\Push-ValentiaCurrentContextToTask.ps1" />
+    <Content Include="functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1" />
     <Content Include="functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
     <Content Include="functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaJobProcess.ps1" />
     <Content Include="functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1" />

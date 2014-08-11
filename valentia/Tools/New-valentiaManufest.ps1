@@ -88,6 +88,9 @@ $script:functionToExport = @(
         # PromptForChoice
         "Show-ValentiaPromptForChoice",
 
+        # ScheduledTask
+        'Set-ValentiaScheduledTask',
+
         # Sed
         "Invoke-ValentiaSed",
 
