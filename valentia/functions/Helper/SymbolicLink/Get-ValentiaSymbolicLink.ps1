@@ -71,22 +71,6 @@ function Get-ValentiaSymbolicLink
     {
         $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
-        $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-        $script:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
-        $script:sig = Get-Content -Path $CredReadCS -Raw
-
-        $script:addType = @{
-            MemberDefinition = $sig
-            Namespace        = "Advapi32"
-            Name             = "Util"
-        }
-        Add-ValentiaTypeMemberDefinition @addType -PassThru `
-        | select -First 1 `
-        | %{
-            $script:typeQualifiedName = $_.AssemblyQualifiedName
-            $script:typeFullName = $_.FullName
-        }
-
         function IsFile ([string]$Path)
         {
             if ([System.IO.File]::Exists($Path))
