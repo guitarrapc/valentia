@@ -5,6 +5,22 @@ This indicate Version History for valentia.
 
 ## Version 0.4.x
 
+- version : 0.4.6
+	
+	[ author : guitarrapc ]
+	
+	[ Aug 12, 2014 ]
+	
+	#### Enhancement
+	* Added SymbolicLink Functions without using mklink. ```Get-ValentiaSymbolicLink```, ```Remove-ValentiaSymbolicLink```, ```Set-ValentiaSymbolicLink``` is now available.
+	* Added TaskScheduler functions. Now you can create TaskScheduler easily by passing Hashtable style.
+
+	#### Breaking Changes
+	* Change TaskParameter from String[] to hashtable for ```Invoke-Valentia``` and ```Invoke-ValentiaAsync```.
+		* This cause breaking change to use local variable in valentia  scriptblock.
+		* Before : $args[0]
+		* After  : $args[0].Values
+
 - version : 0.4.5
 	
 	[ author : guitarrapc ]
@@ -15,7 +31,7 @@ This indicate Version History for valentia.
 	* Added Credential Parameter for ```Invoke-ValentiaDownload```, ```Invoke-Valentia```, ```Invoke-ValentiaAsync```, ```Invoke-ValentiaSync```, ```Invoke-ValentiaUpload```, ```Invoke-ValentiaUploadList```
 
 	#### Changes
-	* Now ```Invoke-Valentia`` and ```Invoke-ValentiaAsync``` Prereqisite action is sharing.
+	* Now ```Invoke-Valentia``` and ```Invoke-ValentiaAsync``` Prereqisite action is sharing.
 
 	#### Bug fix
 	* Fix ```Invoke-ValentiaAsync``` had memory leak since v0.4.3 had been fixed.
