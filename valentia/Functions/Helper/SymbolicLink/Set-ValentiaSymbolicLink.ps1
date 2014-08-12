@@ -36,7 +36,7 @@ As number input was less with -Path, d:\hoge3 will be ignore.
 #>
 function Set-ValentiaSymbolicLink
 {
-    [cmdletBinding()]
+    [cmdletBinding(DefaultParameterSetName = "ForceFile")]
     param
     (
         [parameter(
@@ -54,7 +54,23 @@ function Set-ValentiaSymbolicLink
             Position  = 1,
             ValueFromPipelineByPropertyName = 1)]
         [String[]]
-        $SymbolicPath
+        $SymbolicPath,
+
+        [parameter(
+            Mandatory = 0,
+            Position  = 2,
+            ValueFromPipelineByPropertyName = 1,
+            ParameterSetName = "ForceFile")]
+        [bool]
+        $ForceFile = $false,
+
+        [parameter(
+            Mandatory = 0,
+            Position  = 2,
+            ValueFromPipelineByPropertyName = 1,
+            ParameterSetName = "ForceDirectory")]
+        [bool]
+        $ForceDirectory = $false
     )
     
     process
@@ -67,9 +83,17 @@ function Set-ValentiaSymbolicLink
             $targetPath = ($x.Key -split "$($prefix * ($i + 1))" | select -Last 1)
             $SymbolicNewPath = $x.value
 
-            # Check File Type
-            if ($file = IsFile -Path $targetPath)
+            if ($ForceFile -eq $true)
             {
+                [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $Path, $false)
+            }
+            elseif ($ForceDirectory -eq $true)
+            {
+                [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $Path, $true)
+            }
+            elseif ($file = IsFile -Path $targetPath)
+            {
+                # Check File Type
                 if (IsFileAttribute -Path $file)
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $file.fullname, $false)
@@ -79,6 +103,7 @@ function Set-ValentiaSymbolicLink
             }
             elseif ($directory = IsDirectory -Path $targetPath)
             {
+                # Check Directory Type
                 if (IsDirectoryAttribute -Path $directory)
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $directory.fullname, $true)
