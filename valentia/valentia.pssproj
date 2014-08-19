@@ -72,6 +72,7 @@
     <Compile Include="functions\Helper\IE\Private\Disable-ValentiaEnhancedIESecutiry.ps1" />
     <Compile Include="functions\Helper\Config\Edit-ValentiaConfig.ps1" />
     <Compile Include="functions\Helper\CredSSP\Private\Enable-ValentiaCredSSP.ps1" />
+    <Compile Include="Functions\Helper\Utils\New-ValentiaZpPairs.ps1" />
     <Compile Include="functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
     <Compile Include="functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" />
     <Compile Include="functions\Helper\Group\Get-ValentiaGroup.ps1" />
@@ -153,6 +154,7 @@
     <Folder Include="functions\Helper\User\" />
     <Folder Include="functions\Helper\PromptForChoice\" />
     <Folder Include="functions\Helper\Task\" />
+    <Folder Include="Functions\Helper\Utils\" />
     <Folder Include="functions\Helper\Windows\" />
     <Folder Include="functions\Helper\Sed\" />
     <Folder Include="functions\Helper\Windows\Private\" />
