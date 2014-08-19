@@ -76,12 +76,12 @@ function Set-ValentiaSymbolicLink
     process
     {
         # Work as like LINQ Zip() method
-        $zip = NewZipPairs -key $Path -value $SymbolicPath -Prefix $prefix
-        foreach ($x in $zip.GetEnumerator())
+        $zip = New-ValentiaZipPairs -key $Path -value $SymbolicPath
+        foreach ($x in $zip)
         {
             # reverse original key
-            $targetPath = ($x.Key -split "$($prefix * ($i + 1))" | select -Last 1)
-            $SymbolicNewPath = $x.value
+            $targetPath = $x.item1
+            $SymbolicNewPath = $x.item2
 
             if ($ForceFile -eq $true)
             {
@@ -111,9 +111,6 @@ function Set-ValentiaSymbolicLink
                     [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
                 }
             } 
-            
-            # increment prefix length
-            $i++
         }
     }    
 
@@ -194,86 +191,6 @@ function Set-ValentiaSymbolicLink
             {
                 Write-Verbose ('Attribute detected as NOT Directory. : {0}' -f $Path.Attributes)
                 return $result
-            }
-        }
-
-        function NewZipPairs
-        {
-            [CmdletBinding()]
-            param
-            (
-                [parameter(
-                    Mandatory = 1,
-                    Position = 0,
-                    ValueFromPipelineByPropertyName = 1)]
-                [string[]]
-                $key,
-
-                [parameter(
-                    Mandatory = 1,
-                    Position = 1,
-                    ValueFromPipelineByPropertyName = 1)]
-                [string[]]
-                $value,
-
-                [parameter(
-                    Mandatory = 0,
-                    Position = 2)]
-                [string]
-                $Prefix = "_"
-            )
-
-            begin
-            {
-                function ToArrayEx ([string[]]$InputStringArray)
-                {
-                    $array = @()
-                    $array += $InputStringArray | %{$_}
-                    $array
-                }
-            }
-
-            process
-            {
-                # ToArray
-                [string[]]$keys = ToArrayEx -InputStringArray $key
-                [string[]]$values = ToArrayEx -InputStringArray $value
-
-                # Element Count Check
-                $keyElementsCount = ($keys | measure).count
-                $valueElementsCount = ($values | measure).count
-                if ($valueElementsCount -eq 0)
-                {
-                    # TagValue auto fill with "*" when Value is empty
-                    $values = 1..$keyElementsCount | %{"*"}
-                }
-
-                # Get shorter list
-                $length = if ($keyElementsCount -le $valueElementsCount)
-                {
-                    $keyElementsCount
-                }
-                else
-                {
-                    $valueElementsCount
-                }
-
-                # Make Element Pair
-                $i = 0
-                $dictionary = New-Object 'System.Collections.Generic.Dictionary[[string],[string]]'
-                do
-                {
-                    # make new key to avoid duplicate entry
-                    $key = "$($prefix * ($i + 1))" + $($keys[$i])
-                    $dictionary.Add($key,$values[$i])
-                    $i++
-                }
-                while ($i -lt $length)
-            }
-
-            end
-            {
-                return $dictionary
             }
         }
     }
