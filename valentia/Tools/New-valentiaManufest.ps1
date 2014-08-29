@@ -30,6 +30,7 @@ $script:functionToExport = @(
         "Invoke-ValentiaUploadList", 
 
     # Helper
+
         # Certificate
         "Convert-ValentiaDecryptPassword",
         "Convert-ValentiaEncryptPassword",
@@ -51,6 +52,7 @@ $script:functionToExport = @(
 
         # Config
         "Edit-ValentiaConfig",
+        'Reset-ValentiaConfig',
         "Show-ValentiaConfig",
 
         # Credential
