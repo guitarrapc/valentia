@@ -147,6 +147,7 @@
     <Folder Include="functions\Helper\Log\Private\" />
     <Folder Include="functions\Helper\Add-Memeber\" />
     <Folder Include="functions\Helper\Add-Memeber\Private\" />
+    <Folder Include="functions\Helper\ACL\" />
     <Folder Include="functions\Helper\SymbolicLink\" />
     <Folder Include="functions\Helper\ScheduledTask\" />
     <Folder Include="functions\Helper\Prerequisites\" />
@@ -192,6 +193,9 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="functions\Helper\ACL\Test-ValentiaACL.ps1" />
+    <Content Include="functions\Helper\ACL\Set-ValentiaACL.ps1" />
+    <Content Include="functions\Helper\ACL\Get-ValentiaACL.ps1" />
     <Content Include="functions\Helper\Certificate\Convert-ValentiaDecryptPassword .ps1" />
     <Content Include="functions\Helper\Certificate\Convert-ValentiaEncryptPassword .ps1" />
     <Content Include="functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1" />
