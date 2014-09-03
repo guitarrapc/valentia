@@ -31,6 +31,11 @@ $script:functionToExport = @(
 
     # Helper
 
+        # ACL
+        "Get-ValentiaACL",
+        "Set-ValentiaACL",
+        "Test-ValentiaACL",
+
         # Certificate
         "Convert-ValentiaDecryptPassword",
         "Convert-ValentiaEncryptPassword",
