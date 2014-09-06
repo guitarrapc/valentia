@@ -91,21 +91,21 @@ function Set-ValentiaScheduledTask
         [parameter(
             Mandatory = 1,
             Position  = 4)]
-        [datetime]
+        [datetime[]]
         $ScheduledAt,
 
         [parameter(
             Mandatory = 0,
             Position  = 5,
             parameterSetName = "ScheduledDuration")]
-        [TimeSpan]
+        [TimeSpan[]]
         $ScheduledTimeSpan,
 
         [parameter(
             Mandatory = 0,
             Position  = 6,
             parameterSetName = "ScheduledDuration")]
-        [TimeSpan]
+        [TimeSpan[]]
         $ScheduledDuration,
 
         [parameter(
@@ -166,15 +166,17 @@ function Set-ValentiaScheduledTask
 
         $trigger = if ($ScheduledTimeSpan)
         {
-            New-ScheduledTaskTrigger -At $ScheduledAt -RepetitionInterval $ScheduledTimeSpan -RepetitionDuration $ScheduledDuration -Once 
+            $ScheduledTimeSpanPair = New-valentiaZipPairs -first $ScheduledTimeSpan -Second $ScheduledDuration
+            $ScheduledAtPair = New-valentiaZipPairs -first $ScheduledAt -Second $ScheduledTimeSpanPair
+            $ScheduledAtPair | %{New-ScheduledTaskTrigger -At $_.Item1 -RepetitionInterval $_.Item2.Item1 -RepetitionDuration $_.Item2.Item2 -Once}
         }
         elseif ($Daily)
         {
-            New-ScheduledTaskTrigger -At $ScheduledAt -Daily
+            $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Daily}
         }
         elseif ($Once)
         {
-            New-ScheduledTaskTrigger -At $ScheduledAt -Once
+            $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Once}
         }
 
         $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden
