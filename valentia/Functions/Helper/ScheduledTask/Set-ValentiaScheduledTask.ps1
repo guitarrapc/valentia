@@ -184,22 +184,22 @@ function Set-ValentiaScheduledTask
         {
             if ($null -ne $Credential)
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -User $Credential.UserName -Password $Credential.GetNetworkCredential().Password -Force
+                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath -User $Credential.UserName -Password $Credential.GetNetworkCredential().Password -Force
             }
             else
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -User $Credential.UserName -Force
+                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath
             }
         }
         elseif (-not(Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath))
         {
             if ($null -ne $Credential)
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -User $Credential.UserName -Password $Credential.GetNetworkCredential().Password
+                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath -User $Credential.UserName -Password $Credential.GetNetworkCredential().Password
             }
             else
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -User $Credential.UserName
+                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath
             }
         }
         else
