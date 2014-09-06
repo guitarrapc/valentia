@@ -76,7 +76,7 @@ function Set-ValentiaSymbolicLink
     process
     {
         # Work as like LINQ Zip() method
-        $zip = New-ValentiaZipPairs -key $Path -value $SymbolicPath
+        $zip = New-ValentiaZipPairs -first $Path -second $SymbolicPath
         foreach ($x in $zip)
         {
             # reverse original key

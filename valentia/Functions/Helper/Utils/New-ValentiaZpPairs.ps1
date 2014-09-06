@@ -4,94 +4,73 @@ function New-ValentiaZipPairs
     param
     (
         [parameter(
-            Mandatory = 1,
+            Mandatory = 0,
             Position = 0,
+            ValueFromPipeline = 1,
             ValueFromPipelineByPropertyName = 1)]
-        $key,
+        [PSObject[]]
+        $first,
  
         [parameter(
-            Mandatory = 1,
+            Mandatory = 0,
             Position = 1,
             ValueFromPipelineByPropertyName = 1)]
-        $value
-     )
- 
-    begin
-    {
-        if ($null -eq $key)
-        {
-            throw "Key Null Reference Exception!!"
-        }
+        [PSObject[]]
+        $second,
 
-        if ($null -eq $value)
-        {
-            throw "Value Null Reference Exception!!"
-        }
+        [parameter(
+            Mandatory = 0,
+            Position = 2,
+            ValueFromPipelineByPropertyName = 1)]
+        [scriptBlock]
+        $resultSelector
+    )
 
-        function ToListEx ($InputArray, $type)
-        {
-            $list = New-Object "System.Collections.Generic.List[$type]"
-            @($InputArray) | where {$_.GetType().FullName -eq $type} | %{$list.Add($_)}
-            return $list
-        }
-
-        function GetType ($Object)
-        {
-            @($Object) | select -First 1 | %{$_.GetType().FullName}
-        }
-    }
- 
     process
     {
-        # Get Type
-        $keyType = GetType -Object $key
-        $valueType = GetType -Object $value
+        if ([string]::IsNullOrWhiteSpace($first)){ break }        
+        if ([string]::IsNullOrWhiteSpace($second)){ break }
+        
+        try
+        {
+            $e1 = @($first).GetEnumerator()
 
-        # Create Typed container
-        $list = New-Object "System.Collections.Generic.List[System.Tuple[$keyType, $valueType]]"
-
-        # To Typed List
-        $keys = ToListEx -InputArray $key -type $keyType
-        $values = ToListEx -InputArray $value -type $valueType
- 
-        # Element Count Check
-        $keyElementsCount = ($keys | measure).count
-        $valueElementsCount = ($values | measure).count
-        if ($valueElementsCount -eq 0)
-        {
-            # TagValue auto fill with "*" when Value is empty
-            $values = 1..$keyElementsCount | %{"*"}
-        }
- 
-        # Get shorter list
-        $length = if ($keyElementsCount -le $valueElementsCount)
-        {
-            $keyElementsCount
-        }
-        else
-        {
-            $valueElementsCount
-        }
- 
-        # Make Element Pair
-        if ($length -eq 1)
-        {
-            $list.Add($(New-Object "System.Tuple[[$keyType],[$valueType]]" ($keys, $values)))
-        }
-        else
-        {
-            $i = 0
-            do
+            while ($e1.MoveNext() -and $e2.MoveNext())
             {
-                $list.Add($(New-Object "System.Tuple[[$keyType],[$valueType]]" ($keys[$i], $values[$i])))
-                $i++
+                if ($PSBoundParameters.ContainsKey('resultSelector'))
+                {
+                    $first = $e1.Current
+                    $second = $e2.Current
+                    $context = $resultselector.InvokeWithContext(
+                        $null,
+                        ($psvariable),
+                        {
+                            (New-Object System.Management.Automation.PSVariable ("first", $first)),
+                            (New-Object System.Management.Automation.PSVariable ("second", $second))
+                        }
+                    )
+                    $context
+                }
+                else
+                {
+                    $tuple = New-Object 'System.Tuple[PSObject, PSObject]' ($e1.Current, $e2.current)
+                    $tuple
+                }
             }
-            while ($i -lt $length)
+        }
+        finally
+        {
+            if(($d1 = $e1 -as [IDisposable]) -ne $null) { $d1.Dispose() }
+            if(($d2 = $e2 -as [IDisposable]) -ne $null) { $d2.Dispose() }
+            if(($d3 = $psvariable -as [IDisposable]) -ne $null) {$d3.Dispose() }
+            if(($d4 = $context -as [IDisposable]) -ne $null) {$d4.Dispose() }
+            if(($d5 = $tuple -as [IDisposable]) -ne $null) {$d5.Dispose() }
         }
     }
- 
-    end
+
+    begin
     {
-        return $list
+        $e2 = @($second).GetEnumerator()
+        $psvariable = New-Object 'System.Collections.Generic.List[PSVariable]]'
     }
 }
