@@ -129,7 +129,7 @@ function Set-ValentiaScheduledTask
         $Description,
 
         [parameter(
-            Mandatory = 1,
+            Mandatory = 0,
             Position  = 10)]
         [PScredential]
         $Credential = $null,
