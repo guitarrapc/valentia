@@ -71,6 +71,6 @@ function New-ValentiaZipPairs
     begin
     {
         $e2 = @($second).GetEnumerator()
-        $psvariable = New-Object 'System.Collections.Generic.List[PSVariable]]'
+        $psvariable = New-Object 'System.Collections.Generic.List[System.Management.Automation.psvariable]'
     }
 }
