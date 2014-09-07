@@ -23,6 +23,10 @@ replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 then replace file
 Invoke-valentiaDeployGroupUnremark -unremarkIPAddresses 10.0.0.10,10.0.0.11 -Verbose
 --------------------------------------------
 replace #10.0.0.10 and #10.0.0.11 with 10.0.0.10 and 10.0.0.11 (like sed -f "s/^#10.0.0.10$/10.0.0.10")
+
+Invoke-valentiaDeployGroupUnremark -remarkIPAddresses 10.0.0.10,10.0.0.11 -Verbose -Recurse $false -Path d:\hoge
+--------------------------------------------
+Check d:\hoge folder without recursive. This means it only check path you desired.
 #>
 function Invoke-ValentiaDeployGroupUnremark
 {
@@ -35,32 +39,55 @@ function Invoke-ValentiaDeployGroupUnremark
             ValueFromPipeline = 1,
             ValueFromPipelineByPropertyName = 1)]
         [string[]]
+        [Alias("IPAddress", "HostName")]
         $unremarkIPAddresses,
 
         [parameter(
             position = 1,
+            mandatory = 0,
+            ValueFromPipelineByPropertyName = 1)]
+        [string]
+        $Path = (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+
+        [parameter(
+            position = 2,
+            mandatory = 0,
+            ValueFromPipelineByPropertyName = 1)]
+        [bool]
+        $Recurse = $true,
+
+        [parameter(
+            position = 3,
             mandatory = 0)]
         [switch]
         $overWrite,
 
         [parameter(
-            position = 2,
+            position = 4,
             mandatory = 0)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $valentia.fileEncode
     )
 
-    Get-ChildItem -Path (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)) -Recurse `
-    | where {-not $_.PSISContainer } `
-    | %{foreach ($unremarkIPAddress in $unremarkIPAddresses)
-        {
-            if ($overWrite)
+    begin
+    {
+        if (-not (Test-Path $Path)){ throw New-Object System.IO.FileNotFoundException ("Path $Path not found Exception!!", "$Path")}
+    }
+
+    end
+    {
+        Get-ChildItem -Path $Path -Recurse:$Recurse -File `
+        | %{
+            foreach ($unremarkIPAddress in $unremarkIPAddresses)
             {
-                Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding -overWrite
-            }
-            else
-            {
-                Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding
+                if ($overWrite)
+                {
+                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding -overWrite
+                }
+                else
+                {
+                    Invoke-ValentiaSed -path $_.FullName -searchPattern "^#$unremarkIPAddress$" -replaceWith "$unremarkIPAddress" -encoding $encoding
+                }
             }
         }
     }
