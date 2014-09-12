@@ -307,19 +307,12 @@ function Initialize-ValentiaEnvironment
                 New-ValentiaFolder
             
                 "Set Valentia credential in Windows Credential Manager." | Write-ValentiaVerboseDebug
-                if ($NoPassSave)
-                {
-                    "NoPassSave switch was enabled, skipping Create/Revise set password into Windows Credential Manager." | Write-ValentiaVerboseDebug
-                }
-                elseif ($null -eq $credential)
-                {
-                    "Credential was empty. Skipping Create/Revise set password into Windows Credential Manager." | Write-ValentiaVerboseDebug
-                }
-                else
-                {
-                    "Create Deploy user credential .pass" | Write-ValentiaVerboseDebug
-                    Set-ValentiaCredential -Credential $credential
-                }
+                # validation
+                if ($NoPassSave){ "NoPassSave switch was enabled, skipping Create/Revise set password into Windows Credential Manager." | Write-ValentiaVerboseDebug; return; }
+                if ($null -eq $credential){ "Credential was empty. Skipping Create/Revise set password into Windows Credential Manager." | Write-ValentiaVerboseDebug; return; }
+
+                "Create Deploy user credential .pass" | Write-ValentiaVerboseDebug
+                Set-ValentiaCredential -Credential $credential
             }
         }
 
