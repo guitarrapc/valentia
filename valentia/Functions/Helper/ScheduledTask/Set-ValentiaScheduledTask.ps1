@@ -62,6 +62,7 @@ foreach ($p in $param.GetEnumerator())
 
 function Set-ValentiaScheduledTask
 {
+    [CmdletBinding()]
     param
     (
         [parameter(
