@@ -180,6 +180,8 @@ function Set-ValentiaScheduledTask
             $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Once}
         }
 
+        if ($Description -eq ""){ $Description = "No Description"}
+
         $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden
         $scheduledTask = New-ScheduledTask -Description $Description -Action $action -Settings $settings -Trigger $trigger
 
