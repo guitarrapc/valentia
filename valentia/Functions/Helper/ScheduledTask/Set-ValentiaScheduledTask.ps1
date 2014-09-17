@@ -191,7 +191,7 @@ function Set-ValentiaScheduledTask
             }
             else
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath
+                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath -Force
             }
         }
         elseif (-not(Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath))
