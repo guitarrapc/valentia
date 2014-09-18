@@ -1,6 +1,6 @@
 ﻿#Requires -Version 3.0
 
-#-- Deploy Folder/File Module Functions --#
+#-- Scheduler Task Functions --#
 
 <#
 .SYNOPSIS 
@@ -69,93 +69,47 @@ function Set-ValentiaScheduledTask
     [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
-        [parameter(
-            Mandatory = 0,
-            Position  = 0)]
-        [string]
-        $execute,
+        [parameter(Mandatory = 0, Position  = 0)]
+        [string]$execute,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 1)]
-        [string]
-        $argument,
+        [parameter(Mandatory = 0, Position  = 1)]
+        [string]$argument,
     
-        [parameter(
-            Mandatory = 1,
-            Position  = 2)]
-        [string]
-        $taskName,
+        [parameter(Mandatory = 1, Position  = 2)]
+        [string]$taskName,
     
-        [parameter(
-            Mandatory = 0,
-            Position  = 3)]
-        [string]
-        $taskPath = "\",
+        [parameter(Mandatory = 0, Position  = 3)]
+        [string]$taskPath = "\",
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 4)]
-        [datetime[]]
-        $ScheduledAt,
+        [parameter(Mandatory = 0, Position  = 4)]
+        [datetime[]]$ScheduledAt,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 5,
-            parameterSetName = "ScheduledDuration")]
-        [TimeSpan[]]
-        $ScheduledTimeSpan = (New-TimeSpan -Hours 1),
+        [parameter(Mandatory = 0, Position  = 5, parameterSetName = "ScheduledDuration")]
+        [TimeSpan[]]$ScheduledTimeSpan = (New-TimeSpan -Hours 1),
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 6,
-            parameterSetName = "ScheduledDuration")]
-        [TimeSpan[]]
-        $ScheduledDuration = [TimeSpan]::MaxValue,
+        [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
+        [TimeSpan[]]$ScheduledDuration = [TimeSpan]::MaxValue,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 7,
-            parameterSetName = "Daily")]
-        [bool]
-        $Daily = $false,
+        [parameter(Mandatory = 0, Position  = 7, parameterSetName = "Daily")]
+        [bool]$Daily = $false,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 8,
-            parameterSetName = "Once")]
-        [bool]
-        $Once = $false,
+        [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Once")]
+        [bool]$Once = $false,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 9)]
-        [string]
-        $Description,
+        [parameter(Mandatory = 0, Position  = 9)]
+        [string]$Description,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 10)]
-        [PScredential]
-        $Credential = $null,
+        [parameter(Mandatory = 0, Position  = 10)]
+        [PScredential]$Credential = $null,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 11)]
-        [bool]
-        $Disable = $true,
+        [parameter(Mandatory = 0, Position  = 11)]
+        [bool]$Disable = $true,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 12)]
-        [bool]
-        $Hidden = $true,
+        [parameter(Mandatory = 0, Position  = 12)]
+        [bool]$Hidden = $true,
 
-        [parameter(
-            Mandatory = 0,
-            Position  = 13)]
-        [bool]
-        $Force = $false
+        [parameter(Mandatory = 0,　Position  = 13)]
+        [bool]$Force = $false
     )
 
     end
@@ -257,7 +211,8 @@ function Set-ValentiaScheduledTask
 
     begin
     {
-        $ErrorMessages = Data {
+        $ErrorMessages = Data 
+        {
             ConvertFrom-StringData -StringData @"
                 InvalidTrigger = "Invalid Operation detected, you can't set same or greater timespan for RepetitionInterval '{0}' than RepetitionDuration '{1}'."
                 ExecuteBrank = "Invalid Operation detected, Execute detected as blank. You must set executable string."

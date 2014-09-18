@@ -96,6 +96,8 @@ $script:functionToExport = @(
         "Show-ValentiaPromptForChoice",
 
         # ScheduledTask
+        'Disable-ValentiaScheduledTaskLogSetting',
+        'Enable-ValentiaScheduledTaskLogSetting',
         'Set-ValentiaScheduledTask',
 
         # Sed
