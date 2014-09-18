@@ -58,15 +58,19 @@ foreach ($p in $param.GetEnumerator())
 {
     Set-ValentiaScheduledTask @p -Credential $Credential
 }
+
+.LINK
+https://github.com/guitarrapc/valentia/wiki/TaskScheduler-Automation
+
 #>
 
 function Set-ValentiaScheduledTask
 {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
         [parameter(
-            Mandatory = 1,
+            Mandatory = 0,
             Position  = 0)]
         [string]
         $execute,
@@ -84,13 +88,13 @@ function Set-ValentiaScheduledTask
         $taskName,
     
         [parameter(
-            Mandatory = 1,
+            Mandatory = 0,
             Position  = 3)]
         [string]
-        $taskPath,
+        $taskPath = "\",
 
         [parameter(
-            Mandatory = 1,
+            Mandatory = 0,
             Position  = 4)]
         [datetime[]]
         $ScheduledAt,
@@ -100,28 +104,28 @@ function Set-ValentiaScheduledTask
             Position  = 5,
             parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]
-        $ScheduledTimeSpan,
+        $ScheduledTimeSpan = (New-TimeSpan -Hours 1),
 
         [parameter(
             Mandatory = 0,
             Position  = 6,
             parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]
-        $ScheduledDuration,
+        $ScheduledDuration = [TimeSpan]::MaxValue,
 
         [parameter(
             Mandatory = 0,
             Position  = 7,
             parameterSetName = "Daily")]
         [bool]
-        $Daily,
+        $Daily = $false,
 
         [parameter(
             Mandatory = 0,
             Position  = 8,
             parameterSetName = "Once")]
         [bool]
-        $Once,
+        $Once = $false,
 
         [parameter(
             Mandatory = 0,
@@ -154,66 +158,152 @@ function Set-ValentiaScheduledTask
         $Force = $false
     )
 
-    if (Test-Path $execute)
+    end
     {
-        $action = if ($argument -ne "")
-        {
-            New-ScheduledTaskAction -Execute $execute -Argument $Argument
-        }
-        else
-        {
-            New-ScheduledTaskAction -Execute $execute
+        # exist
+        $existingTaskParam = 
+        @{
+            TaskName = $taskName
+            TaskPath = $taskPath
         }
 
-        $trigger = if ($ScheduledTimeSpan)
+    #region Exclude Action Change : Only Disable / Enable Task
+
+        if (($Execute -eq "") -and ($null -ne (GetExistingTaskScheduler @existingTaskParam)))
         {
-            $ScheduledTimeSpanPair = New-valentiaZipPairs -first $ScheduledTimeSpan -Second $ScheduledDuration
-            $ScheduledAtPair = New-valentiaZipPairs -first $ScheduledAt -Second $ScheduledTimeSpanPair
-            $ScheduledAtPair | %{New-ScheduledTaskTrigger -At $_.Item1 -RepetitionInterval $_.Item2.Item1 -RepetitionDuration $_.Item2.Item2 -Once}
-        }
-        elseif ($Daily)
-        {
-            $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Daily}
-        }
-        elseif ($Once)
-        {
-            $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Once}
+            switch ($Disable)
+            {
+                $true {
+                    GetExistingTaskScheduler @existingTaskParam | Disable-ScheduledTask
+                    return;
+                }
+                $false {
+                    GetExistingTaskScheduler @existingTaskParam | Enable-ScheduledTask
+                    return;
+                }
+            }
         }
 
+    #endregion
+
+    #region Include Action Change
+
+        if ($execute -eq ""){ throw New-Object System.InvalidOperationException ($ErrorMessages.ExecuteBrank) }
+        
+        # Description
         if ($Description -eq ""){ $Description = "No Description"}
 
+        # Action
+        $actionParam = 
+        @{
+            argument = $argument
+            execute = $execute
+        }
+
+        # trigger
+        $triggerParam =
+        @{
+            ScheduledTimeSpan = $scheduledTimeSpan
+            ScheduledDuration = $scheduledDuration
+            ScheduledAt = $ScheduledAt
+            Daily = $Daily
+            Once = $Once
+        }
+
+        # Setup Task items
+        $action = CreateTaskSchedulerAction @actionParam
+        $trigger = CreateTaskSchedulerTrigger @triggerParam
         $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden
         $scheduledTask = New-ScheduledTask -Description $Description -Action $action -Settings $settings -Trigger $trigger
 
-        if ($force)
+        # Credential
+        $credentialParam = if($Credential -ne $null)
         {
-            if ($null -ne $Credential)
-            {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath -User $Credential.UserName -Password $Credential.GetNetworkCredential().Password -Force
-            }
-            else
-            {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath -Force
+            @{
+                User = $Credential.UserName
+                Password = $Credential.GetNetworkCredential().Password
             }
         }
-        elseif (-not(Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath))
+
+        # Register
+        $registerParam = 
+        @{
+            InputObject = $scheduledTask
+            TaskName = $taskName
+            TaskPath = $taskPath
+            Force = $Force
+        }
+
+        if ($force -or -not(GetExistingTaskScheduler @existingTaskParam))
         {
             if ($null -ne $Credential)
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath -User $Credential.UserName -Password $Credential.GetNetworkCredential().Password
+                Register-ScheduledTask @registerParam @credentialParam
+                return;
             }
             else
             {
-                Register-ScheduledTask -InputObject $scheduledTask -TaskName $taskName -TaskPath $taskPath
+                Register-ScheduledTask @registerParam
+                return;
             }
         }
         else
         {
-            Write-Warning ("'{0}' already exist on path '{1}'." -f $taskName, $taskPath)
+            Write-Warning ('"{0}" already exist on path "{1}". Please Set "-Force $true" to overwrite existing task.' -f $taskName, $taskPath)
         }
+
+    #endregion
     }
-    else
+
+    begin
     {
-        Write-Warning ("'{0}' not found." -f $execute)
+        $ErrorMessages = Data {
+            ConvertFrom-StringData -StringData @"
+                InvalidTrigger = "Invalid Operation detected, you can't set same or greater timespan for RepetitionInterval '{0}' than RepetitionDuration '{1}'."
+                ExecuteBrank = "Invalid Operation detected, Execute detected as blank. You must set executable string."
+"@
+        }
+
+        function GetExistingTaskScheduler ($TaskName, $TaskPath)
+        {
+            return Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath
+        }
+
+        function CreateTaskSchedulerAction ($argument, $execute)
+        {
+            $action = if ($argument -ne "")
+            {
+                New-ScheduledTaskAction -Execute $execute -Argument $Argument
+            }
+            else
+            {
+                New-ScheduledTaskAction -Execute $execute
+            }
+            return $action
+        }
+
+        function CreateTaskSchedulerTrigger ($ScheduledTimeSpan, $ScheduledDuration, $ScheduledAt, $Daily, $Once)
+        {
+
+            $trigger = if (($false -eq $Daily) -and ($false -eq $Once))
+            {
+                $ScheduledTimeSpanPair = New-ValentiaZipPairs -first $ScheduledTimeSpan -Second $ScheduledDuration
+                $ScheduledAtPair = New-ValentiaZipPairs -first $ScheduledAt -Second $ScheduledTimeSpanPair
+                $ScheduledAtPair `
+                | %{
+                    if ($_.Item2.Item1 -ge $_.Item2.Item2){ throw New-Object System.InvalidOperationException ($ErrorMessages.InvalidTrigger -f $_.Item2.Item1, $_.Item2.Item2)}
+                    New-ScheduledTaskTrigger -At $_.Item1 -RepetitionInterval $_.Item2.Item1 -RepetitionDuration $_.Item2.Item2 -Once
+                }
+            }
+            elseif ($Daily)
+            {
+                $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Daily}
+            }
+            elseif ($Once)
+            {
+                $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Once}
+            }
+            return $trigger
+        }
     }
 }
