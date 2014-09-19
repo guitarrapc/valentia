@@ -67,6 +67,8 @@
     <Compile Include="Functions\Helper\Add-Memeber\Private\Add-ValentiaTypeMemberDefinition.ps1" />
     <Compile Include="Functions\Helper\Credential\Get-ValentiaCredential.ps1" />
     <Compile Include="Functions\Helper\Credential\Set-ValentiaCredential.ps1" />
+    <Compile Include="Functions\Helper\ScheduledTask\Disable-ValentiaScheduledTaskLogSetting.ps1" />
+    <Compile Include="Functions\Helper\ScheduledTask\Enable-ValentiaScheduledTaskLogSetting.ps1" />
     <Compile Include="Functions\Helper\Task\Get-ValentiaTask.ps1" />
     <Compile Include="Functions\Helper\Task\ConvertTo-ValentiaTask.ps1" />
     <Compile Include="Functions\Helper\IE\Private\Disable-ValentiaEnhancedIESecutiry.ps1" />
@@ -243,7 +245,7 @@
     <Content Include="Tools\install.ps1" />
     <Content Include="Tools\New-valentiaManufest.ps1" />
     <Content Include="Tools\RemoteInstall.ps1" />
-    <Content Include="Type\valentia.psm1" />
+    <Content Include="Type\Type.ps1" />
     <Content Include="valentia.psd1" />
     <Content Include="valentia.psm1" />
   </ItemGroup>
