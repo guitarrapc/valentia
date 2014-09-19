@@ -25,39 +25,6 @@ Write-Verbose 'Loading valentia.psm1'
 # THE SOFTWARE.
 
 
-#-- Public Class load for Asynchronous execution (MultiThread) --#
-
-Add-Type @'
-public class AsyncPipeline
-{
-    public System.Management.Automation.PowerShell Pipeline ;
-    public System.IAsyncResult AsyncResult ;
-}
-'@
-
-#-- PublicEnum for CredRead/Write Type --#
-Add-Type -TypeDefinition @"
-    public enum WindowsCredentialManagerType
-    {
-        Generic           = 1,
-        DomainPassword    = 2,
-        DomainCertificate = 3
-    }
-"@
-
-#-- PublicEnum for Location Type --#
-Add-Type -TypeDefinition @"
-    public enum ValentiaBranchPath
-    {
-        Application       = 1,
-        Deploygroup       = 2,
-        Download          = 3,
-        Maintenance       = 4,
-        Upload            = 5,
-        Utils             = 6
-    }
-"@
-
 #-- Public Loading Module Custom Configuration Functions --#
 
 function Import-ValentiaConfiguration
@@ -157,6 +124,33 @@ function Import-ValentiaModules
     }
 }
 
+function CombineMultipleFileToSingle ([string]$InputRootPath, [string]$OutputPath, $Encoding)
+{
+    try
+    {
+        $sb = New-Object System.Text.StringBuilder
+        $sw = New-Object System.IO.StreamWriter ($OutputPath, $false, [System.Text.Encoding]::$Encoding)
+
+        # Read All functions
+        Get-ChildItem $InputRootPath -Recurse -File `
+        | Where-Object { -not ($_.FullName.Contains('.Tests.')) } `
+        | Where-Object Extension -eq '.ps1' `
+        | ForEach-Object {
+            $sb.Append((Get-Content -Path $_.FullName -Raw -Encoding utf8)) > $null
+            $sb.AppendLine() > $null
+        }
+    
+        # Output into single file
+        $sw.Write($sb.ToString());
+    }
+    finally
+    {
+        # Dispose and release file handler
+        $sb = $null
+        $sw.Dispose()
+    }
+}
+
 #-- Private Loading Module Parameters --#
 
 # Setup Messages to be loaded
@@ -240,14 +234,37 @@ ConvertFrom-StringData @'
 #-- Private Loading Module Parameters --#
 
 # contains default base configuration, may not be override without version update.
-$Script:valentia                        = [ordered]@{}
-$valentia.name                          = 'valentia'                                                             # contains the Name of Module
-$valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
-$valentia.helpersPath                   = '\functions\*'
-$valentia.cSharpPath                    = '\cs\'
-$valentia.supportWindows                = @(6,1,0,0)                                                             # higher than windows 7 or windows 2008 R2
-$valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
-$valentia.context                       = New-Object System.Collections.Stack                                    # holds onto the current state of all variables
+$Script:valentia              = [ordered]@{}
+$valentia.name                = 'valentia'                                                             # contains the Name of Module
+$valentia.modulePath          = Split-Path -parent $MyInvocation.MyCommand.Definition
+$valentia.helpersPath         = '\functions\*'
+$valentia.combineTempfunction = 'combine-functions-should-be-delete.ps1'
+$valentia.cSharpPath          = '\cs\'
+$valentia.typePath           = '\type'
+$valentia.supportWindows      = @(6,1,0,0)                                                             # higher than windows 7 or windows 2008 R2
+$valentia.fileEncode          = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
+$valentia.context             = New-Object System.Collections.Stack                                    # holds onto the current state of all variables
+
+# Load Type from C# Enum
+Write-Verbose 'Loading Module Types.'
+try
+{
+    # Remove Temp
+    $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
+    $InputRootPath = (Join-Path $valentia.modulePath $valentia.typePath)
+    if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
+
+    CombineMultipleFileToSingle -InputRootPath $InputRootPath -OutputPath $outputPath -Encoding UTF8
+}
+finally
+{
+    # Read File
+    if(Test-Path $outputPath)
+    {
+        . $outputPath
+        Remove-Item -Path $outputPath -Force
+    }
+}
 
 # contains valentia default configuration path
 $valentia.defaultconfiguration = New-Object psobject -property @{
@@ -468,15 +485,28 @@ New-Alias -Name DynamicParameter -Value New-ValentiaDynamicParamMulti
 New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 
 
-# -- Export Modules when loading this module -- #
-# grab functions from files
-
-Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
-| where { -not ($_.FullName.Contains('.Tests.')) } `
-| where Extension -eq '.ps1' `
-| % {. $_.FullName}
-
 #-- Loading Internal Function when loaded --#
+
+try
+{
+    # Remove Temp
+    $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
+    $InputRootPath = (Join-Path $valentia.modulePath $valentia.helpersPath)
+    if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
+
+    CombineMultipleFileToSingle -InputRootPath $InputRootPath -OutputPath $outputPath -Encoding UTF8
+}
+finally
+{
+    # Read File
+    if(Test-Path $outputPath)
+    {
+        . $outputPath
+        Remove-Item -Path $outputPath -Force
+    }
+}
+
+#-- Loading External Configuration --#
 
 Import-ValentiaModules
 Import-ValentiaConfiguration
