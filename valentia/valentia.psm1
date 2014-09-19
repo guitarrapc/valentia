@@ -33,20 +33,39 @@ function Import-ValentiaConfiguration
     [CmdletBinding()]
     param
     (
-        [string]$valentiaConfigFilePath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file)
+        [string]$OriginalConfigFilePath = (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file),
+        [string]$NewConfigFilePath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
     )
 
-    if (Test-Path $valentiaConfigFilePath -pathType Leaf) 
+    # Installation time will call here
+    if (Test-Path $OriginalConfigFilePath -pathType Leaf)
     {
         try 
         {        
             Write-Verbose $valeWarningMessages.warn_load_currentConfigurationOrDefault
             $config = Get-CurrentConfigurationOrDefault
-            . $valentiaConfigFilePath
+            . $OriginalConfigFilePath
+            return
         } 
         catch 
         {
-            throw ('Error Loading Configuration from {0}: ' -f $valentia.defaultconfiguration.file) + $_
+            throw ('Error Loading Configuration from {0}: ' -f $OriginalConfigFilePath) + $_
+        }
+    }
+
+    # Import time will call here
+    if (Test-Path $NewConfigFilePath -pathType Leaf) 
+    {
+        try 
+        {        
+            Write-Verbose $valeWarningMessages.warn_load_currentConfigurationOrDefault
+            $config = Get-CurrentConfigurationOrDefault
+            . $NewConfigFilePath
+            return
+        } 
+        catch 
+        {
+            throw ('Error Loading Configuration from {0}: ' -f $NewConfigFilePath) + $_
         }
     }
 }
@@ -67,34 +86,6 @@ function Get-CurrentConfigurationOrDefault
     {
         return $valentia.config_default
     }
-}
-
-function New-ValentiaConfigurationForNewContext
-{
-
-    [CmdletBinding()]
-    param
-    (
-        [string]$buildFileName
-    )
-
-    $previousConfig = Get-CurrentConfigurationOrDefault
-
-    $config = New-Object psobject -property @{
-        buildFileName  = $previousConfig.buildFileName;
-        framework      = $previousConfig.framework;
-        taskNameFormat = $previousConfig.taskNameFormat;
-        verboseError   = $previousConfig.verboseError;
-        modules        = $previousConfig.modules;
-    }
-
-    if ($buildFileName)
-    {
-        $config.buildFileName
-    }
-
-    return $config
-
 }
 
 function Import-ValentiaModules
@@ -264,12 +255,17 @@ finally
     }
 }
 
-# contains valentia default configuration path
-$valentia.defaultconfiguration = [PSCustomObject]@{
-    original = '\config\{0}-config.ps1' -f $valentia.name # original configuration file name (Will be delete after initial installation completed.)
-    dir      = Join-Path $env:APPDATA $valentia.name      # default configuration path
+# contains default configuration path
+$valentia.originalconfig = [ordered]@{
+    root     = Join-Path $valentia.modulePath '\config'
     file     = '{0}-config.ps1' -f $valentia.name         # default configuration file name to read
 }
+
+$valentia.appdataconfig = [ordered]@{
+    root     = Join-Path $env:APPDATA $valentia.name      # default configuration path
+    file     = '{0}-config.ps1' -f $valentia.name         # default configuration file name to read
+}
+$valentia.appdataconfig.backup = Join-Path $valentia.appdataconfig.root '\config'
 
 # contains PS Build-in Preference status
 $valentia.preference = [ordered]@{
@@ -416,8 +412,8 @@ $valentia.certificate = [PSCustomObject]@{
     ThumbPrint = "INPUT THUMBPRINT YOU WANT TO USE"
     CN         = "dsc"                                                                            # cer subject name you want to export from and import to
     FilePath   = @{
-        Cert = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                  # cer save location
-        PFX  = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.pfx"                  # pfx save location
+        Cert = Join-Path $valentia.originalconfig.root "\cert\{0}.cer"                  # cer save location
+        PFX  = Join-Path $valentia.originalconfig.root "\cert\{0}.pfx"                  # pfx save location
     }
     export = @{
         CertStoreLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from

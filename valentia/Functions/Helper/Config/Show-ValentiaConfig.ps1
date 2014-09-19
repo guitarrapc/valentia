@@ -14,7 +14,7 @@ function Show-ValentiaConfig
     param
     (
         [parameter(mandatory = 0, position = 0)]
-        [string]$configPath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file),
+        [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
 
         [parameter(mandatory = 0, position = 1)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = "default"
