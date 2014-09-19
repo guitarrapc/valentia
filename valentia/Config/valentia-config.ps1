@@ -66,8 +66,8 @@ $valentia.certificate = [PSCustomObject]@{
     ThumbPrint = "INPUT THUMBPRINT YOU WANT TO USE"
     CN         = "dsc"                                                                            # cer subject name you want to export from and import to
     FilePath   = @{
-        Cert = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                  # cer save location
-        PFX  = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.pfx"                  # pfx save location
+        Cert = Join-Path $valentia.appdataconfig.root "\cert\{0}.cer"                  # cer save location
+        PFX  = Join-Path $valentia.appdataconfig.root "\cert\{0}.pfx"                  # pfx save location
     }
     export = @{
         CertStoreLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from
