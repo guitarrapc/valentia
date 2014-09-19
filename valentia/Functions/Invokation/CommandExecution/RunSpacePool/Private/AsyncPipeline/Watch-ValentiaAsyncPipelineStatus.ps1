@@ -7,12 +7,8 @@ function Watch-ValentiaAsyncPipelineStatus
     [Cmdletbinding()]
     Param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
-        [System.Collections.Generic.List[AsyncPipeline]]
-        $AsyncPipelines
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
+        [System.Collections.Generic.List[AsyncPipeline]]$AsyncPipelines
     )
 
     process

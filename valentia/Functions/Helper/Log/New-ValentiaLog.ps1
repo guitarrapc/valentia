@@ -29,19 +29,11 @@ function New-ValentiaLog
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0, 
-            Mandatory = 0,
-            HelpMessage = "Path to LogFolder.")]
-        [string]
-        $LogFolder = $(Join-Path $valentia.Log.path (Get-Date).ToString("yyyyMMdd")),
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Path to LogFolder.")]
+        [string]$LogFolder = $(Join-Path $valentia.Log.path (Get-Date).ToString("yyyyMMdd")),
 
-        [Parameter(
-            Position = 1, 
-            Mandatory = 0,
-            HelpMessage = "Name of LogFile.")]
-        [string]
-        $LogFile = "$($valentia.Log.name)_$((Get-Date).ToString("yyyyMMdd_HHmmss"))$($valentia.Log.extension)"
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Name of LogFile.")]
+        [string]$LogFile = "$($valentia.Log.name)_$((Get-Date).ToString("yyyyMMdd_HHmmss"))$($valentia.Log.extension)"
     )
 
 

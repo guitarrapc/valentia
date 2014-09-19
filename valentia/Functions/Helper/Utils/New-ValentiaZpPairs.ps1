@@ -3,27 +3,14 @@ function New-ValentiaZipPairs
     [CmdletBinding()]
     param
     (
-        [parameter(
-            Mandatory = 0,
-            Position = 0,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [PSObject[]]
-        $first,
+        [parameter(Mandatory = 0, Position = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [PSObject[]]$first,
  
-        [parameter(
-            Mandatory = 0,
-            Position = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [PSObject[]]
-        $second,
+        [parameter(Mandatory = 0, Position = 1, ValueFromPipelineByPropertyName = 1)]
+        [PSObject[]]$second,
 
-        [parameter(
-            Mandatory = 0,
-            Position = 2,
-            ValueFromPipelineByPropertyName = 1)]
-        [scriptBlock]
-        $resultSelector
+        [parameter(Mandatory = 0, Position = 2, ValueFromPipelineByPropertyName = 1)]
+        [scriptBlock]$resultSelector
     )
 
     process

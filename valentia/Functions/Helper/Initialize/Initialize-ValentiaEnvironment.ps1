@@ -87,39 +87,28 @@ function Initialize-ValentiaEnvironment
     param
     (
         [parameter(ParameterSetName = "Server")]
-        [switch]
-        $Server = $true,
+        [switch]$Server = $true,
 
         [parameter(ParameterSetName = "Client")]
-        [switch]
-        $Client = $false,
+        [switch]$Client = $false,
 
-        [string]
-        $HostUsage = "",
+        [string]$HostUsage = "",
 
-        [PSCredential]
-        $Credential = $null,
+        [PSCredential]$Credential = $null,
 
-        [string]
-        $TrustedHosts = $valentia.wsman.TrustedHosts,
+        [string]$TrustedHosts = $valentia.wsman.TrustedHosts,
 
-        [switch]
-        $Force = $false,
+        [switch]$Force = $false,
 
-        [switch]
-        $NoOSUser = $false,
+        [switch]$NoOSUser = $false,
 
-        [switch]
-        $NoPassSave = $false,
+        [switch]$NoPassSave = $false,
 
-        [switch]
-        $NoReboot = $true,
+        [switch]$NoReboot = $true,
 
-        [switch]
-        $SkipEnablePSRemoting = $false,
+        [switch]$SkipEnablePSRemoting = $false,
 
-        [switch]
-        $CredSSP = $false
+        [switch]$CredSSP = $false
     )
 
     process

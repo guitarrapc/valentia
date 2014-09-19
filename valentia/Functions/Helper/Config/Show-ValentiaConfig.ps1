@@ -13,17 +13,11 @@ function Show-ValentiaConfig
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = 0,
-            position = 0)]
-        [string]
-        $configPath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file),
+        [parameter(mandatory = 0, position = 0)]
+        [string]$configPath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file),
 
-        [parameter(
-            mandatory = 0,
-            position = 1)]
-        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
-        $encoding = "default"
+        [parameter(mandatory = 0, position = 1)]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = "default"
     )
 
     if (Test-Path $configPath)

@@ -23,19 +23,11 @@ function Enable-ValentiaWsManTrustedHosts
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1,
-            HelpMessage = "Specify TrustedHosts to allow.")]
-        [string]
-        $TrustedHosts,
+        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Specify TrustedHosts to allow.")]
+        [string]$TrustedHosts,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Specify path to WSMan TrustedHosts.")]
-        [string]
-        $TrustedHostsPath = "WSman:localhost\client\TrustedHosts"
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Specify path to WSMan TrustedHosts.")]
+        [string]$TrustedHostsPath = "WSman:localhost\client\TrustedHosts"
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

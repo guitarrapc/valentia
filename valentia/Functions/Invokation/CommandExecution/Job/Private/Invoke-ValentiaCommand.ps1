@@ -31,53 +31,23 @@ function Invoke-ValentiaCommand
     [CmdletBinding(DefaultParameterSetName = "All")]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1,
-            ParameterSetName = "Default",
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1,
-            HelpMessage = "Input Session")]
-        [string[]]
-        $ComputerNames,
+        [Parameter(Position = 0, Mandatory = 1, ParameterSetName = "Default", ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input Session")]
+        [string[]]$ComputerNames,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 1,
-            ParameterSetName = "Default",
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1,
-            HelpMessage = "Input ScriptBlock. ex) Get-ChildItem, Get-NetAdaptor | where MTUSize -gt 1400")]
-        [ScriptBlock]
-        $ScriptToRun,
+        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "Default", ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input ScriptBlock. ex) Get-ChildItem, Get-NetAdaptor | where MTUSize -gt 1400")]
+        [ScriptBlock]$ScriptToRun,
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 1,
-            HelpMessage = "Input PSCredential for Remote Command execution.")]
-        [System.Management.Automation.PSCredential]
-        $Credential,
+        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input PSCredential for Remote Command execution.")]
+        [System.Management.Automation.PSCredential]$Credential,
 
-        [Parameter(
-            Position = 3, 
-            Mandatory = 0,
-            HelpMessage = "Input parameter pass into task's arg[0....x].")]
-        [hashtable]
-        $TaskParameter,
+        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [hashtable]$TaskParameter,
 
-        [Parameter(
-            Position = 4, 
-            Mandatory = 0,
-            HelpMessage = "Input Authentication for credential.")]
-        [System.Management.Automation.Runspaces.AuthenticationMechanism]
-        $Authentication,
+        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input Authentication for credential.")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [Parameter(
-            Position = 5, 
-            Mandatory = 0,
-            HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
-        [bool]
-        $SkipException
+        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [bool]$SkipException
     )
 
     process

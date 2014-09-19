@@ -85,13 +85,8 @@ function New-ValentiaDynamicParamMulti
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = 1,
-            position = 0,
-            valueFromPipeline = 1,
-            valueFromPipelineByPropertyName = 1)]
-        [hashtable[]]
-        $dynamicParams
+        [parameter(mandatory = 1, position = 0, valueFromPipeline = 1, valueFromPipelineByPropertyName = 1)]
+        [hashtable[]]$dynamicParams
     )
 
     begin

@@ -8,38 +8,22 @@ function Set-ValentiaInvokationPrerequisites
     param
     (
         [parameter(Mandatory = 1)]
-        [System.Diagnostics.Stopwatch]
-        $StopWatch,
+        [System.Diagnostics.Stopwatch]$StopWatch,
 
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string[]]
-        $DeployGroups,
+        [Parameter(Position = 0, Mandatory = 1)]
+        [string[]]$DeployGroups,
 
-        [Parameter(
-            Position = 1, 
-            Mandatory = 0)]
-        [string]
-        $TaskFileName,
+        [Parameter(Position = 1, Mandatory = 0)]
+        [string]$TaskFileName,
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 0)]
-        [ScriptBlock]
-        $ScriptBlock,
+        [Parameter(Position = 2, Mandatory = 0)]
+        [ScriptBlock]$ScriptBlock,
 
-        [Parameter(
-            Position = 3, 
-            Mandatory = 0)]
-        [string]
-        $DeployFolder,
+        [Parameter(Position = 3, Mandatory = 0)]
+        [string]$DeployFolder,
 
-        [Parameter(
-            Position = 4, 
-            Mandatory = 0)]
-        [string[]]
-        $TaskParameter
+        [Parameter(Position = 4, Mandatory = 0)]
+        [string[]]$TaskParameter
     )
     
     # clear previous result

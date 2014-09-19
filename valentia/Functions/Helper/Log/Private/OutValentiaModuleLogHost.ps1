@@ -8,88 +8,41 @@ filter OutValentiaModuleLogHost
     [CmdletBinding(DefaultParameterSetName = "message")]
     param
     (
-        [parameter(
-            mandatory = 0,
-            position  = 0,
-            valuefromPipeline,
-            ValuefromPipelineByPropertyName)]
-        [string]
-        $logmessage,
+        [parameter(mandatory = 0, position  = 0, valuefromPipeline = 1, ValuefromPipelineByPropertyName = 1)]
+        [string]$logmessage,
 
-        [parameter(
-            mandatory = 0,
-            position  = 1)]
-        [string]
-        $logfile = $valentia.log.fullpath,
+        [parameter(mandatory = 0, position  = 1)]
+        [string]$logfile = $valentia.log.fullpath,
 
-        [parameter(
-            mandatory = 0,
-            position  = 2)]
-        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
-        $encoding = $valentia.fileEncode,
+        [parameter(mandatory = 0, position  = 2)]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "message")]
-        [switch]
-        $message,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "message")]
+        [switch]$message,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "showdata")]
-        [switch]
-        $showdata,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "showdata")]
+        [switch]$showdata,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "hidedata")]
-        [switch]
-        $hidedata,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "hidedata")]
+        [switch]$hidedata,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "hidedataAsString")]
-        [switch]
-        $hidedataAsString,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "hidedataAsString")]
+        [switch]$hidedataAsString,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "warning")]
-        [switch]
-        $warning,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "warning")]
+        [switch]$warning,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "verbosing")]
-        [switch]
-        $verbosing,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "verbosing")]
+        [switch]$verbosing,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "error")]
-        [switch]
-        $error,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "error")]
+        [switch]$error,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "result")]
-        [switch]
-        $result,
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "result")]
+        [switch]$result,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3,
-            ParameterSetName = "resultAppend")]
-        [switch]
-        $resultAppend
+        [parameter(mandatory = 0, position  = 3, ParameterSetName = "resultAppend")]
+        [switch]$resultAppend
     )
 
     process

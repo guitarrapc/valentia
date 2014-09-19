@@ -9,28 +9,22 @@ function Out-ValentiaResult
     param
     (
         [parameter(Mandatory = 1)]
-        [System.Diagnostics.Stopwatch]
-        $StopWatch,
+        [System.Diagnostics.Stopwatch]$StopWatch,
 
         [parameter(Mandatory = 1)]
-        [string]
-        $Cmdlet,
+        [string]$Cmdlet,
 
         [parameter(Mandatory = 0)]
-        [string]
-        $TaskFileName = "",
+        [string]$TaskFileName = "",
 
         [parameter(Mandatory = 1)]
-        [string[]]
-        $DeployGroups,
+        [string[]]$DeployGroups,
 
         [parameter(Mandatory = 1)]
-        [bool]
-        $SkipException,
+        [bool]$SkipException,
 
         [parameter(Mandatory = 1)]
-        [bool]
-        $Quiet
+        [bool]$Quiet
     )
 
     # obtain Result

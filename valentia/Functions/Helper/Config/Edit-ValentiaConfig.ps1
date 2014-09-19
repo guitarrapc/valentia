@@ -13,17 +13,11 @@ function Edit-ValentiaConfig
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = 0,
-            position = 0)]
-        [string]
-        $configPath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file),
+        [parameter(mandatory = 0, position = 0)]
+        [string]$configPath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file),
 
-        [parameter(
-            mandatory = 0,
-            position = 1)]
-        [switch]
-        $NoProfile
+        [parameter(mandatory = 0, position = 1)]
+        [switch]$NoProfile
     )
 
     if (Test-Path $configPath)

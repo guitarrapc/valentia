@@ -24,19 +24,11 @@ function Disable-ValentiaEnhancedIESecutiry
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Registry key for Admin.")]
-        [string]
-        $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}",
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Registry key for Admin.")]
+        [string]$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}",
     
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Registry key for User.")]
-        [string]
-        $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Registry key for User.")]
+        [string]$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

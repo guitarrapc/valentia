@@ -26,38 +26,31 @@ function Set-ValentiaACL
     (
         [Parameter(Mandatory = 1, position = 0)]
         [ValidateNotNullOrEmpty()]
-        [String]
-        $Path,
+        [String]$Path,
 
         [Parameter(Mandatory = 1, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [String]
-        $Account,
+        [String]$Account,
 
         [Parameter(Mandatory = 0, position = 2)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.AccessControl.FileSystemRights]
-        $Rights = "ReadAndExecute",
+        [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
 
         [Parameter(Mandatory = 0, position = 3)]
         [ValidateSet("Present", "Absent")]
         [ValidateNotNullOrEmpty()]
-        [String]
-        $Ensure = "Present",
+        [String]$Ensure = "Present",
         
         [Parameter(Mandatory = 0, position = 4)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Allow", "Deny")]
-        [System.Security.AccessControl.AccessControlType]
-        $Access = "Allow",
+        [System.Security.AccessControl.AccessControlType]$Access = "Allow",
 
         [Parameter(Mandatory = 0, position = 5)]
-        [Bool]
-        $Inherit = $false,
+        [Bool]$Inherit = $false,
 
         [Parameter(Mandatory = 0, position = 6)]
-        [Bool]
-        $Recurse = $false
+        [Bool]$Recurse = $false
     )
 
     $InheritFlag = if ($Inherit)

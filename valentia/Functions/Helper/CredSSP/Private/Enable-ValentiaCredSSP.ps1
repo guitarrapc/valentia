@@ -7,12 +7,9 @@ function Enable-ValentiaCredSSP
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0)]
+        [Parameter(Position = 0, Mandatory = 0)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $TrustedHosts = $valentia.wsman.TrustedHosts
+        [string]$TrustedHosts = $valentia.wsman.TrustedHosts
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

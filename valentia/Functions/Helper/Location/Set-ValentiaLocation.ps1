@@ -30,12 +30,8 @@ function Set-ValentiaLocation
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Select branch deploy folder to change directory.")]
-        [ValentiaBranchPath]
-        $BranchPath
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Select branch deploy folder to change directory.")]
+        [ValentiaBranchPath]$BranchPath
     )
 
     begin

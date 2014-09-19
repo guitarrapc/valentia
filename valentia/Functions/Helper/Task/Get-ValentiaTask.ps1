@@ -30,19 +30,11 @@ function Get-ValentiaTask
     [CmdletBinding()]  
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1,
-            HelpMessage = "Input TaskName you want to set and not dupricated.")]
-        [string]
-        $Name = $null,
+        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input TaskName you want to set and not dupricated.")]
+        [string]$Name = $null,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Write ScriptBlock Action to execute with this task.")]
-        [scriptblock]
-        $Action = $null
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Write ScriptBlock Action to execute with this task.")]
+        [scriptblock]$Action = $null
     )
 
     # Load Task

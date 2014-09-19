@@ -25,39 +25,6 @@ Write-Verbose 'Loading valentia.psm1'
 # THE SOFTWARE.
 
 
-#-- Public Class load for Asynchronous execution (MultiThread) --#
-
-Add-Type @'
-public class AsyncPipeline
-{
-    public System.Management.Automation.PowerShell Pipeline ;
-    public System.IAsyncResult AsyncResult ;
-}
-'@
-
-#-- PublicEnum for CredRead/Write Type --#
-Add-Type -TypeDefinition @"
-    public enum WindowsCredentialManagerType
-    {
-        Generic           = 1,
-        DomainPassword    = 2,
-        DomainCertificate = 3
-    }
-"@
-
-#-- PublicEnum for Location Type --#
-Add-Type -TypeDefinition @"
-    public enum ValentiaBranchPath
-    {
-        Application       = 1,
-        Deploygroup       = 2,
-        Download          = 3,
-        Maintenance       = 4,
-        Upload            = 5,
-        Utils             = 6
-    }
-"@
-
 #-- Public Loading Module Custom Configuration Functions --#
 
 function Import-ValentiaConfiguration
@@ -66,8 +33,7 @@ function Import-ValentiaConfiguration
     [CmdletBinding()]
     param
     (
-        [string]
-        $valentiaConfigFilePath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file)
+        [string]$valentiaConfigFilePath = (Join-Path $valentia.defaultconfiguration.dir $valentia.defaultconfiguration.file)
     )
 
     if (Test-Path $valentiaConfigFilePath -pathType Leaf) 
@@ -109,8 +75,7 @@ function New-ValentiaConfigurationForNewContext
     [CmdletBinding()]
     param
     (
-        [string]
-        $buildFileName
+        [string]$buildFileName
     )
 
     $previousConfig = Get-CurrentConfigurationOrDefault
@@ -154,6 +119,33 @@ function Import-ValentiaModules
             }
         }
         '' # blank line for next entry
+    }
+}
+
+function CombineMultipleFileToSingle ([string]$InputRootPath, [string]$OutputPath, $Encoding)
+{
+    try
+    {
+        $sb = New-Object System.Text.StringBuilder
+        $sw = New-Object System.IO.StreamWriter ($OutputPath, $false, [System.Text.Encoding]::$Encoding)
+
+        # Read All functions
+        Get-ChildItem $InputRootPath -Recurse -File `
+        | Where-Object { -not ($_.FullName.Contains('.Tests.')) } `
+        | Where-Object Extension -eq '.ps1' `
+        | ForEach-Object {
+            $sb.Append((Get-Content -Path $_.FullName -Raw -Encoding utf8)) > $null
+            $sb.AppendLine() > $null
+        }
+    
+        # Output into single file
+        $sw.Write($sb.ToString());
+    }
+    finally
+    {
+        # Dispose and release file handler
+        $sb = $null
+        $sw.Dispose()
     }
 }
 
@@ -240,24 +232,47 @@ ConvertFrom-StringData @'
 #-- Private Loading Module Parameters --#
 
 # contains default base configuration, may not be override without version update.
-$Script:valentia                        = [ordered]@{}
-$valentia.name                          = 'valentia'                                                             # contains the Name of Module
-$valentia.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
-$valentia.helpersPath                   = '\functions\*'
-$valentia.cSharpPath                    = '\cs\'
-$valentia.supportWindows                = @(6,1,0,0)                                                             # higher than windows 7 or windows 2008 R2
-$valentia.fileEncode                    = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
-$valentia.context                       = New-Object System.Collections.Stack                                    # holds onto the current state of all variables
+$Script:valentia              = [ordered]@{}
+$valentia.name                = 'valentia'                                                             # contains the Name of Module
+$valentia.modulePath          = Split-Path -parent $MyInvocation.MyCommand.Definition
+$valentia.helpersPath         = '\functions\*'
+$valentia.combineTempfunction = 'combine-functions-should-be-delete.ps1'
+$valentia.cSharpPath          = '\cs\'
+$valentia.typePath            = '\type'
+$valentia.supportWindows      = @(6,1,0,0)                                                             # higher than windows 7 or windows 2008 R2
+$valentia.fileEncode          = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
+$valentia.context             = New-Object System.Collections.Stack                                    # holds onto the current state of all variables
+
+# Load Type from C# Enum
+Write-Verbose 'Loading Module Types.'
+try
+{
+    # Remove Temp
+    $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
+    $InputRootPath = (Join-Path $valentia.modulePath $valentia.typePath)
+    if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
+
+    CombineMultipleFileToSingle -InputRootPath $InputRootPath -OutputPath $outputPath -Encoding UTF8
+}
+finally
+{
+    # Read File
+    if(Test-Path $outputPath)
+    {
+        . $outputPath
+        Remove-Item -Path $outputPath -Force
+    }
+}
 
 # contains valentia default configuration path
-$valentia.defaultconfiguration = New-Object psobject -property @{
-    original  = '\config\{0}-config.ps1' -f $valentia.name # original configuration file name (Will be delete after initial installation completed.)
-    dir       = Join-Path $env:APPDATA $valentia.name      # default configuration path
-    file      = '{0}-config.ps1' -f $valentia.name         # default configuration file name to read
+$valentia.defaultconfiguration = [PSCustomObject]@{
+    original = '\config\{0}-config.ps1' -f $valentia.name # original configuration file name (Will be delete after initial installation completed.)
+    dir      = Join-Path $env:APPDATA $valentia.name      # default configuration path
+    file     = '{0}-config.ps1' -f $valentia.name         # default configuration file name to read
 }
 
 # contains PS Build-in Preference status
-$valentia.preference = @{
+$valentia.preference = [ordered]@{
     ErrorActionPreference = @{
         original = $ErrorActionPreference
         custom   = 'Stop'
@@ -277,60 +292,60 @@ $valentia.preference = @{
 }
 
 # contains WSman value to set by initialization
-$valentia.wsman = New-Object psobject -property @{
-    MaxShellsPerUser                    = 100; # default 25 change to 100                 : "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'"
-    MaxMemoryPerShellMB                 =   0; # default 1024 change to 0 means unlimited : "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue."
-    MaxProccessesPerShell               =   0; # default 100 change to 0 means unlimited  : "Configure WSMan MaxProccessesPerShell to improve performance"
-    TrustedHosts                        = "*";
+$valentia.wsman = [PSCustomObject]@{
+    MaxShellsPerUser      = 100; # default 25 change to 100                 : "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'"
+    MaxMemoryPerShellMB   =   0; # default 1024 change to 0 means unlimited : "Configure WSMan MaxMBPerUser to prevent huge memory consumption crach PowerShell issue."
+    MaxProccessesPerShell =   0; # default 100 change to 0 means unlimited  : "Configure WSMan MaxProccessesPerShell to improve performance"
+    TrustedHosts          = "*";
 }
 
 # contains CredSSP configuration
-$valentia.credssp = New-Object psobject -property @{
-    AllowFreshCredentialsWhenNTLMOnly       = @{
-        Key                                 = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly';
-        Value                               = ($valentia.wsman.TrustedHosts | %{"wsman/$_"}) -join ", ";
+$valentia.credssp = [PSCustomObject]@{
+    AllowFreshCredentialsWhenNTLMOnly = @{
+        Key   = 'registry::hklm\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly';
+        Value = ($valentia.wsman.TrustedHosts | %{"wsman/$_"}) -join ", ";
     }
 }
 
 # contains RunspacePoolExecution instance
-$valentia.runspace = New-Object psobject -property @{
+$valentia.runspace = [PSCustomObject]@{
     # contains wait Limit settings for Asynchronous cmdlet (Invoke-ValentiaAsync)
-    async            = @{
-        sleepMS                             = 10;
-        limitCount                          = 30000;
+    async = @{
+        sleepMS    = 10;
+        limitCount = 30000;
     }
     
     # contains instance of AsyncPipeline
     asyncPipeline    = [System.Collections.Generic.List[AsyncPipeline]];
     
     # contains RunSpace Pool Size for Asynchronous cmdlet (Invoke-ValentiaAsync)
-    pool             = @{
-        minSize                             = 1;
-        maxSize                             = ([int]$env:NUMBER_OF_PROCESSORS * 30);
-        instance                            = $null
+    pool = @{
+        minSize  = 1;
+        maxSize  = ([int]$env:NUMBER_OF_PROCESSORS * 30);
+        instance = $null
     }
 }
 
 # contains ping property
-$valentia.ping = New-Object psobject -property @{
-    timeout                             = 10;
-    buffer                              = 16;
-    pingOption                              = @{
-        ttl                                     = 64;
-        dontFragment                            = $false;
+$valentia.ping = [PSCustomObject]@{
+    timeout = 10;
+    buffer  = 16;
+    pingOption = @{
+        ttl          = 64;
+        dontFragment = $false;
     }
 }
 
 # Set Valentia prompt for choice messages
-$valentia.promptForChoice = New-Object psobject -property @{
-    title                               = 'Select item from prompt choices.';
-    questions                           = @('Yes', 'No');
-    defaultChoiceYes                    = 'y';
-    defaultChoiceNo                     = 'n';
-    helpMessage                         = "Enter '{0}' to select '{1}'."
-    message                             = 'Type alphabet you want to choose.';
-    additionalMessage                   = $null;
-    defaultIndex                        = 0;
+$valentia.promptForChoice = [PSCustomObject]@{
+    title             = 'Select item from prompt choices.';
+    questions         = @('Yes', 'No');
+    defaultChoiceYes  = 'y';
+    defaultChoiceNo   = 'n';
+    helpMessage       = "Enter '{0}' to select '{1}'."
+    message           = 'Type alphabet you want to choose.';
+    additionalMessage = $null;
+    defaultIndex      = 0;
 }
 
 #-- Public Loading Module Parameters (Recommend to use ($valentia.defaultconfigurationfile) for customization) --#
@@ -338,114 +353,112 @@ $valentia.promptForChoice = New-Object psobject -property @{
 # contains context for default.
 $valentia.context.push(
     @{
-        executedTasks                   = New-Object System.Collections.Stack;
-        callStack                       = New-Object System.Collections.Stack;
-        originalEnvPath                 = $env:Path;
-        originalDirectory               = Get-Location;
-        originalErrorActionPreference   = $valentia.preference.ErrorActionPreference.original;
-        errorActionPreference           = $valentia.preference.ErrorActionPreference.custom;
-        originalDebugPreference         = $valentia.preference.DebugPreference.original;
-        debugPreference                 = $valentia.preference.DebugPreference.custom;
-        originalProgressPreference      = $valentia.preference.ProgressPreference.original;
-        progressPreference              = $valentia.preference.ProgressPreference.custom;
-        name                            = $valentia.name;
-        modulePath                      = $valentia.modulePath;
-        helpersPath                     = Join-Path $valentia.modulePath $valentia.helpersPath;
-        supportWindows                  = $valentia.supportWindows;
-        fileEncode                      = $valentia.fileEncode;
-        tasks                           = @{};
-        includes                        = New-Object System.Collections.Queue;
-        Result                          = $valentia.Result;
+        executedTasks                 = New-Object System.Collections.Stack;
+        callStack                     = New-Object System.Collections.Stack;
+        originalEnvPath               = $env:Path;
+        originalDirectory             = Get-Location;
+        originalErrorActionPreference = $valentia.preference.ErrorActionPreference.original;
+        errorActionPreference         = $valentia.preference.ErrorActionPreference.custom;
+        originalDebugPreference       = $valentia.preference.DebugPreference.original;
+        debugPreference               = $valentia.preference.DebugPreference.custom;
+        originalProgressPreference    = $valentia.preference.ProgressPreference.original;
+        progressPreference            = $valentia.preference.ProgressPreference.custom;
+        name                          = $valentia.name;
+        modulePath                    = $valentia.modulePath;
+        helpersPath                   = Join-Path $valentia.modulePath $valentia.helpersPath;
+        supportWindows                = $valentia.supportWindows;
+        fileEncode                    = $valentia.fileEncode;
+        tasks                         = @{};
+        includes                      = New-Object System.Collections.Queue;
+        Result                        = $valentia.Result;
     }
 )
 
 # contains default OS user configuration
-$valentia.users = New-Object psobject -property @{
-    CurrentUser                         = $env:USERNAME;
-    deployUser                          = "deployment";
+$valentia.users = [PSCustomObject]@{
+    CurrentUser = $env:USERNAME;
+    deployUser = "deployment";
 }
-$valentia.group = New-Object psobject -property @{
-    name                                = "Administrators";
-    userFlag                            = "0X10040";         # #UserFlag for password (ex. infinity & No change Password)
+$valentia.group = [PSCustomObject]@{
+    name = "Administrators";
+    userFlag = "0X10040";         # #UserFlag for password (ex. infinity & No change Password)
 }
 
 # contains valentia execution policy for initial setup
-$valentia.ExecutionPolicy               = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
+$valentia.ExecutionPolicy = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
 
 # contains valentia remote invokation authentication mechanism
-$valentia.Authentication                = [System.Management.Automation.Runspaces.AuthenticationMechanism]::Negotiate
+$valentia.Authentication = [System.Management.Automation.Runspaces.AuthenticationMechanism]::Negotiate
 
 # contains valentia configuration Information
-$valentia.PSDrive                       = "V:";             # Set Valentia Mapping Drive with SMBMapping
-$valentia.deployextension               = ".ps1";           # contains default DeployGroup file extension
+$valentia.PSDrive = "V:";             # Set Valentia Mapping Drive with SMBMapping
+$valentia.deployextension = ".ps1";           # contains default DeployGroup file extension
 
 # Define Prefix for Deploy Client NetBIOS name
 $valentia.prefix = New-Object psobject -property @{
-    hostName                            = "web";
-    ipstring                            = "ip";
+    hostName = "web";
+    ipstring = "ip";
 }
 
 # contains default deployment Path configuration.
-$valentia.RootPath                      = "{0}\Deployment" -f $env:SystemDrive;
+$valentia.RootPath = "{0}\Deployment" -f $env:SystemDrive;
 
 # Set Valentia Log
-$valentia.log = New-Object psobject -property @{
-    path                                = "{0}\Logs\Deployment" -f $env:SystemDrive;
-    name                                = "deploy";
-    extension                           = ".log";
-    fullPath                            = "";
+$valentia.log = [PSCustomObject]@{
+    path      = "{0}\Logs\Deployment" -f $env:SystemDrive;
+    name      = "deploy";
+    extension = ".log";
+    fullPath  = "";
 }
 
 # contains certificate configuration
-$valentia.certificate = New-Object psobject -property @{
-    ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
-    CN                                  = "dsc"                                                                            # cer subject name you want to export from and import to
-    FilePath                            = @{
-        Cert                               = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                  # cer save location
-        PFX                                = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.pfx"                  # pfx save location
+$valentia.certificate = [PSCustomObject]@{
+    ThumbPrint = "INPUT THUMBPRINT YOU WANT TO USE"
+    CN         = "dsc"                                                                            # cer subject name you want to export from and import to
+    FilePath   = @{
+        Cert = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.cer"                  # cer save location
+        PFX  = Join-Path $valentia.defaultconfiguration.dir "\cert\{0}.pfx"                  # pfx save location
     }
-    export                              = @{
-        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name export from
-        CertType                            = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert        # export Type should be cert
-        PFXType                             = [System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx         # export Type should be pfx
+    export = @{
+        CertStoreLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location export from
+        CertStoreName     = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name export from
+        CertType          = [System.Security.Cryptography.X509Certificates.X509ContentType]::Cert        # export Type should be cert
+        PFXType           = [System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx         # export Type should be pfx
     }
-    import                              = @{
-        CertStoreLocation                   = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location import to
-        CertStoreName                       = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name import to
+    import = @{
+        CertStoreLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine  # cer Store Location import to
+        CertStoreName     = [System.Security.Cryptography.X509Certificates.StoreName]::My                # cer Store Name import to
     }
-    Encrypt                             = @{
-        CertPath                            = "Cert:\LocalMachine\My"
-        ThumbPrint                          = "INPUT THUMBPRINT YOU WANT TO USE"
+    Encrypt = @{
+        CertPath   = "Cert:\LocalMachine\My"
+        ThumbPrint = "INPUT THUMBPRINT YOU WANT TO USE"
     }
 }
 
 # Define External program path
-$valentia.fastcopy = New-Object psobject -property @{
-    folder                              = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
-    exe                                 = 'FastCopy.exe';
+$valentia.fastcopy = [PSCustomObject]@{
+    folder = '{0}\lib\FastCopy.2.0.11.0\bin' -f $env:ChocolateyInstall;
+    exe    = 'FastCopy.exe';
 }
 
 # contains default configuration, can be overriden in ($valentia.defaultconfigurationfile) in directory with valentia.psm1 or in directory with current task script
-$valentia.config_default                = New-Object PSObject -property ([ordered]@{
-    TaskFileName                        = 'default.ps1';
-    Result                              = $valentia.Result
-    TaskFileDir                         = [ValentiaBranchPath]::Application;
-    taskNameFormat                      = 'Executing {0}';
-    verboseError                        = $false;
-    modules                             = $null;
-    PSDrive                             = $valentia.PSDrive;
-    deployextension                     = $valentia.deployextension;
-    prefix                              = $valentia.prefix;
-    fastcopy                            = $valentia.fastcopy;
-    RootPath                            = $valentia.RootPath;
-    BranchFolder                        = [Enum]::GetNames([ValentiaBranchPath]);
-    log                                 = $valentia.log;
+$valentia.config_default = [PSCustomObject]([ordered]@{
+    TaskFileName   = 'default.ps1';
+    Result         = $valentia.Result
+    TaskFileDir    = [ValentiaBranchPath]::Application;
+    taskNameFormat = 'Executing {0}';
+    verboseError   = $false;
+    modules        = $null;
+    PSDrive        = $valentia.PSDrive;
+    deployextension= $valentia.deployextension;
+    prefix         = $valentia.prefix;
+    fastcopy       = $valentia.fastcopy;
+    RootPath       = $valentia.RootPath;
+    BranchFolder   = [Enum]::GetNames([ValentiaBranchPath]);
+    log            = $valentia.log;
 })
 
 #-- Set Alias for public valentia commands --#
-
-Write-Verbose 'Set Alias for valentia Cmdlets.'
 
 New-Alias -Name Task             -Value Get-ValentiaTask
 New-Alias -Name Valep            -Value Invoke-ValentiaParallel
@@ -468,15 +481,28 @@ New-Alias -Name DynamicParameter -Value New-ValentiaDynamicParamMulti
 New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 
 
-# -- Export Modules when loading this module -- #
-# grab functions from files
-
-Get-ChildItem (Join-Path $valentia.modulePath $valentia.helpersPath) -Recurse `
-| where { -not ($_.FullName.Contains('.Tests.')) } `
-| where Extension -eq '.ps1' `
-| % {. $_.FullName}
-
 #-- Loading Internal Function when loaded --#
+
+try
+{
+    # Remove Temp
+    $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
+    $InputRootPath = (Join-Path $valentia.modulePath $valentia.helpersPath)
+    if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
+
+    CombineMultipleFileToSingle -InputRootPath $InputRootPath -OutputPath $outputPath -Encoding UTF8
+}
+finally
+{
+    # Read File
+    if(Test-Path $outputPath)
+    {
+        . $outputPath
+        Remove-Item -Path $outputPath -Force
+    }
+}
+
+#-- Loading External Configuration --#
 
 Import-ValentiaModules
 Import-ValentiaConfiguration

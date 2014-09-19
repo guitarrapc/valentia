@@ -7,12 +7,9 @@ function Add-ValentiaCredSSPDelegateReg
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 1,
-            Mandatory = 0)]
+        [Parameter(Position = 1, Mandatory = 0)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
+        [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

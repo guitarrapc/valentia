@@ -21,12 +21,10 @@ function Push-ValentiaCurrentContextToTask
     param
     (
         [parameter(Mandatory = 0)]
-        [ScriptBlock]
-        $ScriptBlock,
+        [ScriptBlock]$ScriptBlock,
 
         [parameter(Mandatory = 0)]
-        [string]
-        $TaskFileName
+        [string]$TaskFileName
     )
 
     # Swtich ScriptBlock or ScriptFile was selected

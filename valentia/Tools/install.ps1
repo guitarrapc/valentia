@@ -6,20 +6,13 @@ function Main
     [CmdletBinding()]
     Param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0)]
-        [string]
-        $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
+        [Parameter(Position = 0, Mandatory = 0)]
+        [string]$modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0)]
-        [bool]
-        $reNew = $false,
+        [Parameter(Position = 1, Mandatory = 0)]
+        [bool]$reNew = $false,
 
-        [switch]
-        $force = $false
+        [switch]$force = $false
     )
 
     process
@@ -75,11 +68,8 @@ function Main
             [CmdletBinding()]
             param
             (
-                [Parameter(
-                    Position = 0,
-                    Mandatory = 1)]
-                [string]
-                $modulepath        
+                [Parameter(Position = 0, Mandatory = 1)]
+                [string]$modulepath        
             )
  
             Write-Verbose "Checking Module Home."
@@ -96,11 +86,8 @@ function Main
             [CmdletBinding()]
             param
             (
-                [Parameter(
-                    Position = 0,
-                    Mandatory = 1)]
-                [string]
-                $modulepath
+                [Parameter(Position = 0, Mandatory = 1)]
+                [string]$modulepath
             )
 
             if ((Get-OperatingSystemVersion) -ge 6.1)
@@ -116,11 +103,8 @@ function Main
             [CmdletBinding()]
             param
             (
-                [Parameter(
-                    Position = 0,
-                    Mandatory = 1)]
-                [string]
-                $path
+                [Parameter(Position = 0, Mandatory = 1)]
+                [string]$path
             )
 
             if (Test-Path $path)
@@ -144,11 +128,8 @@ function Main
             [CmdletBinding()]
             param
             (
-                [Parameter(
-                    Position = 0,
-                    Mandatory = 1)]
-                [string]
-                $path
+                [Parameter(Position = 0, Mandatory = 1)]
+                [string]$path
             )
 
             if (Test-Path $path)
@@ -162,19 +143,13 @@ function Main
             [CmdletBinding()]
             param
             (
-                [parameter(
-                    mandatory,
-                    position = 0)]
+                [parameter(mandatory, position = 0)]
                 [validateScript({Test-Path $_})]
-                [string]
-                $path,
+                [string]$path,
 
-                [parameter(
-                    mandatory,
-                    position = 1)]
+                [parameter(mandatory, position = 1)]
                 [validateScript({(Get-Item $_).PSIsContainer -eq $true})]
-                [string]
-                $destination
+                [string]$destination
             )
 
             if(Test-Path $path)
@@ -234,11 +209,8 @@ function Main
             [CmdletBinding()]
             param
             (
-                [parameter(
-                    mandatory,
-                    position = 0)]
-                [string]
-                $ModuleName
+                [parameter(mandatory = 1, position = 0)]
+                [string]$ModuleName
             )
 
             if(Get-Module -ListAvailable | where Name -eq $moduleName)
@@ -252,21 +224,14 @@ function Main
             [CmdletBinding()]
             param
             (
-                [parameter(
-                    mandatory,
-                    position = 0)]
+                [parameter(mandatory, position = 0)]
                 [validateScript({Test-Path $_})]
-                [string]
-                $defaultConfigPath,
+                [string]$defaultConfigPath,
 
-                [parameter(
-                    mandatory,
-                    position = 1)]
-                [string]
-                $ExportConfigDir,
+                [parameter(mandatory, position = 1)]
+                [string]$ExportConfigDir,
 
-                [switch]
-                $force
+                [switch]$force
             )
 
             if(Test-Path $defaultConfigPath)
@@ -301,12 +266,9 @@ function Main
             [CmdletBinding()]
             param
             (
-                [parameter(
-                    mandatory,
-                    position = 0)]
+                [parameter(mandatory, position = 0)]
                 [validateScript({Test-Path $_})]
-                [string]
-                $defaultConfigPath
+                [string]$defaultConfigPath
             )
 
             if(Test-Path $defaultConfigPath)

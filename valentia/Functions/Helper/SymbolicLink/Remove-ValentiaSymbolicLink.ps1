@@ -30,14 +30,9 @@ function Remove-ValentiaSymbolicLink
     [cmdletBinding()]
     param
     (
-        [parameter(
-            Mandatory = 1,
-            Position  = 0,
-            ValueFromPipeline =1,
-            ValueFromPipelineByPropertyName = 1)]
+        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('FullName')]
-        [String[]]
-        $Path
+        [String[]]$Path
     )
     
     process

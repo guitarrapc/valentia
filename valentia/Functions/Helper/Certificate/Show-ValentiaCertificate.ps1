@@ -7,54 +7,33 @@ function Show-ValentiaCertificate
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = 0,
-            position  = 0)]
+        [parameter(mandatory = 0, position  = 0)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $CN = $valentia.certificate.CN,
+        [string]$CN = $valentia.certificate.CN,
 
-        [parameter(
-            mandatory = 0,
-            position  = 1)]
+        [parameter(mandatory = 0,position  = 1)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.StoreLocation]
-        $certStoreLocationExport = $valentia.certificate.export.CertStoreLocation,
+        [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocationExport = $valentia.certificate.export.CertStoreLocation,
 
-        [parameter(
-            mandatory = 0,
-            position  = 2)]
+        [parameter(mandatory = 0, position  = 2)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.StoreName]
-        $certStoreNameExport = $valentia.certificate.export.CertStoreName,
+        [System.Security.Cryptography.X509Certificates.StoreName]$certStoreNameExport = $valentia.certificate.export.CertStoreName,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3)]
+        [parameter(mandatory = 0, position  = 3)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.StoreLocation]
-        $certStoreLocationImport = $valentia.certificate.import.CertStoreLocation,
+        [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocationImport = $valentia.certificate.import.CertStoreLocation,
 
-        [parameter(
-            mandatory = 0,
-            position  = 4)]
+        [parameter(mandatory = 0, position  = 4)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.StoreName]
-        $certStoreNameImport = $valentia.certificate.import.CertStoreName,
+        [System.Security.Cryptography.X509Certificates.StoreName]$certStoreNameImport = $valentia.certificate.import.CertStoreName,
 
-        [parameter(
-            mandatory = 0,
-            position  = 5)]
+        [parameter(mandatory = 0, position  = 5)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $CertFilePath = $valentia.certificate.FilePath.Cert,
+        [string]$CertFilePath = $valentia.certificate.FilePath.Cert,
 
-        [parameter(
-            mandatory = 0,
-            position  = 6)]
+        [parameter(mandatory = 0, position  = 6)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $PFXFilePath = $valentia.certificate.FilePath.PFX
+        [string]$PFXFilePath = $valentia.certificate.FilePath.PFX
     )
     
     "Obtain CERT from export CertStoreLocation." | Write-ValentiaVerboseDebug

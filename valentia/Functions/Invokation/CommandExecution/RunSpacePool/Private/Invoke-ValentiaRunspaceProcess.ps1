@@ -8,32 +8,25 @@ function Invoke-ValentiaRunspaceProcess
     param
     (
         [parameter(Mandatory = 0)]
-        [string[]]
-        $ComputerNames = $valentia.Result.DeployMembers,
+        [string[]]$ComputerNames = $valentia.Result.DeployMembers,
 
         [parameter(Mandatory = 0)]
-        [scriptBlock]
-        $ScriptToRun = $valentia.Result.ScriptTorun,
+        [scriptBlock]$ScriptToRun = $valentia.Result.ScriptTorun,
 
         [parameter(Mandatory = 1)]
-        [PSCredential]
-        $Credential,
+        [PSCredential]$Credential,
 
         [parameter(Mandatory = 0)]
-        [hashtable]
-        $TaskParameter,
+        [hashtable]$TaskParameter,
 
         [parameter(Mandatory = 1)]
-        [System.Management.Automation.Runspaces.AuthenticationMechanism]
-        $Authentication,
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
         [parameter(Mandatory = 1)]
-        [bool]
-        $SkipException,
+        [bool]$SkipException,
 
         [parameter(Mandatory = 0)]
-        [bool]
-        $quiet
+        [bool]$quiet
     )
 
     process

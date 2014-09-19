@@ -45,70 +45,32 @@ function Invoke-ValentiaUpload
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory,
-            HelpMessage = "Input Deploy Server SourcePath to be uploaded.")]
-        [string]
-        $SourcePath, 
+        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input Deploy Server SourcePath to be uploaded.")]
+        [string]$SourcePath, 
 
-        [Parameter(
-            Position = 1,
-            Mandatory,
-            HelpMessage = "Input Clinet DestinationPath to save upload items.")]
-        [String]
-        $DestinationPath = $null,
+        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input Clinet DestinationPath to save upload items.")]
+        [String]$DestinationPath = $null,
 
-        [Parameter(
-            Position = 2,
-            Mandatory,
-            HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
-        [string]
-        $DeployGroups,
+        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [string]$DeployGroups,
 
-        [Parameter(
-            position = 3,
-            Mandatory = 0,
-            ParameterSetName = "File",
-            HelpMessage = "Set this switch to execute command for File. exclusive with Directory Switch.")]
-        [switch]
-        $File = $null,
+        [Parameter(position = 3, Mandatory = 0, ParameterSetName = "File", HelpMessage = "Set this switch to execute command for File. exclusive with Directory Switch.")]
+        [switch]$File = $null,
 
-        [Parameter(
-            position = 3,
-            Mandatory = 0,
-            ParameterSetName = "Directory",
-            HelpMessage = "Set this switch to execute command for Directory. exclusive with File Switch.")]
-        [switch]
-        $Directory,
+        [Parameter(position = 3, Mandatory = 0, ParameterSetName = "Directory", HelpMessage = "Set this switch to execute command for Directory. exclusive with File Switch.")]
+        [switch]$Directory,
 
-        [Parameter(
-            Position = 4,
-            Mandatory = 0,
-            HelpMessage = "Set this switch to execute command as Async (Job).")]
-        [switch]
-        $Async = $false,
+        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Set this switch to execute command as Async (Job).")]
+        [switch]$Async = $false,
 
-        [Parameter(
-            Position = 5,
-            Mandatory = 0,
-            HelpMessage = "Input DeployGroup Folder path if changed from default.")]
-        [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(
-            Position = 6, 
-            Mandatory = 0,
-            HelpMessage = "Input PSCredential to use for wsman.")]
-        [PSCredential]
-        $Credential = (Get-ValentiaCredential),
+        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(
-            Position = 7,
-            Mandatory = 0,
-            HelpMessage = "Return success result even if there are error.")]
-        [bool]
-        $SkipException = $false
+        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [bool]$SkipException = $false
     )
 
     try
