@@ -7,35 +7,21 @@ function Export-ValentiaCertificate
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = 1,
-            position  = 0,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = 1, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]
-        $cert,
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$cert,
 
-        [parameter(
-            mandatory = 0,
-            position  = 1)]
+        [parameter(mandatory = 0, position  = 1)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $CN = $valentia.certificate.CN,
+        [string]$CN = $valentia.certificate.CN,
 
-        [parameter(
-            mandatory = 0,
-            position  = 2)]
+        [parameter(mandatory = 0, position  = 2)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $exportFilePath = $valentia.certificate.FilePath.Cert,
+        [string]$exportFilePath = $valentia.certificate.FilePath.Cert,
 
-        [parameter(
-            mandatory = 0,
-            position  = 3)]
+        [parameter(mandatory = 0, position  = 3)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.X509ContentType]
-        $certType = $valentia.certificate.export.CertType
+        [System.Security.Cryptography.X509Certificates.X509ContentType]$certType = $valentia.certificate.export.CertType
     )
     
     process

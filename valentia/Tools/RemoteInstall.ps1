@@ -102,21 +102,11 @@ function New-ZipExtract
     [CmdletBinding(DefaultParameterSetName="safe")]
     param
     (
-        [parameter(
-            mandatory,
-            position = 0,
-            valuefrompipeline,
-            valuefrompipelinebypropertyname)]
-        [string]
-        $source,
+        [parameter(mandatory, position = 0, valuefrompipeline, valuefrompipelinebypropertyname)]
+        [string]$source,
 
-        [parameter(
-            mandatory = 0,
-            position = 1,
-            valuefrompipeline,
-            valuefrompipelinebypropertyname)]
-        [string]
-        $destination
+        [parameter(mandatory = 0, position = 1, valuefrompipeline, valuefrompipelinebypropertyname)]
+        [string]$destination
     )
 
     begin

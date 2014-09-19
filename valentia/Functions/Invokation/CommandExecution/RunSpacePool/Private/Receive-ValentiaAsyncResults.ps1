@@ -26,26 +26,14 @@ function Receive-ValentiaAsyncResults
     [Cmdletbinding()]
     Param
     (
-        [Parameter(
-            Position=0,
-            Mandatory,
-            HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
-        [System.Collections.Generic.List[AsyncPipeline]]
-        $AsyncPipelines,
+        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
+        [System.Collections.Generic.List[AsyncPipeline]]$AsyncPipelines,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Hide execution progress.")]
-        [bool]
-        $quiet,
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Hide execution progress.")]
+        [bool]$quiet,
 
-        [Parameter(
-            Position = 2, 
-            Mandatory = 0,
-            HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
-        [bool]
-        $SkipException
+        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [bool]$SkipException
     )
     
     process

@@ -33,38 +33,20 @@ function Invoke-ValentiaDeployGroupUnremark
     [CmdletBinding()]
     param
     (
-        [parameter(
-            position = 0,
-            mandatory = 1,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [string[]]
+        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [Alias("IPAddress", "HostName")]
-        $unremarkIPAddresses,
+        [string[]]$unremarkIPAddresses,
 
-        [parameter(
-            position = 1,
-            mandatory = 0,
-            ValueFromPipelineByPropertyName = 1)]
-        [string]
-        $Path = (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+        [parameter(position = 1, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [string]$Path = (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [parameter(
-            position = 2,
-            mandatory = 0,
-            ValueFromPipelineByPropertyName = 1)]
-        [bool]
-        $Recurse = $true,
+        [parameter(position = 2, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [bool]$Recurse = $true,
 
-        [parameter(
-            position = 3,
-            mandatory = 0)]
-        [switch]
-        $overWrite,
+        [parameter(position = 3, mandatory = 0)]
+        [switch]$overWrite,
 
-        [parameter(
-            position = 4,
-            mandatory = 0)]
+        [parameter(position = 4, mandatory = 0)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $valentia.fileEncode
     )

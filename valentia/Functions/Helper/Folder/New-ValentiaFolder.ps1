@@ -23,35 +23,19 @@ function New-ValentiaFolder
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Root Folder path.")]
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Root Folder path.")]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $RootPath = $valentia.RootPath,
+        [string]$RootPath = $valentia.RootPath,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Branch Path path.")]
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Branch Path path.")]
         [ValidateNotNullOrEmpty()]
-        [ValentiaBranchPath[]]
-        $BranchPath = [Enum]::GetNames([ValentiaBranchPath]),
+        [ValentiaBranchPath[]]$BranchPath = [Enum]::GetNames([ValentiaBranchPath]),
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 0,
-            HelpMessage = "Log Folder path.")]
-        [ValidateNotNullOrEmpty()]
-        $LogFolder = $valentia.Log.path,
+        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Log Folder path.")]
+        [ValidateNotNullOrEmpty()]$LogFolder = $valentia.Log.path,
 
-        [Parameter(
-            Position = 3,
-            Mandatory = 0,
-            HelpMessage = "Suppress output directory create info.")]
-        [switch]
-        $Quiet
+        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Suppress output directory create info.")]
+        [switch]$Quiet
     )
 
     begin

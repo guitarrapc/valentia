@@ -30,39 +30,24 @@ function Show-ValentiaPromptForChoice
     param
     (
         # input prompt items with array. second index is for help message.
-        [parameter(
-            mandatory = 0,
-            position = 0)]
-        [string[]]
-        $questions = $valentia.promptForChoice.questions,
+        [parameter(mandatory = 0, position = 0)]
+        [string[]]$questions = $valentia.promptForChoice.questions,
 
         # input title message showing when prompt.
-        [parameter(
-            mandatory = 0,
-            position = 1)]
-        [string[]]
-        $title = $valentia.promptForChoice.title,
+        [parameter(mandatory = 0, position = 1)]
+        [string[]]$title = $valentia.promptForChoice.title,
                 
         # input message showing when prompt.
-        [parameter(
-            mandatory = 0,
-            position = 2)]
-        [string]
-        $message = $valentia.promptForChoice.message,
+        [parameter(mandatory = 0, position = 2)]
+        [string]$message = $valentia.promptForChoice.message,
 
         # input additional message showing under message.
-        [parameter(
-            mandatory = 0,
-            position = 3)]
-        [string]
-        $additionalMessage = $valentia.promptForChoice.additionalMessage,
+        [parameter(mandatory = 0, position = 3)]
+        [string]$additionalMessage = $valentia.promptForChoice.additionalMessage,
         
         # input Index default selected when prompt.
-        [parameter(
-            mandatory = 0,
-            position = 4)]
-        [int]
-        $defaultIndex = $valentia.promptForChoice.defaultIndex
+        [parameter(mandatory = 0, position = 4)]
+        [int]$defaultIndex = $valentia.promptForChoice.defaultIndex
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

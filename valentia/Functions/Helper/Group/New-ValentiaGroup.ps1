@@ -23,49 +23,23 @@ function New-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position  = 0,
-            Mandatory = 1,
-            HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.",
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [string[]]
-        $DeployClients,
+        [Parameter(Position  = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.")]
+        [string[]]$DeployClients,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 1,
-            HelpMessage = "Input filename to output DeployClients")]
-        [string]
-        $FileName,
+        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input filename to output DeployClients")]
+        [string]$FileName,
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 0,
-            HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
-        [string]
-        $DeployGroupsFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
+        [string]$DeployGroupsFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(
-            Position = 3,
-            Mandatory = 0,
-            HelpMessage = "If you want to add item to exist file.")]
-        [switch]
-        $Add,
+        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "If you want to add item to exist file.")]
+        [switch]$Add,
 
-        [Parameter(
-            Position = 4,
-            Mandatory = 0,
-            HelpMessage = "If you want to popup confirm message when file created.")]
-        [switch]
-        $Confirm,
+        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "If you want to popup confirm message when file created.")]
+        [switch]$Confirm,
 
-        [Parameter(
-            Position = 5,
-            Mandatory = 0,
-            HelpMessage = "If you want to Show file information when operation executed.")]
-        [switch]
-        $PassThru
+        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "If you want to Show file information when operation executed.")]
+        [switch]$PassThru
     )
 
     process

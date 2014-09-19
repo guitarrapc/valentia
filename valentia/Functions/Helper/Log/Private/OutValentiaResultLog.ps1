@@ -9,15 +9,12 @@ function OutValentiaResultLog
     param
     (
         [parameter(Mandatory = 1)]
-        [System.Collections.Specialized.OrderedDictionary]
-        $CommandResult,
+        [System.Collections.Specialized.OrderedDictionary]$CommandResult,
 
         [parameter(Mandatory = 0)]
-        [string]
-        $removeProperty = "Result",
+        [string]$removeProperty = "Result",
 
-        [bool]
-        $Append = $false
+        [bool]$Append = $false
     )
 
     try

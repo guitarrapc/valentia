@@ -28,47 +28,23 @@ function Invoke-ValentiaSed
     [CmdletBinding()]
     param
     (
-        [parameter(
-            position = 0,
-            mandatory,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [string]
-        $path,
+        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [string]$path,
 
-        [parameter(
-            position = 1,
-            mandatory,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [string]
-        $searchPattern,
+        [parameter(position = 1, mandatory = 1, ValueFromPipeline = 1,ValueFromPipelineByPropertyName = 1)]
+        [string]$searchPattern,
 
-        [parameter(
-            position = 2,
-            mandatory,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
-        [string]
-        $replaceWith,
+        [parameter(position = 2, mandatory = 1,ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [string]$replaceWith,
 
-        [parameter(
-            position = 3,
-            mandatory = 0)]
-        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
-        $encoding = $valentia.fileEncode,
+        [parameter(position = 3, mandatory = 0)]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
-        [parameter(
-            position = 4,
-            mandatory = 0)]
-        [switch]
-        $overWrite,
+        [parameter(position = 4, mandatory = 0)]
+        [switch]$overWrite,
 
-        [parameter(
-            position = 5,
-            mandatory = 0)]
-        [switch]
-        $compress
+        [parameter(position = 5, mandatory = 0)]
+        [switch]$compress
     )
 
     $read = Select-String -Path $path -Pattern $searchPattern -Encoding $encoding

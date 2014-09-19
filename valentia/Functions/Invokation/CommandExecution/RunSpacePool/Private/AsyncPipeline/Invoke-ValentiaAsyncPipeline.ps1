@@ -8,20 +8,16 @@ function Invoke-ValentiaAsyncPipeline
     param
     (
         [parameter(Mandatory = 0)]
-        [scriptBlock]
-        $ScriptBlock,
+        [scriptBlock]$ScriptBlock,
 
         [parameter(Mandatory = 1)]
-        [PSCredential]
-        $Credential,
+        [PSCredential]$Credential,
 
         [parameter(Mandatory = 0)]
-        [hashtable]
-        $TaskParameter,
+        [hashtable]$TaskParameter,
 
         [parameter(Mandatory = 1)]
-        [System.Management.Automation.Runspaces.AuthenticationMechanism]
-        $Authentication
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication
     )
 
     # Create RunSpacePools

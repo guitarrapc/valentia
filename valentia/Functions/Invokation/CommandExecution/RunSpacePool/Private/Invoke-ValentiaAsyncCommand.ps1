@@ -30,47 +30,23 @@ function Invoke-ValentiaAsyncCommand
     [Cmdletbinding()]
     Param
     (
-        [Parameter(
-            Position  = 0,
-            Mandatory = 1,
-            HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
-        [System.Management.Automation.Runspaces.RunspacePool]
-        $RunspacePool,
+        [Parameter(Position  = 0, Mandatory = 1, HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
+        [System.Management.Automation.Runspaces.RunspacePool]$RunspacePool,
         
-        [Parameter(
-            Position  = 1,
-            Mandatory = 1,
-            HelpMessage = "The scriptblock to be executed to the Remote host.")]
-        [HashTable]
-        $ScriptToRunHash,
+        [Parameter(Position  = 1, Mandatory = 1, HelpMessage = "The scriptblock to be executed to the Remote host.")]
+        [HashTable]$ScriptToRunHash,
         
-        [Parameter(
-            Position  = 2,
-            Mandatory = 1,
-            HelpMessage = "Target Computers to be execute.")]
-        [string[]]
-        $DeployMembers,
+        [Parameter(Position  = 2, Mandatory = 1, HelpMessage = "Target Computers to be execute.")]
+        [string[]]$DeployMembers,
         
-        [Parameter(
-            Position  = 3,
-            Mandatory = 1,
-            HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
-        [HashTable]
-        $CredentialHash,
+        [Parameter(Position  = 3, Mandatory = 1, HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
+        [HashTable]$CredentialHash,
 
-        [Parameter(
-            Position  = 4,
-            Mandatory = 1,
-            HelpMessage = "Input parameter pass into task's arg[0....x].")]
-        [HashTable]
-        $TaskParameterHash,
+        [Parameter(Position  = 4, Mandatory = 1, HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [HashTable]$TaskParameterHash,
 
-        [Parameter(
-            Position  = 5,
-            Mandatory = 1,
-            HelpMessage = "Input Authentication for credential.")]
-        [HashTable]
-        $AuthenticationHash
+        [Parameter(Position  = 5, Mandatory = 1, HelpMessage = "Input Authentication for credential.")]
+        [HashTable]$AuthenticationHash
     )
 
     end

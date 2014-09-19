@@ -7,29 +7,17 @@ function Set-ValetntiaWSManConfiguration
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
         [ValidateNotNullOrEmpty()]
-        [int]
-        $ShellsPerUser = $valentia.wsman.MaxShellsPerUser,
+        [int]$ShellsPerUser = $valentia.wsman.MaxShellsPerUser,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
         [ValidateNotNullOrEmpty()]
-        [int]
-        $MaxMemoryPerShellMB = $valentia.wsman.MaxMemoryPerShellMB,
+        [int]$MaxMemoryPerShellMB = $valentia.wsman.MaxMemoryPerShellMB,
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 0,
-            HelpMessage = "Configure WSMan MaxProccessesPerShell to improve performance")]
+        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Configure WSMan MaxProccessesPerShell to improve performance")]
         [ValidateNotNullOrEmpty()]
-        [int]
-        $MaxProccessesPerShell = $valentia.wsman.MaxProccessesPerShell
+        [int]$MaxProccessesPerShell = $valentia.wsman.MaxProccessesPerShell
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

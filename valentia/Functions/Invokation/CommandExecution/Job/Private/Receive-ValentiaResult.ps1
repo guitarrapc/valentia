@@ -21,21 +21,11 @@ function Receive-ValentiaResult
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1,
-            HelpMessage = "Input list<job> to recieve result of each job.")]
-        [System.Collections.Generic.List[System.Management.Automation.Job]]
-        $listJob,
+        [Parameter(Position = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input list<job> to recieve result of each job.")]
+        [System.Collections.Generic.List[System.Management.Automation.Job]]$listJob,
 
-        [Parameter(
-            Position = 1, 
-            Mandatory = 0,
-            HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
-        [bool]
-        $SkipException
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [bool]$SkipException
     )
 
     process

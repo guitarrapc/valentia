@@ -5,30 +5,18 @@ function Add-ValentiaTypeMemberDefinition
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            mandatory = 1,
-            position = 0)]
-        [string]
-        $MemberDefinition,
+        [Parameter(mandatory = 1, position = 0)]
+        [string]$MemberDefinition,
 
-        [Parameter(
-            mandatory = 1,
-            position = 1)]
-        [string]
-        $NameSpace,
+        [Parameter(mandatory = 1, position = 1)]
+        [string]$NameSpace,
 
-        [Parameter(
-            mandatory = 0,
-            position = 2)]
+        [Parameter(mandatory = 0, position = 2)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $Name,
+        [string]$Name,
 
-        [Parameter(
-            mandatory = 0,
-            position = 3)]
-        [switch]
-        $PassThru
+        [Parameter(mandatory = 0, position = 3)]
+        [switch]$PassThru
     )
 
     $private:guid = [Guid]::NewGuid().ToString().Replace("-", "_")

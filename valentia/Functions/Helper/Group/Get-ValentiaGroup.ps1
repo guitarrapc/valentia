@@ -30,22 +30,12 @@ function Get-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
-        [string[]]
-        $DeployGroups,
+        [Parameter(Position = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [string[]]$DeployGroups,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup))
+        [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup))
     )
 
     process

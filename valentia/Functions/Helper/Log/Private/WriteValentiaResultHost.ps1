@@ -9,12 +9,10 @@ function WriteValentiaResultHost
     param
     (
         [parameter(Mandatory = 1)]
-        [bool]
-        $quiet,
+        [bool]$quiet,
 
         [parameter(Mandatory = 1)]
-        [System.Collections.Specialized.OrderedDictionary]
-        $CommandResult
+        [System.Collections.Specialized.OrderedDictionary]$CommandResult
     )
 
     if (-not $quiet)

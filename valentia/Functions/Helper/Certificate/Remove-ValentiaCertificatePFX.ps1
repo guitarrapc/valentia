@@ -7,27 +7,16 @@ function Remove-ValentiaCertificatePFX
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = 0,
-            position  = 0)]
+        [parameter(mandatory = 0, position  = 0)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $CN = $valentia.certificate.CN,
+        [string]$CN = $valentia.certificate.CN,
 
-        [parameter(
-            mandatory = 0,
-            position  = 1,
-            ValueFromPipeline = 1,
-            ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = 0, position  = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $PFXFilePath = $valentia.certificate.FilePath.PFX,
+        [string]$PFXFilePath = $valentia.certificate.FilePath.PFX,
 
-        [parameter(
-            mandatory = 0,
-            position  = 2)]
-        [switch]
-        $force = $false
+        [parameter(mandatory = 0, position  = 2)]
+        [switch]$force = $false
     )
     
     $param = @{

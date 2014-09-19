@@ -23,33 +23,17 @@ function New-ValentiaPSRemotingFirewallRule
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Input PowerShellRemoting-In port. default is 5985")]
-        [int]
-        $PSRemotePort = 5985,
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Input PowerShellRemoting-In port. default is 5985")]
+        [int]$PSRemotePort = 5985,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Input Name of Firewall rule for PowerShellRemoting-In.")]
-        [string]
-        $Name = "Windows Remote Management (HTTP-In)",
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input Name of Firewall rule for PowerShellRemoting-In.")]
+        [string]$Name = "Windows Remote Management (HTTP-In)",
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 0,
-            HelpMessage = "Input Decription of Firewall rule for PowerShellRemoting-In.")]
-        [string]
-        $Description = "Windows PowerShell Remoting required to open for public connection. not for private network.",
+        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input Decription of Firewall rule for PowerShellRemoting-In.")]
+        [string]$Description = "Windows PowerShell Remoting required to open for public connection. not for private network.",
 
-        [Parameter(
-            Position = 2,
-            Mandatory = 0,
-            HelpMessage = "Input Group of Firewall rule for PowerShellRemoting-In.")]
-        [string]
-        $Group = "Windows Remote Management"
+        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input Group of Firewall rule for PowerShellRemoting-In.")]
+        [string]$Group = "Windows Remote Management"
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

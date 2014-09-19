@@ -7,26 +7,17 @@ function Get-ValentiaCertificateFromCert
     [CmdletBinding()]
     param
     (       
-        [parameter(
-            mandatory = 0,
-            position  = 0)]
+        [parameter(mandatory = 0, position  = 0)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $CN = $valentia.certificate.CN,
+        [string]$CN = $valentia.certificate.CN,
 
-        [parameter(
-            mandatory = 0,
-            position  = 1)]
+        [parameter(mandatory = 0, position  = 1)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.StoreLocation]
-        $certStoreLocation = $valentia.certificate.export.CertStoreLocation,
+        [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocation = $valentia.certificate.export.CertStoreLocation,
 
-        [parameter(
-            mandatory = 0,
-            position  = 2)]
+        [parameter(mandatory = 0, position  = 2)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Cryptography.X509Certificates.StoreName]
-        $certStoreName = $valentia.certificate.export.CertStoreName
+        [System.Security.Cryptography.X509Certificates.StoreName]$certStoreName = $valentia.certificate.export.CertStoreName
     )
     
     "Obtain Cert from CertStoreLocation." | Write-ValentiaVerboseDebug

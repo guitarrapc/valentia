@@ -24,19 +24,11 @@ function Set-ValentiaWsManMaxMemoryPerShellMB
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1,
-            HelpMessage = "Input MaxMemoryPerShellMB. 0 will be unlimited.")]
-        [int]
-        $MaxMemoryPerShellMB,
+        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input MaxMemoryPerShellMB. 0 will be unlimited.")]
+        [int]$MaxMemoryPerShellMB,
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0,
-            HelpMessage = "Set WSMan Path.")]
-        [string]
-        $MaxMemoryPerShellMBPath = "WSMan:\localhost\Shell\MaxMemoryPerShellMB"
+        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set WSMan Path.")]
+        [string]$MaxMemoryPerShellMBPath = "WSMan:\localhost\Shell\MaxMemoryPerShellMB"
     )
 
     $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

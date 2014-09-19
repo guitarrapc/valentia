@@ -21,12 +21,8 @@ function Remove-ValentiaRunSpacePool
     [Cmdletbinding()]
     Param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0,
-            HelpMessage = "Specify RunSpace Pool to close and dispose.")]
-        [System.Management.Automation.Runspaces.RunspacePool]
-        $Pool = $valentia.runspace.pool.instance
+        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Specify RunSpace Pool to close and dispose.")]
+        [System.Management.Automation.Runspaces.RunspacePool]$Pool = $valentia.runspace.pool.instance
     )
 
     $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom

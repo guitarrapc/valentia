@@ -35,61 +35,29 @@ function Invoke-ValentiaSync
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory,
-            HelpMessage = "Input Deploy Server Source Folder Sync to Client PC.")]
-        [string]
-        $SourceFolder, 
+        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input Deploy Server Source Folder Sync to Client PC.")]
+        [string]$SourceFolder, 
 
-        [Parameter(
-            Position = 1,
-            Mandatory,
-            HelpMessage = "Input Client Destination Folder Sync with Desploy Server.")]
-        [String]
-        $DestinationFolder,
+        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input Client Destination Folder Sync with Desploy Server.")]
+        [String]$DestinationFolder,
 
-        [Parameter(
-            Position = 2,
-            Mandatory,
-            HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
-        [string]
-        $DeployGroups,
+        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [string]$DeployGroups,
 
-        [Parameter(
-            Position = 3,
-            Mandatory = 0,
-            HelpMessage = "Input DeployGroup Folder path if changed.")]
-        [string]
-        $DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
+        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed.")]
+        [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(
-            Position = 4,
-            Mandatory = 0,
-            HelpMessage = "Return success result even if there are error.")]
-        [bool]
-        $SkipException = $false,
+        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [bool]$SkipException = $false,
 
-        [Parameter(
-            Position = 5, 
-            Mandatory = 0,
-            HelpMessage = "Input PSCredential to use for wsman.")]
-        [PSCredential]
-        $Credential = (Get-ValentiaCredential),
+        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(
-            Position = 6,
-            Mandatory = 0,
-            HelpMessage = "Input fastCopy.exe location folder if changed.")]
-        [string]
-        $FastCopyFolder = $valentia.fastcopy.folder,
+        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input fastCopy.exe location folder if changed.")]
+        [string]$FastCopyFolder = $valentia.fastcopy.folder,
         
-        [Parameter(
-            Position = 7,
-            Mandatory = 0,
-            HelpMessage = "Input fastCopy.exe name if changed.")]
-        [string]
-        $FastcopyExe =  $valentia.fastcopy.exe
+        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Input fastCopy.exe name if changed.")]
+        [string]$FastcopyExe =  $valentia.fastcopy.exe
     )
 
     try
