@@ -16,8 +16,8 @@ function Get-ValentiaCredential
             mandatory = 0,
             position = 1)]
         [ValidateNotNullOrEmpty()]
-        [WindowsCredentialManagerType]
-        $Type = [WindowsCredentialManagerType]::Generic
+        [ValentiaWindowsCredentialManagerType]
+        $Type = [ValentiaWindowsCredentialManagerType]::Generic
     )
  
     $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
