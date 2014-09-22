@@ -96,7 +96,6 @@ function Invoke-Valentia
                 TaskFileName  = $TaskFileName
                 ScriptBlock   = $ScriptBlock
                 DeployFolder  = $DeployFolder
-                TaskParameter = $TaskParameter
             }
             Set-ValentiaInvokationPrerequisites @prerequisiteParam
 

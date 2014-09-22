@@ -74,7 +74,7 @@
     <Compile Include="Functions\Helper\IE\Private\Disable-ValentiaEnhancedIESecutiry.ps1" />
     <Compile Include="Functions\Helper\Config\Edit-ValentiaConfig.ps1" />
     <Compile Include="Functions\Helper\CredSSP\Private\Enable-ValentiaCredSSP.ps1" />
-    <Compile Include="Functions\Helper\Utils\New-ValentiaZpPairs.ps1" />
+    <Compile Include="Functions\Helper\Utils\New-ValentiaZipPairs.ps1" />
     <Compile Include="Functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
     <Compile Include="Functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" />
     <Compile Include="Functions\Helper\Group\Get-ValentiaGroup.ps1" />

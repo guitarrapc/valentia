@@ -14,16 +14,13 @@ function Set-ValentiaInvokationPrerequisites
         [string[]]$DeployGroups,
 
         [Parameter(Position = 1, Mandatory = 0)]
-        [string]$TaskFileName,
+        [string]$TaskFileName = "",
 
         [Parameter(Position = 2, Mandatory = 0)]
-        [ScriptBlock]$ScriptBlock,
+        [ScriptBlock]$ScriptBlock = $null,
 
         [Parameter(Position = 3, Mandatory = 0)]
-        [string]$DeployFolder,
-
-        [Parameter(Position = 4, Mandatory = 0)]
-        [string[]]$TaskParameter
+        [string]$DeployFolder
     )
     
     # clear previous result
@@ -47,10 +44,13 @@ function Set-ValentiaInvokationPrerequisites
     New-ValentiaLog
 
     # Set Task and push CurrentContext
-    $task = Push-ValentiaCurrentContextToTask -ScriptBlock $ScriptBlock -TaskFileName $TaskFileName
+    if (($scriptBlock -ne $null) -and ($TaskFilename -ne ""))
+    {
+        $task = Push-ValentiaCurrentContextToTask -ScriptBlock $ScriptBlock -TaskFileName $TaskFileName
   
-    # Set Task as CurrentContext with task key
-    $valentia.Result.ScriptTorun = $task.Action
+        # Set Task as CurrentContext with task key
+        $valentia.Result.ScriptTorun = $task.Action
+    }
 
     # Obtain DeployMember IP or Hosts for deploy
     try
