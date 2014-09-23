@@ -70,46 +70,7 @@ function Invoke-ValentiaSync
 
         #region Process
 
-        $zip = New-ValentiaZipPairs -first $SourceFolder -second $DestinationFolder
-        foreach ($x in $zip)
-        {
-            # skip not directory
-            if (-not (IsDirectory -Path $x.item1)){ Write-Warning ("SourceFolder detected as not Directory, skip '{0}'" -f $x.item1); continue;}
-
-            foreach ($member in $valentia.Result.DeployMembers)
-            {                
-                # Prerequisite
-                $robocopy = "robocopy.exe"
-                $source = RemoveLastSlashFromPath -Path $x.item1
-                $dest = ConcatDeployMemeberWithPath -deploymember $member -Path $x.item2
-                $mode = "*.* /MIR /R:3 /W:5"
-                $arguments = @("`"$source`"", "`"$dest`"", $mode)
-
-                # ProcessInfo
-                $ProcessStartInfo = New-object System.Diagnostics.ProcessStartInfo
-                $ProcessStartInfo.CreateNoWindow = $true 
-                $ProcessStartInfo.UseShellExecute = $false 
-                $ProcessStartInfo.RedirectStandardOutput = $true
-                $ProcessStartInfo.RedirectStandardError = $true
-                $ProcessStartInfo.FileName = $robocopy
-                $ProcessStartInfo.Arguments = $arguments
-
-                # execute
-                $process = New-Object System.Diagnostics.Process 
-                $process.StartInfo = $ProcessStartInfo
-                $process.Start() > $null
-                $output = $process.StandardOutput.ReadToEnd()
-                $outputError = $process.StandardError.ReadToEnd()
-                $process.StandardOutput.ReadLine()
-                $process.WaitForExit() 
-                    
-                # Result
-                $output
-                $valentia.Result.Result = $output
-                $valentia.Result.ScriptToRun += "{0} {1}`r`n" -f $ProcessStartInfo.FileName, $ProcessStartInfo.Arguments
-                $valentia.Result.ErrorMessageDetail = $outputError
-            }
-        }        
+            Invoke-ValentiaRoboCopyMirror -SourceFolder $SourceFolder -DestinationFolder $DestinationFolder
 
         #endregion
 
@@ -125,6 +86,7 @@ function Invoke-ValentiaSync
         }
         finally
         {
+            $valentia.Result.ScriptToRun = $valentia.Result.ScriptToRun -join "`r`n"
             # obtain Result
             $resultParam = @{
                 StopWatch     = $TotalstopwatchSession
@@ -154,47 +116,6 @@ function Invoke-ValentiaSync
         else
         {
             $originalErrorAction = $ErrorActionPreference = $valentia.preference.ErrorActionPreference.original
-        }
-
-        function IsFile ([string]$Path)
-        {
-            if ([System.IO.File]::Exists($Path))
-            {
-                Write-Verbose ("Input object : '{0}' detected as File." -f $Path)
-                return [System.IO.FileInfo]($Path)
-            }
-        }
-
-        function IsDirectory ([string]$Path)
-        {
-            if ([System.IO.Directory]::Exists($Path))
-            {
-                Write-Verbose ("Input object : '{0}' detected as Directory." -f $Path)
-                return [System.IO.DirectoryInfo] ($Path)
-            }
-        }
-
-        function RemoveLastSlashFromPath ([string]$Path)
-        {
-            $sourceP = Split-Path $Path -Parent
-            $sourceL = Split-Path $Path -Leaf
-            return $sourceP + "\" + $sourceL
-        }
-
-        function RenameToUNCPath ([string]$Path)
-        {
-            if ($Path.Contains){ return $Path.Replace(":", "$") }
-            return $Path
-        }
-
-        function ConcatDeployMemeberWithPath ([string]$deploymember, [string]$Path)
-        {
-            # Local will not use UNC Path
-            if ($deploymember -in "127.0.0.1", "localhost", [System.Net.DNS]::GetHostByName("").HostName, [System.Net.DNS]::GetHostByName("").AddressList){ return $Path }
-            
-            # Only for Remote Host
-            $UNCPath = RenameToUNCPath -Path $Path
-            return [string]::Concat("\\", $deploymember, "\", $UNCPath)
         }
     }
 }

@@ -27,7 +27,7 @@ function Invoke-ValentiaCleanResult
     $valentia.Result = [ordered]@{
         SuccessStatus         = @()
         TimeStart             = [datetime]::Now.DateTime
-        ScriptToRun           = ""
+        ScriptToRun           = New-Object 'System.Collections.Generic.List[string]'
         DeployMembers         = @()
         Result                = New-Object 'System.Collections.Generic.List[PSCustomObject]'
         ErrorMessageDetail    = @()
