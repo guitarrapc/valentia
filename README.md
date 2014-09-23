@@ -1,3 +1,12 @@
+# TODO
+
+- [ ] BackGround Job execution
+- [ ] Remote Session to handle Other credential
+- [ ] Fix Donwload as Sync update
+- [ ] Fix Upload as Sync update
+- [ ] Add Pre / After injection
+- [ ] not determine : MSDeploy Wrapper
+
 # Read Me Fast
 
 Valentia is PowerShell deployment tool for Server-Client model.
