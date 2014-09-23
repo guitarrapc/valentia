@@ -1,10 +1,17 @@
 # TODO
 
-- [ ] BackGround Job execution
-- [ ] Remote Session to handle Other credential
-- [ ] Fix Donwload as Sync update
-- [ ] Fix Upload as Sync update
-- [ ] Add Pre / After injection
+- [ ] Sync : Renew from FastCopy to RoboCopy
+- [ ] Sync : Local Test
+- [ ] Sync : UNC Test
+- [ ] Sync : Multiple file Test
+- [ ] Sync : Validation for Source
+- [ ] Sync : Validation for Destination (ping? SMB?)
+- [ ] Sync : BackGround Job execution
+- [ ] Sync : Remote Session to handle Other credential
+- [ ] Donwload : Fix Donwload as Sync
+- [ ] Upload : Fix Upload as Sync
+- [ ] Pre : Add Pre injection
+- [ ] After : Add After injection
 - [ ] not determine : MSDeploy Wrapper
 
 # Read Me Fast
