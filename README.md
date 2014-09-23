@@ -1,10 +1,10 @@
 # TODO
 
-- [ ] Sync : Renew from FastCopy to RoboCopy
-- [ ] Sync : Local Test
-- [ ] Sync : UNC Test
-- [ ] Sync : Multiple file Test
-- [ ] Sync : Validation for Source
+- [x] Sync : Renew from FastCopy to RoboCopy
+- [x] Sync : Local Test
+- [x] Sync : UNC Test
+- [x] Sync : Multiple file Test
+- [x] Sync : Validation for Source
 - [ ] Sync : Validation for Destination (ping? SMB?)
 - [ ] Sync : BackGround Job execution
 - [ ] Sync : Remote Session to handle Other credential
