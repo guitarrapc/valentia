@@ -1,19 +1,3 @@
-# TODO
-
-- [x] Sync : Renew from FastCopy to RoboCopy
-- [x] Sync : Local Test
-- [x] Sync : UNC Test
-- [x] Sync : Multiple file Test
-- [x] Sync : Validation for Source
-- [ ] Sync : Validation for Destination (ping? SMB?)
-- [ ] Sync : BackGround Job execution
-- [ ] Sync : Remote Session to handle Other credential
-- [ ] Donwload : Fix Donwload as Sync
-- [ ] Upload : Fix Upload as Sync
-- [ ] Pre : Add Pre injection
-- [ ] After : Add After injection
-- [ ] not determine : MSDeploy Wrapper
-
 # Read Me Fast
 
 Valentia is PowerShell deployment tool for Server-Client model.
