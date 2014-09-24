@@ -132,16 +132,16 @@ function Set-ValentiaScheduledTask
 
     #region Exclude Action Change : Only Disable / Enable Task
 
-        if (($Execute -eq "") -and ($null -ne (GetExistingTaskScheduler @existingTaskParam)))
+        if (($Execute -eq "") -and ($null -ne (testExistingTaskScheduler @existingTaskParam)))
         {
             switch ($Disable)
             {
                 $true {
-                    GetExistingTaskScheduler @existingTaskParam | Disable-ScheduledTask
+                    TestExistingTaskScheduler @existingTaskParam | Disable-ScheduledTask
                     return;
                 }
                 $false {
-                    GetExistingTaskScheduler @existingTaskParam | Enable-ScheduledTask
+                    TestExistingTaskScheduler @existingTaskParam | Enable-ScheduledTask
                     return;
                 }
             }
@@ -169,7 +169,7 @@ function Set-ValentiaScheduledTask
 
         # validation
         if ($execute -eq ""){ throw New-Object System.InvalidOperationException ($ErrorMessages.ExecuteBrank) }
-        if (GetExistingTaskSchedulerWithPath @existingTaskParam){ throw New-Object System.InvalidOperationException ($ErrorMessages.SameNameFolderFound -f $taskName) }
+        if (TestExistingTaskSchedulerWithPath @existingTaskParam){ throw New-Object System.InvalidOperationException ($ErrorMessages.SameNameFolderFound -f $taskName) }
 
         # Action
         $actionParam = 
@@ -223,7 +223,7 @@ function Set-ValentiaScheduledTask
         }
 
         # Register
-        if ($force -or -not(GetExistingTaskScheduler @existingTaskParam))
+        if ($force -or -not(TestExistingTaskScheduler @existingTaskParam))
         {
             if ($null -ne $Credential)
             {
@@ -260,22 +260,29 @@ function Set-ValentiaScheduledTask
 "@
         }
 
-        function GetExistingTaskScheduler ($TaskName, $TaskPath)
+        $WarningMessages = Data 
+        {
+            ConvertFrom-StringData -StringData @"
+                TaskAlreadyExist = '"{0}" already exist on path "{1}". Please Set "-Force $true" to overwrite existing task.'
+"@
+        }
+
+        function TestExistingTaskScheduler ($TaskName, $TaskPath)
         {
             $task = Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath
-            Write-Warning ('"{0}" already exist on path "{1}". Please Set "-Force $true" to overwrite existing task.' -f $task.taskName, $task.taskPath)
+            if (($task | Measure-Object).count -ne 0){ Write-Verbose ($WarningMessages.TaskAlreadyExist -f $task.taskName, $task.taskPath) }
             return ($task | Measure-Object).count -ne 0
         }
 
-        function GetExistingTaskSchedulerWithPath ($TaskName, $TaskPath)
+        function TestExistingTaskSchedulerWithPath ($TaskName, $TaskPath)
         {
             if ($TaskPath -ne "\"){ return $false }
 
             # only run when taskpath is \
-            $taskPath = Join-Path $env:windir "System32\Tasks"
-            $path = Get-ChildItem -Path $taskPath -Directory | where Name -eq $TaskName
+            $path = Join-Path $env:windir "System32\Tasks"
+            $result = Get-ChildItem -Path $path -Directory | where Name -eq $TaskName
 
-            if (($path | measure).count -ne 0)
+            if (($result | measure).count -ne 0)
             {
                 return $true
             }
