@@ -59,6 +59,66 @@ foreach ($p in $param.GetEnumerator())
     Set-ValentiaScheduledTask @p -Credential $Credential
 }
 
+# Multipole task With Credential
+
+.EXAMPLE
+$param = @{
+    taskName          = "Sample No Credential Task"
+    Description       = "None"
+    taskPath          = "\"
+    execute           = "PATH TO EXE"
+    Argument          = ''
+    ScheduledAt       = [datetime]::Now
+    ScheduledTimeSpan = (New-TimeSpan -Minutes 5)
+    ScheduledDuration = ([TimeSpan]::MaxValue)
+    Hidden            = $true
+    Disable           = $false
+    Force             = $true
+}
+Set-ValentiaScheduledTask @param
+
+# single task without credential
+
+.EXAMPLE
+$param = @{
+    taskName          = "Sample High Runlevel without Credential Task"
+    Description       = "None"
+    taskPath          = "\"
+    execute           = "PATH TO EXE"
+    Argument          = ''
+    ScheduledAt       = [datetime]::Now
+    ScheduledTimeSpan = (New-TimeSpan -Minutes 5)
+    ScheduledDuration = ([TimeSpan]::MaxValue)
+    Hidden            = $true
+    Disable           = $false
+    Force             = $true
+    RunLevel          = "Highest"
+}
+Set-ValentiaScheduledTask @param
+
+# single task without credential and set Runlevel High
+
+.EXAMPLE
+$param = @{
+    taskName          = "Sample High Runlevel with Credential Task"
+    Description       = "None"
+    taskPath          = "\"
+    execute           = "PATH TO EXE"
+    Argument          = ''
+    ScheduledAt       = [datetime]::Now
+    ScheduledTimeSpan = (New-TimeSpan -Minutes 5)
+    ScheduledDuration = ([TimeSpan]::MaxValue)
+    Hidden            = $true
+    Disable           = $false
+    Force             = $true
+    RunLevel          = "Highest"
+}
+$Credential = Get-ValentiaCredential
+
+Set-ValentiaScheduledTask @param -Credential $Credential
+
+# single task with credential and set Runlevel High
+
 .LINK
 https://github.com/guitarrapc/valentia/wiki/TaskScheduler-Automation
 
@@ -130,18 +190,20 @@ function Set-ValentiaScheduledTask
             TaskPath = $taskPath
         }
 
+        $currentTask = GetExistingTaskScheduler @existingTaskParam
+
     #region Exclude Action Change : Only Disable / Enable Task
 
-        if (($Execute -eq "") -and ($null -ne (testExistingTaskScheduler @existingTaskParam)))
+        if (($Execute -eq "") -and (TestExistingTaskScheduler -Task $currentTask))
         {
             switch ($Disable)
             {
                 $true {
-                    TestExistingTaskScheduler @existingTaskParam | Disable-ScheduledTask
+                    $currentTask | Disable-ScheduledTask
                     return;
                 }
                 $false {
-                    TestExistingTaskScheduler @existingTaskParam | Enable-ScheduledTask
+                    $currentTask | Enable-ScheduledTask
                     return;
                 }
             }
@@ -151,6 +213,7 @@ function Set-ValentiaScheduledTask
 
     #region Include Action Change
 
+        # credential
         if($Credential -ne $null)
         {
             # Credential
@@ -223,7 +286,7 @@ function Set-ValentiaScheduledTask
         }
 
         # Register
-        if ($force -or -not(TestExistingTaskScheduler @existingTaskParam))
+        if ($force -or -not(TestExistingTaskScheduler -Task $currentTask))
         {
             if ($null -ne $Credential)
             {
@@ -267,11 +330,16 @@ function Set-ValentiaScheduledTask
 "@
         }
 
-        function TestExistingTaskScheduler ($TaskName, $TaskPath)
+        function GetExistingTaskScheduler ($TaskName, $TaskPath)
         {
-            $task = Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath
-            if (($task | Measure-Object).count -ne 0){ Write-Verbose ($WarningMessages.TaskAlreadyExist -f $task.taskName, $task.taskPath) }
-            return ($task | Measure-Object).count -ne 0
+            return Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath
+        }
+
+        function TestExistingTaskScheduler ($Task)
+        {
+            $result = ($task | Measure-Object).count -ne 0
+            if ($result){ Write-Verbose ($WarningMessages.TaskAlreadyExist -f $task.taskName, $task.taskPath) }
+            return $result
         }
 
         function TestExistingTaskSchedulerWithPath ($TaskName, $TaskPath)
