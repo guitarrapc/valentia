@@ -227,6 +227,8 @@
     <Content Include="Functions\Helper\Log\Private\OutValentiaModuleLogHost.ps1" />
     <Content Include="Functions\Helper\Prerequisites\Private\Set-ValentiaInvokationPrerequisites.ps1" />
     <Content Include="Functions\Helper\Prerequisites\Private\Push-ValentiaCurrentContextToTask.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Remove-ValentiaScheduledTaskEmptyDirectoryPath.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Remove-ValentiaScheduledTask.ps1" />
     <Content Include="Functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1" />
     <Content Include="Functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1" />
     <Content Include="Functions\Helper\SymbolicLink\Remove-ValentiaSymbolicLink.ps1" />

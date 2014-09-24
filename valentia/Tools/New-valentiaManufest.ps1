@@ -98,6 +98,8 @@ $script:functionToExport = @(
         # ScheduledTask
         'Disable-ValentiaScheduledTaskLogSetting',
         'Enable-ValentiaScheduledTaskLogSetting',
+        'Remove-ValentiaScheduledTask',
+        'Remove-ValentiaScheduledTaskEmptyDirectoryPath',
         'Set-ValentiaScheduledTask',
 
         # Sed
