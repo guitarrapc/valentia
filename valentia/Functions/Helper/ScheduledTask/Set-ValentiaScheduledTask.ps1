@@ -108,12 +108,21 @@ function Set-ValentiaScheduledTask
         [parameter(Mandatory = 0, Position  = 12)]
         [bool]$Hidden = $true,
 
-        [parameter(Mandatory = 0,　Position  = 13)]
+        [parameter(Mandatory = 0,Position  = 13)]
+        [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
+        [string]$Compatibility = "Win8",
+
+        [parameter(Mandatory = 0,Position  = 14)]
+        [ValidateSet("Highest", "Limited")]
+        [string]$Runlevel = "Limited",
+
+        [parameter(Mandatory = 0,　Position  = 15)]
         [bool]$Force = $false
     )
 
     end
     {
+        Write-Verbose ($VerboseMessages.CreateTask -f $taskName, $taskPath)
         # exist
         $existingTaskParam = 
         @{
@@ -142,10 +151,25 @@ function Set-ValentiaScheduledTask
 
     #region Include Action Change
 
+        if($Credential -ne $null)
+        {
+            # Credential
+            $credentialParam = @{
+                User = $Credential.UserName
+                Password = $Credential.GetNetworkCredential().Password
+            }
+
+            # Principal
+            $principalParam = 
+            @{
+                GroupId = "BUILTIN\Administrators"
+                RunLevel = $Runlevel
+            }
+        }
+
+        # validation
         if ($execute -eq ""){ throw New-Object System.InvalidOperationException ($ErrorMessages.ExecuteBrank) }
-        
-        # Description
-        if ($Description -eq ""){ $Description = "No Description"}
+        if (GetExistingTaskSchedulerWithPath @existingTaskParam){ throw New-Object System.InvalidOperationException ($ErrorMessages.SameNameFolderFound -f $taskName) }
 
         # Action
         $actionParam = 
@@ -164,30 +188,41 @@ function Set-ValentiaScheduledTask
             Once = $Once
         }
 
+        # Description
+        if ($Description -eq ""){ $Description = "No Description"}     
+
         # Setup Task items
         $action = CreateTaskSchedulerAction @actionParam
         $trigger = CreateTaskSchedulerTrigger @triggerParam
-        $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden
-        $scheduledTask = New-ScheduledTask -Description $Description -Action $action -Settings $settings -Trigger $trigger
-
-        # Credential
-        $credentialParam = if($Credential -ne $null)
+        $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden -Compatibility $Compatibility
+        $registerParam = if ($null -ne $Credential)
         {
+            Write-Verbose $VerboseMessages.UsePrincipal
+            $principal = New-ScheduledTaskPrincipal @principalParam
+            $scheduledTask = New-ScheduledTask -Description $Description -Action $action -Settings $settings -Trigger $trigger -Principal $principal
             @{
-                User = $Credential.UserName
-                Password = $Credential.GetNetworkCredential().Password
+                InputObject = $scheduledTask
+                TaskName = $taskName
+                TaskPath = $taskPath
+                Force = $Force
+            }
+        }
+        else
+        {
+            Write-Verbose $VerboseMessages.SkipPrincipal
+            @{
+                Action = $action
+                Settings = $settings
+                Trigger = $trigger
+                Description = $Description
+                TaskName = $taskName
+                TaskPath = $taskPath
+                Runlevel = $Runlevel
+                Force = $Force
             }
         }
 
         # Register
-        $registerParam = 
-        @{
-            InputObject = $scheduledTask
-            TaskName = $taskName
-            TaskPath = $taskPath
-            Force = $Force
-        }
-
         if ($force -or -not(GetExistingTaskScheduler @existingTaskParam))
         {
             if ($null -ne $Credential)
@@ -201,10 +236,6 @@ function Set-ValentiaScheduledTask
                 return;
             }
         }
-        else
-        {
-            Write-Warning ('"{0}" already exist on path "{1}". Please Set "-Force $true" to overwrite existing task.' -f $taskName, $taskPath)
-        }
 
     #endregion
     }
@@ -216,12 +247,39 @@ function Set-ValentiaScheduledTask
             ConvertFrom-StringData -StringData @"
                 InvalidTrigger = "Invalid Operation detected, you can't set same or greater timespan for RepetitionInterval '{0}' than RepetitionDuration '{1}'."
                 ExecuteBrank = "Invalid Operation detected, Execute detected as blank. You must set executable string."
+                SameNameFolderFound = "Already same FolderName existing as TaskPath : \\{0}\\ . Please change TaskName or Rename TaskFolder.."
+"@
+        }
+
+        $VerboseMessages = Data 
+        {
+            ConvertFrom-StringData -StringData @"
+                CreateTask = "Creating Task Scheduler Name '{0}', Path '{1}'"
+                UsePrincipal = "Using principal with Credential. Execution will be fail if not elevated."
+                SkipPrincipal = "Skip Principal and Credential. Runlevel Highest requires elevated."
 "@
         }
 
         function GetExistingTaskScheduler ($TaskName, $TaskPath)
         {
-            return Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath
+            $task = Get-ScheduledTask | where TaskName -eq $taskName | where TaskPath -eq $taskPath
+            Write-Warning ('"{0}" already exist on path "{1}". Please Set "-Force $true" to overwrite existing task.' -f $task.taskName, $task.taskPath)
+            return ($task | Measure-Object).count -ne 0
+        }
+
+        function GetExistingTaskSchedulerWithPath ($TaskName, $TaskPath)
+        {
+            if ($TaskPath -ne "\"){ return $false }
+
+            # only run when taskpath is \
+            $taskPath = Join-Path $env:windir "System32\Tasks"
+            $path = Get-ChildItem -Path $taskPath -Directory | where Name -eq $TaskName
+
+            if (($path | measure).count -ne 0)
+            {
+                return $true
+            }
+            return $false
         }
 
         function CreateTaskSchedulerAction ($argument, $execute)

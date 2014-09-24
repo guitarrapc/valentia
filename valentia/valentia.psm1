@@ -481,7 +481,6 @@ New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 
 try
 {
-    # Remove Temp
     $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
     $InputRootPath = (Join-Path $valentia.modulePath $valentia.helpersPath)
     if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
@@ -494,7 +493,6 @@ finally
     if(Test-Path $outputPath)
     {
         . $outputPath
-        Remove-Item -Path $outputPath -Force
     }
 }
 
