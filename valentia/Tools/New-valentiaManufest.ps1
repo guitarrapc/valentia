@@ -56,6 +56,7 @@ $script:functionToExport = @(
         'Rename-ValentiaComputerName',
 
         # Config
+        "Backup-ValentiaConfig",
         "Edit-ValentiaConfig",
         'Reset-ValentiaConfig',
         "Show-ValentiaConfig",

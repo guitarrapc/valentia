@@ -211,6 +211,7 @@
     <Content Include="Functions\Helper\CleanupVariables\Invoke-ValentiaCleanResult.ps1" />
     <Content Include="Functions\Helper\ComputerName\Rename-ValentiaComputerName.ps1" />
     <Content Include="Functions\Helper\ComputerName\Get-ValentiaComputerName.ps1" />
+    <Content Include="Functions\Helper\Config\Backup-valentiaConfig.ps1" />
     <Content Include="Functions\Helper\Config\Reset-ValentiaConfig.ps1" />
     <Content Include="Functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
     <Content Include="Functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateReg.ps1" />

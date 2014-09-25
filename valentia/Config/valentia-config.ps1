@@ -53,14 +53,6 @@ $valentia.prefix = New-Object psobject -property @{
 # contains default deployment Path configuration.
 $valentia.RootPath = "{0}\Deployment" -f $env:SystemDrive;
 
-# Set Valentia Log
-$valentia.log = [PSCustomObject]@{
-    path      = "{0}\Logs\Deployment" -f $env:SystemDrive;
-    name      = "deploy";
-    extension = ".log";
-    fullPath  = "";
-}
-
 # contains certificate configuration
 $valentia.certificate = [PSCustomObject]@{
     ThumbPrint = "INPUT THUMBPRINT YOU WANT TO USE"
