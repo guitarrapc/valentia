@@ -1,7 +1,5 @@
 ﻿#Required -Version 3.0
 
-$VerbosePreference = "Continue"
-
 function Main
 {
     # Uri
