@@ -145,7 +145,7 @@ function Set-ValentiaScheduledTask
         [datetime[]]$ScheduledAt,
 
         [parameter(Mandatory = 0, Position  = 5, parameterSetName = "ScheduledDuration")]
-        [TimeSpan[]]$ScheduledTimeSpan = (New-TimeSpan -Hours 1),
+        [TimeSpan[]]$ScheduledTimeSpan = ([TimeSpan]::FromHours(1)),
 
         [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledDuration = [TimeSpan]::MaxValue,
@@ -168,15 +168,18 @@ function Set-ValentiaScheduledTask
         [parameter(Mandatory = 0, Position  = 12)]
         [bool]$Hidden = $true,
 
-        [parameter(Mandatory = 0,Position  = 13)]
+        [parameter(Mandatory = 0, Position  = 13)]
+        [TimeSpan]$ExecutionTimeLimit = ([TimeSpan]::FromDays(3)),
+
+        [parameter(Mandatory = 0,Position  = 14)]
         [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
         [string]$Compatibility = "Win8",
 
-        [parameter(Mandatory = 0,Position  = 14)]
+        [parameter(Mandatory = 0,Position  = 15)]
         [ValidateSet("Highest", "Limited")]
         [string]$Runlevel = "Limited",
 
-        [parameter(Mandatory = 0,　Position  = 15)]
+        [parameter(Mandatory = 0,　Position  = 16)]
         [bool]$Force = $false
     )
 
@@ -257,7 +260,7 @@ function Set-ValentiaScheduledTask
         # Setup Task items
         $action = CreateTaskSchedulerAction @actionParam
         $trigger = CreateTaskSchedulerTrigger @triggerParam
-        $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden -Compatibility $Compatibility
+        $settings = New-ScheduledTaskSettingsSet -Disable:$Disable -Hidden:$Hidden -Compatibility $Compatibility -ExecutionTimeLimit $ExecutionTimeLimit
         $registerParam = if ($null -ne $Credential)
         {
             Write-Verbose $VerboseMessages.UsePrincipal
