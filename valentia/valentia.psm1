@@ -125,6 +125,8 @@ function CombineMultipleFileToSingle ([string]$InputRootPath, [string]$OutputPat
         | Where-Object { -not ($_.FullName.Contains('.Tests.')) } `
         | Where-Object Extension -eq '.ps1' `
         | ForEach-Object {
+            $header = '# file loaded from path : {0}' -f $_.FullName
+            $sb.Append($header) > $null
             $sb.Append((Get-Content -Path $_.FullName -Raw -Encoding utf8)) > $null
             $sb.AppendLine() > $null
         }
