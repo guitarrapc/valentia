@@ -181,7 +181,7 @@ $script:AliasesToExport = @(
 )
 
 $script:moduleManufest = @{
-    Path = "{0}\{1}.psd1" -f $valentia.ExportPath, $valentia.module
+    Path = "{0}\{1}.psd1" -f $valentia.modulePath, $valentia.name
     Author = "guitarrapc";
     CompanyName = "guitarrapc"
     Copyright = ""; 
@@ -201,10 +201,11 @@ $script:moduleManufest = @{
 New-ModuleManifest @moduleManufest
 
 # As Installer place on ModuleName\Tools.
-$psd1 = Join-Path $valentia.ExportPath ("{0}.psd1" -f $valentia.module);
+$psd1 = Join-Path $valentia.ExportPath ("{0}.psd1" -f $valentia.name);
+$newpsd1 = Join-Path $valentia.ModulePath ("{0}.psd1" -f $valentia.name);
 if (Test-Path -Path $psd1)
 {
-    Get-Content -Path $psd1 -Encoding UTF8 -Raw -Force | Out-File -FilePath $psd1 -Encoding default -Force
+    Get-Content -Path $psd1 -Encoding UTF8 -Raw -Force | Out-File -FilePath $newpsd1 -Encoding default -Force
     Remove-Item -Path $psd1 -Force
 }
 
