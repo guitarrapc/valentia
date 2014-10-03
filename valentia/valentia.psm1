@@ -113,35 +113,6 @@ function Import-ValentiaModules
     }
 }
 
-function CombineMultipleFileToSingle ([string]$InputRootPath, [string]$OutputPath, $Encoding)
-{
-    try
-    {
-        $sb = New-Object System.Text.StringBuilder
-        $sw = New-Object System.IO.StreamWriter ($OutputPath, $false, [System.Text.Encoding]::$Encoding)
-
-        # Read All functions
-        Get-ChildItem $InputRootPath -Recurse -File `
-        | Where-Object { -not ($_.FullName.Contains('.Tests.')) } `
-        | Where-Object Extension -eq '.ps1' `
-        | ForEach-Object {
-            $sb.Append((Get-Content -Path $_.FullName -Raw -Encoding utf8)) > $null
-            $sb.AppendLine() > $null
-            $footer = '# file loaded from path : {0}' -f $_.FullName
-            $sb.Append($header) > $null
-        }
-    
-        # Output into single file
-        $sw.Write($sb.ToString());
-    }
-    finally
-    {
-        # Dispose and release file handler
-        $sb = $null
-        $sw.Dispose()
-    }
-}
-
 #-- Private Loading Module Parameters --#
 
 # Setup Messages to be loaded
@@ -225,37 +196,21 @@ ConvertFrom-StringData @'
 #-- Private Loading Module Parameters --#
 
 # contains default base configuration, may not be override without version update.
-$Script:valentia              = [ordered]@{}
-$valentia.name                = 'valentia'                                                             # contains the Name of Module
-$valentia.modulePath          = Split-Path -parent $MyInvocation.MyCommand.Definition
-$valentia.helpersPath         = '\functions\*'
-$valentia.combineTempfunction = 'combine-functions-should-be-delete.ps1'
-$valentia.cSharpPath          = '\cs\'
-$valentia.typePath            = '\type'
-$valentia.supportWindows      = @(6,1,0,0)                                                             # higher than windows 7 or windows 2008 R2
-$valentia.fileEncode          = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
-$valentia.context             = New-Object System.Collections.Stack                                    # holds onto the current state of all variables
+$Script:valentia = [ordered]@{}
+$valentia.name = 'valentia'
+$valentia.modulePath = Split-Path -parent $MyInvocation.MyCommand.Definition
+$valentia.helpersPath= '\functions\*'
+$valentia.typePath = '\type'
+$valentia.combineTempfunction = '{0}.ps1' -f $valentia.name
+$valentia.combineTemptype = 'Type.ps1'
+$valentia.cSharpPath = '\cs\'
+$valentia.supportWindows = @(6,1,0,0) # higher than windows 7 or windows 2008 R2
+$valentia.fileEncode = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
+$valentia.context = New-Object System.Collections.Stack
 
 # Load Type from C# Enum
-Write-Verbose 'Loading Module Types.'
-try
-{
-    # Remove Temp
-    $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
-    $InputRootPath = (Join-Path $valentia.modulePath $valentia.typePath)
-    if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
-
-    CombineMultipleFileToSingle -InputRootPath $InputRootPath -OutputPath $outputPath -Encoding UTF8
-}
-finally
-{
-    # Read File
-    if(Test-Path $outputPath)
-    {
-        . $outputPath
-        Remove-Item -Path $outputPath -Force
-    }
-}
+$typePath = Join-Path $valentia.modulePath $valentia.combineTemptype
+if (Test-Path $typePath){ . $typePath }
 
 # contains default configuration path
 $valentia.originalconfig = [ordered]@{
@@ -482,22 +437,8 @@ New-Alias -Name Initial          -Value Initialize-valentiaEnvironment
 
 #-- Loading Internal Function when loaded --#
 
-try
-{
-    $outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
-    $InputRootPath = (Join-Path $valentia.modulePath $valentia.helpersPath)
-    if(Test-Path $outputPath){ Remove-Item -Path $outputPath -Force }
-
-    CombineMultipleFileToSingle -InputRootPath $InputRootPath -OutputPath $outputPath -Encoding UTF8
-}
-finally
-{
-    # Read File
-    if(Test-Path $outputPath)
-    {
-        . $outputPath
-    }
-}
+$outputPath = Join-Path $valentia.modulePath $valentia.combineTempfunction
+if (Test-Path $outputPath){ . $outputPath }
 
 #-- Loading External Configuration --#
 

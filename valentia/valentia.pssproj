@@ -114,7 +114,6 @@
     <Compile Include="Functions\Helper\Group\Show-ValentiaGroup.ps1" />
     <Compile Include="Functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1" />
     <Compile Include="Functions\Helper\Windows\Private\Test-ValentiaPowerShellElevated.ps1" />
-    <Compile Include="valentia-Help\valentia.psm1.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
@@ -182,7 +181,6 @@
     <Folder Include="Test\PingAsync\" />
     <Folder Include="Test\SymbolicLink\" />
     <Folder Include="Tools\" />
-    <Folder Include="valentia-Help\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\valentia-config.ps1" />
@@ -246,7 +244,7 @@
     <Content Include="Test\SymbolicLink\PingAsync.ps1" />
     <Content Include="Tools\install.bat" />
     <Content Include="Tools\install.ps1" />
-    <Content Include="Tools\New-valentiaManufest.ps1" />
+    <Content Include="Tools\build.ps1" />
     <Content Include="Tools\RemoteInstall.ps1" />
     <Content Include="Type\Type.ps1" />
     <Content Include="valentia.psd1" />
