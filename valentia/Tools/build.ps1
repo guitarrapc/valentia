@@ -181,7 +181,7 @@ $script:AliasesToExport = @(
 )
 
 $script:moduleManufest = @{
-    Path = "{0}\{1}.psd1" -f $valentia.modulePath, $valentia.name
+    Path = "{0}.psd1" -f $valentia.name
     Author = "guitarrapc";
     CompanyName = "guitarrapc"
     Copyright = ""; 
