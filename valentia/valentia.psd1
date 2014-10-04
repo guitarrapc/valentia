@@ -15,7 +15,7 @@
 ModuleVersion = '0.4.6'
 
 # ID used to uniquely identify this module
-GUID = 'efe9d6a7-5276-4c74-902b-eace0c038de2'
+GUID = 'f797046d-1a00-4a98-adc8-2261531dd507'
 
 # Author of this module
 Author = 'guitarrapc'
@@ -66,7 +66,37 @@ CLRVersion = '4.0.0.0'
 NestedModules = @('valentia.psm1')
 
 # Functions to export from this module
-# FunctionsToExport = @()
+FunctionsToExport = 'Invoke-Valentia', 'Invoke-ValentiaAsync', 'Invoke-ValentiaDownload', 
+               'Ping-ValentiaGroupAsync', 'Watch-ValentiaPingAsyncReplyStatus', 
+               'Invoke-ValentiaSync', 'Invoke-ValentiaUpload', 
+               'Invoke-ValentiaUploadList', 'Get-ValentiaACL', 'Set-ValentiaACL', 
+               'Test-ValentiaACL', 'Convert-ValentiaDecryptPassword', 
+               'Convert-ValentiaEncryptPassword', 'Export-ValentiaCertificate', 
+               'Export-ValentiaCertificatePFX', 'Get-ValentiaCertificateFromCert', 
+               'Import-ValentiaCertificate', 'Import-ValentiaCertificatePFX', 
+               'Remove-ValentiaCertificate', 'Remove-ValentiaCertificatePFX', 
+               'Show-ValentiaCertificate', 'Invoke-ValentiaClean', 
+               'Get-ValentiaComputerName', 'Rename-ValentiaComputerName', 
+               'Backup-ValentiaConfig', 'Edit-ValentiaConfig', 
+               'Reset-ValentiaConfig', 'Show-ValentiaConfig', 
+               'Get-ValentiaCredential', 'Set-ValentiaCredential', 
+               'Get-ValentiaHostEntryAsync', 'New-ValentiaDynamicParamMulti', 
+               'Get-ValentiaFileEncoding', 'New-ValentiaFolder', 'Get-ValentiaGroup', 
+               'Invoke-ValentiaDeployGroupRemark', 
+               'Invoke-ValentiaDeployGroupUnremark', 'New-ValentiaGroup', 
+               'Show-ValentiaGroup', 'Initialize-ValentiaEnvironment', 
+               'Set-ValentiaLocation', 'New-ValentiaLog', 
+               'Show-ValentiaPromptForChoice', 
+               'Disable-ValentiaScheduledTaskLogSetting', 
+               'Enable-ValentiaScheduledTaskLogSetting', 
+               'Remove-ValentiaScheduledTask', 
+               'Remove-ValentiaScheduledTaskEmptyDirectoryPath', 
+               'Set-ValentiaScheduledTask', 'Invoke-ValentiaSed', 
+               'Get-ValentiaSymbolicLink', 'Remove-ValentiaSymbolicLink', 
+               'Set-ValentiaSymbolicLink', 'ConvertTo-ValentiaTask', 
+               'Get-ValentiaTask', 'New-ValentiaOSUser', 
+               'Get-ValentiaRebootRequiredStatus', 
+               'Set-ValetntiaWSManConfiguration'
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
