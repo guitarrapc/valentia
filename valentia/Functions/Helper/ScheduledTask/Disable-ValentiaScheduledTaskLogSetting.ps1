@@ -40,9 +40,16 @@ function Disable-ValentiaScheduledTaskLogSetting
     end
     {
         if (-not(Test-ValentiaPowerShellElevated)){ throw New-Object System.UnauthorizedAccessException ($ErrorMessages.LogOperationNotPermitted) }
-        $logName = 'Microsoft-Windows-TaskScheduler/Operational'
-        $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
-        $log.IsEnabled = $false
-        $log.SaveChanges()
+        try
+        {
+            $logName = 'Microsoft-Windows-TaskScheduler/Operational'
+            $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
+            $log.IsEnabled = $false
+            $log.SaveChanges()
+        }
+        finally
+        {
+            $log.Dispose()
+        }
     }
 }
