@@ -4075,10 +4075,17 @@ function Disable-ValentiaScheduledTaskLogSetting
     end
     {
         if (-not(Test-ValentiaPowerShellElevated)){ throw New-Object System.UnauthorizedAccessException ($ErrorMessages.LogOperationNotPermitted) }
-        $logName = 'Microsoft-Windows-TaskScheduler/Operational'
-        $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
-        $log.IsEnabled = $false
-        $log.SaveChanges()
+        try
+        {
+            $logName = 'Microsoft-Windows-TaskScheduler/Operational'
+            $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
+            $log.IsEnabled = $false
+            $log.SaveChanges()
+        }
+        finally
+        {
+            $log.Dispose()
+        }
     }
 }
 # file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Disable-ValentiaScheduledTaskLogSetting.ps1
@@ -4125,10 +4132,17 @@ function Enable-ValentiaScheduledTaskLogSetting
     end
     {
         if (-not(Test-ValentiaPowerShellElevated)){ throw New-Object System.UnauthorizedAccessException ($ErrorMessages.LogOperationNotPermitted) }
-        $logName = 'Microsoft-Windows-TaskScheduler/Operational'
-        $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
-        $log.IsEnabled = $true
-        $log.SaveChanges()
+        try
+        {
+            $logName = 'Microsoft-Windows-TaskScheduler/Operational'
+            $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
+            $log.IsEnabled = $true
+            $log.SaveChanges()
+        }
+        finally
+        {
+            $log.Dispose()
+        }
     }
 }
 # file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Enable-ValentiaScheduledTaskLogSetting.ps1

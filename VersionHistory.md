@@ -5,6 +5,44 @@ This indicate Version History for valentia.
 
 ## Version 0.4.x
 
+- version : 0.4.7
+	
+	[ author : guitarrapc ]
+	
+	[ Oct 9, 2014 ]
+	
+	#### Enhancement
+	* Added ```Set-ValentiaSymbolicLink``` functionality to create SynbolicLink against None Exist Path.
+	* Added ```Reset-ValentiaConfig``` to reload config.
+	* Added ```Backup-ValentiaConfig``` to Backup current configuration.
+	* Added ACL functions ```Get-ValentiaACL```,  ```Set-ValentiaACL```, ```Test-ValentiaACL```. This enable you to control NTFS ACL.
+	* [Issue #67](https://github.com/guitarrapc/valentia/issues/67) Enhanced for Multiple Task Scheduler settings.
+	* ```Set-ValentiaScheduledTask``` now not mandatory for Credential parameter in some situations.
+	* ```Set-ValentiaScheduledTask``` now supports **Compatibility**, **Force** and **ExecutionTimeLimit** parameters.
+	* Added ```Remove-ValentiaScheduledTask``` to remove ScheduledTask.
+	* Added [Onlinehelp](https://github.com/guitarrapc/valentia/wiki/TaskScheduler-Automation) for ```Set-ValentiaScheduledTask``` to 
+	*  Support ```-Recurse``` parameter for ```Invoke-ValentiaDeployGroupRemark```. Now you can choose path and only effect it, means not deep inside the path.
+	*  Added ```Added Enable-ValentiaScheduledTaskLogSetting```, ```Disable-ValentiaScheduledTaskLogSetting``` to control ScheduledTask Log.
+	* Speedup Importing Module. Now all functions are included in single file, it only takes 1sec to import. (Previously 10sec)
+	* Speedup Installer for Module.
+
+	#### Breaking Changes
+	* Change TaskParameter from String[] to hashtable for ```Invoke-Valentia``` and ```Invoke-ValentiaAsync```.
+		* This cause breaking change to use local variable in valentia  scriptblock.
+		* Before : $args[0]
+		* After  : $args[0].Values
+
+	#### Bug fix
+	* Fix ```Invoke-ValentiaAsync``` had memory leak since v0.4.3 had been fixed.
+	* Fix ```Set-ValentiaScheduledTask``` Task Path not working.
+	* Fix ```Initialize-ValentiaEnvironment``` validation
+
+	#### Unremarkable change
+	* Folder Structure Capitalize (no effect)
+	* Added Internal utility functions. 
+	* Divide Type to each ps1
+	* Re-factor Code.
+
 - version : 0.4.6
 	
 	[ author : guitarrapc ]

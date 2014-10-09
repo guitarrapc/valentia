@@ -6,67 +6,67 @@ function Main
     [CmdletBinding()]
     Param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 0)]
-        [string]
-        $modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
+        [string]$Modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
 
-        [Parameter(
-            Position = 1,
-            Mandatory = 0)]
-        [bool]
-        $reNew = $false,
+        [bool]$Renew = $false,
 
-        [switch]
-        $force = $false
+        [switch]$Force = $false,
+
+        [switch]$Whatif = $false
     )
 
-    $ErrorActionPreference = "Stop"
-
-    $parent = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
-    $child  = $parent.name.split(".")[0]
-    $path = Join-Path $parent $child
-
-    if(-not(Test-ModulePath -modulepath $modulepath))
+    process
     {
-        Write-Warning "$modulepath not found. creating module path."
-        New-ModulePath -modulepath $modulepath
+        try
+        {
+            # Copy Module
+            Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, $moduleFullPath) -ForegroundColor Cyan
+            Copy-ItemEX -path $path -destination $moduleFullPath -Targets * -Recurse -Force 
+
+            # Import Module
+            Write-Host ("Importing Module '{0}'" -f $moduleName) -ForegroundColor cyan
+            Import-ModuleEX -ModuleName $moduleName
+
+            # GetModuleVariable
+            $moduleVariable = (Get-Variable -Name $moduleName).Value
+            
+            # Set configuration File
+            $originalConfigPath = Join-Path $moduleVariable.originalconfig.root $moduleVariable.originalconfig.file -Resolve
+            Set-DefaultConfig -defaultConfigPath $originalConfigPath -ExportConfigDir $moduleVariable.appdataconfig.root -ExportConfigFile $moduleVariable.appdataconfig.file -force:$force
+            Move-OriginalDefaultConfig -defaultConfigPath $originalConfigPath -ExportConfigDir $moduleVariable.appdataconfig.backup
+        }
+        catch
+        {
+            throw $_
+        }
     }
 
-    $moduleName = Get-ModuleName -path $path
-    $dir = Join-Path $modulepath $moduleName
-    Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $dir)
-    if($reNew -and (Test-ModulePath -modulepath $dir))
+    begin
     {
-        Write-Warning ("'{0}' already exist. Escape from creating module Directory." -f $dir)
-        Write-Warning $dir
-        Remove-ModulePath -path $dir -Verbose
-    }
+        $ErrorActionPreference = "Stop"
+        # For Nuget
+        $parent = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
+        $child  = $parent.name.split(".")[0]
+        $path = Join-Path $parent $child
+        # Original
+        # $path = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
+        $moduleName = Get-ModuleName -path $path
+        $moduleFullPath = Join-Path $modulepath $moduleName
 
-    if ($moduleName)
-    {
-        Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, "$modulepath") -ForegroundColor Cyan
-    }
-    else
-    {
-        Write-Host ("Copying scripts in '{0}' to Module path '{1}'." -f $path , "$modulepath") -ForegroundColor Green
-    }
-    
-    $destinationtfolder = Copy-Module -path $path -destination $modulepath
-    Write-Host ("Module have been copied to PowerShell Module path '{0}'" -f $destinationtfolder) -ForegroundColor Green
+        Write-Verbose ("Checking Module Root Path '{0}' is exist not not." -f $modulepath)
+        if(-not(Test-ModulePath -modulepath $modulepath))
+        {
+            Write-Warning "$modulepath not found. creating module path."
+            New-Item -Path $modulepath -ItemType directory -Force > $null
+        }
 
-    Test-ImportModule -ModuleName $moduleName
-    Write-Host ("Imported Module '{0}'" -f $moduleName) -ForegroundColor Green
-    $moduleVariable = (Get-Variable -Name $moduleName).Value
-    $originalDefaultConfigPath = Join-Path $moduleVariable.modulePath $moduleVariable.defaultconfiguration.original -Resolve
-    Set-DefaultConfig -defaultConfigPath $originalDefaultConfigPath -ExportConfigDir $moduleVariable.defaultconfiguration.dir
-    Remove-OriginalDefaultConfig -defaultConfigPath $originalDefaultConfigPath
-}
-
-Function Get-OperatingSystemVersion
-{
-    [System.Environment]::OSVersion.Version
+        Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $moduleFullPath)
+        if($reNew -and (Test-ModulePath -modulepath $moduleFullPath))
+        {
+            Write-Warning ("'{0}' already exist. Escape from creating module Directory." -f $moduleFullPath)
+            Remove-Item -Path $moduleFullPath -Recurse -Force
+        }
+    }
 }
 
 Function Test-ModulePath
@@ -74,38 +74,19 @@ Function Test-ModulePath
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $modulepath        
+        [Parameter(Position = 0, Mandatory = 1)]
+        [string]$modulepath        
     )
  
     Write-Verbose "Checking Module Home."
-    if ((Get-OperatingSystemVersion) -ge 6.1)
+    if (([System.Environment]::OSVersion.Version) -ge 6.1)
     {
         Write-Verbose "Your operating system is later then Windows 7 / Windows Server 2008 R2. Continue evaluation."
         return Test-Path -Path $modulepath
     }
-}
-
-Function New-ModulePath
-{
-
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $modulepath
-    )
-
-    if ((Get-OperatingSystemVersion) -ge 6.1)
-    {         
-        Write-Verbose "Creating Module Home at $modulepath"
-        New-Item -Path $modulepath -ItemType directory > $null
+    else
+    {
+        throw "Operation System not higher enough exception!! Make sure you are runnning Windows 7 / Windows Server 2008 R2 or Higher."
     }
 }
 
@@ -115,11 +96,8 @@ Function Get-ModuleName
     [CmdletBinding()]
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $path
+        [Parameter(Position = 0, Mandatory = 1)]
+        [string]$path
     )
 
     if (Test-Path $path)
@@ -137,107 +115,195 @@ Function Get-ModuleName
     }
 }
 
-Function Remove-ModulePath
-{
 
-    [CmdletBinding()]
+function Copy-ItemEX
+{
     param
     (
-        [Parameter(
-            Position = 0,
-            Mandatory = 1)]
-        [string]
-        $path
+        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName =1)]
+        [alias('PSParentPath')]
+        [string]$Path,
+
+        [parameter(Mandatory = 1, Position  = 1, ValueFromPipelineByPropertyName =1)]
+        [string]$Destination,
+
+        [parameter(Mandatory = 0, Position  = 2, ValueFromPipelineByPropertyName =1)]
+        [string[]]$Targets,
+
+        [parameter(Mandatory = 0, Position  = 3, ValueFromPipelineByPropertyName =1)]
+        [string[]]$Excludes,
+
+        [parameter(Mandatory = 0, Position  = 4, ValueFromPipelineByPropertyName =1)]
+        [Switch]$Recurse,
+
+        [parameter(Mandatory = 0, Position  = 5)]
+        [switch]$Force,
+
+        [parameter(Mandatory = 0, Position  = 6)]
+        [switch]$WhatIf
     )
 
-    if (Test-Path $path)
+    process
     {
-        Remove-Item -Path $path -Recurse -Force
+        # Test Path
+        if (-not (Test-Path $Path)){throw 'Path not found Exception!!'}
+
+        # Get Filter Item Path as List<Tuple<string>,<string>,<string>>
+        $filterPath = GetTargetsFiles -Path $Path -Targets $Targets -Recurse:$isRecurse -Force:$Force
+
+        # Remove Exclude Item from Filter Item
+        $excludePath = GetExcludeFiles -Path $filterPath -Excludes $Excludes
+
+        # Execute Copy, confirmation and WhatIf can be use.
+        CopyItemEX  -Path $excludePath -RootPath $Path -Destination $Destination -Force:$isForce -WhatIf:$isWhatIf
     }
-}
 
-Function Copy-Module
-{
-    [CmdletBinding()]
-    param
-    (
-        [parameter(
-            mandatory,
-            position = 0)]
-        [validateScript({Test-Path $_})]
-        [string]
-        $path,
-
-        [parameter(
-            mandatory,
-            position = 1)]
-        [validateScript({(Get-Item $_).PSIsContainer -eq $true})]
-        [string]
-        $destination
-    )
-
-    if(Test-Path $path)
+    begin
     {
-        $rootpath = Get-Item $path
-        
-        Get-ChildItem -Path $path `
-        | %{
+        $isRecurse = $PSBoundParameters.ContainsKey('Recurse')
+        $isForce = $PSBoundParameters.ContainsKey('Force')
+        $isWhatIf = $PSBoundParameters.ContainsKey('WhatIf')
 
-            # Define target directory path for each directory
-            if ($_.Directory.Name -ne $rootpath.Name)
+        function GetTargetsFiles
+        {
+            [CmdletBinding()]
+            param
+            (
+                [string]$Path,
+
+                [string[]]$Targets,
+
+                [bool]$Recurse,
+
+                [bool]$Force
+            )
+
+            # fullName, DirectoryName, Name
+            $list = New-Object 'System.Collections.Generic.List[Tuple[string,string,string]]'
+            $base = Get-ChildItem $Path -Recurse:$Recurse -Force:$Force
+
+            if (($Targets | measure).count -ne 0)
             {
-                $script:droot = Join-Path $destination $rootpath.Name
-                $script:ddirectory = Join-Path $droot $_.Directory.Name
+                foreach($target in $Targets)
+                {
+                    $base `
+                    | where Name -like $target `
+                    | %{
+                        if ($_ -is [System.IO.FileInfo])
+                        {
+                            $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.DirectoryName, $_.Name)
+                        }
+                        elseif ($_ -is [System.IO.DirectoryInfo])
+                        {
+                            $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.PSParentPath, $_.Name)
+                        }
+                        else
+                        {
+                            throw "Type '{0}' not imprement Exception!!" -f $_.GetType().FullName
+                        }
+                        $list.Add($tuple)
+                    }
+                }
             }
             else
             {
-                $script:ddirectory = Join-Path $destination $_.Directory.Name
+                $base `
+                | %{
+                    if ($_ -is [System.IO.FileInfo])
+                    {
+                        $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.DirectoryName, $_.Name)
+                    }
+                    elseif ($_ -is [System.IO.DirectoryInfo])
+                    {
+                        $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.PSParentPath, $_.Name)
+                    }
+                    else
+                    {
+                        throw "Type '{0}' not imprement Exception!!" -f $_.GetType().FullName
+                    }
+                    $list.Add($tuple)
+                }
             }
-
-            # Check target directory path is already exist or not
-            if(-not(Test-Path $ddirectory))
-            {
-                Write-Verbose "Creating $ddirectory"
-                $script:ddirectorypath = New-Item -Path $ddirectory -ItemType Directory -Force
-            }
-            else
-            {
-                $script:ddirectorypath = Get-Item -Path $ddirectory
-            }
-
-            # Copy Items to target directory
-            try
-            {
-                $script:dpath = Join-Path $ddirectorypath $_.Name
-
-                Write-Host ("Copying '{0}' to {1}" -f $_.FullName, $dpath) -ForegroundColor Cyan
-                Copy-Item -Path $_.FullName -Destination $ddirectorypath -Force -Recurse -ErrorAction Stop
-            }
-            catch
-            {
-                Write-Error $_
-            }
+            
+            return $list
         }
 
-        # return copied destination path
-        return $droot
-    }
-    else
-    {
-        throw "{0} not found exception!" -f $path
+        function GetExcludeFiles
+        {
+            param
+            (
+                [System.Collections.Generic.List[Tuple[string,string,string]]]$Path,
+
+                [string[]]$Excludes
+            )
+
+            if (($Excludes | measure).count -ne 0)
+            {
+                Foreach ($exclude in $Excludes)
+                {
+                    # name not like $exclude
+                    $Path | where Item3 -notlike $exclude
+                }
+            }
+            else
+            {
+                $Path
+            }
+
+        }
+
+        function CopyItemEX
+        {
+            [cmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
+            param
+            (
+                [System.Collections.Generic.List[Tuple[string,string,string]]]$Path,
+
+                [string]$RootPath,
+
+                [string]$Destination,
+
+                [bool]$Force
+            )
+
+            begin
+            {
+                # remove default bound "Force"
+                $PSBoundParameters.Remove('Force') > $null
+            }
+
+            process
+            {
+                # convert to regex format
+                $root = $RootPath.Replace('Microsoft.PowerShell.Core\FileSystem::','').Replace('\', '\\')
+
+                $Path `
+                | %{
+                    # create destination DirectoryName
+                    $directoryName = Join-Path $Destination ($_.Item2 -split $root | select -Last 1)
+                    [PSCustomObject]@{
+                        Path = $_.Item1
+                        DirectoryName = $directoryName
+                        Destination = Join-Path $directoryName $_.Item3
+                    }} `
+                | where {$Force -or $PSCmdlet.ShouldProcess($_.Path, ('Copy Item to {0}' -f $_.Destination))} `
+                | %{
+                    Write-Verbose ("Copying '{0}' to '{1}'." -f $_.Path, $_.Destination)
+                    New-Item -Path $_.DirectoryName -ItemType Directory -Force > $null
+                    Copy-Item -Path $_.Path -Destination $_.Destination -Force
+                }
+            }
+        }
     }
 }
 
-Function Test-ImportModule
+Function Import-ModuleEX
 {
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory,
-            position = 0)]
-        [string]
-        $ModuleName
+        [parameter(mandatory = 1, position = 0)]
+        [string]$ModuleName
     )
 
     if(Get-Module -ListAvailable | where Name -eq $moduleName)
@@ -251,18 +317,17 @@ Function Set-DefaultConfig
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory,
-            position = 0)]
+        [parameter(mandatory = 1, position = 0)]
         [validateScript({Test-Path $_})]
-        [string]
-        $defaultConfigPath,
+        [string]$defaultConfigPath,
 
-        [parameter(
-            mandatory,
-            position = 1)]
-        [string]
-        $ExportConfigDir
+        [parameter(mandatory = 1, position = 1)]
+        [string]$ExportConfigDir,
+
+        [parameter(mandatory = 1, position = 2)]
+        [string]$ExportConfigFile,
+
+        [switch]$force
     )
 
     if(Test-Path $defaultConfigPath)
@@ -272,8 +337,8 @@ Function Set-DefaultConfig
             New-Item -Path $ExportConfigDir -ItemType Directory -Force > $null
         }
         
-        $configName = Split-Path $defaultConfigPath -Leaf
-        $configPath = Join-Path $ExportConfigDir $configName
+        $configPath = Join-Path $ExportConfigDir $ExportConfigFile
+                
         if (-not(Test-Path $configPath))
         {
             Write-Host ("Default configuration file created in '{0}'" -f $configPath) -ForegroundColor Green
@@ -282,7 +347,7 @@ Function Set-DefaultConfig
         elseif ($force)
         {
             Write-Host ("Default configuration file overwrite in '{0}'" -f $configPath) -ForegroundColor Green
-            Rename-Item -Path $configPath -NewName ("{0}_{1}" -f (Get-Date).ToString("yyyyMMdd_HHmmss"), $configName)
+            Rename-Item -Path $configPath -NewName ("{0}_{1}" -f (Get-Date).ToString("yyyyMMdd_HHmmss"), $ExportConfigFile)
             Get-Content $defaultConfigPath -Raw | Out-File -FilePath $configPath -Encoding $moduleVariable.fileEncode -Force
         }
         else
@@ -292,23 +357,27 @@ Function Set-DefaultConfig
     }
 }
 
-Function Remove-OriginalDefaultConfig
+Function Move-OriginalDefaultConfig
 {
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory,
-            position = 0)]
+        [parameter(mandatory = 1, position = 0)]
         [validateScript({Test-Path $_})]
-        [string]
-        $defaultConfigPath
+        [string]$defaultConfigPath,
+
+        [parameter(mandatory = 1, position = 1)]
+        [string]$ExportConfigDir
     )
 
     if(Test-Path $defaultConfigPath)
     {
-        Remove-Item -Path (Split-Path $defaultConfigPath -Parent) -Force -Recurse
+        if (Test-Path $ExportConfigDir)
+        {
+            Get-ChildItem $ExportConfigDir | Remove-Item -Force -Recurse
+        }
+        Move-Item -Path (Split-Path $defaultConfigPath -Parent) -Destination $ExportConfigDir -Force
     }
 }
 
-. Main -reNew $true -force
+Main -Renew $true -Force
