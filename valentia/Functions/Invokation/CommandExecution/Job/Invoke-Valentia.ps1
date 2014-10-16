@@ -135,7 +135,7 @@ function Invoke-Valentia
                 TaskFileName  = $TaskFileName
                 DeployGroups  = $DeployGroups
                 SkipException = $SkipException
-                Quiet         = $PSBoundParameters.ContainsKey("quiet")
+                Quiet         = $quiet
             }
             Out-ValentiaResult @resultParam
 
@@ -158,5 +158,7 @@ function Invoke-Valentia
         {
             $originalErrorAction = $ErrorActionPreference = $valentia.preference.ErrorActionPreference.original
         }
+
+        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
     }
 }

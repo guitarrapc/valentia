@@ -58,6 +58,7 @@ function Ping-ValentiaGroupAsync
         $pingOptions = New-Object Net.NetworkInformation.PingOptions($Ttl, $dontFragment)
         $tasks = New-Object System.Collections.Generic.List[PSCustomObject]
         $output = New-Object System.Collections.Generic.List[PSCustomObject]
+        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
     }
 
     process

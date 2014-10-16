@@ -352,6 +352,9 @@ $valentia.ExecutionPolicy = [Microsoft.PowerShell.ExecutionPolicy]::Bypass
 # contains valentia remote invokation authentication mechanism
 $valentia.Authentication = [System.Management.Automation.Runspaces.AuthenticationMechanism]::Negotiate
 
+# contains valentia remote invokation SSL setting
+$valentia.UseSSL = $false
+
 # contains valentia configuration Information
 $valentia.PSDrive = "V:";             # Set Valentia Mapping Drive with SMBMapping
 $valentia.deployextension = ".ps1";           # contains default DeployGroup file extension
