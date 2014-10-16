@@ -6,6 +6,19 @@ This indicate Version History for valentia.
 ## Version 0.4.x
 ====
 
+
+- version : 0.4.9
+	
+	[ author : guitarrapc ]
+	
+	[ Oct 17, 2014 ]
+	
+	#### Bug fix
+	* fix UseSSL = $true in Config not working
+	* fix Windows Version check for Firewall Cmdlet in ```New-ValentiaPSRemotingFirewallRule```
+
+----
+
 - version : 0.4.8
 	
 	[ author : guitarrapc ]

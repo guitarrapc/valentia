@@ -3242,7 +3242,7 @@ function Initialize-ValentiaEnvironment
         function FirewallNetWorkProfile
         {
             Write-Host "Configuring Firewall to accept PowerShell Remoting." -ForegroundColor Cyan
-            if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.1.0.0))
+            if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.2.0.0)) # over Win8/2012
             {
                 "Enable WindowsPowerShell Remoting Firewall Rule." | Write-ValentiaVerboseDebug
                 New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985
@@ -6241,7 +6241,7 @@ function Invoke-Valentia
         [hashtable]$TaskParameter,
 
         [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
-        [switch]$quiet,
+        [switch]$Quiet,
 
         [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
@@ -6283,7 +6283,7 @@ function Invoke-Valentia
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
-                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
+                UseSSL          = $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
             }
@@ -6310,7 +6310,7 @@ function Invoke-Valentia
                 TaskFileName  = $TaskFileName
                 DeployGroups  = $DeployGroups
                 SkipException = $SkipException
-                Quiet         = $PSBoundParameters.ContainsKey("quiet") -and $quiet
+                Quiet         = $Quiet
             }
             Out-ValentiaResult @resultParam
 
@@ -6665,7 +6665,7 @@ function Invoke-ValentiaAsync
         [hashtable]$TaskParameter,
 
         [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
-        [switch]$quiet,
+        [switch]$Quiet,
 
         [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
@@ -6706,10 +6706,10 @@ function Invoke-ValentiaAsync
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
-                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
+                UseSSL          = $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
-                quiet           = $PSBoundParameters.ContainsKey("quiet")
+                quiet           = $Quiet
             }
             Invoke-ValentiaRunspaceProcess @param
 

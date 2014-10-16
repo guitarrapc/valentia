@@ -189,7 +189,7 @@ function Initialize-ValentiaEnvironment
         function FirewallNetWorkProfile
         {
             Write-Host "Configuring Firewall to accept PowerShell Remoting." -ForegroundColor Cyan
-            if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.1.0.0))
+            if ([System.Environment]::OSVersion.Version -ge (New-Object 'Version' 6.2.0.0)) # over Win8/2012
             {
                 "Enable WindowsPowerShell Remoting Firewall Rule." | Write-ValentiaVerboseDebug
                 New-ValentiaPSRemotingFirewallRule -PSRemotePort 5985

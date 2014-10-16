@@ -71,7 +71,7 @@ function Invoke-ValentiaAsync
         [hashtable]$TaskParameter,
 
         [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
-        [switch]$quiet,
+        [switch]$Quiet,
 
         [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
@@ -112,10 +112,10 @@ function Invoke-ValentiaAsync
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
-                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
+                UseSSL          = $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
-                quiet           = $PSBoundParameters.ContainsKey("quiet")
+                quiet           = $Quiet
             }
             Invoke-ValentiaRunspaceProcess @param
 

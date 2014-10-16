@@ -70,7 +70,7 @@ function Invoke-Valentia
         [hashtable]$TaskParameter,
 
         [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
-        [switch]$quiet,
+        [switch]$Quiet,
 
         [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
@@ -112,7 +112,7 @@ function Invoke-Valentia
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
-                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
+                UseSSL          = $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
             }
@@ -139,7 +139,7 @@ function Invoke-Valentia
                 TaskFileName  = $TaskFileName
                 DeployGroups  = $DeployGroups
                 SkipException = $SkipException
-                Quiet         = $PSBoundParameters.ContainsKey("quiet") -and $quiet
+                Quiet         = $Quiet
             }
             Out-ValentiaResult @resultParam
 
