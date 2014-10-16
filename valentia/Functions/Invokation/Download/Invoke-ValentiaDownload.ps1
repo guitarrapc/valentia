@@ -74,7 +74,6 @@ function Invoke-ValentiaDownload
     ### Begin
 
         $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
 
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
@@ -429,7 +428,7 @@ function Invoke-ValentiaDownload
             TaskFileName  = $TaskFileName
             DeployGroups  = $DeployGroups
             SkipException = $SkipException
-            Quiet         = $quiet
+            Quiet         = $PSBoundParameters.ContainsKey("quiet") -and $quiet
         }
         Out-ValentiaResult @resultParam
 

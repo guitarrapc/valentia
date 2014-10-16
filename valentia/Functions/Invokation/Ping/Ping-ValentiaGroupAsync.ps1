@@ -58,7 +58,6 @@ function Ping-ValentiaGroupAsync
         $pingOptions = New-Object Net.NetworkInformation.PingOptions($Ttl, $dontFragment)
         $tasks = New-Object System.Collections.Generic.List[PSCustomObject]
         $output = New-Object System.Collections.Generic.List[PSCustomObject]
-        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
     }
 
     process
@@ -85,28 +84,33 @@ function Ping-ValentiaGroupAsync
         
         foreach ($task in $tasks)
         {
-            [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
-
-            if (-not $quiet)
+            try
             {
-                    [PSCustomObject]@{
-                    Id                 = $task.Task.Id
-                    HostNameOrAddress  = $task.HostNameOrAddress
-                    Status             = $result.Status
-                    IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-                    RoundtripTime      = $result.RoundtripTime
+                [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
+
+                if (-not ($PSBoundParameters.ContainsKey("quiet") -and $quiet))
+                {
+                        [PSCustomObject]@{
+                        Id                 = $task.Task.Id
+                        HostNameOrAddress  = $task.HostNameOrAddress
+                        Status             = $result.Status
+                        IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
+                        RoundtripTime      = $result.RoundtripTime
+                    }
+                }
+                else
+                {
+                    $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
                 }
             }
-            else
+            finally
             {
-                $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-            }
-
-            "Dispose Ping Object" | Write-ValentiaVerboseDebug
-            $task.Ping.Dispose()
+                "Dispose Ping Object" | Write-ValentiaVerboseDebug
+                if ($null -ne $task){ $task.Ping.Dispose() }
             
-            "Dispose PingReply Object" | Write-ValentiaVerboseDebug
-            $task.Task.Dispose()
+                "Dispose PingReply Object" | Write-ValentiaVerboseDebug
+                if ($null -ne $task){ $task.Task.Dispose() }
+            }
         }
     }
 }

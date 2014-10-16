@@ -351,7 +351,8 @@ function Invoke-ValentiaUpload
         }
 
         # show result
-        WriteValentiaResultHost -quiet $PSBoundParameters.ContainsKey("quiet") -CommandResult $CommandResult
+        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
+        WriteValentiaResultHost -quiet $quiet -CommandResult $CommandResult
 
         # output result
         OutValentiaResultLog -CommandResult $CommandResult

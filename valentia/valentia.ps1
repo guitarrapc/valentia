@@ -6306,7 +6306,7 @@ function Invoke-Valentia
                 TaskFileName  = $TaskFileName
                 DeployGroups  = $DeployGroups
                 SkipException = $SkipException
-                Quiet         = $PSBoundParameters.ContainsKey("quiet")
+                Quiet         = $PSBoundParameters.ContainsKey("quiet") -and $quiet
             }
             Out-ValentiaResult @resultParam
 
@@ -6719,7 +6719,7 @@ function Invoke-ValentiaAsync
                 TaskFileName  = $TaskFileName
                 DeployGroups  = $DeployGroups
                 SkipException = $SkipException
-                Quiet         = $PSBoundParameters.ContainsKey("quiet")
+                Quiet         = $PSBoundParameters.ContainsKey("quiet") -and $quiet
             }
             Out-ValentiaResult @resultParam
 
@@ -7432,7 +7432,7 @@ function Invoke-ValentiaDownload
     ### Begin
 
         $ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-    
+
         # Initialize Stopwatch
         [decimal]$TotalDuration = 0
         $TotalstopwatchSession = [System.Diagnostics.Stopwatch]::StartNew()
@@ -7786,7 +7786,7 @@ function Invoke-ValentiaDownload
             TaskFileName  = $TaskFileName
             DeployGroups  = $DeployGroups
             SkipException = $SkipException
-            Quiet         = $PSBoundParameters.ContainsKey("quiet")
+            Quiet         = $PSBoundParameters.ContainsKey("quiet") -and $quiet
         }
         Out-ValentiaResult @resultParam
 
@@ -7883,28 +7883,33 @@ function Ping-ValentiaGroupAsync
         
         foreach ($task in $tasks)
         {
-            [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
-
-            if (-not $quiet)
+            try
             {
-                    [PSCustomObject]@{
-                    Id                 = $task.Task.Id
-                    HostNameOrAddress  = $task.HostNameOrAddress
-                    Status             = $result.Status
-                    IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-                    RoundtripTime      = $result.RoundtripTime
+                [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
+
+                if (-not ($PSBoundParameters.ContainsKey("quiet") -and $quiet))
+                {
+                        [PSCustomObject]@{
+                        Id                 = $task.Task.Id
+                        HostNameOrAddress  = $task.HostNameOrAddress
+                        Status             = $result.Status
+                        IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
+                        RoundtripTime      = $result.RoundtripTime
+                    }
+                }
+                else
+                {
+                    $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
                 }
             }
-            else
+            finally
             {
-                $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-            }
-
-            "Dispose Ping Object" | Write-ValentiaVerboseDebug
-            $task.Ping.Dispose()
+                "Dispose Ping Object" | Write-ValentiaVerboseDebug
+                if ($null -ne $task){ $task.Ping.Dispose() }
             
-            "Dispose PingReply Object" | Write-ValentiaVerboseDebug
-            $task.Task.Dispose()
+                "Dispose PingReply Object" | Write-ValentiaVerboseDebug
+                if ($null -ne $task){ $task.Task.Dispose() }
+            }
         }
     }
 }
@@ -8285,7 +8290,8 @@ function Invoke-ValentiaSync
         }
 
         # show result
-        WriteValentiaResultHost -quiet $PSBoundParameters.ContainsKey("quiet") -CommandResult $CommandResult
+        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
+        WriteValentiaResultHost -quiet $quiet -CommandResult $CommandResult
 
         # output result
         OutValentiaResultLog -CommandResult $CommandResult -Append
@@ -8651,7 +8657,8 @@ function Invoke-ValentiaUpload
         }
 
         # show result
-        WriteValentiaResultHost -quiet $PSBoundParameters.ContainsKey("quiet") -CommandResult $CommandResult
+        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
+        WriteValentiaResultHost -quiet $quiet -CommandResult $CommandResult
 
         # output result
         OutValentiaResultLog -CommandResult $CommandResult
@@ -8923,7 +8930,8 @@ function Invoke-ValentiaUploadList
         }
 
         # show result
-        WriteValentiaResultHost -quiet $PSBoundParameters.ContainsKey("quiet") -CommandResult $CommandResult
+        $quiet = $PSBoundParameters.ContainsKey("quiet") -and $quiet
+        WriteValentiaResultHost -quiet $quiet -CommandResult $CommandResult
 
         # output result
         OutValentiaResultLog -CommandResult $CommandResult
