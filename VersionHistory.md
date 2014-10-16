@@ -4,6 +4,25 @@ This indicate Version History for valentia.
 # Update detail
 
 ## Version 0.4.x
+====
+
+- version : 0.4.8
+	
+	[ author : guitarrapc ]
+	
+	[ Oct 16, 2014 ]
+	
+	#### Enhancement
+	* [Issue #72](https://github.com/guitarrapc/valentia/issues/72) : Added ```-UseSSL``` switch to ```Invoke-Valentia``` and ```Invoke-ValentiaAsync``` functions. This allows you to use Valentia in Microsoft Azure Environment.
+
+	#### Bug fix
+	* psd1 was not correct as it expose unnessesary variables and functions. Now these are capsulled.
+	* Fix Nuget Init.ps1 always install valentia when opbing project  
+
+	#### Unremarkable change
+	* Fix ```-Quiet``` switch check 
+
+----
 
 - version : 0.4.7
 	
@@ -26,12 +45,6 @@ This indicate Version History for valentia.
 	* Speedup Importing Module. Now all functions are included in single file, it only takes 1sec to import. (Previously 10sec)
 	* Speedup Installer for Module.
 
-	#### Breaking Changes
-	* Change TaskParameter from String[] to hashtable for ```Invoke-Valentia``` and ```Invoke-ValentiaAsync```.
-		* This cause breaking change to use local variable in valentia  scriptblock.
-		* Before : $args[0]
-		* After  : $args[0].Values
-
 	#### Bug fix
 	* Fix ```Invoke-ValentiaAsync``` had memory leak since v0.4.3 had been fixed.
 	* Fix ```Set-ValentiaScheduledTask``` Task Path not working.
@@ -42,6 +55,8 @@ This indicate Version History for valentia.
 	* Added Internal utility functions. 
 	* Divide Type to each ps1
 	* Re-factor Code.
+
+----
 
 - version : 0.4.6
 	
@@ -59,6 +74,8 @@ This indicate Version History for valentia.
 		* Before : $args[0]
 		* After  : $args[0].Values
 
+----
+
 - version : 0.4.5
 	
 	[ author : guitarrapc ]
@@ -74,6 +91,7 @@ This indicate Version History for valentia.
 	#### Bug fix
 	* Fix ```Invoke-ValentiaAsync``` had memory leak since v0.4.3 had been fixed.
 
+----
 
 - version : 0.4.3
 	
@@ -103,6 +121,7 @@ This indicate Version History for valentia.
 	#### Bug fix
 	* Now Result will show Correct Json format as {host : HostName ; value : Value}. Previously it was Hostname : Value.
 
+----
 
 - version : 0.4.0
 	
@@ -134,7 +153,10 @@ This indicate Version History for valentia.
 	* fix installer issue.
 	* change Firewall rule name to Windows Standard
 
+----
+
 ## Version 0.3.x
+====
 
 - version : 0.3.7
 	
@@ -151,7 +173,8 @@ This indicate Version History for valentia.
 	* Invoke-ValentiaParallel is now deprecated. As Workflow is not useful in many deployemnt cases, valentia no longer support workflow.
 	* As Workflow ristrection is taken away, you can use full PowerShell code. (Since Workflow blocks some cmdlet like Write-Host to use in InlineScript, but Workflow will never use in valentia.)
 	 
-	
+----
+
 - version : 0.3.6
 	
 	[ author : guitarrapc ]
@@ -159,6 +182,8 @@ This indicate Version History for valentia.
 	[ Feb 13, 2014 ]
 	
 	* fix issue #56 : Now Invoke-ValentiaAsync runs quiet fast almost same as Invoke-Valentia.
+
+----
 
 - version : 0.3.5
 	
@@ -169,6 +194,8 @@ This indicate Version History for valentia.
 	* fix issue #54 : Invoke-Valentia waiting for job finish before passing next command to jobs.
 	* tune RunSpacePool configutaion #55 : Check preferred number of RunSpaces to execute most efficiently
 	* enhanced issue #52 : change Ping-ValentiaGroupAsync from PSEventJob to System.Threading.Tasks.task
+
+----
 
 - version : 0.3.4
 	
@@ -200,6 +227,7 @@ This indicate Version History for valentia.
 	* define help message for all functions.
 	* Added ```-quiet``` switch to ```Invoke-Valentia```,```Invoke-valentiaParallel``` and ```Invoke-ValentiaAsync```. Now you can compress messages and only recieve execution result in bool.
 
+----
 
 - version : 0.3.3
 	
@@ -212,6 +240,7 @@ This indicate Version History for valentia.
 	* fix issue 31 : valentia cmdlet will stop with error when trying to run more then 2 whithin same console
 	* Enhanced issue 32 : Now you can modify Runspace Pool Size within valentia-config.ps1 
 
+----
 
 - version : 0.3.2
 	
@@ -226,6 +255,7 @@ This indicate Version History for valentia.
 	* fix issue 21 : New-ValentiaFolder could not create branch folder as configured.
 	* fix issue 22 : Result compress result as Format-Table when ScriptBlock or Task output as format-table.
 
+----
 
 - version : 0.3.1
 	
@@ -241,6 +271,7 @@ This indicate Version History for valentia.
 	* fix some messages on Write-Verbose and Write-Warning. 
 	* little configuration for valentia-config.ps1
 
+----
 
 - version : 0.3.0
 	
@@ -253,9 +284,10 @@ This indicate Version History for valentia.
 	* Now Invoke-ValentiaDownload had added to copy item from clients to server
 	* Minor Change valep error variable from array to list (will do for valea and vale)
 
+----
 
 ## Version 0.2.x
-
+====
 
 - version : 0.2.8
 	
@@ -269,6 +301,8 @@ This indicate Version History for valentia.
 	* - Note you should create credential for each user who want to use valentia.
 	* - Recommend to put valentia at C:\Users\Administrator\Documents\WindowsPowerShell\Modules to avoid saving to each user's module path.
 
+----
+
 - version : 0.2.7
 	
 	[ author : guitarrapc ]
@@ -278,6 +312,8 @@ This indicate Version History for valentia.
 	* Added -Force switch for Invoke-ValentiaDownload
 	* As Bits-Transfer cmdlets could stopped with target file had already handled by other process, force switch will ignore handle and copy.
 	* 1. -Force cmdlet using not Bits-Transfer but Copu-Item -Force with credential smb and cim
+
+----
 
 - version : 0.2.6
 	
@@ -292,6 +328,7 @@ This indicate Version History for valentia.
 	* 2. Now DeployGroup must pass extention with. (previously you can omit extention, but now fullname is required.)
 	* 3. Now each functions DeployGroup parameter is changed from [string] to [string[]]
 
+----
 
 - version : 0.2.5
 	
@@ -303,6 +340,7 @@ This indicate Version History for valentia.
 	* Added Close RunSpace before dispose for Invoke-ValentiaResult function
 	* Remove Json fix as C# could not read
 
+----
 
 - version : 0.2.4
 	
@@ -313,6 +351,7 @@ This indicate Version History for valentia.
 	* Fixt Invoke-ValentiaDownload and Invoke-ValentiaUpload to retrive correct status when sending as Async.
 	* Fix Invoke-ValentiaUpload, now it can send multiple files.
 
+----
 
 - version : 0.2.3
 	
@@ -324,6 +363,7 @@ This indicate Version History for valentia.
 	* Destination Path will create DeployMemer foler
 	* Correct miss type in Invoke-ValentiaUpload function
 
+----
 
 - version : 0.2.2
 	
@@ -335,6 +375,7 @@ This indicate Version History for valentia.
 	* Added Warning Messages.
 	* Add functions
 
+----
 
 - version : 0.2.1
 	
@@ -350,6 +391,7 @@ This indicate Version History for valentia.
 	* Added Deploy task and others on example
 	* Change deploy bat execution from vale to valea
 	
+----
 
 - version : 0.2.0
 	
@@ -369,8 +411,10 @@ This indicate Version History for valentia.
 	* Added dllProductVersionDetail with Logout.
 	* Added help syntax into some functions.
 
+----
 
 ## Version 0.1.x
+====
 
 - version : 0.1.7
 	
@@ -384,7 +428,7 @@ This indicate Version History for valentia.
 	* fix bug in uploadL
 	* fix bug in Sync
 
--
+----
 
 - version : 0.1.6
 	
@@ -398,7 +442,7 @@ This indicate Version History for valentia.
 	* Now Valentia.Context issue of remaining past time command variables are corrected. clean function (Get-ValentiaClean) sat at end of each valentia cmdlet. This will execute $valentia.context.Clear().
 	* Now SuccessStatus and ErrorMessageDetail variables are included into $valentia.context.taskkey @{}. This allow valentia variables keep in clean.
 
--
+----
 
 - version : 0.1.5
 	
@@ -410,7 +454,7 @@ This indicate Version History for valentia.
 	* Added Exception for Task read.
 	* Now Log format is fixed.
 
--
+----
 
 - version : 0.1.4
 	
@@ -429,7 +473,7 @@ This indicate Version History for valentia.
 	* Changed Get-ValentiaGroup to output Result.
 	* Replace all Write-Host with other Write cmdlet. Now you can call valentia cmdlets from workflow, or C# or any other processes through PowerShell runspace.
 
--
+----
 
 - version : 0.1.3
 	
@@ -442,7 +486,7 @@ This indicate Version History for valentia.
 	* Added Set-ValentiaHostName and Get-ValentiaRebootRequiredStatus to Initialize-ValentiaEnvironment function
 	* Disable Get-ValentiaClean on End of Set-ValentiaOSUser function
 
--
+----
 
 - version : 0.1.2
 	
@@ -457,7 +501,7 @@ This indicate Version History for valentia.
 	* Add explanation in ReadMeFast for Initialize-ValentiaEnvironment new swtich "-NoPassSave".
 	* Devide Readme and VersionHistory. Now only latest changes will be written in Readme, and all history will keep in VersionHistory.
 
--
+----
 
 - version : 0.1.1
 	
@@ -474,7 +518,7 @@ This indicate Version History for valentia.
 	* Nomore Initialize-ValentiaServer and Initialize-ValentiaClient but changed to Initialize-ValentiaEnvironment.
 	   (Initialize-ValentiaEnvironment can choose "-Server" or "-Client" settings with switch. Also  you can skip deploy OS user setup by "-NoOSUser" switch.)
 
--
+-----
 
 - version : 0.1.0
 
