@@ -15,7 +15,7 @@
 ModuleVersion = '0.4.7'
 
 # ID used to uniquely identify this module
-GUID = '036f2d50-eaf8-44c4-84e1-15b0b92823a0'
+GUID = '8f24857d-de0c-4fe8-a464-d6470661f95a'
 
 # Author of this module
 Author = 'guitarrapc'
@@ -102,10 +102,12 @@ FunctionsToExport = 'Invoke-Valentia', 'Invoke-ValentiaAsync', 'Invoke-ValentiaD
 CmdletsToExport = '*'
 
 # Variables to export from this module
-# VariablesToExport = @()
+VariablesToExport = 'valentia'
 
 # Aliases to export from this module
-# AliasesToExport = @()
+AliasesToExport = 'Task', 'Vale', 'Valea', 'Upload', 'UploadL', 'Sync', 'Download', 'Go', 'Clean', 
+               'Reload', 'Target', 'PingAsync', 'Sed', 'ipremark', 'ipunremark', 'Cred', 
+               'Rename', 'DynamicParameter', 'Initial'
 
 # List of all modules packaged with this module
 # ModuleList = @()

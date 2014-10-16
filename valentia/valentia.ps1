@@ -6249,7 +6249,10 @@ function Invoke-Valentia
         [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication = $valentia.Authentication,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Select SSL is use or not.")]
+        [switch]$UseSSL = $valentia.UseSSL,
+
+        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 
@@ -6280,6 +6283,7 @@ function Invoke-Valentia
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
+                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
             }
@@ -6382,7 +6386,10 @@ function Invoke-ValentiaCommand
         [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input Authentication for credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input SSL is use or not.")]
+        [bool]$UseSSL,
+
+        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
         [bool]$SkipException
     )
 
@@ -6394,7 +6401,7 @@ function Invoke-ValentiaCommand
             Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
             Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
             ("Running ScriptBlock to {0} as Job" -f $computerName) | Write-ValentiaVerboseDebug
-            $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -Authentication $Authentication -AsJob
+            $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -Authentication $Authentication -UseSSL:$UseSSL -AsJob
             $list.Add($job)
         }
 
@@ -6450,6 +6457,9 @@ function Invoke-ValentiaJobProcess
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
         [parameter(Mandatory = 1)]
+        [bool]$UseSSL,
+
+        [parameter(Mandatory = 1)]
         [bool]$SkipException
     )
 
@@ -6460,6 +6470,7 @@ function Invoke-ValentiaJobProcess
         Credential      = $Credential
         TaskParameter   = $TaskParameter
         Authentication  = $Authentication
+        UseSSL          = $UseSSL
         SkipException   = $SkipException
         ErrorAction     = $ErrorActionPreference
     }
@@ -6662,7 +6673,10 @@ function Invoke-ValentiaAsync
         [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication = $valentia.Authentication,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Select SSL is use or not.")]
+        [switch]$UseSSL = $valentia.UseSSL,
+
+        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 
@@ -6692,6 +6706,7 @@ function Invoke-ValentiaAsync
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
+                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
                 quiet           = $PSBoundParameters.ContainsKey("quiet")
@@ -6794,7 +6809,10 @@ function Invoke-ValentiaAsyncCommand
         [HashTable]$TaskParameterHash,
 
         [Parameter(Position  = 5, Mandatory = 1, HelpMessage = "Input Authentication for credential.")]
-        [HashTable]$AuthenticationHash
+        [HashTable]$AuthenticationHash,
+
+        [Parameter(Position  = 6, Mandatory = 1, HelpMessage = "Select SSL is use or not.")]
+        [HashTable]$UseSSLHash
     )
 
     end
@@ -6813,13 +6831,15 @@ function Invoke-ValentiaAsyncCommand
             Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}"   -f   $($CredentialHash.Keys)    , $($CredentialHash.Values))
             Write-Verbose ("Add ArgumentList Argument..... Keys : {0}, Values : {1}" -f   $($TaskParameterHash.Keys) , $($TaskParameterHash.Values))
             Write-Verbose ("Add Authentication Argument..... Keys : {0}, Values : {1}" -f $($AuthenticationHash.Keys), $($AuthenticationHash.Values))
+            Write-Verbose ("Add UseSSL Argument..... Keys : {0}, Values : {1}"       -f $($UseSSLHash.Keys), $($UseSSLHash.Values))
             $Pipeline.
                 AddScript($InvokeCommand).
                 AddArgument($ScriptToRunHash).
                 AddArgument($ComputerName).
                 AddArgument($CredentialHash).
                 AddArgument($TaskParameterHash).
-                AddArgument($AuthenticationHash) > $null
+                AddArgument($AuthenticationHash).
+                AddArgument($UseSSLHash) > $null
 
             # Add RunSpacePool to PowerShell Instance
             ("Adding Runspaces {0}" -f $RunspacePool) | Write-ValentiaVerboseDebug
@@ -6862,7 +6882,8 @@ function Invoke-ValentiaAsyncCommand
                 $ComputerName,
                 $CredentialHash,
                 $TaskParameterHash,
-                $AuthenticationHash
+                $AuthenticationHash,
+                $UseSSLHash
             )
 
             $param = @{
@@ -6871,6 +6892,7 @@ function Invoke-ValentiaAsyncCommand
                 Credential     = $($CredentialHash.Values)
                 ArgumentList   = $($TaskParameterHash.Values)
                 Authentication = $($AuthenticationHash.Values)
+                UseSSL         = $($UseSSLHash.Values)
             }
 
             Invoke-Command @param
@@ -6905,6 +6927,9 @@ function Invoke-ValentiaRunspaceProcess
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
         [parameter(Mandatory = 1)]
+        [bool]$UseSSL,
+
+        [parameter(Mandatory = 1)]
         [bool]$SkipException,
 
         [parameter(Mandatory = 0)]
@@ -6921,6 +6946,7 @@ function Invoke-ValentiaRunspaceProcess
                 Credential     = $credential
                 TaskParameter  = $TaskParameter
                 Authentication = $Authentication
+                UseSSL         = $UseSSL
             }
             Invoke-ValentiaAsyncPipeline @asyncPipelineparam
 
@@ -7140,7 +7166,10 @@ function Invoke-ValentiaAsyncPipeline
         [hashtable]$TaskParameter,
 
         [parameter(Mandatory = 1)]
-        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
+
+        [parameter(Mandatory = 1)]
+        [bool]$UseSSL
     )
 
     # Create RunSpacePools
@@ -7153,6 +7182,7 @@ function Invoke-ValentiaAsyncPipeline
         credentialHash     = @{Credential     = $Credential}
         TaskParameterHash  = @{TaskParameter  = $TaskParameter}
         AuthenticationHash = @{Authentication = $Authentication}
+        UseSSL             = @{UseSSL         = $UseSSL}
     }
     $valentia.runspace.asyncPipeline = New-Object 'System.Collections.Generic.List[AsyncPipeline]'
 

@@ -162,8 +162,8 @@ $valentia.functionToExport = @(
         "Set-ValetntiaWSManConfiguration"
 )
 
-$script:variableToExport = "valentia"
-$script:AliasesToExport = @(
+$valentia.variableToExport = "valentia"
+$valentia.AliasesToExport = @(
     "Task",
     "Vale",
     "Valea",
