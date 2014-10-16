@@ -8,15 +8,23 @@ function Main
     (
         [string]$Modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
 
-        [bool]$Renew = $false,
-
         [switch]$Force = $false,
 
         [switch]$Whatif = $false
     )
 
-    process
+    end
     {
+        # Test Module is same or not
+        if (Test-ModuleVersion -Modulename $moduleName -modulePath $moduleFullPath -NugetModulePath $path){ return }
+        
+        # Remove Current Module
+        if (Test-Path $moduleFullPath)
+        {
+            Write-Warning ("'{0}' already exist. Removing current module." -f $moduleFullPath)
+            Remove-Item -Path $moduleFullPath -Recurse -Force
+        }
+
         try
         {
             # Copy Module
@@ -44,12 +52,15 @@ function Main
     begin
     {
         $ErrorActionPreference = "Stop"
+
         # For Nuget
         $parent = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
         $child  = $parent.name.split(".")[0]
         $path = Join-Path $parent $child
+
         # Original
         # $path = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
+        
         $moduleName = Get-ModuleName -path $path
         $moduleFullPath = Join-Path $modulepath $moduleName
 
@@ -58,13 +69,6 @@ function Main
         {
             Write-Warning "$modulepath not found. creating module path."
             New-Item -Path $modulepath -ItemType directory -Force > $null
-        }
-
-        Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $moduleFullPath)
-        if($reNew -and (Test-ModulePath -modulepath $moduleFullPath))
-        {
-            Write-Warning ("'{0}' already exist. Escape from creating module Directory." -f $moduleFullPath)
-            Remove-Item -Path $moduleFullPath -Recurse -Force
         }
     }
 }
@@ -312,6 +316,24 @@ Function Import-ModuleEX
     }
 }
 
+function Test-ModuleVersion ([string]$Modulename, [string]$modulePath, [string]$NugetModulePath)
+{
+    $modulePSD1 = Join-Path $modulePath "$Modulename.psd1"
+    $nugetPSD1 = Join-Path $NugetModulePath "$Modulename.psd1"
+
+    Write-Host "Checking current Module : $modulePSD1" -ForegroundColor Green
+    if (-not (Test-Path $modulePSD1)){ return $false }
+
+    Write-Host "Checking Nuget Module : $nugetPSD1" -ForegroundColor Green
+    if (-not (Test-Path $nugetPSD1)){ return $false }
+
+    $currentModule = Test-ModuleManifest -Path $modulePSD1
+    $newModule = Test-ModuleManifest -Path $nugetPSD1
+
+    Write-Host ("Current Module Version : {0}, NuGet Module Version : {1}" -f $currentModule.Version, $newModule.Version) -ForegroundColor Green
+    return $currentModule.Version -eq $newModule.Version
+}
+
 Function Set-DefaultConfig
 {
     [CmdletBinding()]
@@ -380,4 +402,4 @@ Function Move-OriginalDefaultConfig
     }
 }
 
-Main -Renew $true -Force
+Main -Force
