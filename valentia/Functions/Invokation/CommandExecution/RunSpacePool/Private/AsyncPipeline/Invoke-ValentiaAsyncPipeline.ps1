@@ -17,7 +17,10 @@ function Invoke-ValentiaAsyncPipeline
         [hashtable]$TaskParameter,
 
         [parameter(Mandatory = 1)]
-        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication
+        [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
+
+        [parameter(Mandatory = 1)]
+        [bool]$UseSSL
     )
 
     # Create RunSpacePools
@@ -30,6 +33,7 @@ function Invoke-ValentiaAsyncPipeline
         credentialHash     = @{Credential     = $Credential}
         TaskParameterHash  = @{TaskParameter  = $TaskParameter}
         AuthenticationHash = @{Authentication = $Authentication}
+        UseSSL             = @{UseSSL         = $UseSSL}
     }
     $valentia.runspace.asyncPipeline = New-Object 'System.Collections.Generic.List[AsyncPipeline]'
 

@@ -46,7 +46,10 @@ function Invoke-ValentiaAsyncCommand
         [HashTable]$TaskParameterHash,
 
         [Parameter(Position  = 5, Mandatory = 1, HelpMessage = "Input Authentication for credential.")]
-        [HashTable]$AuthenticationHash
+        [HashTable]$AuthenticationHash,
+
+        [Parameter(Position  = 6, Mandatory = 1, HelpMessage = "Select SSL is use or not.")]
+        [HashTable]$UseSSLHash
     )
 
     end
@@ -65,13 +68,15 @@ function Invoke-ValentiaAsyncCommand
             Write-Verbose ("Add Credential Argument..... Keys : {0}, Values : {1}"   -f   $($CredentialHash.Keys)    , $($CredentialHash.Values))
             Write-Verbose ("Add ArgumentList Argument..... Keys : {0}, Values : {1}" -f   $($TaskParameterHash.Keys) , $($TaskParameterHash.Values))
             Write-Verbose ("Add Authentication Argument..... Keys : {0}, Values : {1}" -f $($AuthenticationHash.Keys), $($AuthenticationHash.Values))
+            Write-Verbose ("Add UseSSL Argument..... Keys : {0}, Values : {1}"       -f $($UseSSLHash.Keys), $($UseSSLHash.Values))
             $Pipeline.
                 AddScript($InvokeCommand).
                 AddArgument($ScriptToRunHash).
                 AddArgument($ComputerName).
                 AddArgument($CredentialHash).
                 AddArgument($TaskParameterHash).
-                AddArgument($AuthenticationHash) > $null
+                AddArgument($AuthenticationHash).
+                AddArgument($UseSSLHash) > $null
 
             # Add RunSpacePool to PowerShell Instance
             ("Adding Runspaces {0}" -f $RunspacePool) | Write-ValentiaVerboseDebug
@@ -114,7 +119,8 @@ function Invoke-ValentiaAsyncCommand
                 $ComputerName,
                 $CredentialHash,
                 $TaskParameterHash,
-                $AuthenticationHash
+                $AuthenticationHash,
+                $UseSSLHash
             )
 
             $param = @{
@@ -123,6 +129,7 @@ function Invoke-ValentiaAsyncCommand
                 Credential     = $($CredentialHash.Values)
                 ArgumentList   = $($TaskParameterHash.Values)
                 Authentication = $($AuthenticationHash.Values)
+                UseSSL         = $($UseSSLHash.Values)
             }
 
             Invoke-Command @param

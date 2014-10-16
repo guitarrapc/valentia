@@ -46,7 +46,10 @@ function Invoke-ValentiaCommand
         [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input Authentication for credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input SSL is use or not.")]
+        [bool]$UseSSL,
+
+        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
         [bool]$SkipException
     )
 
@@ -58,7 +61,7 @@ function Invoke-ValentiaCommand
             Write-Verbose ("ScriptBlock..... {0}" -f $($ScriptToRun))
             Write-Verbose ("Argumentlist..... {0}" -f $($TaskParameter))
             ("Running ScriptBlock to {0} as Job" -f $computerName) | Write-ValentiaVerboseDebug
-            $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -Authentication $Authentication -AsJob
+            $job = Invoke-Command -ScriptBlock $ScriptToRun -ArgumentList $TaskParameter -ComputerName $computerName -Credential $Credential -Authentication $Authentication -UseSSL:$UseSSL -AsJob
             $list.Add($job)
         }
 

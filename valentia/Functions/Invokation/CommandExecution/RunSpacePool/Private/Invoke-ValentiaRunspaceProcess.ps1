@@ -23,6 +23,9 @@ function Invoke-ValentiaRunspaceProcess
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
         [parameter(Mandatory = 1)]
+        [bool]$UseSSL,
+
+        [parameter(Mandatory = 1)]
         [bool]$SkipException,
 
         [parameter(Mandatory = 0)]
@@ -39,6 +42,7 @@ function Invoke-ValentiaRunspaceProcess
                 Credential     = $credential
                 TaskParameter  = $TaskParameter
                 Authentication = $Authentication
+                UseSSL         = $UseSSL
             }
             Invoke-ValentiaAsyncPipeline @asyncPipelineparam
 

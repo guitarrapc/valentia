@@ -23,6 +23,9 @@ function Invoke-ValentiaJobProcess
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
         [parameter(Mandatory = 1)]
+        [bool]$UseSSL,
+
+        [parameter(Mandatory = 1)]
         [bool]$SkipException
     )
 
@@ -33,6 +36,7 @@ function Invoke-ValentiaJobProcess
         Credential      = $Credential
         TaskParameter   = $TaskParameter
         Authentication  = $Authentication
+        UseSSL          = $UseSSL
         SkipException   = $SkipException
         ErrorAction     = $ErrorActionPreference
     }

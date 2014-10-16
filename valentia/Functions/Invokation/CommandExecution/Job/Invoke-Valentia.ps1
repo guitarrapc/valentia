@@ -78,7 +78,10 @@ function Invoke-Valentia
         [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication = $valentia.Authentication,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Select SSL is use or not.")]
+        [switch]$UseSSL = $valentia.UseSSL,
+
+        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 
@@ -109,6 +112,7 @@ function Invoke-Valentia
                 Credential      = $Credential
                 TaskParameter   = $TaskParameter
                 Authentication  = $Authentication
+                UseSSL          = $PSBoundParameters.ContainsKey("UseSSL") -and $UseSSL
                 SkipException   = $SkipException
                 ErrorAction     = $originalErrorAction
             }
