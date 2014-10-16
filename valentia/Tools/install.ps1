@@ -1,13 +1,14 @@
 ﻿#Requires -Version 2.0
 
 # Windows 7 and later is requires.
+
 function Main
 {
     [CmdletBinding()]
     Param
     (
-        [string]$Modulepath = ($env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}),
-
+        [string]$Modulepath = (GetModulePath),
+        
         [bool]$Renew = $false,
 
         [switch]$Force = $false,
@@ -25,7 +26,7 @@ function Main
 
             # Import Module
             Write-Host ("Importing Module '{0}'" -f $moduleName) -ForegroundColor cyan
-            Import-ModuleEX -ModuleName $moduleName
+            Import-ModuleEX -ModuleName $moduleName -ModulePath $moduleFullPath
 
             # GetModuleVariable
             $moduleVariable = (Get-Variable -Name $moduleName).Value
@@ -34,6 +35,7 @@ function Main
             $originalConfigPath = Join-Path $moduleVariable.originalconfig.root $moduleVariable.originalconfig.file -Resolve
             Set-DefaultConfig -defaultConfigPath $originalConfigPath -ExportConfigDir $moduleVariable.appdataconfig.root -ExportConfigFile $moduleVariable.appdataconfig.file -force:$force
             Move-OriginalDefaultConfig -defaultConfigPath $originalConfigPath -ExportConfigDir $moduleVariable.appdataconfig.backup
+            return
         }
         catch
         {
@@ -280,7 +282,7 @@ function Copy-ItemEX
                         Path = $_.Item1
                         DirectoryName = $directoryName
                         Destination = Join-Path $directoryName $_.Item3
-                    }} `
+                }} `
                 | where {$Force -or $PSCmdlet.ShouldProcess($_.Path, ('Copy Item to {0}' -f $_.Destination))} `
                 | %{
                     Write-Verbose ("Copying '{0}' to '{1}'." -f $_.Path, $_.Destination)
@@ -298,13 +300,15 @@ Function Import-ModuleEX
     param
     (
         [parameter(mandatory = 1, position = 0)]
-        [string]$ModuleName
+        [string]$ModuleName,
+
+        [parameter(mandatory = 1, position = 0)]
+        [string]$ModulePath
     )
 
-    if(Get-Module -ListAvailable | where Name -eq $moduleName)
-    {
-        Import-Module (Join-Path (Join-Path $modulepath $moduleName) ("{0}.psd1" -f $moduleName)) -PassThru -Force
-    }
+    if(Get-Module -ListAvailable | where Name -eq $moduleName){ Import-Module (Join-Path $modulepath ("{0}.psd1" -f $moduleName)) -PassThru -Force }
+    $module = (Join-Path $ModulePath $ModuleName)
+    Import-Module "$module.psd1"
 }
 
 Function Set-DefaultConfig
@@ -372,6 +376,131 @@ Function Move-OriginalDefaultConfig
             Get-ChildItem $ExportConfigDir | Remove-Item -Force -Recurse
         }
         Move-Item -Path (Split-Path $defaultConfigPath -Parent) -Destination $ExportConfigDir -Force
+    }
+}
+
+function Show-PromptForChoice
+{
+    [CmdletBinding()]
+    param
+    (
+        # input prompt items with array. second index is for help message.
+        [parameter(mandatory = 0, position = 0)]
+        [string[]]$questions = @('Yes', 'No'),
+
+        # input title message showing when prompt.
+        [parameter(mandatory = 0, position = 1)]
+        [string[]]$title = "PSModulePath not contains Documents directory.",
+                
+        # input message showing when prompt.
+        [parameter(mandatory = 0, position = 2)]
+        [string]$message = "Please select PSmodulePath to install valentia.",
+
+        # input additional message showing under message.
+        [parameter(mandatory = 0, position = 3)]
+        [string]$additionalMessage = $null,
+        
+        # input Index default selected when prompt.
+        [parameter(mandatory = 0, position = 4)]
+        [int]$defaultIndex = 0
+    )
+   
+    try
+    {
+        # create caption Messages
+        if(-not [string]::IsNullOrEmpty($additionalMessage))
+        {
+            $message += ([System.Environment]::NewLine + $additionalMessage)
+        }
+
+        # create dictionary include dictionary <int, KV<string, string>> : accessing KV <string, string> with int key return from prompt
+        $script:dictionary = New-Object 'System.Collections.Generic.Dictionary[int, System.Collections.Generic.KeyValuePair[string, string]]'
+        
+        foreach ($question in $questions)
+        {
+            if ("$questions" -eq "$($valentia.promptForChoice.questions)")
+            {
+                if ($private:count -eq 1)
+                {
+                    # create key to access value
+                    $private:key = $valentia.promptForChoice.defaultChoiceNo
+                }
+                else
+                {
+                    # create key to access value
+                    $private:key = $valentia.promptForChoice.defaultChoiceYes
+                }
+            }
+            else
+            {
+                # create key to access value
+                $private:key = [System.Text.Encoding]::ASCII.GetString($([byte[]][char[]]'a') + [int]$private:count)
+            }
+
+            # create KeyValuePair<string, string> for prompt item : accessing value with 1 letter Alphabet by converting char
+            $script:keyValuePair = New-Object 'System.Collections.Generic.KeyValuePair[string, string]'($key, $question)
+            
+            # add to Dictionary
+            $dictionary.Add($count, $keyValuePair)
+
+            # increment to next char
+            $count++
+
+            # prompt limit to max 26 items as using single Alphabet charactors.
+            if ($count -gt 26)
+            {
+                throw ("Not allowed to pass more then '{0}' items for prompt" -f ($dictionary.Keys).count)
+            }
+        }
+
+        # create choices Collection
+        $script:collectionType = [System.Management.Automation.Host.ChoiceDescription]
+        $script:choices = New-Object "System.Collections.ObjectModel.Collection[$CollectionType]"
+
+        # create choice description from dictionary<int, KV<string, string>>
+        foreach ($dict in $dictionary.GetEnumerator())
+        {
+            foreach ($kv in $dict)
+            {
+                # create prompt choice item. Currently you could not use help message.
+                $private:choice = (("{0} (&{1}){2}-" -f $kv.Value.Value, "$($kv.Value.Key)".ToUpper(), [Environment]::NewLine), ($valentia.promptForChoice.helpMessage -f $kv.Value.Key, $kv.Value.Value))
+
+                # add to choices
+                $choices.Add((New-Object $CollectionType $choice))
+            }
+        }
+
+        # show choices on host
+        $script:answer = $host.UI.PromptForChoice($title, $message, $choices, $defaultIndex)
+
+        # return value from key
+        return ($dictionary.GetEnumerator() | where Key -eq $answer).Value.Value
+    }
+    catch
+    {
+        throw $_
+    }
+}
+
+function GetModulePath
+{
+    $ModulePath = $env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}
+    if (($ModulePath | measure).count -eq 1){ return $ModulePath }
+    if (($ModulePath | measure).count -eq 0)
+    {
+        $answer = Read-Host -Prompt "PSModulePath detected as not include Documents path. Please input path to install valentia."
+        if (-not (Test-Path $answer)){ throw New-Object New-Object System.IO.FileNotFoundException ("Specified Path not found exception!!", $answer) }
+        return $answer
+    }
+
+    if (($ModulePath | measure).count -gt 1)
+    {
+        $param = @{
+            title = "PSModulePath contains more than 2 Documents directory."
+            message = "Please select which PSmodulePath to install valentia."
+            questions = $ModulePath
+        }
+        return Show-PromptForChoice @param
     }
 }
 
