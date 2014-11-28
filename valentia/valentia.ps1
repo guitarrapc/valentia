@@ -15,7 +15,12 @@ Created: 3/Sep/2014
 .EXAMPLE
 Get-ValentiaACL -Path c:\Deployment -Account Users
 --------------------------------------------
-Get ACL Information from c:\Deployment for user "BuiltIn\Users"
+Get ACL Information from c:\Deployment for user "Users", means no Computer/Domain user name checking.
+
+.EXAMPLE
+Get-ValentiaACL -Path c:\Deployment -Account contoso\John
+--------------------------------------------
+Get ACL Information from c:\Deployment for user "contoso\John", means strict user name checking.
 
 .ExternalHelp "https://github.com/guitarrapc/DSCResources/tree/master/Custom/gACLResource"
 #>
@@ -51,33 +56,18 @@ function Get-ValentiaACL
         [Bool]$Inherit = $false,
 
         [Parameter(Mandatory = 0, position = 6)]
-        [Bool]$Recurse = $false
+        [Bool]$Recurse = $false,
+
+        [Parameter(Mandatory = 0, position = 7)]
+        [Bool]$Strict = $false
     )
 
-    $InheritFlag = if ($Inherit)
-    {
-        "{0}, {1}" -f [System.Security.AccessControl.InheritanceFlags]::ContainerInherit, [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-    }
-    elseif ($Recurse)
-    {
-        "{0}, {1}" -f [System.Security.AccessControl.InheritanceFlags]::ContainerInherit, [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-    }
-    else
-    {
-        [System.Security.AccessControl.InheritanceFlags]::None
-    }
-
-    $DesiredRule = New-Object System.Security.AccessControl.FileSystemAccessRule($Account, $Rights, $InheritFlag, "None", $Access)
-    $CurrentACL = (Get-Item $Path).GetAccessControl("Access")
-    $CurrentRules = $CurrentACL.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])
-    $Match = $CurrentRules `
-    | where {($DesiredRule.IdentityReference -eq $_.IdentityReference) `
-        -and ($DesiredRule.FileSystemRights -eq $_.FileSystemRights) `
-        -and ($DesiredRule.AccessControlType -eq $_.AccessControlType) `
-        -and ($Inherit -eq $_.InheritanceFlags )
-    }
+    $desiredRule = GetDesiredRule -Path $Path -Account $Account -Rights $Rights -Access $Access -Inherit $Inherit -Recurse $Recurse
+    $currentACL = (Get-Item $Path).GetAccessControl("Access")
+    $currentRules = $currentACL.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])
+    $match = IsDesiredRuleAndCurrentRuleSame -DesiredRule $desiredRule -CurrentRules $currentRules -Strict $Strict
     
-    $Presence = if ($Match)
+    $presence = if ($true -eq $match)
     {
         "Present"
     }
@@ -87,7 +77,7 @@ function Get-ValentiaACL
     }
 
     return @{
-        Ensure    = $Presence
+        Ensure    = $presence
         Path      = $Path
         Account   = $Account
         Rights    = $Rights
@@ -115,7 +105,12 @@ Created: 3/Sep/2014
 .EXAMPLE
 Set-ValentiaACL -Path c:\Deployment -Account Users -Rights Modify -Ensure Present -Access Allow -Inherit $false -Recurse $false
 --------------------------------------------
-Add FullControl to the c:\Deployment for user "BuiltIn\Users".
+Add FullControl to the c:\Deployment for user "Users", means no Computer/Domain user name checking.
+
+.EXAMPLE
+Set-ValentiaACL -Path c:\Deployment -Account contoso\John -Rights Modify -Ensure Present -Access Allow -Inherit $false -Recurse $false
+--------------------------------------------
+Add FullControl to the c:\Deployment for user "BuiltIn\Users", means strict user name checking.
 
 .ExternalHelp "https://github.com/guitarrapc/DSCResources/tree/master/Custom/gACLResource"
 #>
@@ -150,43 +145,25 @@ function Set-ValentiaACL
         [Bool]$Inherit = $false,
 
         [Parameter(Mandatory = 0, position = 6)]
-        [Bool]$Recurse = $false
+        [Bool]$Recurse = $false,
+
+        [Parameter(Mandatory = 0, position = 7)]
+        [Bool]$Strict = $false
     )
 
-    $InheritFlag = if ($Inherit)
-    {
-        "{0}, {1}" -f [System.Security.AccessControl.InheritanceFlags]::ContainerInherit, [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-    }
-    elseif ($Recurse)
-    {
-        "{0}, {1}" -f [System.Security.AccessControl.InheritanceFlags]::ContainerInherit, [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-    }
-    else
-    {
-        [System.Security.AccessControl.InheritanceFlags]::None
-    }
-
-    $DesiredRule = New-Object System.Security.AccessControl.FileSystemAccessRule($Account, $Rights, $InheritFlag, "None", $Access)
-    $CurrentACL = (Get-Item $Path).GetAccessControl("Access")
-    $CurrentRules = $CurrentACL.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])
-    $Match = $CurrentRules `
-    | where {($DesiredRule.IdentityReference -eq $_.IdentityReference) `
-        -and ($DesiredRule.FileSystemRights -eq $_.FileSystemRights) `
-        -and ($DesiredRule.AccessControlType -eq $_.AccessControlType) `
-        -and ($Inherit -eq $_.InheritanceFlags )
-    }
+    $desiredRule = GetDesiredRule -Path $Path -Account $Account -Rights $Rights -Access $Access -Inherit $Inherit -Recurse $Recurse
+    $currentACL = (Get-Item $Path).GetAccessControl("Access")
+    $currentRules = $currentACL.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])
+    $match = IsDesiredRuleAndCurrentRuleSame -DesiredRule $desiredRule -CurrentRules $currentRules -Strict $Strict
 
     if ($Ensure -eq "Present")
     {
-        if ($null -eq $Match)
-        {
-            $CurrentACL.AddAccessRule($DesiredRule)
-            $CurrentACL | Set-Acl -Path $Path 
-        }
+        $CurrentACL.AddAccessRule($DesiredRule)
+        $CurrentACL | Set-Acl -Path $Path 
     }
     elseif ($Ensure -eq "Absent")
     {
-        $Match | % {$CurrentACL.RemoveAccessRule($_)} > $null
+        $CurrentACL.RemoveAccessRule($DesiredRule) > $null
         $CurrentACL | Set-Acl -Path $Path 
     }
 }
@@ -209,7 +186,12 @@ Created: 3/Sep/2014
 .EXAMPLE
 Test-ValentiaACL -Path c:\Deployment -Account Users -Rights Modify -Ensure Present -Access Allow -Inherit $false -Recurse $false
 --------------------------------------------
-TestACL to the c:\Deployment for user "BuiltIn\Users".
+TestACL to the c:\Deployment for user "Users", means no Computer/Domain user name checking.
+
+.EXAMPLE
+Test-ValentiaACL -Path c:\Deployment -Account contoso\John -Rights Modify -Ensure Present -Access Allow -Inherit $false -Recurse $false
+--------------------------------------------
+TestACL to the c:\Deployment for user "contoso\John", means strict user name checking.
 
 .ExternalHelp "https://github.com/guitarrapc/DSCResources/tree/master/Custom/gACLResource"
 #>
@@ -245,6 +227,57 @@ function Test-ValentiaACL
         [Bool]$Inherit = $false,
 
         [Parameter(Mandatory = 0, position = 6)]
+        [Bool]$Recurse = $false,
+
+        [Parameter(Mandatory = 0, position = 7)]
+        [Bool]$Strict = $false
+    )
+
+    $desiredRule = GetDesiredRule -Path $Path -Account $Account -Rights $Rights -Access $Access -Inherit $Inherit -Recurse $Recurse
+    $currentACL = (Get-Item $Path).GetAccessControl("Access")
+    $currentRules = $currentACL.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])
+    $match = IsDesiredRuleAndCurrentRuleSame -DesiredRule $desiredRule -CurrentRules $currentRules -Strict $Strict
+    
+    $presence = if ($true -eq $match)
+    {
+        "Present"
+    }
+    else
+    {
+        "Absent"
+    }
+    return $presence -eq $Ensure
+}
+# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Test-ValentiaACL.ps1
+
+#Requires -Version 3.0
+
+function GetDesiredRule
+{
+    [OutputType([System.Security.AccessControl.FileSystemAccessRule])]
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = 1)]
+        [ValidateNotNullOrEmpty()]
+        [String]$Path,
+
+        [Parameter(Mandatory = 1)]
+        [ValidateNotNullOrEmpty()]
+        [String]$Account,
+
+        [Parameter(Mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
+        [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
+
+        [Parameter(Mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
+        [System.Security.AccessControl.AccessControlType]$Access = "Allow",
+
+        [Parameter(Mandatory = 0)]
+        [Bool]$Inherit = $false,
+
+        [Parameter(Mandatory = 0)]
         [Bool]$Recurse = $false
     )
 
@@ -261,27 +294,48 @@ function Test-ValentiaACL
         [System.Security.AccessControl.InheritanceFlags]::None
     }
 
-    $DesiredRule = New-Object System.Security.AccessControl.FileSystemAccessRule($Account, $Rights, $InheritFlag, "None", $Access)
-    $CurrentACL = (Get-Item $Path).GetAccessControl("Access")
-    $CurrentRules = $CurrentACL.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])
-    $Match = $CurrentRules `
-    | where {($DesiredRule.IdentityReference -eq $_.IdentityReference) `
-        -and ($DesiredRule.FileSystemRights -eq $_.FileSystemRights) `
-        -and ($DesiredRule.AccessControlType -eq $_.AccessControlType) `
-        -and ($Inherit -eq $_.InheritanceFlags )
-    }
-    
-    $Presence = if ($Match)
+    $desiredRule = New-Object System.Security.AccessControl.FileSystemAccessRule($Account, $Rights, $InheritFlag, "None", $Access)
+    return $desiredRule
+}
+
+# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Private\GetDesiredRule.ps1
+
+#Requires -Version 3.0
+
+function IsDesiredRuleAndCurrentRuleSame
+{
+    [OutputType([Bool])]
+    [CmdletBinding()]
+    param
+    (
+        [System.Security.AccessControl.FileSystemAccessRule]$DesiredRule,
+        [System.Security.AccessControl.AuthorizationRuleCollection]$CurrentRules,
+        [bool]$Strict
+    )
+
+    $match = if ($Strict)
     {
-        "Present"
+        $currentRules `
+        | where {$_.IdentityReference.Value -eq $DesiredRule.IdentityReference.Value} `
+        | where FileSystemRights -eq $DesiredRule.FileSystemRights `
+        | where AccessControlType -eq $DesiredRule.AccessControlType `
+        | where Inherit -eq $_.InheritanceFlags `
+        | measure
     }
     else
     {
-        "Absent"
+        $currentRules `
+        | where {$_.IdentityReference.Value.Split("\")[1] -eq $DesiredRule.IdentityReference.Value} `
+        | where FileSystemRights -eq $DesiredRule.FileSystemRights `
+        | where AccessControlType -eq $DesiredRule.AccessControlType `
+        | where Inherit -eq $_.InheritanceFlags `
+        | measure
     }
-    return $Presence -eq $Ensure
+
+    return $match.Count -ge 1
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Test-ValentiaACL.ps1
+
+# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Private\IsDesiredRuleAndCurrentRuleSame.ps1
 
 #Requires -Version 3.0
 

@@ -125,6 +125,7 @@
     <Folder Include="Example\Deployment\Deploygroup\" />
     <Folder Include="Example\Deployment\Upload\" />
     <Folder Include="Functions\" />
+    <Folder Include="Functions\Helper\ACL\Private\" />
     <Folder Include="Functions\Helper\Config\" />
     <Folder Include="Functions\Helper\Credential\" />
     <Folder Include="Functions\Helper\CredSSP\" />
@@ -194,6 +195,8 @@
     <Content Include="example\Deployment\Upload\test.csv" />
     <Content Include="example\Deployment\Upload\test.txt" />
     <Content Include="example\readme.md" />
+    <Content Include="Functions\Helper\ACL\Private\GetDesiredRule.ps1" />
+    <Content Include="Functions\Helper\ACL\Private\IsDesiredRuleAndCurrentRuleSame.ps1" />
     <Content Include="Functions\Helper\ACL\Test-ValentiaACL.ps1" />
     <Content Include="Functions\Helper\ACL\Set-ValentiaACL.ps1" />
     <Content Include="Functions\Helper\ACL\Get-ValentiaACL.ps1" />
