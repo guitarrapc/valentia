@@ -31,5 +31,5 @@ Add-Type -TypeDefinition @"
         Utils             = 6
     }
 "@
-# file loaded from path : D:\GitHub\valentia\valentia\type\Type.ps1
+# file loaded from path : \type\Type.ps1
 

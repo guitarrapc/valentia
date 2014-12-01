@@ -12,7 +12,7 @@
         | ForEach-Object {
             $sb.Append((Get-Content -Path $_.FullName -Raw -Encoding utf8)) > $null
             $sb.AppendLine() > $null
-            $footer = '# file loaded from path : {0}' -f $_.FullName
+            $footer = '# file loaded from path : {0}' -f $_.FullName.Replace($valentia.modulePath, "")
             $sb.Append($footer) > $null
             $sb.AppendLine() > $null
             $sb.AppendLine() > $null

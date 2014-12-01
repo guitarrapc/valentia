@@ -86,7 +86,7 @@ function Get-ValentiaACL
         Recurse   = $Recurse
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Get-ValentiaACL.ps1
+# file loaded from path : \functions\Helper\ACL\Get-ValentiaACL.ps1
 
 #Requires -Version 3.0
 
@@ -167,7 +167,7 @@ function Set-ValentiaACL
         $CurrentACL | Set-Acl -Path $Path 
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Set-ValentiaACL.ps1
+# file loaded from path : \functions\Helper\ACL\Set-ValentiaACL.ps1
 
 #Requires -Version 3.0
 
@@ -248,7 +248,7 @@ function Test-ValentiaACL
     }
     return $presence -eq $Ensure
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Test-ValentiaACL.ps1
+# file loaded from path : \functions\Helper\ACL\Test-ValentiaACL.ps1
 
 #Requires -Version 3.0
 
@@ -298,7 +298,7 @@ function GetDesiredRule
     return $desiredRule
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Private\GetDesiredRule.ps1
+# file loaded from path : \functions\Helper\ACL\Private\GetDesiredRule.ps1
 
 #Requires -Version 3.0
 
@@ -335,7 +335,7 @@ function IsDesiredRuleAndCurrentRuleSame
     return $match.Count -ge 1
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ACL\Private\IsDesiredRuleAndCurrentRuleSame.ps1
+# file loaded from path : \functions\Helper\ACL\Private\IsDesiredRuleAndCurrentRuleSame.ps1
 
 #Requires -Version 3.0
 
@@ -371,7 +371,7 @@ function Add-ValentiaTypeMemberDefinition
         return $result
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Add-Memeber\Private\Add-ValentiaTypeMemberDefinition.ps1
+# file loaded from path : \functions\Helper\Add-Memeber\Private\Add-ValentiaTypeMemberDefinition.ps1
 
 #Requires -Version 3.0
 
@@ -423,7 +423,7 @@ function Convert-ValentiaDecryptPassword
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Convert-ValentiaDecryptPassword .ps1
+# file loaded from path : \functions\Helper\Certificate\Convert-ValentiaDecryptPassword .ps1
 
 #Requires -Version 3.0
 
@@ -479,7 +479,7 @@ function Convert-ValentiaEncryptPassword
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Convert-ValentiaEncryptPassword .ps1
+# file loaded from path : \functions\Helper\Certificate\Convert-ValentiaEncryptPassword .ps1
 
 #Requires -Version 3.0
 
@@ -539,7 +539,7 @@ function Export-ValentiaCertificate
         Get-Item $FilePath
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Export-ValentiaCertificate.ps1
+# file loaded from path : \functions\Helper\Certificate\Export-ValentiaCertificate.ps1
 
 #Requires -Version 3.0
 
@@ -604,7 +604,7 @@ function Export-ValentiaCertificatePFX
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1
+# file loaded from path : \functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1
 
 #Requires -Version 3.0
 
@@ -639,7 +639,7 @@ function Get-ValentiaCertificateFromCert
 
     return [System.Security.Cryptography.X509Certificates.X509Certificate2]$cert
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1
+# file loaded from path : \functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1
 
 #Requires -Version 3.0
 
@@ -708,7 +708,7 @@ function Import-ValentiaCertificate
         $CertStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Import-ValentiaCertificate.ps1
+# file loaded from path : \functions\Helper\Certificate\Import-ValentiaCertificate.ps1
 
 #Requires -Version 3.0
 
@@ -787,7 +787,7 @@ function Import-ValentiaCertificatePFX
         $PFXStore = New-Object System.Security.Cryptography.X509Certificates.X509Store $CertStoreName, $CertStoreLocation
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Import-ValentiaCertificatePFX.ps1
+# file loaded from path : \functions\Helper\Certificate\Import-ValentiaCertificatePFX.ps1
 
 #Requires -Version 3.0
 
@@ -820,7 +820,7 @@ function Remove-ValentiaCertificate
         Remove-Item @param
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Remove-ValentiaCertificate.ps1
+# file loaded from path : \functions\Helper\Certificate\Remove-ValentiaCertificate.ps1
 
 #Requires -Version 3.0
 
@@ -853,7 +853,7 @@ function Remove-ValentiaCertificatePFX
         Remove-Item @param
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1
+# file loaded from path : \functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1
 
 #Requires -Version 3.0
 
@@ -938,7 +938,7 @@ function Show-ValentiaCertificate
         PFXFile    = $pfxFile
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Certificate\Show-ValentiaCertificate.ps1
+# file loaded from path : \functions\Helper\Certificate\Show-ValentiaCertificate.ps1
 
 #Requires -Version 3.0
 
@@ -981,7 +981,7 @@ function Invoke-ValentiaClean
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CleanupVariables\Invoke-ValentiaClean.ps1
+# file loaded from path : \functions\Helper\CleanupVariables\Invoke-ValentiaClean.ps1
 
 #Requires -Version 3.0
 
@@ -1019,7 +1019,7 @@ function Invoke-ValentiaCleanResult
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CleanupVariables\Invoke-ValentiaCleanResult.ps1
+# file loaded from path : \functions\Helper\CleanupVariables\Invoke-ValentiaCleanResult.ps1
 
 #Requires -Version 3.0
 
@@ -1131,7 +1131,7 @@ function Get-ValentiaComputerName
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ComputerName\Get-ValentiaComputerName.ps1
+# file loaded from path : \functions\Helper\ComputerName\Get-ValentiaComputerName.ps1
 
 #Requires -Version 3.0
 
@@ -1267,7 +1267,7 @@ function Rename-ValentiaComputerName
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ComputerName\Rename-ValentiaComputerName.ps1
+# file loaded from path : \functions\Helper\ComputerName\Rename-ValentiaComputerName.ps1
 
 #requires -Version 3.0
 
@@ -1313,7 +1313,7 @@ function Backup-ValentiaConfig
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Config\Backup-valentiaConfig.ps1
+# file loaded from path : \functions\Helper\Config\Backup-valentiaConfig.ps1
 
 #Requires -Version 3.0
 
@@ -1355,7 +1355,7 @@ function Edit-ValentiaConfig
 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Config\Edit-ValentiaConfig.ps1
+# file loaded from path : \functions\Helper\Config\Edit-ValentiaConfig.ps1
 
 #Requires -Version 3.0
 
@@ -1390,7 +1390,7 @@ function Reset-ValentiaConfig
 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Config\Reset-ValentiaConfig.ps1
+# file loaded from path : \functions\Helper\Config\Reset-ValentiaConfig.ps1
 
 #Requires -Version 3.0
 
@@ -1424,7 +1424,7 @@ function Show-ValentiaConfig
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Config\Show-ValentiaConfig.ps1
+# file loaded from path : \functions\Helper\Config\Show-ValentiaConfig.ps1
 
 #Requires -Version 3.0
 
@@ -1487,7 +1487,7 @@ function Get-ValentiaCredential
         throw $_
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Credential\Get-ValentiaCredential.ps1
+# file loaded from path : \functions\Helper\Credential\Get-ValentiaCredential.ps1
 
 #Requires -Version 3.0
 
@@ -1559,7 +1559,7 @@ function Set-ValentiaCredential
         return $false
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Credential\Set-ValentiaCredential.ps1
+# file loaded from path : \functions\Helper\Credential\Set-ValentiaCredential.ps1
 
 #Requires -Version 3.0
 
@@ -1595,7 +1595,7 @@ function Add-ValentiaCredSSPDelegateReg
         New-ItemProperty @param
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateReg.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateReg.ps1
 
 #Requires -Version 3.0
 
@@ -1625,7 +1625,7 @@ function Add-ValentiaCredSSPDelegateRegKey
         New-Item @param
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKey.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKey.ps1
 
 #Requires -Version 3.0
 
@@ -1666,7 +1666,7 @@ function Add-ValentiaCredSSPDelegateRegKeyProperty
         New-ItemProperty @param -Name 1
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1
 
 #Requires -Version 3.0
 
@@ -1700,7 +1700,7 @@ function Enable-ValentiaCredSSP
         Get-WSManCredSSP
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Enable-ValentiaCredSSP.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Enable-ValentiaCredSSP.ps1
 
 #Requires -Version 3.0
 
@@ -1740,7 +1740,7 @@ function Get-ValentiaCredSSPDelegateReg
         [PSCustomObject]$hashtable
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateReg.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateReg.ps1
 
 #Requires -Version 3.0
 
@@ -1778,7 +1778,7 @@ function Get-ValentiaCredSSPDelegateRegKey
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKey.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKey.ps1
 
 #Requires -Version 3.0
 
@@ -1821,7 +1821,7 @@ function Get-ValentiaCredSSPDelegateRegKeyProperty
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1
 
 #Requires -Version 3.0
 
@@ -1854,7 +1854,7 @@ function Remove-ValentiaCredSSPDelegateRegKey
         $result | %{Remove-ItemProperty -Path $_.pspath -Name $_.Key -Force}
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\CredSSP\Private\Remove-ValentiaCredSSPDelegateRegKey.ps1
+# file loaded from path : \functions\Helper\CredSSP\Private\Remove-ValentiaCredSSPDelegateRegKey.ps1
 
 #Requires -Version 3.0
 
@@ -1956,7 +1956,7 @@ function Get-ValentiaHostEntryAsync
         $tasks = New-Object 'System.Collections.Generic.List[PSCustomObject]'
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\DNS\Get-ValentiaHostEntryAsync.ps1
+# file loaded from path : \functions\Helper\DNS\Get-ValentiaHostEntryAsync.ps1
 
 #Requires -Version 3.0
 
@@ -2309,7 +2309,7 @@ function Sort-ValentiaDynamicParamHashTable
         return $index | %{$h.$_}
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1
+# file loaded from path : \functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1
 
 #Requires -Version 3.0
 
@@ -2365,7 +2365,7 @@ function Get-ValentiaFileEncoding
         throw ("path '{0}' not exist excemption." -f $path)
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1
+# file loaded from path : \functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1
 
 #Requires -Version 3.0
 
@@ -2470,7 +2470,7 @@ function New-ValentiaPSRemotingFirewallRule
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\FireWall\Firewall\New-ValentiaPSRemotingFirewallRule.ps1
+# file loaded from path : \functions\Helper\FireWall\Firewall\New-ValentiaPSRemotingFirewallRule.ps1
 
 #Requires -Version 3.0
 
@@ -2573,7 +2573,7 @@ function New-ValentiaFolder
 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Folder\New-ValentiaFolder.ps1
+# file loaded from path : \functions\Helper\Folder\New-ValentiaFolder.ps1
 
 #Requires -Version 3.0
 
@@ -2655,7 +2655,7 @@ function Get-ValentiaGroup
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Group\Get-ValentiaGroup.ps1
+# file loaded from path : \functions\Helper\Group\Get-ValentiaGroup.ps1
 
 #Requires -Version 3.0
 
@@ -2733,7 +2733,7 @@ function Invoke-ValentiaDeployGroupRemark
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1
+# file loaded from path : \functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1
 
 #Requires -Version 3.0
 
@@ -2812,7 +2812,7 @@ function Invoke-ValentiaDeployGroupUnremark
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1
+# file loaded from path : \functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1
 
 #Requires -Version 3.0
 
@@ -2919,7 +2919,7 @@ function New-ValentiaGroup
 }
 
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Group\New-ValentiaGroup.ps1
+# file loaded from path : \functions\Helper\Group\New-ValentiaGroup.ps1
 
 #Requires -Version 3.0
 
@@ -2975,7 +2975,7 @@ function Show-ValentiaGroup
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Group\Show-ValentiaGroup.ps1
+# file loaded from path : \functions\Helper\Group\Show-ValentiaGroup.ps1
 
 #Requires -Version 3.0
 
@@ -3002,7 +3002,7 @@ filter Write-ValentiaVerboseDebug
     Write-Verbose -Message $_
     Write-Debug -Message $_
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1
+# file loaded from path : \functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1
 
 #Requires -Version 3.0
 
@@ -3103,7 +3103,7 @@ function Disable-ValentiaEnhancedIESecutiry
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\IE\Private\Disable-ValentiaEnhancedIESecutiry.ps1
+# file loaded from path : \functions\Helper\IE\Private\Disable-ValentiaEnhancedIESecutiry.ps1
 
 #Requires -Version 3.0
 
@@ -3452,7 +3452,7 @@ function Initialize-ValentiaEnvironment
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Initialize\Initialize-ValentiaEnvironment.ps1
+# file loaded from path : \functions\Helper\Initialize\Initialize-ValentiaEnvironment.ps1
 
 #Requires -Version 3.0
 
@@ -3524,7 +3524,7 @@ function Set-ValentiaLocation
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Location\Set-ValentiaLocation.ps1
+# file loaded from path : \functions\Helper\Location\Set-ValentiaLocation.ps1
 
 #Requires -Version 3.0
 
@@ -3586,7 +3586,7 @@ function New-ValentiaLog
 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Log\New-ValentiaLog.ps1
+# file loaded from path : \functions\Helper\Log\New-ValentiaLog.ps1
 
 #Requires -Version 3.0
 
@@ -3642,7 +3642,7 @@ function Out-ValentiaResult
     # output result Log as json
     OutValentiaResultLog -CommandResult $CommandResult
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Log\Out-ValentiaResult.ps1
+# file loaded from path : \functions\Helper\Log\Out-ValentiaResult.ps1
 
 #Requires -Version 3.0
 
@@ -3737,7 +3737,7 @@ filter OutValentiaModuleLogHost
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Log\Private\OutValentiaModuleLogHost.ps1
+# file loaded from path : \functions\Helper\Log\Private\OutValentiaModuleLogHost.ps1
 
 #Requires -Version 3.0
 
@@ -3778,7 +3778,7 @@ function OutValentiaResultLog
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Log\Private\OutValentiaResultLog.ps1
+# file loaded from path : \functions\Helper\Log\Private\OutValentiaResultLog.ps1
 
 #Requires -Version 3.0
 
@@ -3808,7 +3808,7 @@ function WriteValentiaResultHost
         ([PSCustomObject]$Commandresult).Success
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Log\Private\WriteValentiaResultHost.ps1
+# file loaded from path : \functions\Helper\Log\Private\WriteValentiaResultHost.ps1
 
 #Requires -Version 3.0
 
@@ -3881,7 +3881,7 @@ function Push-ValentiaCurrentContextToTask
     return $currentContext.tasks.$taskKey
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Prerequisites\Private\Push-ValentiaCurrentContextToTask.ps1
+# file loaded from path : \functions\Helper\Prerequisites\Private\Push-ValentiaCurrentContextToTask.ps1
 
 #Requires -Version 3.0
 
@@ -3953,7 +3953,7 @@ function Set-ValentiaInvokationPrerequisites
     # Show Stopwatch for Begin section
     Write-Verbose ("{0}Duration Second for Begin Section: {1}" -f "`t`t", $Stopwatch.Elapsed.TotalSeconds)
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Prerequisites\Private\Set-ValentiaInvokationPrerequisites.ps1
+# file loaded from path : \functions\Helper\Prerequisites\Private\Set-ValentiaInvokationPrerequisites.ps1
 
 #Requires -Version 3.0
 
@@ -4085,7 +4085,7 @@ function Show-ValentiaPromptForChoice
         throw $_
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1
+# file loaded from path : \functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1
 
 #Requires -Version 3.0
 
@@ -4142,7 +4142,7 @@ function Disable-ValentiaScheduledTaskLogSetting
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Disable-ValentiaScheduledTaskLogSetting.ps1
+# file loaded from path : \functions\Helper\ScheduledTask\Disable-ValentiaScheduledTaskLogSetting.ps1
 
 #Requires -Version 3.0
 
@@ -4199,7 +4199,7 @@ function Enable-ValentiaScheduledTaskLogSetting
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Enable-ValentiaScheduledTaskLogSetting.ps1
+# file loaded from path : \functions\Helper\ScheduledTask\Enable-ValentiaScheduledTaskLogSetting.ps1
 
 #Requires -Version 3.0
 
@@ -4358,7 +4358,7 @@ function Remove-ValentiaScheduledTask
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Remove-ValentiaScheduledTask.ps1
+# file loaded from path : \functions\Helper\ScheduledTask\Remove-ValentiaScheduledTask.ps1
 
 #Requires -Version 3.0
 
@@ -4419,7 +4419,7 @@ function Remove-ValentiaScheduledTaskEmptyDirectoryPath
     | where {(Get-ChildItem -Path $_) -eq $null} `
     | Remove-Item -Force
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Remove-ValentiaScheduledTaskEmptyDirectoryPath.ps1
+# file loaded from path : \functions\Helper\ScheduledTask\Remove-ValentiaScheduledTaskEmptyDirectoryPath.ps1
 
 #Requires -Version 3.0
 
@@ -4821,7 +4821,7 @@ function Set-ValentiaScheduledTask
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1
+# file loaded from path : \functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1
 
 #Requires -Version 3.0
 
@@ -4908,7 +4908,7 @@ function Invoke-ValentiaSed
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Sed\Invoke-ValentiaSed.ps1
+# file loaded from path : \functions\Helper\Sed\Invoke-ValentiaSed.ps1
 
 #Requires -Version 3.0
 
@@ -5031,7 +5031,7 @@ function Get-ValentiaSymbolicLink
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\SymbolicLink\Get-ValentiaSymbolicLink.ps1
+# file loaded from path : \functions\Helper\SymbolicLink\Get-ValentiaSymbolicLink.ps1
 
 #Requires -Version 3.0
 
@@ -5165,7 +5165,7 @@ function Remove-ValentiaSymbolicLink
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\SymbolicLink\Remove-ValentiaSymbolicLink.ps1
+# file loaded from path : \functions\Helper\SymbolicLink\Remove-ValentiaSymbolicLink.ps1
 
 #Requires -Version 3.0
 
@@ -5345,7 +5345,7 @@ function Set-ValentiaSymbolicLink
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1
+# file loaded from path : \functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1
 
 #Requires -Version 3.0
 
@@ -5452,7 +5452,7 @@ function ConvertTo-ValentiaTask
     }
     
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Task\ConvertTo-ValentiaTask.ps1
+# file loaded from path : \functions\Helper\Task\ConvertTo-ValentiaTask.ps1
 
 #Requires -Version 3.0
 
@@ -5524,7 +5524,7 @@ function Get-ValentiaTask
 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Task\Get-ValentiaTask.ps1
+# file loaded from path : \functions\Helper\Task\Get-ValentiaTask.ps1
 
 #Requires -Version 3.0
 
@@ -5735,7 +5735,7 @@ function New-ValentiaOSUser
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\User\New-ValentiaOSUser.ps1
+# file loaded from path : \functions\Helper\User\New-ValentiaOSUser.ps1
 
 function New-ValentiaZipPairs
 {
@@ -5800,7 +5800,7 @@ function New-ValentiaZipPairs
         $psvariable = New-Object 'System.Collections.Generic.List[System.Management.Automation.psvariable]'
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Utils\New-ValentiaZpPairs.ps1
+# file loaded from path : \functions\Helper\Utils\New-ValentiaZpPairs.ps1
 
 #Requires -Version 3.0
 
@@ -5868,7 +5868,7 @@ function Get-ValentiaRebootRequiredStatus
     }
 
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Windows\Get-ValentiaRebootRequiredStatus.ps1
+# file loaded from path : \functions\Helper\Windows\Get-ValentiaRebootRequiredStatus.ps1
 
 #Requires -Version 3.0
 
@@ -5945,7 +5945,7 @@ function Set-ValentiaHostName
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Windows\Set-ValentiaHostName.ps1
+# file loaded from path : \functions\Helper\Windows\Set-ValentiaHostName.ps1
 
 #Requires -Version 3.0
 
@@ -5986,7 +5986,7 @@ function Test-ValentiaPowerShellElevated
     return (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\Windows\Private\Test-ValentiaPowerShellElevated.ps1
+# file loaded from path : \functions\Helper\Windows\Private\Test-ValentiaPowerShellElevated.ps1
 
 #Requires -Version 3.0
 
@@ -6035,7 +6035,7 @@ function Enable-ValentiaWsManTrustedHosts
 }
 
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1
+# file loaded from path : \functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1
 
 #Requires -Version 3.0
 
@@ -6084,7 +6084,7 @@ function Set-ValentiaWsManMaxMemoryPerShellMB
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxMemoryPerShellMB.ps1
+# file loaded from path : \functions\Helper\WsMan\Set-ValentiaWsManMaxMemoryPerShellMB.ps1
 
 #Requires -Version 3.0
 
@@ -6133,7 +6133,7 @@ function Set-ValentiaWsManMaxProccessesPerShell
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxProccessesPerShell.ps1
+# file loaded from path : \functions\Helper\WsMan\Set-ValentiaWsManMaxProccessesPerShell.ps1
 
 #Requires -Version 3.0
 
@@ -6182,7 +6182,7 @@ function Set-ValentiaWsManMaxShellsPerUser
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\WsMan\Set-ValentiaWsManMaxShellsPerUser.ps1
+# file loaded from path : \functions\Helper\WsMan\Set-ValentiaWsManMaxShellsPerUser.ps1
 
 #Requires -Version 3.0
 
@@ -6221,7 +6221,7 @@ function Set-ValetntiaWSManConfiguration
     "Restart-Service WinRM -PassThru" | Write-ValentiaVerboseDebug
     Restart-Service WinRM -PassThru
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1
+# file loaded from path : \functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1
 
 #Requires -Version 3.0
 
@@ -6390,7 +6390,7 @@ function Invoke-Valentia
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\Job\Invoke-Valentia.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\Job\Invoke-Valentia.ps1
 
 #Requires -Version 3.0
 
@@ -6484,7 +6484,7 @@ function Invoke-ValentiaCommand
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaCommand.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaCommand.ps1
 
 #Requires -Version 3.0
 
@@ -6556,7 +6556,7 @@ function Invoke-ValentiaJobProcess
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaJobProcess.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaJobProcess.ps1
 
 #Requires -Version 3.0
 
@@ -6644,7 +6644,7 @@ function Receive-ValentiaResult
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\Job\Private\Receive-ValentiaResult.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\Job\Private\Receive-ValentiaResult.ps1
 
 #Requires -Version 3.0
 
@@ -6813,7 +6813,7 @@ function Invoke-ValentiaAsync
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Invoke-ValentiaAsync.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Invoke-ValentiaAsync.ps1
 
 #Requires -Version 3.0
 
@@ -6954,7 +6954,7 @@ function Invoke-ValentiaAsyncCommand
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaAsyncCommand.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaAsyncCommand.ps1
 
 #Requires -Version 3.0
 
@@ -7047,7 +7047,7 @@ function Invoke-ValentiaRunspaceProcess
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaRunspaceProcess.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaRunspaceProcess.ps1
 
 #Requires -Version 3.0
 
@@ -7151,7 +7151,7 @@ function Receive-ValentiaAsyncResults
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\Receive-ValentiaAsyncResults.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\Receive-ValentiaAsyncResults.ps1
 
 #Requires -Version 3.0
 
@@ -7199,7 +7199,7 @@ function Receive-ValentiaAsyncStatus
     } 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\Receive-ValentiaAsyncStatus.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\Receive-ValentiaAsyncStatus.ps1
 
 #Requires -Version 3.0
 
@@ -7246,7 +7246,7 @@ function Invoke-ValentiaAsyncPipeline
         $valentia.runspace.asyncPipeline.Add($AsyncPipeline)
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Invoke-ValentiaAsyncPipeline.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Invoke-ValentiaAsyncPipeline.ps1
 
 #Requires -Version 3.0
 
@@ -7331,7 +7331,7 @@ function Watch-ValentiaAsyncPipelineStatus
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Watch-ValentiaAsyncPipelineStatus.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Watch-ValentiaAsyncPipelineStatus.ps1
 
 #Requires -Version 3.0
 
@@ -7392,7 +7392,7 @@ function New-ValentiaRunSpacePool
         Write-Error $_
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\RunSpacePool\New-ValentiaRunSpacePool.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\RunSpacePool\New-ValentiaRunSpacePool.ps1
 
 #Requires -Version 3.0
 
@@ -7438,7 +7438,7 @@ function Remove-ValentiaRunSpacePool
         Write-Error $_
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\CommandExecution\RunSpacePool\Private\RunSpacePool\Remove-ValentiaRunSpacePool.ps1
+# file loaded from path : \functions\Invokation\CommandExecution\RunSpacePool\Private\RunSpacePool\Remove-ValentiaRunSpacePool.ps1
 
 #Requires -Version 3.0
 
@@ -7879,7 +7879,7 @@ function Invoke-ValentiaDownload
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\Download\Invoke-ValentiaDownload.ps1
+# file loaded from path : \functions\Invokation\Download\Invoke-ValentiaDownload.ps1
 
 #Requires -Version 3.0
 
@@ -7997,7 +7997,7 @@ function Ping-ValentiaGroupAsync
         }
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1
+# file loaded from path : \functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1
 
 #Requires -Version 3.0
 
@@ -8114,7 +8114,7 @@ function Watch-ValentiaPingAsyncReplyStatus
         Get-ValentiaGroup -DeployGroups $deploygroups | %{$ipaddress.Add($_)}
     }
 }
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1
+# file loaded from path : \functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1
 
 #Requires -Version 3.0
 
@@ -8386,7 +8386,7 @@ function Invoke-ValentiaSync
 
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\Sync\Invoke-ValentiaSync.ps1
+# file loaded from path : \functions\Invokation\Sync\Invoke-ValentiaSync.ps1
 
 #Requires -Version 3.0
 
@@ -8753,7 +8753,7 @@ function Invoke-ValentiaUpload
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\Upload\Invoke-ValentiaUpload.ps1
+# file loaded from path : \functions\Invokation\Upload\Invoke-ValentiaUpload.ps1
 
 #Requires -Version 3.0
 
@@ -9025,5 +9025,5 @@ function Invoke-ValentiaUploadList
     }
 }
 
-# file loaded from path : D:\GitHub\valentia\valentia\functions\Invokation\Upload\Invoke-ValentiaUploadList.ps1
+# file loaded from path : \functions\Invokation\Upload\Invoke-ValentiaUploadList.ps1
 
