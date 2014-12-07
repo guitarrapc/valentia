@@ -130,67 +130,70 @@ function Set-ValentiaScheduledTask
     param
     (
         [parameter(Mandatory = 0, Position  = 0)]
-        [string]$execute,
+        [string]$Execute,
 
         [parameter(Mandatory = 0, Position  = 1)]
-        [string]$argument,
+        [string]$Argument = "",
     
-        [parameter(Mandatory = 1, Position  = 2)]
-        [string]$taskName,
-    
-        [parameter(Mandatory = 0, Position  = 3)]
-        [string]$taskPath = "\",
+        [parameter(Mandatory = 0, Position  = 2)]
+        [string]$WorkingDirectory = "",
 
+        [parameter(Mandatory = 1, Position  = 3)]
+        [string]$TaskName,
+    
         [parameter(Mandatory = 0, Position  = 4)]
+        [string]$TaskPath = "\",
+
+        [parameter(Mandatory = 0, Position  = 5)]
         [datetime[]]$ScheduledAt,
 
-        [parameter(Mandatory = 0, Position  = 5, parameterSetName = "ScheduledDuration")]
+        [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledTimeSpan = ([TimeSpan]::FromHours(1)),
 
-        [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
+        [parameter(Mandatory = 0, Position  = 7, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledDuration = [TimeSpan]::MaxValue,
 
-        [parameter(Mandatory = 0, Position  = 7, parameterSetName = "Daily")]
+        [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Daily")]
         [bool]$Daily = $false,
 
-        [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Once")]
+        [parameter(Mandatory = 0, Position  = 9, parameterSetName = "Once")]
         [bool]$Once = $false,
 
-        [parameter(Mandatory = 0, Position  = 9)]
+        [parameter(Mandatory = 0, Position  = 10)]
         [string]$Description,
 
-        [parameter(Mandatory = 0, Position  = 10)]
+        [parameter(Mandatory = 0, Position  = 11)]
         [PScredential]$Credential = $null,
 
-        [parameter(Mandatory = 0, Position  = 11)]
+        [parameter(Mandatory = 0, Position  = 12)]
         [bool]$Disable = $true,
 
-        [parameter(Mandatory = 0, Position  = 12)]
+        [parameter(Mandatory = 0, Position  = 13)]
         [bool]$Hidden = $true,
 
-        [parameter(Mandatory = 0, Position  = 13)]
+        [parameter(Mandatory = 0, Position  = 14)]
         [TimeSpan]$ExecutionTimeLimit = ([TimeSpan]::FromDays(3)),
 
-        [parameter(Mandatory = 0,Position  = 14)]
+        [parameter(Mandatory = 0,Position  = 15)]
         [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
         [string]$Compatibility = "Win8",
 
-        [parameter(Mandatory = 0,Position  = 15)]
+        [parameter(Mandatory = 0,Position  = 16)]
         [ValidateSet("Highest", "Limited")]
         [string]$Runlevel = "Limited",
 
-        [parameter(Mandatory = 0,　Position  = 16)]
+        [parameter(Mandatory = 0,　Position  = 17)]
         [bool]$Force = $false
     )
 
     end
     {
-        Write-Verbose ($VerboseMessages.CreateTask -f $taskName, $taskPath)
+        Write-Verbose ($VerboseMessages.CreateTask -f $TaskName, $TaskPath)
         # exist
         $existingTaskParam = 
         @{
-            TaskName = $taskName
-            TaskPath = $taskPath
+            TaskName = $TaskName
+            TaskPath = $TaskPath
         }
 
         $currentTask = GetExistingTaskScheduler @existingTaskParam
@@ -234,14 +237,15 @@ function Set-ValentiaScheduledTask
         }
 
         # validation
-        if ($execute -eq ""){ throw New-Object System.InvalidOperationException ($ErrorMessages.ExecuteBrank) }
+        if ($Execute -eq ""){ throw New-Object System.InvalidOperationException ($ErrorMessages.ExecuteBrank) }
         if (TestExistingTaskSchedulerWithPath @existingTaskParam){ throw New-Object System.InvalidOperationException ($ErrorMessages.SameNameFolderFound -f $taskName) }
 
         # Action
         $actionParam = 
         @{
-            argument = $argument
-            execute = $execute
+            Argument = $Argument
+            Execute = $Execute
+            WorkingDirectory = $WorkingDirectory
         }
 
         # trigger
@@ -268,8 +272,8 @@ function Set-ValentiaScheduledTask
             $scheduledTask = New-ScheduledTask -Description $Description -Action $action -Settings $settings -Trigger $trigger -Principal $principal
             @{
                 InputObject = $scheduledTask
-                TaskName = $taskName
-                TaskPath = $taskPath
+                TaskName = $TaskName
+                TaskPath = $TaskPath
                 Force = $Force
             }
         }
@@ -281,8 +285,8 @@ function Set-ValentiaScheduledTask
                 Settings = $settings
                 Trigger = $trigger
                 Description = $Description
-                TaskName = $taskName
-                TaskPath = $taskPath
+                TaskName = $TaskName
+                TaskPath = $TaskPath
                 Runlevel = $Runlevel
                 Force = $Force
             }
@@ -360,17 +364,22 @@ function Set-ValentiaScheduledTask
             return $false
         }
 
-        function CreateTaskSchedulerAction ($argument, $execute)
+        function CreateTaskSchedulerAction ($Argument, $Execute, $WorkingDirectory)
         {
-            $action = if ($argument -ne "")
+            if (($Argument -eq "") -and ($WorkingDirectory -eq ""))
             {
-                New-ScheduledTaskAction -Execute $execute -Argument $Argument
+                return New-ScheduledTaskAction -Execute $execute
             }
-            else
+
+            if (($Argument -ne "") -and ($WorkingDirectory -eq ""))
             {
-                New-ScheduledTaskAction -Execute $execute
+                return New-ScheduledTaskAction -Execute $Execute -Argument $Argument
             }
-            return $action
+
+            if (($Argument -ne "") -and ($WorkingDirectory -ne ""))
+            {
+                return New-ScheduledTaskAction -Execute $Execute -Argument $Argument -WorkingDirectory $WorkingDirectory
+            }
         }
 
         function CreateTaskSchedulerTrigger ($ScheduledTimeSpan, $ScheduledDuration, $ScheduledAt, $Daily, $Once)
