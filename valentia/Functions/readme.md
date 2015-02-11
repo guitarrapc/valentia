@@ -5,12 +5,12 @@ All the valentia functions will be locate here.
 You can add functions into this directory.
  
 # Export function as valentia cmdlet
-All you need is add function name inside .psd1. psd1 will be create by executing ```New-valentiaManufest.ps1```.
+All you need is add function name inside .psd1 and valentia.ps1. Both will created by executing ```build.ps1```.
 
 So the way you add functions inside valentia module is....
 
-1. add function you want inside valentia\functions.
+1. Add function you want inside valentia\functions.
 2. If you want to set Alias for the function, then add Alias inside valentia.psm1.
-3. add functions name in ```New-valentiaManufest.ps1```.
-4. add Alias name in ```New-valentiaManufest.ps1```.
-5. run the ```New-valentiaManufest.ps1``` as PowerShell. then valentia.psd1 will be generated.
+3. Add functions name in ```Tools/build.ps1```.
+4. add Alias name in ```Tools/build.ps1```.
+5. run the ```Tools/build.ps1``` as PowerShell. then valentia.psd1 and valentia.ps1 will be generated.
