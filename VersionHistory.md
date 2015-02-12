@@ -15,7 +15,7 @@ This indicate Version History for valentia.
 	#### Enhancement
 	* Now Get-ValentiaSymbolicLink returns SymbolicLink Target Path.
 
-- version : 0.4.12
+- version : 0.4.11
 	
 	[ author : guitarrapc ]
 	
