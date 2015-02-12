@@ -12,10 +12,10 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '0.4.12'
+ModuleVersion = '0.4.13'
 
 # ID used to uniquely identify this module
-GUID = '931ab02f-2090-4271-be26-cad75219984b'
+GUID = 'c1a13881-3401-43a4-8ea9-efe0d834bb0d'
 
 # Author of this module
 Author = 'guitarrapc'
@@ -93,8 +93,8 @@ FunctionsToExport = 'Invoke-Valentia', 'Invoke-ValentiaAsync', 'Invoke-ValentiaD
                'Remove-ValentiaScheduledTaskEmptyDirectoryPath', 
                'Set-ValentiaScheduledTask', 'Invoke-ValentiaSed', 
                'Get-ValentiaSymbolicLink', 'Remove-ValentiaSymbolicLink', 
-               'Set-ValentiaSymbolicLink', 'ConvertTo-ValentiaTask', 
-               'Get-ValentiaTask', 'New-ValentiaOSUser', 
+               'Set-ValentiaSymbolicLink', 'Test-ValentiaSymbolicLink', 
+               'ConvertTo-ValentiaTask', 'Get-ValentiaTask', 'New-ValentiaOSUser', 
                'Get-ValentiaRebootRequiredStatus', 
                'Set-ValetntiaWSManConfiguration'
 
