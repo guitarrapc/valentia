@@ -6,6 +6,18 @@ This indicate Version History for valentia.
 ## Version 0.4.x
 ====
 
+- version : 0.4.13
+	
+	[ author : guitarrapc ]
+	
+	[ Feb 12, 2015 ]
+	
+	#### Enhancement
+	* Added Test-ValentiaSymbolicLink to detect where target is SymbolicLink or not.
+
+	#### Bug fix
+	* Now Set-ValentiaSymbolicLink null reference object issue is fixed.
+
 - version : 0.4.12
 	
 	[ author : guitarrapc ]

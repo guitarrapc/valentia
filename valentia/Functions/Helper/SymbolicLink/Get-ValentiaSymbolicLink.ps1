@@ -45,7 +45,7 @@ function Get-ValentiaSymbolicLink
                 {
                     if (IsFileReparsePoint -Path $file.FullName)
                     {
-                        # [Valentia.SymbolicLink2]::GetSymbolicLinkTarget()
+                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
                         $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($file.FullName)
                         Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $file
@@ -55,7 +55,7 @@ function Get-ValentiaSymbolicLink
                 {
                     if (IsDirectoryReparsePoint -Path $directory.FullName)
                     {
-                        # [Valentia.SymbolicLink2]::GetSymbolicLinkTarget()
+                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
                         $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($directory.FullName)
                         Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $directory
@@ -82,7 +82,7 @@ function Get-ValentiaSymbolicLink
             $script:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
-                Name             = "SymbolicLink"
+                Name             = "SymbolicLinkGet"
                 UsingNameSpace   = "System.Text", "Microsoft.Win32.SafeHandles", "System.ComponentModel"
             }
             Add-ValentiaTypeMemberDefinition @addType -PassThru `

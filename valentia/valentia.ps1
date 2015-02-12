@@ -410,7 +410,8 @@ function Add-ValentiaTypeMemberDefinition
         Namespace        = $NameSpace 
         Name             = $Name + $guid
     }
-    if (@($UsingNameSpace).Count -ne 0)
+
+    if ($UsingNameSpace.Count -ne 0)
     {
         $addType.UsingNameSpace = $UsingNameSpace
     }
@@ -5016,7 +5017,7 @@ function Get-ValentiaSymbolicLink
                 {
                     if (IsFileReparsePoint -Path $file.FullName)
                     {
-                        # [Valentia.SymbolicLink2]::GetSymbolicLinkTarget()
+                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
                         $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($file.FullName)
                         Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $file
@@ -5026,7 +5027,7 @@ function Get-ValentiaSymbolicLink
                 {
                     if (IsDirectoryReparsePoint -Path $directory.FullName)
                     {
-                        # [Valentia.SymbolicLink2]::GetSymbolicLinkTarget()
+                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
                         $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($directory.FullName)
                         Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $directory
@@ -5053,7 +5054,7 @@ function Get-ValentiaSymbolicLink
             $script:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
-                Name             = "SymbolicLink"
+                Name             = "SymbolicLinkGet"
                 UsingNameSpace   = "System.Text", "Microsoft.Win32.SafeHandles", "System.ComponentModel"
             }
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
@@ -5340,7 +5341,8 @@ function Set-ValentiaSymbolicLink
                 if (IsFileAttribute -Path $file)
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $file.fullname, $false)
-                    # [Valentia.SymbolicLink]::CreateSymLink()
+                    # [Valentia.SymbolicLinkSet]::CreateSymLink()
+                    Write-Verbose "$typeQualifiedName"
                     [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $file.fullname, $false)
                 }
             }
@@ -5350,7 +5352,8 @@ function Set-ValentiaSymbolicLink
                 if (IsDirectoryAttribute -Path $directory)
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $directory.fullname, $true)
-                    # [Valentia.SymbolicLink]::CreateSymLink()
+                    # [Valentia.SymbolicLinkSet]::CreateSymLink()
+                    Write-Verbose "$typeQualifiedName"
                     [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
                 }
             } 
@@ -5372,7 +5375,7 @@ function Set-ValentiaSymbolicLink
             $script:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
-                Name             = "SymbolicLink"
+                Name             = "SymbolicLinkSet"
             }
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
             | select -First 1 `
@@ -5439,6 +5442,54 @@ function Set-ValentiaSymbolicLink
     }
 }
 # file loaded from path : \functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1
+
+#Requires -Version 3.0
+
+#-- SymbolicLink Functions --#
+
+<#
+.SYNOPSIS 
+This function will Test whether target path is Symbolic Link or not.
+
+.DESCRIPTION
+If target is Symbolic Link (reparse point), function will return $true.
+Others, return $false.
+
+.NOTES
+Author: guitarrapc
+Created: 12/Feb/2015
+
+.EXAMPLE
+Test-ValentiaSymbolicLink -Path "d:\SymbolicLink"
+--------------------------------------------
+As Path is Symbolic Link, this returns $true.
+
+#>
+function Test-ValentiaSymbolicLink
+{
+    [OutputType([System.IO.DirectoryInfo[]])]
+    [cmdletBinding()]
+    param
+    (
+        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [Alias('FullName')]
+        [String]$Path
+    )
+    
+    process
+    {
+        $result = Get-ValentiaSymbolicLink -Path $Path
+        if ($null -eq $result){ return $false }
+        return $true
+    }
+
+    begin
+    {
+        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+    }
+}
+
+# file loaded from path : \functions\Helper\SymbolicLink\Test-ValentiaSymbolicLink.ps1
 
 #Requires -Version 3.0
 

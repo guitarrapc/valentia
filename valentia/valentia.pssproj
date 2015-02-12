@@ -233,6 +233,7 @@
     <Content Include="Functions\Helper\ScheduledTask\Remove-ValentiaScheduledTaskEmptyDirectoryPath.ps1" />
     <Content Include="Functions\Helper\ScheduledTask\Remove-ValentiaScheduledTask.ps1" />
     <Content Include="Functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1" />
+    <Content Include="Functions\Helper\SymbolicLink\Test-ValentiaSymbolicLink.ps1" />
     <Content Include="Functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1" />
     <Content Include="Functions\Helper\SymbolicLink\Remove-ValentiaSymbolicLink.ps1" />
     <Content Include="Functions\Helper\SymbolicLink\Get-ValentiaSymbolicLink.ps1" />

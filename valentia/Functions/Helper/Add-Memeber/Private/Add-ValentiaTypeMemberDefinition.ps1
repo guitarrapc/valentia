@@ -29,7 +29,8 @@ function Add-ValentiaTypeMemberDefinition
         Namespace        = $NameSpace 
         Name             = $Name + $guid
     }
-    if (@($UsingNameSpace).Count -ne 0)
+
+    if ($UsingNameSpace.Count -ne 0)
     {
         $addType.UsingNameSpace = $UsingNameSpace
     }

@@ -79,7 +79,8 @@ function Set-ValentiaSymbolicLink
                 if (IsFileAttribute -Path $file)
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $file.fullname, $false)
-                    # [Valentia.SymbolicLink]::CreateSymLink()
+                    # [Valentia.SymbolicLinkSet]::CreateSymLink()
+                    Write-Verbose "$typeQualifiedName"
                     [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $file.fullname, $false)
                 }
             }
@@ -89,7 +90,8 @@ function Set-ValentiaSymbolicLink
                 if (IsDirectoryAttribute -Path $directory)
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $directory.fullname, $true)
-                    # [Valentia.SymbolicLink]::CreateSymLink()
+                    # [Valentia.SymbolicLinkSet]::CreateSymLink()
+                    Write-Verbose "$typeQualifiedName"
                     [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
                 }
             } 
@@ -111,7 +113,7 @@ function Set-ValentiaSymbolicLink
             $script:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
-                Name             = "SymbolicLink"
+                Name             = "SymbolicLinkSet"
             }
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
             | select -First 1 `
