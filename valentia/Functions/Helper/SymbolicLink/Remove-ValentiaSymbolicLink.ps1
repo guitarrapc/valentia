@@ -27,6 +27,7 @@ Parameter Input to detect SymbolicLink items.
 #>
 function Remove-ValentiaSymbolicLink
 {
+    [OutputType([Void])]
     [cmdletBinding()]
     param
     (

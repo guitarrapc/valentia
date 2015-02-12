@@ -397,6 +397,10 @@ function Add-ValentiaTypeMemberDefinition
         [string]$Name,
 
         [Parameter(mandatory = 0, position = 3)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$UsingNameSpace,
+
+        [Parameter(mandatory = 0, position = 4)]
         [switch]$PassThru
     )
 
@@ -405,6 +409,10 @@ function Add-ValentiaTypeMemberDefinition
         MemberDefinition = $MemberDefinition
         Namespace        = $NameSpace 
         Name             = $Name + $guid
+    }
+    if (@($UsingNameSpace).Count -ne 0)
+    {
+        $addType.UsingNameSpace = $UsingNameSpace
     }
 
     $private:result = Add-Type @addType -PassThru
@@ -4989,6 +4997,7 @@ Parameter Input to detect SymbolicLink items.
 #>
 function Get-ValentiaSymbolicLink
 {
+    [OutputType([System.IO.DirectoryInfo[]])]
     [cmdletBinding()]
     param
     (
@@ -5007,6 +5016,9 @@ function Get-ValentiaSymbolicLink
                 {
                     if (IsFileReparsePoint -Path $file.FullName)
                     {
+                        # [Valentia.SymbolicLink2]::GetSymbolicLinkTarget()
+                        $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($file.FullName)
+                        Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $file
                     }
                 }
@@ -5014,6 +5026,9 @@ function Get-ValentiaSymbolicLink
                 {
                     if (IsDirectoryReparsePoint -Path $directory.FullName)
                     {
+                        # [Valentia.SymbolicLink2]::GetSymbolicLinkTarget()
+                        $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($directory.FullName)
+                        Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $directory
                     }
                 }
@@ -5028,6 +5043,31 @@ function Get-ValentiaSymbolicLink
     begin
     {
         $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+
+        try
+        {
+            $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+            $script:SymbolicCS = Join-Path $CSPath GetSymLink.cs -Resolve
+            $script:sig = Get-Content -Path $SymbolicCS -Raw
+
+            $script:addType = @{
+                MemberDefinition = $sig
+                Namespace        = "Valentia"
+                Name             = "SymbolicLink"
+                UsingNameSpace   = "System.Text", "Microsoft.Win32.SafeHandles", "System.ComponentModel"
+            }
+            Add-ValentiaTypeMemberDefinition @addType -PassThru `
+            | select -First 1 `
+            | %{
+                $script:typeQualifiedName = $_.AssemblyQualifiedName
+                $script:typeFullName = $_.FullName
+                $valentia.typeQualifiedName = $_.AssemblyQualifiedName
+            }
+        }
+        catch
+        {
+            # catch Exception and ignore it
+        }
 
         function IsFile ([string]$Path)
         {
@@ -5113,6 +5153,7 @@ Parameter Input to detect SymbolicLink items.
 #>
 function Remove-ValentiaSymbolicLink
 {
+    [OutputType([Void])]
     [cmdletBinding()]
     param
     (
@@ -5256,6 +5297,7 @@ As number input was less with -Path, d:\hoge3 will be ignore.
 #>
 function Set-ValentiaSymbolicLink
 {
+    [OutputType([Void])]
     [cmdletBinding(DefaultParameterSetName = "ForceFile")]
     param
     (

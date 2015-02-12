@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\valentia-config.ps1" />
+    <Content Include="CS\GetSymLink.cs" />
     <Content Include="CS\CreateSymLink.cs" />
     <Content Include="Example\Deployment\Application\execute\execute.ps1" />
     <Content Include="Example\Deployment\Application\Task-InstallChocolatey.bat" />

@@ -36,6 +36,7 @@ As number input was less with -Path, d:\hoge3 will be ignore.
 #>
 function Set-ValentiaSymbolicLink
 {
+    [OutputType([Void])]
     [cmdletBinding(DefaultParameterSetName = "ForceFile")]
     param
     (
