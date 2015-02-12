@@ -6,6 +6,42 @@ This indicate Version History for valentia.
 ## Version 0.4.x
 ====
 
+- version : 0.4.12
+	
+	[ author : guitarrapc ]
+	
+	[ Feb 12, 2015 ]
+	
+	#### Enhancement
+	* Now Get-ValentiaSymbolicLink returns SymbolicLink Target Path.
+
+- version : 0.4.12
+	
+	[ author : guitarrapc ]
+	
+	[ Dec 11, 2015 ]
+	
+	#### Enhancement
+	* Added WorkingDirectory support for ```Set-ValentiaScheduledTask```
+	* Added Verbose Stream support for ```Get/Set/Test-ValentiaACL```
+
+	#### Unremarkable change
+	* Hide loaded path from valentia.ps1 
+	
+- version : 0.4.10
+	
+	[ author : guitarrapc ]
+	
+	[ Nov 28, 2014 ]
+	
+	#### Enhancement
+	* ```-Strict``` parameter([bool]) was added to support UserName strict Checking.
+
+	#### Bug fix
+	* fix Bug for Get/Set/Test-ValetniaACL. Now ACL detect collect.
+
+	#### Unremarkable change
+	* Installer update. 
 
 - version : 0.4.9
 	

@@ -16,6 +16,10 @@ function Add-ValentiaTypeMemberDefinition
         [string]$Name,
 
         [Parameter(mandatory = 0, position = 3)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$UsingNameSpace,
+
+        [Parameter(mandatory = 0, position = 4)]
         [switch]$PassThru
     )
 
@@ -24,6 +28,10 @@ function Add-ValentiaTypeMemberDefinition
         MemberDefinition = $MemberDefinition
         Namespace        = $NameSpace 
         Name             = $Name + $guid
+    }
+    if (@($UsingNameSpace).Count -ne 0)
+    {
+        $addType.UsingNameSpace = $UsingNameSpace
     }
 
     $private:result = Add-Type @addType -PassThru
