@@ -30,7 +30,7 @@ function Add-ValentiaTypeMemberDefinition
         Name             = $Name + $guid
     }
 
-    if ($UsingNameSpace.Count -ne 0)
+    if (($UsingNameSpace | measure).Count -ne 0)
     {
         $addType.UsingNameSpace = $UsingNameSpace
     }
