@@ -202,17 +202,8 @@ function Set-ValentiaScheduledTask
 
         if (($Execute -eq "") -and (TestExistingTaskScheduler -Task $currentTask))
         {
-            switch ($Disable)
-            {
-                $true {
-                    $currentTask | Disable-ScheduledTask
-                    return;
-                }
-                $false {
-                    $currentTask | Enable-ScheduledTask
-                    return;
-                }
-            }
+            EnableDisableScheduleTask -Disable $Disable
+            return;
         }
 
     #endregion
@@ -231,8 +222,9 @@ function Set-ValentiaScheduledTask
             # Principal
             $principalParam = 
             @{
-                GroupId = "BUILTIN\Administrators"
+                UserId = $Credential.UserName
                 RunLevel = $Runlevel
+                LogOnType = "InteractiveOrPassword"
             }
         }
 
@@ -404,6 +396,28 @@ function Set-ValentiaScheduledTask
                 $ScheduledAt | %{New-ScheduledTaskTrigger -At $_ -Once}
             }
             return $trigger
+        }
+
+        function EnableDisableScheduleTask
+        {
+            [OutputType([Void])]
+            [CmdletBinding()]
+            param
+            (
+                [bool]$Disable
+            )
+
+            switch ($Disable)
+            {
+                $true {
+                    $currentTask | Disable-ScheduledTask
+                    return;
+                }
+                $false {
+                    $currentTask | Enable-ScheduledTask
+                    return;
+                }
+            }
         }
     }
 }

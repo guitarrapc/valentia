@@ -4705,8 +4705,9 @@ function Set-ValentiaScheduledTask
             # Principal
             $principalParam = 
             @{
-                GroupId = "BUILTIN\Administrators"
+                UserId = $Credential.UserName
                 RunLevel = $Runlevel
+                LogOnType = "InteractiveOrPassword"
             }
         }
 
