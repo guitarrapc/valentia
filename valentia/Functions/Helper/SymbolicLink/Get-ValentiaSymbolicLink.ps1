@@ -46,7 +46,8 @@ function Get-ValentiaSymbolicLink
                     if (IsFileReparsePoint -Path $file.FullName)
                     {
                         # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
-                        $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($file.FullName)
+                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
+                        $symTarget = $SymbolicLinkGet::GetSymbolicLinkTarget($file.FullName)
                         Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $file
                     }
@@ -56,7 +57,8 @@ function Get-ValentiaSymbolicLink
                     if (IsDirectoryReparsePoint -Path $directory.FullName)
                     {
                         # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
-                        $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($directory.FullName)
+                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
+                        $symTarget = $SymbolicLinkGet::GetSymbolicLinkTarget($directory.FullName)
                         Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $directory
                     }
@@ -71,15 +73,15 @@ function Get-ValentiaSymbolicLink
 
     begin
     {
-        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         try
         {
-            $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-            $script:SymbolicCS = Join-Path $CSPath GetSymLink.cs -Resolve
-            $script:sig = Get-Content -Path $SymbolicCS -Raw
+            $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+            $private:SymbolicCS = Join-Path $CSPath GetSymLink.cs -Resolve
+            $private:sig = Get-Content -Path $SymbolicCS -Raw
 
-            $script:addType = @{
+            $private:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
                 Name             = "SymbolicLinkGet"
@@ -88,9 +90,7 @@ function Get-ValentiaSymbolicLink
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
             | select -First 1 `
             | %{
-                $script:typeQualifiedName = $_.AssemblyQualifiedName
-                $script:typeFullName = $_.FullName
-                $valentia.typeQualifiedName = $_.AssemblyQualifiedName
+                $SymbolicLinkGet = $_.AssemblyQualifiedName -as [type]
             }
         }
         catch

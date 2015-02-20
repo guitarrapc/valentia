@@ -67,11 +67,11 @@ function Set-ValentiaSymbolicLink
 
             if ($ForceFile -eq $true)
             {
-                [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $Path, $false)
+                $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $Path, $false)
             }
             elseif ($ForceDirectory -eq $true)
             {
-                [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $Path, $true)
+                $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $Path, $true)
             }
             elseif ($file = IsFile -Path $targetPath)
             {
@@ -80,8 +80,7 @@ function Set-ValentiaSymbolicLink
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $file.fullname, $false)
                     # [Valentia.SymbolicLinkSet]::CreateSymLink()
-                    Write-Verbose "$typeQualifiedName"
-                    [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $file.fullname, $false)
+                    $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $file.fullname, $false)
                 }
             }
             elseif ($directory = IsDirectory -Path $targetPath)
@@ -91,8 +90,7 @@ function Set-ValentiaSymbolicLink
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $directory.fullname, $true)
                     # [Valentia.SymbolicLinkSet]::CreateSymLink()
-                    Write-Verbose "$typeQualifiedName"
-                    [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
+                    $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
                 }
             } 
         }
@@ -100,17 +98,17 @@ function Set-ValentiaSymbolicLink
 
     begin
     {
-        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
         $prefix = "_"
         $i = 0 # Initialize prefix Length
 
         try
         {
-            $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-            $script:SymbolicCS = Join-Path $CSPath CreateSymLink.cs -Resolve
-            $script:sig = Get-Content -Path $SymbolicCS -Raw
+            $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+            $private:SymbolicCS = Join-Path $CSPath CreateSymLink.cs -Resolve
+            $private:sig = Get-Content -Path $SymbolicCS -Raw
 
-            $script:addType = @{
+            $private:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
                 Name             = "SymbolicLinkSet"
@@ -118,8 +116,7 @@ function Set-ValentiaSymbolicLink
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
             | select -First 1 `
             | %{
-                $script:typeQualifiedName = $_.AssemblyQualifiedName
-                $script:typeFullName = $_.FullName
+                $SymbolicLinkSet = $_.AssemblyQualifiedName -as [type]
             }
         }
         catch

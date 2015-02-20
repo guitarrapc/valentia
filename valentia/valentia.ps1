@@ -417,7 +417,7 @@ function Add-ValentiaTypeMemberDefinition
     }
 
     $private:result = Add-Type @addType -PassThru
-    if ($PSBoundParameters.PassThru.IsPresent)
+    if ($PassThru)
     {
         return $result
     }
@@ -1493,15 +1493,15 @@ function Get-ValentiaCredential
         [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
     )
  
-    $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+    $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
     try
     {
-        $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-        $script:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
-        $script:sig = Get-Content -Path $CredReadCS -Raw
+        $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+        $private:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
+        $private:sig = Get-Content -Path $CredReadCS -Raw
 
-        $script:addType = @{
+        $private:addType = @{
             MemberDefinition = $sig
             Namespace        = "Advapi32"
             Name             = "Util"
@@ -1509,17 +1509,17 @@ function Get-ValentiaCredential
         Add-ValentiaTypeMemberDefinition @addType -PassThru `
         | select -First 1 `
         | %{
-            $script:typeQualifiedName = $_.AssemblyQualifiedName
-            $script:typeFullName = $_.FullName
+            $CredentialType = $_.AssemblyQualifiedName -as [type]
+            $private:typeFullName = $_.FullName
         }
 
-        $script:nCredPtr= New-Object IntPtr
-        if ([System.Type]::GetType($typeQualifiedName)::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
+        $private:nCredPtr= New-Object IntPtr
+        if ($CredentialType::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
         {
-            $script:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
-            $script:cred = $critCred.GetCredential()
-            $script:username = $cred.UserName
-            $script:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
+            $private:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
+            $private:cred = $critCred.GetCredential()
+            $private:username = $cred.UserName
+            $private:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
             $cred = $null
             $credentialObject = New-Object System.Management.Automation.PSCredential $username, $securePassword
             if ($null -eq $credentialObject)
@@ -1588,7 +1588,7 @@ function Set-ValentiaCredential
     }
     $private:typeName = Add-ValentiaTypeMemberDefinition @addType -PassThru
     $private:typeFullName = $typeName.FullName | select -Last  1
-    $private:typeQualifiedName = $typeName.AssemblyQualifiedName | select -First 1
+    $CredentialType = ($typeName.AssemblyQualifiedName | select -First 1) -as [type]
     
     $private:cred = New-Object $typeFullName
     $cred.flags = 0
@@ -1599,7 +1599,7 @@ function Set-ValentiaCredential
     $cred.persist = 2
     $cred.credentialBlobSize = [System.Text.Encoding]::Unicode.GetBytes($password).length
     $cred.credentialBlob = [System.Runtime.InteropServices.Marshal]::StringToCoTaskMemUni($password)
-    $private:result = [System.Type]::GetType($typeQualifiedName)::CredWrite([ref]$cred,0)
+    $private:result = $CredentialType::CredWrite([ref]$cred,0)
 
     if ($true -eq $result)
     {
@@ -5018,7 +5018,8 @@ function Get-ValentiaSymbolicLink
                     if (IsFileReparsePoint -Path $file.FullName)
                     {
                         # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
-                        $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($file.FullName)
+                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
+                        $symTarget = $SymbolicLinkGet::GetSymbolicLinkTarget($file.FullName)
                         Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $file
                     }
@@ -5028,7 +5029,8 @@ function Get-ValentiaSymbolicLink
                     if (IsDirectoryReparsePoint -Path $directory.FullName)
                     {
                         # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
-                        $symTarget = [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget($directory.FullName)
+                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
+                        $symTarget = $SymbolicLinkGet::GetSymbolicLinkTarget($directory.FullName)
                         Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
                         return $directory
                     }
@@ -5043,15 +5045,15 @@ function Get-ValentiaSymbolicLink
 
     begin
     {
-        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
         try
         {
-            $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-            $script:SymbolicCS = Join-Path $CSPath GetSymLink.cs -Resolve
-            $script:sig = Get-Content -Path $SymbolicCS -Raw
+            $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+            $private:SymbolicCS = Join-Path $CSPath GetSymLink.cs -Resolve
+            $private:sig = Get-Content -Path $SymbolicCS -Raw
 
-            $script:addType = @{
+            $private:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
                 Name             = "SymbolicLinkGet"
@@ -5060,9 +5062,7 @@ function Get-ValentiaSymbolicLink
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
             | select -First 1 `
             | %{
-                $script:typeQualifiedName = $_.AssemblyQualifiedName
-                $script:typeFullName = $_.FullName
-                $valentia.typeQualifiedName = $_.AssemblyQualifiedName
+                $SymbolicLinkGet = $_.AssemblyQualifiedName -as [type]
             }
         }
         catch
@@ -5329,11 +5329,11 @@ function Set-ValentiaSymbolicLink
 
             if ($ForceFile -eq $true)
             {
-                [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $Path, $false)
+                $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $Path, $false)
             }
             elseif ($ForceDirectory -eq $true)
             {
-                [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $Path, $true)
+                $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $Path, $true)
             }
             elseif ($file = IsFile -Path $targetPath)
             {
@@ -5342,8 +5342,7 @@ function Set-ValentiaSymbolicLink
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $file.fullname, $false)
                     # [Valentia.SymbolicLinkSet]::CreateSymLink()
-                    Write-Verbose "$typeQualifiedName"
-                    [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $file.fullname, $false)
+                    $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $file.fullname, $false)
                 }
             }
             elseif ($directory = IsDirectory -Path $targetPath)
@@ -5353,8 +5352,7 @@ function Set-ValentiaSymbolicLink
                 {
                     Write-Verbose ("symbolicPath : '{0}',  target : '{1}', isDirectory : '{2}'" -f $SymbolicNewPath, $directory.fullname, $true)
                     # [Valentia.SymbolicLinkSet]::CreateSymLink()
-                    Write-Verbose "$typeQualifiedName"
-                    [System.Type]::GetType($typeQualifiedName)::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
+                    $SymbolicLinkSet::CreateSymLink($SymbolicNewPath, $directory.fullname, $true)
                 }
             } 
         }
@@ -5362,17 +5360,17 @@ function Set-ValentiaSymbolicLink
 
     begin
     {
-        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+        $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
         $prefix = "_"
         $i = 0 # Initialize prefix Length
 
         try
         {
-            $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-            $script:SymbolicCS = Join-Path $CSPath CreateSymLink.cs -Resolve
-            $script:sig = Get-Content -Path $SymbolicCS -Raw
+            $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+            $private:SymbolicCS = Join-Path $CSPath CreateSymLink.cs -Resolve
+            $private:sig = Get-Content -Path $SymbolicCS -Raw
 
-            $script:addType = @{
+            $private:addType = @{
                 MemberDefinition = $sig
                 Namespace        = "Valentia"
                 Name             = "SymbolicLinkSet"
@@ -5380,8 +5378,7 @@ function Set-ValentiaSymbolicLink
             Add-ValentiaTypeMemberDefinition @addType -PassThru `
             | select -First 1 `
             | %{
-                $script:typeQualifiedName = $_.AssemblyQualifiedName
-                $script:typeFullName = $_.FullName
+                $SymbolicLinkSet = $_.AssemblyQualifiedName -as [type]
             }
         }
         catch

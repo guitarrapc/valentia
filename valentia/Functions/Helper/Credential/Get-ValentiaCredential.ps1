@@ -14,15 +14,15 @@ function Get-ValentiaCredential
         [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
     )
  
-    $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+    $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
 
     try
     {
-        $script:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-        $script:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
-        $script:sig = Get-Content -Path $CredReadCS -Raw
+        $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+        $private:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
+        $private:sig = Get-Content -Path $CredReadCS -Raw
 
-        $script:addType = @{
+        $private:addType = @{
             MemberDefinition = $sig
             Namespace        = "Advapi32"
             Name             = "Util"
@@ -30,17 +30,17 @@ function Get-ValentiaCredential
         Add-ValentiaTypeMemberDefinition @addType -PassThru `
         | select -First 1 `
         | %{
-            $script:typeQualifiedName = $_.AssemblyQualifiedName
-            $script:typeFullName = $_.FullName
+            $CredentialType = $_.AssemblyQualifiedName -as [type]
+            $private:typeFullName = $_.FullName
         }
 
-        $script:nCredPtr= New-Object IntPtr
-        if ([System.Type]::GetType($typeQualifiedName)::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
+        $private:nCredPtr= New-Object IntPtr
+        if ($CredentialType::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
         {
-            $script:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
-            $script:cred = $critCred.GetCredential()
-            $script:username = $cred.UserName
-            $script:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
+            $private:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
+            $private:cred = $critCred.GetCredential()
+            $private:username = $cred.UserName
+            $private:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
             $cred = $null
             $credentialObject = New-Object System.Management.Automation.PSCredential $username, $securePassword
             if ($null -eq $credentialObject)

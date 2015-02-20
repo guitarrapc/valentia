@@ -36,7 +36,7 @@ function Add-ValentiaTypeMemberDefinition
     }
 
     $private:result = Add-Type @addType -PassThru
-    if ($PSBoundParameters.PassThru.IsPresent)
+    if ($PassThru)
     {
         return $result
     }

@@ -46,7 +46,7 @@ function Set-ValentiaCredential
     }
     $private:typeName = Add-ValentiaTypeMemberDefinition @addType -PassThru
     $private:typeFullName = $typeName.FullName | select -Last  1
-    $private:typeQualifiedName = $typeName.AssemblyQualifiedName | select -First 1
+    $CredentialType = ($typeName.AssemblyQualifiedName | select -First 1) -as [type]
     
     $private:cred = New-Object $typeFullName
     $cred.flags = 0
@@ -57,7 +57,7 @@ function Set-ValentiaCredential
     $cred.persist = 2
     $cred.credentialBlobSize = [System.Text.Encoding]::Unicode.GetBytes($password).length
     $cred.credentialBlob = [System.Runtime.InteropServices.Marshal]::StringToCoTaskMemUni($password)
-    $private:result = [System.Type]::GetType($typeQualifiedName)::CredWrite([ref]$cred,0)
+    $private:result = $CredentialType::CredWrite([ref]$cred,0)
 
     if ($true -eq $result)
     {
