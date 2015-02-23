@@ -3,37 +3,116 @@
 #-- Scheduler Task Functions --#
 
 <#
-#>
+.SYNOPSIS 
+Test is TaskScheduler is same prameter.
 
+.DESCRIPTION
+You can test is scheduled task setting is desired.
+
+.NOTES
+Author: guitarrapc
+Created: 23/Feb/2015
+
+.EXAMPLE
+$param = @{
+    Execute = "powershell.exe"
+    TaskName = "hoge"
+    ScheduledAt = [datetime]"2015/1/1 0:0:0"
+    Once = $true
+}
+Set-ValentiaScheduledTask @param -Force $true
+
+Test-ValentiaScheduledTask `
+-TaskName hoge `
+-Execute "powershell.exe" -Verbose `
+
+# This example is minimum testing and will return $true
+# None passed parameter will skip checking
+
+.EXAMPLE
+Test-ValentiaScheduledTask `
+-TaskName hoge `
+-Execute "powershell.exe" `
+-ScheduledAt ([datetime]"2015/01/1 0:0:0") `
+-Once $true
+
+# You can add parameter for strict parameter checking.
+
+.EXAMPLE
+$param = @{
+    Execute = "powershell.exe"
+    Argument = "-Command ''"
+    WorkingDirectory = ""
+    Description = "hoge"
+    TaskName = "hoge"
+    TaskPath = "\hoge\"
+    ScheduledAt = [datetime]"2015/1/1 0:0:0"
+    #Daily = $true
+    Once = $true
+    Disable = $true
+    Hidden = $true
+    Credential = Get-ValentiaCredential
+}
+Set-ValentiaScheduledTask @param -Force $true
+
+Test-ValentiaScheduledTask `
+-TaskName hoge `
+-TaskPath "\hoge\" `
+-Execute "powershell.exe" `
+-Argument "-Command ''" `
+-Description hoge `
+-Credential (Get-ValentiaCredential) `
+-ScheduledAt ([datetime]"2015/01/1 0:0:0") `
+-Once $true
+
+# Testing scheduled task would return true
+
+.EXAMPLE
+Test-ValentiaScheduledTask `
+-TaskName hoge `
+-TaskPath "\hoge\" `
+-Execute "powershell.exe" `
+-Argument "-Command ''" `
+-Description hoge `
+-Credential (Get-ValentiaCredential) `
+-ScheduledAt ([datetime]"2015/01/1 0:0:0") `
+-Daily $true -Debug -Verbose
+
+# Testing scheduled task would return false as Daily is invalid. (Should check Once).
+# You can check progress with -Debug and -Verbose switch
+
+.LINK
+https://github.com/guitarrapc/valentia/wiki/TaskScheduler-Automation
+#>
 function Test-ValentiaScheduledTask
 {
     [OutputType([Void])]
     [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
-        [parameter(Mandatory = 0, Position  = 0)]
-        [string]$Execute = [sring]::Empty,
-
-        [parameter(Mandatory = 0, Position  = 1)]
-        [string]$Argument = [sring]::Empty,
-    
-        [parameter(Mandatory = 0, Position  = 2)]
-        [string]$WorkingDirectory = [sring]::Empty,
-
-        [parameter(Mandatory = 1, Position  = 3)]
+        [parameter(Mandatory = 1, Position  = 0)]
         [string]$TaskName,
     
-        [parameter(Mandatory = 0, Position  = 4)]
+        [parameter(Mandatory = 0, Position  = 1)]
         [string]$TaskPath = "\",
+
+        [parameter(Mandatory = 0, Position  = 2)]
+        [string]$Execute,
+
+        [parameter(Mandatory = 0, Position  = 3)]
+        [string]$Argument,
+    
+        [parameter(Mandatory = 0, Position  = 4)]
+        [string]$WorkingDirectory,
 
         [parameter(Mandatory = 0, Position  = 5)]
         [datetime[]]$ScheduledAt,
 
         [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
-        [TimeSpan[]]$ScheduledTimeSpan = ([TimeSpan]::FromHours(1)),
+        [TimeSpan[]]$ScheduledTimeSpan,
 
         [parameter(Mandatory = 0, Position  = 7, parameterSetName = "ScheduledDuration")]
-        [TimeSpan[]]$ScheduledDuration = [TimeSpan]::MaxValue,
+        [TimeSpan[]]$ScheduledDuration,
 
         [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Daily")]
         [bool]$Daily = $false,
@@ -42,47 +121,56 @@ function Test-ValentiaScheduledTask
         [bool]$Once = $false,
 
         [parameter(Mandatory = 0, Position  = 10)]
-        [string]$Description = [string]::Empty,
+        [string]$Description,
 
         [parameter(Mandatory = 0, Position  = 11)]
-        [PScredential]$Credential = $null,
+        [PScredential]$Credential,
 
         [parameter(Mandatory = 0, Position  = 12)]
-        [bool]$Disable = $true,
+        [bool]$Disable,
 
         [parameter(Mandatory = 0, Position  = 13)]
-        [bool]$Hidden = $true,
+        [bool]$Hidden,
 
         [parameter(Mandatory = 0, Position  = 14)]
-        [TimeSpan]$ExecutionTimeLimit = ([TimeSpan]::FromDays(3)),
+        [TimeSpan]$ExecutionTimeLimit = [TimeSpan]::FromDays(3),
 
         [parameter(Mandatory = 0,Position  = 15)]
         [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
-        [string]$Compatibility = "Win8",
+        [string]$Compatibility,
 
         [parameter(Mandatory = 0,Position  = 16)]
         [ValidateSet("Highest", "Limited")]
-        [string]$Runlevel = "Limited"
+        [string]$Runlevel
     )
 
     begin
     {
-        # Enum for Ensure
-        try
+        function GetScheduledTask
         {
-        Add-Type -TypeDefinition @"
-            public enum ScheduledParameterType
-            {
-                Root,
-                Actions,
-                Principal,
-                Settings,
-                Triggers
+            [OutputType([HashTable])]
+            [CmdletBinding()]
+            param
+            (
+                [parameter(Mandatory = $true)]
+                [Microsoft.Management.Infrastructure.CimInstance[]]$ScheduledTask,
+
+                [parameter(Mandatory = $true)]
+                [string]$Parameter,
+
+                [parameter(Mandatory = $true)]
+                [string]$Value
+            )
+
+            Write-Debug ("Checking {0} is exists with : {1}" -f $parameter, $Value)
+            $task = $root | where $Parameter -eq $Value
+            $uniqueValue = $task.$Parameter | sort -Unique
+            $result = $uniqueValue -eq $Value
+            Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $uniqueValue)
+            return @{
+                task = $task
+                result = $result
             }
-"@
-        }
-        catch
-        {
         }
 
         function TestScheduledTask
@@ -95,7 +183,7 @@ function Test-ValentiaScheduledTask
                 [Microsoft.Management.Infrastructure.CimInstance]$ScheduledTask,
 
                 [parameter(Mandatory = $true)]
-                [ScheduledParameterType]$Type,
+                [ValentiaScheduledParameterType]$Type,
 
                 [parameter(Mandatory = $true)]
                 [string]$Parameter,
@@ -106,26 +194,33 @@ function Test-ValentiaScheduledTask
                 [switch]$SkipNullCheck
             )
 
+            # skip null
+            if (($Value -eq $null) -or ($Value -eq [string]::Empty))
+            {
+                Write-Debug ("Skipping {0} as passed value is null" -f $Parameter)
+                return $true
+            }
+
             Write-Debug ("Checking {0} is match with : {1}" -f $Parameter, $Value)
             $target = switch ($Type)
             {
-                ([ScheduledParameterType]::Root)
+                ([ValentiaScheduledParameterType]::Root)
                 {
                     $ScheduledTask.$Parameter | sort -Unique
                 }
-                ([ScheduledParameterType]::Actions)
+                ([ValentiaScheduledParameterType]::Actions)
                 {
                     $ScheduledTask.Actions.$Parameter | sort -Unique
                 }
-                ([ScheduledParameterType]::Principal)
+                ([ValentiaScheduledParameterType]::Principal)
                 {
                     $ScheduledTask.Principal.$Parameter | sort -Unique
                 }
-                ([ScheduledParameterType]::Settings)
+                ([ValentiaScheduledParameterType]::Settings)
                 {
                     $ScheduledTask.Settings.$Parameter | sort -Unique
                 }
-                ([ScheduledParameterType]::Triggers)
+                ([ValentiaScheduledParameterType]::Triggers)
                 {
                     $ScheduledTask.Triggers.$Parameter | sort -Unique
                 }
@@ -134,13 +229,14 @@ function Test-ValentiaScheduledTask
             # null or empty check
             if ([string]::IsNullOrEmpty($target) -and [string]::IsNullOrEmpty($Value))
             {
-                Write-Debug ("Parameter {0} was detected NullOrEmpty. : $true" -f $Parameter)
-                return $true
+                $result = $true
+                Write-Debug ("{0} : $result (Detected NullOrEmpty)" -f $Parameter)
+                return $result
             }
 
             # value check
             $result = $target -eq $Value
-            Write-Verbose ("{0} : {1}" -f $Parameter, $result)
+            Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $target)
             return $result
         }
 
@@ -157,11 +253,19 @@ function Test-ValentiaScheduledTask
                 [TimeSpan]$Value
             )
 
-            $parameter = "ExecutionTimeLimit"
+            $private:parameter = "ExecutionTimeLimit"
+
+            # skip null
+            if ($Value -eq $null)
+            {
+                Write-Debug ("Skipping {0} as passed value is null" -f $Parameter)
+                return $true
+            }
+
             Write-Debug ("Checking {0} is match with : {1}min" -f $parameter, $Value.TotalMinutes)
             $executionTimeLimitTimeSpan = [System.Xml.XmlConvert]::ToTimeSpan($ScheduledTask.Settings.$parameter)
             $result = $Value -eq $executionTimeLimitTimeSpan
-            Write-Verbose ("{0} : {1}" -f $parameter, $result)
+            Write-Verbose ("{0} : {1} ({2}min)" -f $parameter, $result, $executionTimeLimitTimeSpan.TotalMinutes)
             return $result            
         }
 
@@ -178,6 +282,56 @@ function Test-ValentiaScheduledTask
                 [DateTime[]]$Value
             )
 
+            $private:parameter = "StartBoundary"
+
+            # skip null
+            if ($Value -eq $null)
+            {
+                Write-Debug ("Skipping {0} as passed value is null" -f $Parameter)
+                return $true
+            }
+
+            $valueCount = ($Value | measure).Count
+            $scheduleCount = ($ScheduledTask.Triggers | measure).Count
+            if ($valueCount -ne $scheduleCount)
+            {
+                throw New-Object System.ArgumentException ("Argument length not match with current ScheduledAt {0} and passed ScheduledAt {1}." -f $scheduleCount, $valueCount)
+            }
+
+            $result = @()
+            for ($i = 0; $i -le ($ScheduledTask.Triggers.$parameter.Count -1); $i++)
+            {
+                Write-Debug ("Checking {0} is match with : {1}" -f $parameter, $Value[$i])
+                $startBoundaryDateTime = [System.Xml.XmlConvert]::ToDateTime(@($ScheduledTask.Triggers.$parameter)[$i])
+                $result += @($Value)[$i] -eq $startBoundaryDateTime
+                Write-Verbose ("{0} : {1} ({2})" -f $parameter, $result[$i], $startBoundaryDateTime)
+            }
+            return $result | sort -Unique
+        }
+
+        function TestScheduledTaskScheduledRepetition
+        {
+            [OutputType([bool])]
+            [CmdletBinding()]
+            param
+            (
+                [parameter(Mandatory = $true)]
+                [Microsoft.Management.Infrastructure.CimInstance]$ScheduledTask,
+
+                [parameter(Mandatory = $true)]
+                [string]$Parameter,
+
+                [parameter(Mandatory = $false)]
+                [TimeSpan[]]$Value
+            )
+
+            # skip null
+            if ($Value -eq $null)
+            {
+                Write-Debug ("Skipping {0} as passed value is null" -f $Parameter)
+                return $true
+            }
+
             $valueCount = ($Value | measure).Count
             $scheduleCount = ($ScheduledTask.Triggers | measure).Count
             if ($valueCount -ne $scheduleCount)
@@ -185,14 +339,13 @@ function Test-ValentiaScheduledTask
                 throw New-Object System.ArgumentException ("Arugument length not match with current ScheduledAt {0} and passed ScheduledAt {1}." -f $scheduleCount, $valueCount)
             }
 
-            $parameter = "StartBoundary"
             $result = @()
-            for ($i = 0; $i -le ($ScheduledTask.Triggers.$parameter.Count -1); $i++)
+            for ($i = 0; $i -le ($ScheduledTask.Triggers.Repetition.$Parameter.Count -1); $i++)
             {
-                Write-Debug ("Checking {0} is match with : {1}" -f $parameter, $Value[$i])
-                $startBoundaryDateTime = [System.Xml.XmlConvert]::ToDateTime(@($ScheduledTask.Triggers.$parameter)[$i])
-                $result += $Value[$i] -eq $startBoundaryDateTime
-                Write-Verbose ("{0} : {1}" -f $parameter, $result[$i])
+                Write-Debug ("Checking {0} is match with : {1}" -f $Parameter, $Value[$i])
+                $target = [System.Xml.XmlConvert]::ToTimeSpan(@($ScheduledTask.Triggers.Repetition.$Parameter)[$i])
+                $result = @($Value)[$i] -eq $target
+                Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result[$i], $target.TotalMinutes)
             }
             return $result | sort -Unique
         }
@@ -213,23 +366,33 @@ function Test-ValentiaScheduledTask
                 [bool]$Once
             )
 
+            # skip null
+            if (($Daily -eq $false) -and ($Once -eq $false))
+            {
+                Write-Debug ("Skipping Daily, Once as passed value is null")
+                return $true
+            }
+
             $trigger = $ScheduledTaskXml.task.Triggers.CalendarTrigger
             $result = $false
-            if ($Daily)
+            switch ($true)
             {
-                Write-Debug "Checking Trigger is as Daily"
-                $result = ($trigger.ScheduleByDay | measure).Count -ne 0
-                Write-Verbose ("Daily : {0}" -f $result)
-            }
-            if ($Once)
-            {
-                Write-Debug "Checking Trigger is as Once"
-                $result = ($trigger.ScheduleByDay | measure).Count -eq 0
-                Write-Verbose ("Once : {0}" -f $result)
-            }
-            else
-            {
-                Write-Debug "None of Parameter through Test for Daily/Once"
+                $Daily
+                {
+                    Write-Debug "Checking Trigger is : Daily"
+                    $result = ($trigger.ScheduleByDay | measure).Count -ne 0
+                    Write-Verbose ("Daily : {0}" -f $result)
+                }
+                $Once
+                {
+                    Write-Debug "Checking Trigger is : Once"
+                    $result = ($trigger.ScheduleByDay | measure).Count -eq 0
+                    Write-Verbose ("Once : {0}" -f $result)
+                }
+                Default
+                {
+                    Write-Debug "None of Parameter through Test for Daily/Once"
+                }
             }
             return $result
         }
@@ -238,12 +401,26 @@ function Test-ValentiaScheduledTask
     end
     {
         #region Root
-            $script:current = Get-ScheduledTask | where TaskPath -eq $TaskPath | where TaskName -eq $TaskName
-            [xml]$script:xml = Export-ScheduledTask -TaskName $current.TaskName -TaskPath $current.TaskPath
+
+            $private:result = $true
+
+            # get whole task
+            $root = Get-ScheduledTask
+
+            # TaskPath
+            $taskResult = GetScheduledTask -ScheduledTask $root -Parameter TaskPath -Value $TaskPath
+            if ($taskResult.result -eq $false){ return $taskResult.Result; }
+
+            # TaskName
+            $taskResult = GetScheduledTask -ScheduledTask $taskResult.task -Parameter Taskname -Value $TaskName
+            if ($taskResult.result -eq $false){ return $taskResult.Result; }
 
             # default
-            if (($current | measure).Count -eq 0){ return $false}
-            $script:result = $true
+            $current = $taskResult.task
+            if (($current | measure).Count -eq 0){ return $false }
+
+            # export as xml
+            [xml]$script:xml = Export-ScheduledTask -TaskName $current.TaskName -TaskPath $current.TaskPath
 
             # Description
             $result = TestScheduledTask -ScheduledTask $current -Parameter Description -Value $Description -Type ([ScheduledParameterType]::Root)
@@ -298,11 +475,19 @@ function Test-ValentiaScheduledTask
         #region Triggers
 
             # Disable
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Enabled -Value $Disable -Type Triggers
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Enabled -Value $Disable -Type ([ScheduledParameterType]::Triggers)
             if ($result -eq $false){ return $result; }
 
             # SchduledAt
             $result = TestScheduledTaskScheduledAt -ScheduledTask $current -Value $ScheduledAt
+            if ($result -contains $false){ return $false; }
+
+            # ScheduledTimeSpan (Repetition Interval)
+            $result = TestScheduledTaskScheduledRepetition -ScheduledTask $current -Value $ScheduledTimeSpan -Parameter Interval
+            if ($result -contains $false){ return $false; }
+
+            # ScheduledDuration (Repetition Duration)
+            $result = TestScheduledTaskScheduledRepetition -ScheduledTask $current -Value $ScheduledDuration -Parameter Duration
             if ($result -contains $false){ return $false; }
 
             # Daily
