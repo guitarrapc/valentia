@@ -176,11 +176,6 @@
     <Folder Include="Functions\Invokation\Sync\" />
     <Folder Include="Functions\Helper\" />
     <Folder Include="Type\" />
-    <Folder Include="Test\" />
-    <Folder Include="Test\Credential\" />
-    <Folder Include="Test\Get-ValentiaGroup\" />
-    <Folder Include="Test\PingAsync\" />
-    <Folder Include="Test\SymbolicLink\" />
     <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
@@ -244,10 +239,6 @@
     <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Watch-ValentiaAsyncPipelineStatus.ps1" />
     <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Invoke-ValentiaAsyncPipeline.ps1" />
     <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaRunspaceProcess.ps1" />
-    <Content Include="Test\Get-ValentiaGroup\Target.ps1" />
-    <Content Include="Test\PingAsync\PingAsync.ps1" />
-    <Content Include="Test\Credential\Credential.ps1" />
-    <Content Include="Test\SymbolicLink\PingAsync.ps1" />
     <Content Include="Tools\install.bat" />
     <Content Include="Tools\install.ps1" />
     <Content Include="Tools\build.ps1" />

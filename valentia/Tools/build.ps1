@@ -141,6 +141,7 @@ $valentia.functionToExport = @(
         'Remove-ValentiaScheduledTask',
         'Remove-ValentiaScheduledTaskEmptyDirectoryPath',
         'Set-ValentiaScheduledTask',
+        'Test-ValentiaScheduledTask',
 
         # Sed
         "Invoke-ValentiaSed",

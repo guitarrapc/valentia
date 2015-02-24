@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{30c4acb4-1985-476e-bd48-baa6c91b0317}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>
+    <Name>valentia.Tests</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Test\" />
+    <Folder Include="Test\Functions\" />
+    <Folder Include="Test\Functions\Helper\" />
+    <Folder Include="Test\Functions\Helper\ScheduledTask\" />
+    <Folder Include="Test\Functions\Helper\SymbolicLink\" />
+    <Folder Include="Test\Old\" />
+    <Folder Include="Test\Old\Credential\" />
+    <Folder Include="Test\Old\Get-ValentiaGroup\" />
+    <Folder Include="Test\Old\PingAsync\" />
+    <Folder Include="Test\Pester\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Test\Old\Credential\Credential.ps1" />
+    <Compile Include="Test\Old\Get-ValentiaGroup\Target.ps1" />
+    <Compile Include="Test\Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.ps1" />
+    <Compile Include="Test\Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.Tests.ps1" />
+    <Compile Include="Test\Old\PingAsync\PingAsync.ps1" />
+    <Compile Include="Test\Functions\Helper\SymbolicLink\SymbolicLink.ps1" />
+    <Compile Include="Test\Functions\Helper\SymbolicLink\SymbolicLink.Tests.ps1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>
