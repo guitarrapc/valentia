@@ -230,7 +230,13 @@ function Set-ValentiaScheduledTask
 
         # validation
         if ($Execute -eq ""){ throw New-Object System.InvalidOperationException ($ErrorMessages.ExecuteBrank) }
-        if (TestExistingTaskSchedulerWithPath @existingTaskParam){ throw New-Object System.InvalidOperationException ($ErrorMessages.SameNameFolderFound -f $taskName) }
+        if (Test-ValentiaPowerShellElevated)
+        {
+            if (TestExistingTaskSchedulerWithPath @existingTaskParam)
+            {
+                throw New-Object System.InvalidOperationException ($ErrorMessages.SameNameFolderFound -f $taskName)
+            }
+        }
 
         # Action
         $actionParam = 
