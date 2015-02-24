@@ -14,8 +14,6 @@ function Get-ValentiaCredential
         [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
     )
  
-    $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-
     try
     {
         $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
