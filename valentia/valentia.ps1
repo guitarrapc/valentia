@@ -5093,13 +5093,20 @@ function Test-ValentiaScheduledTask
                 [parameter(Mandatory = $false)]
                 [PSObject]$Value,
 
-                [switch]$SkipNullCheck
+                [bool]$IsExist
             )
 
-            # skip null
-            if (($Value -eq $null) -or ($Value -eq [string]::Empty))
+            # skip when Parameter not use
+            if ($IsExist -eq $false)
             {
-                Write-Debug ("Skipping {0} as passed value is null" -f $Parameter)
+                Write-Debug ("Skipping {0} as value not passed to function." -f $Parameter)
+                return $true
+            }
+
+            # skip null
+            if ($Value -eq $null)
+            {
+                Write-Debug ("Skipping {0} as passed value '{1}' is null." -f $Parameter, $Value)
                 return $true
             }
 
@@ -5261,39 +5268,51 @@ function Test-ValentiaScheduledTask
                 [parameter(Mandatory = $true)]
                 [System.Xml.XmlDocument]$ScheduledTaskXml,
 
-                [parameter(Mandatory = $false)]
-                [bool]$Daily,
+                [parameter(Mandatory = $true)]
+                [string]$Parameter,
 
                 [parameter(Mandatory = $false)]
-                [bool]$Once
+                [PSObject]$Value,
+
+                [bool]$IsExist
             )
 
-            # skip null
-            if (($Daily -eq $false) -and ($Once -eq $false))
+            # skip when Parameter not use
+            if ($IsExist -eq $false)
             {
-                Write-Debug ("Skipping Daily, Once as passed value is null")
+                Write-Debug ("Skipping {0} as value not passed to function." -f $Parameter)
                 return $true
             }
 
-            $trigger = $ScheduledTaskXml.task.Triggers.CalendarTrigger
+            $trigger = ($ScheduledTaskXml.task.Triggers.CalendarTrigger.ScheduleByDay | measure).Count
             $result = $false
-            switch ($true)
+            switch ($Parameter)
             {
-                $Daily
+                "Daily"
                 {
                     Write-Debug "Checking Trigger is : Daily"
-                    $result = ($trigger.ScheduleByDay | measure).Count -ne 0
-                    Write-Verbose ("Daily : {0}" -f $result)
+                    $result = if ($Value)
+                    {
+                        $trigger -ne 0
+                    }
+                    else
+                    {
+                        $trigger-eq 0
+                    }
+                Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $trigger)
                 }
-                $Once
+                "Once"
                 {
                     Write-Debug "Checking Trigger is : Once"
-                    $result = ($trigger.ScheduleByDay | measure).Count -eq 0
-                    Write-Verbose ("Once : {0}" -f $result)
-                }
-                Default
-                {
-                    Write-Debug "None of Parameter through Test for Daily/Once"
+                    $result = if ($Value)
+                    {
+                        $trigger -eq 0
+                    }
+                    else
+                    {
+                        $trigger -ne 0
+                    }
+                    Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $trigger)
                 }
             }
             return $result
@@ -5325,7 +5344,7 @@ function Test-ValentiaScheduledTask
             [xml]$script:xml = Export-ScheduledTask -TaskName $current.TaskName -TaskPath $current.TaskPath
 
             # Description
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Description -Value $Description -Type ([ValentiaScheduledParameterType]::Root)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Description -Value $Description -Type ([ValentiaScheduledParameterType]::Root) -IsExist ($PSBoundParameters.ContainsKey('Description'))
             if ($result -eq $false){ return $result; }
 
         #endregion
@@ -5333,15 +5352,15 @@ function Test-ValentiaScheduledTask
         #region Action
 
             # Execute
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Execute -Value $Execute -Type ([ValentiaScheduledParameterType]::Actions)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Execute -Value $Execute -Type ([ValentiaScheduledParameterType]::Actions) -IsExist ($PSBoundParameters.ContainsKey('Execute'))
             if ($result -eq $false){ return $result; }
 
             # Arguments
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Arguments -Value $Argument -Type ([ValentiaScheduledParameterType]::Actions)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Arguments -Value $Argument -Type ([ValentiaScheduledParameterType]::Actions) -IsExist ($PSBoundParameters.ContainsKey('Argument'))
             if ($result -eq $false){ return $result; }
 
             # WorkingDirectory
-            $result = TestScheduledTask -ScheduledTask $current -Parameter WorkingDirectory -Value $WorkingDirectory -Type ([ValentiaScheduledParameterType]::Actions)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter WorkingDirectory -Value $WorkingDirectory -Type ([ValentiaScheduledParameterType]::Actions) -IsExist ($PSBoundParameters.ContainsKey('WorkingDirectory'))
             if ($result -eq $false){ return $result; }
 
         #endregion
@@ -5349,11 +5368,11 @@ function Test-ValentiaScheduledTask
         #region Principal
 
             # UserId
-            $result = TestScheduledTask -ScheduledTask $current -Parameter UserId -Value $Credential.UserName -Type ([ValentiaScheduledParameterType]::Principal)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter UserId -Value $Credential.UserName -Type ([ValentiaScheduledParameterType]::Principal) -IsExist ($PSBoundParameters.ContainsKey('Credential'))
             if ($result -eq $false){ return $result; }
 
             # RunLevel
-            $result = TestScheduledTask -ScheduledTask $current -Parameter RunLevel -Value $Runlevel -Type ([ValentiaScheduledParameterType]::Principal)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter RunLevel -Value $Runlevel -Type ([ValentiaScheduledParameterType]::Principal) -IsExist ($PSBoundParameters.ContainsKey('Runlevel'))
             if ($result -eq $false){ return $result; }
 
         #endregion
@@ -5361,7 +5380,7 @@ function Test-ValentiaScheduledTask
         #region Settings
 
             # Compatibility
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Compatibility -Value $Compatibility -Type ([ValentiaScheduledParameterType]::Settings)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Compatibility -Value $Compatibility -Type ([ValentiaScheduledParameterType]::Settings) -IsExist ($PSBoundParameters.ContainsKey('Compatibility'))
             if ($result -eq $false){ return $result; }
 
             # ExecutionTimeLimit
@@ -5369,16 +5388,16 @@ function Test-ValentiaScheduledTask
             if ($result -eq $false){ return $result; }
 
             # Hidden
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Hidden -Value $Hidden -Type ([ValentiaScheduledParameterType]::Settings)
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Hidden -Value $Hidden -Type ([ValentiaScheduledParameterType]::Settings) -IsExist ($PSBoundParameters.ContainsKey('Hidden'))
+            if ($result -eq $false){ return $result; }
+
+            # Disable
+            $result = TestScheduledTask -ScheduledTask $current -Parameter Enabled -Value ($Disable -eq $false) -Type ([ValentiaScheduledParameterType]::Settings) -IsExist ($PSBoundParameters.ContainsKey('Disable'))
             if ($result -eq $false){ return $result; }
 
         #endregion
 
         #region Triggers
-
-            # Disable
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Enabled -Value $Disable -Type ([ValentiaScheduledParameterType]::Triggers)
-            if ($result -eq $false){ return $result; }
 
             # SchduledAt
             $result = TestScheduledTaskScheduledAt -ScheduledTask $current -Value $ScheduledAt
@@ -5393,7 +5412,11 @@ function Test-ValentiaScheduledTask
             if ($result -contains $false){ return $false; }
 
             # Daily
-            $result = TestScheduledTaskTriggerBy -ScheduledTaskXml $xml -Daily $Daily -Once $Once
+            $result = TestScheduledTaskTriggerBy -ScheduledTaskXml $xml -Parameter Daily -Value $Daily -IsExist ($PSBoundParameters.ContainsKey('Daily'))
+            if ($result -eq $false){ return $result; }
+
+            # Once
+            $result = TestScheduledTaskTriggerBy -ScheduledTaskXml $xml -Parameter Once -Value $Once -IsExist ($PSBoundParameters.ContainsKey('Once'))
             if ($result -eq $false){ return $result; }
 
         #endregion
