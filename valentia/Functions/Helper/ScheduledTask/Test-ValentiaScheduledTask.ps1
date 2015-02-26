@@ -86,7 +86,7 @@ https://github.com/guitarrapc/valentia/wiki/TaskScheduler-Automation
 #>
 function Test-ValentiaScheduledTask
 {
-    [OutputType([Void])]
+    [OutputType([bool])]
     [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
@@ -233,14 +233,6 @@ function Test-ValentiaScheduledTask
                 }
             }
             
-            # null or empty check
-            if ([string]::IsNullOrEmpty($target) -and [string]::IsNullOrEmpty($Value))
-            {
-                $result = $true
-                Write-Debug ("{0} : $result (Detected NullOrEmpty)" -f $Parameter)
-                return $result
-            }
-
             # value check
             $result = $target -eq $Value
             Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $target)
@@ -274,6 +266,37 @@ function Test-ValentiaScheduledTask
             $result = $Value -eq $executionTimeLimitTimeSpan
             Write-Verbose ("{0} : {1} ({2}min)" -f $parameter, $result, $executionTimeLimitTimeSpan.TotalMinutes)
             return $result            
+        }
+
+        function TestScheduledTaskDisable
+        {
+            [OutputType([bool])]
+            [CmdletBinding()]
+            param
+            (
+                [parameter(Mandatory = $true)]
+                [Microsoft.Management.Infrastructure.CimInstance]$ScheduledTask,
+
+                [parameter(Mandatory = $false)]
+                [PSObject]$Value,
+
+                [bool]$IsExist
+            )
+
+            # skip when Parameter not use
+            if ($IsExist -eq $false)
+            {
+                Write-Debug ("Skipping {0} as value not passed to function." -f $Parameter)
+                return $true
+            }
+
+            $target = $ScheduledTask.Settings.Enable -eq $false
+            
+            # value check
+            Write-Debug ("Checking {0} is match with : {1}" -f "Disable", $Value)
+            $result = $target -eq $Value
+            Write-Verbose ("{0} : {1} ({2})" -f "Disable", $result, $target)
+            return $result
         }
 
         function TestScheduledTaskScheduledAt
@@ -490,7 +513,7 @@ function Test-ValentiaScheduledTask
             if ($result -eq $false){ return $result; }
 
             # Disable
-            $result = TestScheduledTask -ScheduledTask $current -Parameter Enabled -Value ($Disable -eq $false) -Type ([ValentiaScheduledParameterType]::Settings) -IsExist ($PSBoundParameters.ContainsKey('Disable'))
+            $result = TestScheduledTaskDisable -ScheduledTask $current -Value ($Disable -eq $false) -IsExist ($PSBoundParameters.ContainsKey('Disable'))
             if ($result -eq $false){ return $result; }
 
         #endregion
