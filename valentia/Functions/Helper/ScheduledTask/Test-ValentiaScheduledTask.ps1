@@ -233,6 +233,13 @@ function Test-ValentiaScheduledTask
                 }
             }
             
+            if ($Value.GetType().FullName -eq "System.String")
+            {
+                if (($target -eq $null) -and ([string]::IsNullOrEmpty($Value)))
+                {
+                    return $result
+                }
+            }
             # value check
             $result = $target -eq $Value
             Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $target)
