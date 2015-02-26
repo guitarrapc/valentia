@@ -27,25 +27,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Test\" />
-    <Folder Include="Test\Functions\" />
-    <Folder Include="Test\Functions\Helper\" />
-    <Folder Include="Test\Functions\Helper\ScheduledTask\" />
-    <Folder Include="Test\Functions\Helper\SymbolicLink\" />
-    <Folder Include="Test\Old\" />
-    <Folder Include="Test\Old\Credential\" />
-    <Folder Include="Test\Old\Get-ValentiaGroup\" />
-    <Folder Include="Test\Old\PingAsync\" />
-    <Folder Include="Test\Pester\" />
+    <Folder Include="Functions\" />
+    <Folder Include="Functions\Helper\" />
+    <Folder Include="Functions\Helper\ScheduledTask\" />
+    <Folder Include="Functions\Helper\SymbolicLink\" />
+    <Folder Include="Old\" />
+    <Folder Include="Old\Credential\" />
+    <Folder Include="Old\Get-ValentiaGroup\" />
+    <Folder Include="Old\PingAsync\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test\Old\Credential\Credential.ps1" />
-    <Compile Include="Test\Old\Get-ValentiaGroup\Target.ps1" />
-    <Compile Include="Test\Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.ps1" />
-    <Compile Include="Test\Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.Tests.ps1" />
-    <Compile Include="Test\Old\PingAsync\PingAsync.ps1" />
-    <Compile Include="Test\Functions\Helper\SymbolicLink\SymbolicLink.ps1" />
-    <Compile Include="Test\Functions\Helper\SymbolicLink\SymbolicLink.Tests.ps1" />
+    <Compile Include="Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.ps1" />
+    <Compile Include="Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.Tests.ps1" />
+    <Compile Include="Functions\Helper\SymbolicLink\SymbolicLink.ps1" />
+    <Compile Include="Functions\Helper\SymbolicLink\SymbolicLink.Tests.ps1" />
+    <Compile Include="Old\Credential\Credential.ps1" />
+    <Compile Include="Old\Get-ValentiaGroup\Target.ps1" />
+    <Compile Include="Old\PingAsync\PingAsync.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
