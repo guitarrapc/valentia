@@ -290,7 +290,8 @@ function Test-ValentiaScheduledTask
                 return $true
             }
 
-            $target = $ScheduledTask.Settings.Enable -eq $false
+            # convert Enable -> Disable
+            $target = $ScheduledTask.Settings.Enabled -eq $false
             
             # value check
             Write-Debug ("Checking {0} is match with : {1}" -f "Disable", $Value)
@@ -513,7 +514,7 @@ function Test-ValentiaScheduledTask
             if ($result -eq $false){ return $result; }
 
             # Disable
-            $result = TestScheduledTaskDisable -ScheduledTask $current -Value ($Disable -eq $false) -IsExist ($PSBoundParameters.ContainsKey('Disable'))
+            $result = TestScheduledTaskDisable -ScheduledTask $current -Value $Disable -IsExist ($PSBoundParameters.ContainsKey('Disable'))
             if ($result -eq $false){ return $result; }
 
         #endregion
