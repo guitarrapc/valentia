@@ -31,5 +31,18 @@ Add-Type -TypeDefinition @"
         Utils             = 6
     }
 "@
+
+#-- PublicEnum Enum for ScheduledTaskTest --#
+Add-Type -TypeDefinition @"
+    public enum ValentiaScheduledParameterType
+    {
+        Root,
+        Actions,
+        Principal,
+        Settings,
+        Triggers
+    }
+"@
+
 # file loaded from path : \type\Type.ps1
 

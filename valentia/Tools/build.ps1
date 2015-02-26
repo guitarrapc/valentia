@@ -39,7 +39,7 @@ $valentia.combineTempfunction = '{0}.ps1' -f $valentia.name
 $valentia.combineTemptype = 'Type.ps1'
 $valentia.fileEncode = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
 
-$valentia.moduleVersion = "0.4.13"
+$valentia.moduleVersion = "0.4.14"
 $valentia.description = "PowerShell Remote deployment library for Windows Servers";
 $valentia.copyright = "28/June/2013 -"
 $valentia.RequiredModules = @()
@@ -141,6 +141,7 @@ $valentia.functionToExport = @(
         'Remove-ValentiaScheduledTask',
         'Remove-ValentiaScheduledTaskEmptyDirectoryPath',
         'Set-ValentiaScheduledTask',
+        'Test-ValentiaScheduledTask',
 
         # Sed
         "Invoke-ValentiaSed",
