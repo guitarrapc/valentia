@@ -237,9 +237,11 @@ function Test-ValentiaScheduledTask
             {
                 if (($target -eq $null) -and ([string]::IsNullOrEmpty($Value)))
                 {
-                    return $result
+                    return $true
+                    Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $target)
                 }
             }
+
             # value check
             $result = $target -eq $Value
             Write-Verbose ("{0} : {1} ({2})" -f $Parameter, $result, $target)
