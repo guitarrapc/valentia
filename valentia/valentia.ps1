@@ -3609,7 +3609,7 @@ function New-ValentiaLog
         [string]$LogFolder = $(Join-Path $valentia.Log.path (Get-Date).ToString("yyyyMMdd")),
 
         [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Name of LogFile.")]
-        [string]$LogFile = "$($valentia.Log.name)_$((Get-Date).ToString("yyyyMMdd_HHmmss"))$($valentia.Log.extension)"
+        [string]$LogFile = "$($valentia.Log.name)_$((Get-Date).ToString("yyyyMMdd_HHmmss"))_$([Guid]::NewGuid().ToString())$($valentia.Log.extension)"
     )
 
 
