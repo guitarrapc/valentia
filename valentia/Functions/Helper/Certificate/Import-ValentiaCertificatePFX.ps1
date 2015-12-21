@@ -7,23 +7,23 @@ function Import-ValentiaCertificatePFX
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocation = $valentia.certificate.import.CertStoreLocation,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreName]$certStoreName = $valentia.certificate.import.CertStoreName,
 
-        [parameter(mandatory = 0, position  = 3, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 3, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$importFilePath = $valentia.certificate.FilePath.PFX,
 
-        [parameter(mandatory = 0, position  = 4)]
+        [parameter(mandatory = $false, position  = 4)]
         [ValidateNotNullOrEmpty()]
         [PSCredential]$Credential = $null
     )

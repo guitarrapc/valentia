@@ -51,38 +51,38 @@ function Invoke-ValentiaAsync
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string[]]$DeployGroups,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "TaskFileName", HelpMessage = "Move to Brach folder you sat taskfile, then input TaskFileName. exclusive with ScriptBlock.")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "TaskFileName", HelpMessage = "Move to Brach folder you sat taskfile, then input TaskFileName. exclusive with ScriptBlock.")]
         [ValidateNotNullOrEmpty()]
         [string]$TaskFileName,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "SctriptBlock", HelpMessage = "Input Script Block {hogehoge} you want to execute with this commandlet. exclusive with TaskFileName")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "SctriptBlock", HelpMessage = "Input Script Block {hogehoge} you want to execute with this commandlet. exclusive with TaskFileName")]
         [ValidateNotNullOrEmpty()]
         [ScriptBlock]$ScriptBlock,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
         [ValidateNotNullOrEmpty()]
         [string]$DeployFolder = (Join-Path $script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input parameter pass into task's arg[0....x].Values")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input parameter pass into task's arg[0....x].Values")]
         [ValidateNotNullOrEmpty()]
         [hashtable]$TaskParameter,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Hide execution progress.")]
         [switch]$Quiet,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Select Authenticateion for Credential.")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication = $valentia.Authentication,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Select SSL is use or not.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Select SSL is use or not.")]
         [switch]$UseSSL = $valentia.UseSSL,
 
-        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 8, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 

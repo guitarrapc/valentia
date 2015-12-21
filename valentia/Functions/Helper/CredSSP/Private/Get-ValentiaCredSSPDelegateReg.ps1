@@ -7,7 +7,7 @@ function Get-ValentiaCredSSPDelegateReg
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )

@@ -23,22 +23,22 @@ function New-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(Position  = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.")]
+        [Parameter(Position  = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.")]
         [string[]]$DeployClients,
 
-        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input filename to output DeployClients")]
+        [Parameter(Position = 1, mandatory = $true, HelpMessage = "Input filename to output DeployClients")]
         [string]$FileName,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
         [string]$DeployGroupsFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "If you want to add item to exist file.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "If you want to add item to exist file.")]
         [switch]$Add,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "If you want to popup confirm message when file created.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "If you want to popup confirm message when file created.")]
         [switch]$Confirm,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "If you want to Show file information when operation executed.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "If you want to Show file information when operation executed.")]
         [switch]$PassThru
     )
 

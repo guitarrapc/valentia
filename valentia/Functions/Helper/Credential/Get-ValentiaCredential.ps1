@@ -5,11 +5,11 @@ function Get-ValentiaCredential
     [CmdletBinding()]
     param
     (
-        [Parameter(mandatory = 0, position = 0)]
+        [Parameter(mandatory = $false, position = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$TargetName = $valentia.name,
 
-        [Parameter(mandatory = 0, position = 1)]
+        [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
         [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
     )

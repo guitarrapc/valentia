@@ -80,19 +80,19 @@ function Remove-ValentiaScheduledTask
     [CmdletBinding(DefaultParameterSetName="TaskName")]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
         [string]$taskName,
     
-        [parameter(Mandatory = 0, Position  = 1, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position  = 1, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
         [string]$taskPath = "\",
 
-        [parameter(Mandatory = 0, Position  = 1, ParameterSetName = "CimTask", ValueFrompipeline = 1)]
+        [parameter(mandatory = $false, Position  = 1, ParameterSetName = "CimTask", ValueFrompipeline = 1)]
         [CimInstance[]]$InputObject,
 
-        [parameter(Mandatory = 0,　Position  = 2)]
+        [parameter(mandatory = $false,　Position  = 2)]
         [bool]$RemoveEmptyFolder = $false,
 
-        [parameter(Mandatory = 0,　Position  = 3)]
+        [parameter(mandatory = $false,　Position  = 3)]
         [bool]$Force = $false
     )
 

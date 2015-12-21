@@ -7,25 +7,25 @@ function Invoke-ValentiaJobProcess
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string[]]$ComputerNames = $valentia.Result.DeployMembers,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [scriptBlock]$ScriptToRun = $valentia.Result.ScriptTorun,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [PSCredential]$Credential,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [hashtable]$TaskParameter,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$UseSSL,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$SkipException
     )
 

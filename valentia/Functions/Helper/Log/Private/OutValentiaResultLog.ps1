@@ -8,10 +8,10 @@ function OutValentiaResultLog
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Collections.Specialized.OrderedDictionary]$CommandResult,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string]$removeProperty = "Result",
 
         [bool]$Append = $false

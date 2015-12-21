@@ -7,15 +7,15 @@ function Remove-ValentiaCredSSPDelegateRegKey
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$TrustedHosts = $valentia.wsman.TrustedHosts,
 
-        [Parameter(Position = 1, Mandatory = 0)]
+        [Parameter(Position = 1, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key,
 
-        [Parameter(Position = 2, Mandatory = 0)]
+        [Parameter(Position = 2, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$regValue = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Value
     )

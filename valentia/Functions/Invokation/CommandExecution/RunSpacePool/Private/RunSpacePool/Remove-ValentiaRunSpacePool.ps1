@@ -21,7 +21,7 @@ function Remove-ValentiaRunSpacePool
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Specify RunSpace Pool to close and dispose.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Specify RunSpace Pool to close and dispose.")]
         [System.Management.Automation.Runspaces.RunspacePool]$Pool = $valentia.runspace.pool.instance
     )
 

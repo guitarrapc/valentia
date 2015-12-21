@@ -28,19 +28,19 @@ function Watch-ValentiaPingAsyncReplyStatus
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, position  = 0)]
+        [parameter(mandatory = $true, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string[]]$deploygroups,
 
-        [parameter(Mandatory = 1, position  = 1)]
+        [parameter(mandatory = $true, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [bool]$DesiredStatus = $true,
 
-        [parameter(Mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [int]$sleepSec = 1,
 
-        [parameter(Mandatory = 0, position  = 3)]
+        [parameter(mandatory = $false, position  = 3)]
         [ValidateNotNullOrEmpty()]
         [int]$limitCount = 100
     )

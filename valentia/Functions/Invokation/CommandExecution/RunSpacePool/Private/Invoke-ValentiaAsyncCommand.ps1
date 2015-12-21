@@ -30,25 +30,25 @@ function Invoke-ValentiaAsyncCommand
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position  = 0, Mandatory = 1, HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
+        [Parameter(Position  = 0, mandatory = $true, HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
         [System.Management.Automation.Runspaces.RunspacePool]$RunspacePool,
         
-        [Parameter(Position  = 1, Mandatory = 1, HelpMessage = "The scriptblock to be executed to the Remote host.")]
+        [Parameter(Position  = 1, mandatory = $true, HelpMessage = "The scriptblock to be executed to the Remote host.")]
         [HashTable]$ScriptToRunHash,
         
-        [Parameter(Position  = 2, Mandatory = 1, HelpMessage = "Target Computers to be execute.")]
+        [Parameter(Position  = 2, mandatory = $true, HelpMessage = "Target Computers to be execute.")]
         [string[]]$DeployMembers,
         
-        [Parameter(Position  = 3, Mandatory = 1, HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
+        [Parameter(Position  = 3, mandatory = $true, HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
         [HashTable]$CredentialHash,
 
-        [Parameter(Position  = 4, Mandatory = 1, HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [Parameter(Position  = 4, mandatory = $true, HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [HashTable]$TaskParameterHash,
 
-        [Parameter(Position  = 5, Mandatory = 1, HelpMessage = "Input Authentication for credential.")]
+        [Parameter(Position  = 5, mandatory = $true, HelpMessage = "Input Authentication for credential.")]
         [HashTable]$AuthenticationHash,
 
-        [Parameter(Position  = 6, Mandatory = 1, HelpMessage = "Select SSL is use or not.")]
+        [Parameter(Position  = 6, mandatory = $true, HelpMessage = "Select SSL is use or not.")]
         [HashTable]$UseSSLHash
     )
 

@@ -30,7 +30,7 @@ function Get-ValentiaSymbolicLink
     [cmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('FullName')]
         [String[]]$Path
     )

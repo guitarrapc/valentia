@@ -25,7 +25,7 @@ function Receive-ValentiaAsyncStatus
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
         [System.Collections.Generic.List[AsyncPipeline]]
         $Pipelines
     )

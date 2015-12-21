@@ -26,10 +26,10 @@ function New-ValentiaRunSpacePool
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position =0, Mandatory = 0, HelpMessage = "Defines the minium number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
+        [Parameter(Position =0, mandatory = $false, HelpMessage = "Defines the minium number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
         [int]$minPoolSize = $valentia.runspace.pool.minSize,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Defines the maximum number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Defines the maximum number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
         [int]$maxPoolSize = $valentia.runspace.pool.maxSize
     )
 

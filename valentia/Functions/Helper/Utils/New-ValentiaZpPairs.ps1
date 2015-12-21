@@ -3,13 +3,13 @@ function New-ValentiaZipPairs
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0, Position = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [PSObject[]]$first,
  
-        [parameter(Mandatory = 0, Position = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position = 1, ValueFromPipelineByPropertyName = 1)]
         [PSObject[]]$second,
 
-        [parameter(Mandatory = 0, Position = 2, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position = 2, ValueFromPipelineByPropertyName = 1)]
         [scriptBlock]$resultSelector
     )
 

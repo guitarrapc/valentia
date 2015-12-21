@@ -30,35 +30,35 @@ function Get-ValentiaACL
     [OutputType([Hashtable])]
     param
     (
-        [Parameter(Mandatory = 1, position = 0)]
+        [Parameter(mandatory = $true, position = 0)]
         [ValidateNotNullOrEmpty()]
         [String]$Path,
 
-        [Parameter(Mandatory = 1, position = 1)]
+        [Parameter(mandatory = $true, position = 1)]
         [ValidateNotNullOrEmpty()]
         [String]$Account,
 
-        [Parameter(Mandatory = 0, position = 2)]
+        [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
 
-        [Parameter(Mandatory = 0, position = 3)]
+        [Parameter(mandatory = $false, position = 3)]
         [ValidateSet("Present", "Absent")]
         [ValidateNotNullOrEmpty()]
         [String]$Ensure = "Present",
         
-        [Parameter(Mandatory = 0, position = 4)]
+        [Parameter(mandatory = $false, position = 4)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Allow", "Deny")]
         [System.Security.AccessControl.AccessControlType]$Access = "Allow",
 
-        [Parameter(Mandatory = 0, position = 5)]
+        [Parameter(mandatory = $false, position = 5)]
         [Bool]$Inherit = $false,
 
-        [Parameter(Mandatory = 0, position = 6)]
+        [Parameter(mandatory = $false, position = 6)]
         [Bool]$Recurse = $false,
 
-        [Parameter(Mandatory = 0, position = 7)]
+        [Parameter(mandatory = $false, position = 7)]
         [Bool]$Strict = $false
     )
 
@@ -119,35 +119,35 @@ function Set-ValentiaACL
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = 1, position = 0)]
+        [Parameter(mandatory = $true, position = 0)]
         [ValidateNotNullOrEmpty()]
         [String]$Path,
 
-        [Parameter(Mandatory = 1, position = 1)]
+        [Parameter(mandatory = $true, position = 1)]
         [ValidateNotNullOrEmpty()]
         [String]$Account,
 
-        [Parameter(Mandatory = 0, position = 2)]
+        [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
 
-        [Parameter(Mandatory = 0, position = 3)]
+        [Parameter(mandatory = $false, position = 3)]
         [ValidateSet("Present", "Absent")]
         [ValidateNotNullOrEmpty()]
         [String]$Ensure = "Present",
         
-        [Parameter(Mandatory = 0, position = 4)]
+        [Parameter(mandatory = $false, position = 4)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Allow", "Deny")]
         [System.Security.AccessControl.AccessControlType]$Access = "Allow",
 
-        [Parameter(Mandatory = 0, position = 5)]
+        [Parameter(mandatory = $false, position = 5)]
         [Bool]$Inherit = $false,
 
-        [Parameter(Mandatory = 0, position = 6)]
+        [Parameter(mandatory = $false, position = 6)]
         [Bool]$Recurse = $false,
 
-        [Parameter(Mandatory = 0, position = 7)]
+        [Parameter(mandatory = $false, position = 7)]
         [Bool]$Strict = $false
     )
 
@@ -201,35 +201,35 @@ function Test-ValentiaACL
     [OutputType([Boolean])]
     param
     (
-        [Parameter(Mandatory = 1, position = 0)]
+        [Parameter(mandatory = $true, position = 0)]
         [ValidateNotNullOrEmpty()]
         [String]$Path,
 
-        [Parameter(Mandatory = 1, position = 1)]
+        [Parameter(mandatory = $true, position = 1)]
         [ValidateNotNullOrEmpty()]
         [String]$Account,
 
-        [Parameter(Mandatory = 0, position = 2)]
+        [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
 
-        [Parameter(Mandatory = 0, position = 3)]
+        [Parameter(mandatory = $false, position = 3)]
         [ValidateSet("Present", "Absent")]
         [ValidateNotNullOrEmpty()]
         [String]$Ensure = "Present",
         
-        [Parameter(Mandatory = 0, position = 4)]
+        [Parameter(mandatory = $false, position = 4)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Allow", "Deny")]
         [System.Security.AccessControl.AccessControlType]$Access = "Allow",
 
-        [Parameter(Mandatory = 0, position = 5)]
+        [Parameter(mandatory = $false, position = 5)]
         [Bool]$Inherit = $false,
 
-        [Parameter(Mandatory = 0, position = 6)]
+        [Parameter(mandatory = $false, position = 6)]
         [Bool]$Recurse = $false,
 
-        [Parameter(Mandatory = 0, position = 7)]
+        [Parameter(mandatory = $false, position = 7)]
         [Bool]$Strict = $false
     )
 
@@ -258,26 +258,26 @@ function GetDesiredRule
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = 1)]
+        [Parameter(mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$Path,
 
-        [Parameter(Mandatory = 1)]
+        [Parameter(mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$Account,
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.AccessControlType]$Access = "Allow",
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [Bool]$Inherit = $false,
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [Bool]$Recurse = $false
     )
 
@@ -386,21 +386,21 @@ function Add-ValentiaTypeMemberDefinition
     [CmdletBinding()]
     param
     (
-        [Parameter(mandatory = 1, position = 0)]
+        [Parameter(mandatory = $true, position = 0)]
         [string]$MemberDefinition,
 
-        [Parameter(mandatory = 1, position = 1)]
+        [Parameter(mandatory = $true, position = 1)]
         [string]$NameSpace,
 
-        [Parameter(mandatory = 0, position = 2)]
+        [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
-        [Parameter(mandatory = 0, position = 3)]
+        [Parameter(mandatory = $false, position = 3)]
         [ValidateNotNullOrEmpty()]
         [string[]]$UsingNameSpace,
 
-        [Parameter(mandatory = 0, position = 4)]
+        [Parameter(mandatory = $false, position = 4)]
         [switch]$PassThru
     )
 
@@ -432,15 +432,15 @@ function Convert-ValentiaDecryptPassword
 {
     param
     (
-        [parameter(mandatory = 1, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$EncryptedKey, 
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$thumbprint = $valentia.certificate.Encrypt.ThumbPrint,
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$certPath = $valentia.certificate.Encrypt.CertPath
     )
@@ -484,15 +484,15 @@ function Convert-ValentiaEncryptPassword
 {
     param
     (
-        [parameter(mandatory = 1, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]$Credential, 
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$thumbprint = $valentia.certificate.Encrypt.ThumbPrint, 
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$certPath = $valentia.certificate.Encrypt.CertPath
     )
@@ -541,19 +541,19 @@ function Export-ValentiaCertificate
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$cert,
 
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [string]$exportFilePath = $valentia.certificate.FilePath.Cert,
 
-        [parameter(mandatory = 0, position  = 3)]
+        [parameter(mandatory = $false, position  = 3)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.X509ContentType]$certType = $valentia.certificate.export.CertType
     )
@@ -601,23 +601,23 @@ function Export-ValentiaCertificatePFX
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$pfx,
 
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [string]$exportFilePath = $valentia.certificate.FilePath.PFX,
         
-        [parameter(mandatory = 0, position  = 3)]
+        [parameter(mandatory = $false, position  = 3)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.X509ContentType]$PFXType = $valentia.certificate.export.PFXType,
 
-        [parameter(mandatory = 0, position  = 4)]
+        [parameter(mandatory = $false, position  = 4)]
         [ValidateNotNullOrEmpty()]
         [PSCredential]$Credential = $null
     )
@@ -666,15 +666,15 @@ function Get-ValentiaCertificateFromCert
     [CmdletBinding()]
     param
     (       
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocation = $valentia.certificate.export.CertStoreLocation,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreName]$certStoreName = $valentia.certificate.export.CertStoreName
     )
@@ -701,19 +701,19 @@ function Import-ValentiaCertificate
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
         
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocation = $valentia.certificate.import.CertStoreLocation,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreName]$certStoreName = $valentia.certificate.import.CertStoreName,
 
-        [parameter(mandatory = 0, position  = 3, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 3, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$importFilePath = $valentia.certificate.FilePath.Cert
     )
@@ -770,23 +770,23 @@ function Import-ValentiaCertificatePFX
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocation = $valentia.certificate.import.CertStoreLocation,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreName]$certStoreName = $valentia.certificate.import.CertStoreName,
 
-        [parameter(mandatory = 0, position  = 3, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 3, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$importFilePath = $valentia.certificate.FilePath.PFX,
 
-        [parameter(mandatory = 0, position  = 4)]
+        [parameter(mandatory = $false, position  = 4)]
         [ValidateNotNullOrEmpty()]
         [PSCredential]$Credential = $null
     )
@@ -849,15 +849,15 @@ function Remove-ValentiaCertificate
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$CertFilePath = $valentia.certificate.FilePath.Cert,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [switch]$force = $false
     )
     
@@ -882,15 +882,15 @@ function Remove-ValentiaCertificatePFX
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$PFXFilePath = $valentia.certificate.FilePath.PFX,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [switch]$force = $false
     )
     
@@ -915,31 +915,31 @@ function Show-ValentiaCertificate
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position  = 0)]
+        [parameter(mandatory = $false, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$CN = $valentia.certificate.CN,
 
-        [parameter(mandatory = 0,position  = 1)]
+        [parameter(mandatory = $false,position  = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocationExport = $valentia.certificate.export.CertStoreLocation,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreName]$certStoreNameExport = $valentia.certificate.export.CertStoreName,
 
-        [parameter(mandatory = 0, position  = 3)]
+        [parameter(mandatory = $false, position  = 3)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreLocation]$certStoreLocationImport = $valentia.certificate.import.CertStoreLocation,
 
-        [parameter(mandatory = 0, position  = 4)]
+        [parameter(mandatory = $false, position  = 4)]
         [ValidateNotNullOrEmpty()]
         [System.Security.Cryptography.X509Certificates.StoreName]$certStoreNameImport = $valentia.certificate.import.CertStoreName,
 
-        [parameter(mandatory = 0, position  = 5)]
+        [parameter(mandatory = $false, position  = 5)]
         [ValidateNotNullOrEmpty()]
         [string]$CertFilePath = $valentia.certificate.FilePath.Cert,
 
-        [parameter(mandatory = 0, position  = 6)]
+        [parameter(mandatory = $false, position  = 6)]
         [ValidateNotNullOrEmpty()]
         [string]$PFXFilePath = $valentia.certificate.FilePath.PFX
     )
@@ -1079,10 +1079,10 @@ function Get-ValentiaComputerName
     [CmdletBinding(DefaultParameterSetName = 'Registry')]
     param
     (
-        [parameter(Mandatory = 0, Position  = 0, ParameterSetName = "Registry")]
+        [parameter(mandatory = $false, Position  = 0, ParameterSetName = "Registry")]
         [switch]$Registry,
 
-        [parameter(Mandatory = 0, Position  = 0, ParameterSetName = "DotNet")]
+        [parameter(mandatory = $false, Position  = 0, ParameterSetName = "DotNet")]
         [switch]$DotNet
     )
    
@@ -1193,14 +1193,14 @@ function Rename-ValentiaComputerName
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [validateLength(1,15)]
         [string]$NewComputerName,
 
-        [parameter(Mandatory = 0, Position  = 1)]
+        [parameter(mandatory = $false, Position  = 1)]
         [switch]$Force,
 
-        [parameter(Mandatory = 0, Position  = 2)]
+        [parameter(mandatory = $false, Position  = 2)]
         [switch]$PassThru = $false
     )
    
@@ -1337,13 +1337,13 @@ function Backup-ValentiaConfig
     param
     (
         [parameter(
-            mandatory = 0,
+            mandatory = $false,
             position = 0)]
         [System.String]
         $configPath = (Join-Path $Valentia.appdataconfig.root $Valentia.appdataconfig.file),
 
         [parameter(
-            mandatory = 0,
+            mandatory = $false,
             position = 1)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $Valentia.fileEncode
@@ -1381,10 +1381,10 @@ function Edit-ValentiaConfig
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position = 0)]
+        [parameter(mandatory = $false, position = 0)]
         [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
 
-        [parameter(mandatory = 0, position = 1)]
+        [parameter(mandatory = $false, position = 1)]
         [switch]$NoProfile
     )
 
@@ -1423,10 +1423,10 @@ function Reset-ValentiaConfig
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position = 0)]
+        [parameter(mandatory = $false, position = 0)]
         [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
 
-        [parameter(mandatory = 0, position = 1)]
+        [parameter(mandatory = $false, position = 1)]
         [switch]$NoProfile
     )
 
@@ -1458,10 +1458,10 @@ function Show-ValentiaConfig
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 0, position = 0)]
+        [parameter(mandatory = $false, position = 0)]
         [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
 
-        [parameter(mandatory = 0, position = 1)]
+        [parameter(mandatory = $false, position = 1)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = "default"
     )
 
@@ -1484,11 +1484,11 @@ function Get-ValentiaCredential
     [CmdletBinding()]
     param
     (
-        [Parameter(mandatory = 0, position = 0)]
+        [Parameter(mandatory = $false, position = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$TargetName = $valentia.name,
 
-        [Parameter(mandatory = 0, position = 1)]
+        [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
         [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
     )
@@ -1545,15 +1545,15 @@ function Set-ValentiaCredential
     [CmdletBinding()]
     param
     (
-        [Parameter(mandatory = 0, position = 0)]
+        [Parameter(mandatory = $false, position = 0)]
         [ValidateNotNullOrEmpty()]
         [string]$TargetName = $valentia.name,
 
-        [Parameter(mandatory = 0, position = 1)]
+        [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
         [System.Management.Automation.PSCredential]$Credential,
 
-        [Parameter(mandatory = 0, position = 2)]
+        [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
     )
@@ -1618,7 +1618,7 @@ function Add-ValentiaCredSSPDelegateReg
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 1, Mandatory = 0)]
+        [Parameter(Position = 1, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
@@ -1654,7 +1654,7 @@ function Add-ValentiaCredSSPDelegateRegKey
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
@@ -1684,11 +1684,11 @@ function Add-ValentiaCredSSPDelegateRegKeyProperty
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key,
 
-        [Parameter(Position = 1, Mandatory = 0)]
+        [Parameter(Position = 1, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$regValue = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Value
     )
@@ -1725,7 +1725,7 @@ function Enable-ValentiaCredSSP
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$TrustedHosts = $valentia.wsman.TrustedHosts
     )
@@ -1759,7 +1759,7 @@ function Get-ValentiaCredSSPDelegateReg
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
@@ -1799,7 +1799,7 @@ function Get-ValentiaCredSSPDelegateRegKey
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
@@ -1837,7 +1837,7 @@ function Get-ValentiaCredSSPDelegateRegKeyProperty
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key
     )
@@ -1880,15 +1880,15 @@ function Remove-ValentiaCredSSPDelegateRegKey
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0)]
+        [Parameter(Position = 0, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$TrustedHosts = $valentia.wsman.TrustedHosts,
 
-        [Parameter(Position = 1, Mandatory = 0)]
+        [Parameter(Position = 1, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Keys = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Key,
 
-        [Parameter(Position = 2, Mandatory = 0)]
+        [Parameter(Position = 2, mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$regValue = $valentia.credssp.AllowFreshCredentialsWhenNTLMOnly.Value
     )
@@ -1940,10 +1940,10 @@ function Get-ValentiaHostEntryAsync
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [string[]]$HostNameOrAddress,
 
-        [parameter(Mandatory = 0, Position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position  = 1, ValueFromPipelineByPropertyName = 1)]
         [bool]$SkipException = $false
     )
 
@@ -2093,7 +2093,7 @@ function New-ValentiaDynamicParamMulti
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0, valueFromPipeline = 1, valueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position = 0, valueFromPipeline = 1, valueFromPipelineByPropertyName = 1)]
         [hashtable[]]$dynamicParams
     )
 
@@ -2221,7 +2221,7 @@ function New-ValentiaDynamicParamList
     param
     (
         [parameter(
-            mandatory = 1,
+            mandatory = $true,
             position = 0,
             valueFromPipeline = 1,
             valueFromPipelineByPropertyName = 1)]
@@ -2284,7 +2284,7 @@ function Sort-ValentiaDynamicParamHashTable
     param
     (
         [parameter(
-            mandatory = 1,
+            mandatory = $true,
             position = 0,
             valueFromPipeline = 1,
             valueFromPipelineByPropertyName = 1)]
@@ -2385,7 +2385,7 @@ function Get-ValentiaFileEncoding
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0)]
+        [parameter(mandatory = $true, position = 0)]
         [string]$path
     )
 
@@ -2440,16 +2440,16 @@ function New-ValentiaPSRemotingFirewallRule
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Input PowerShellRemoting-In port. default is 5985")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Input PowerShellRemoting-In port. default is 5985")]
         [int]$PSRemotePort = 5985,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input Name of Firewall rule for PowerShellRemoting-In.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Input Name of Firewall rule for PowerShellRemoting-In.")]
         [string]$Name = "Windows Remote Management (HTTP-In)",
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input Decription of Firewall rule for PowerShellRemoting-In.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input Decription of Firewall rule for PowerShellRemoting-In.")]
         [string]$Description = "Windows PowerShell Remoting required to open for public connection. not for private network.",
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input Group of Firewall rule for PowerShellRemoting-In.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input Group of Firewall rule for PowerShellRemoting-In.")]
         [string]$Group = "Windows Remote Management"
     )
 
@@ -2545,18 +2545,18 @@ function New-ValentiaFolder
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Root Folder path.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Root Folder path.")]
         [ValidateNotNullOrEmpty()]
         [string]$RootPath = $valentia.RootPath,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Branch Path path.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Branch Path path.")]
         [ValidateNotNullOrEmpty()]
         [ValentiaBranchPath[]]$BranchPath = [Enum]::GetNames([ValentiaBranchPath]),
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Log Folder path.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Log Folder path.")]
         [ValidateNotNullOrEmpty()]$LogFolder = $valentia.Log.path,
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Suppress output directory create info.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Suppress output directory create info.")]
         [switch]$Quiet
     )
 
@@ -2655,10 +2655,10 @@ function Get-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string[]]$DeployGroups,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [ValidateNotNullOrEmpty()]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup))
     )
@@ -2740,20 +2740,20 @@ function Invoke-ValentiaDeployGroupRemark
     [CmdletBinding()]
     param
     (
-        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [Alias("IPAddress", "HostName")]
         [string[]]$remarkIPAddresses,
 
-        [parameter(position = 1, mandatory = 0,ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 1, mandatory = $false,ValueFromPipelineByPropertyName = 1)]
         [string]$Path = (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [parameter(position = 2, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 2, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [bool]$Recurse = $true,
 
-        [parameter(position = 3, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 3, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [switch]$overWrite,
 
-        [parameter(position = 4, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 4, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode
     )
 
@@ -2818,20 +2818,20 @@ function Invoke-ValentiaDeployGroupUnremark
     [CmdletBinding()]
     param
     (
-        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [Alias("IPAddress", "HostName")]
         [string[]]$unremarkIPAddresses,
 
-        [parameter(position = 1, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 1, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [string]$Path = (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [parameter(position = 2, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 2, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [bool]$Recurse = $true,
 
-        [parameter(position = 3, mandatory = 0)]
+        [parameter(position = 3, mandatory = $false)]
         [switch]$overWrite,
 
-        [parameter(position = 4, mandatory = 0)]
+        [parameter(position = 4, mandatory = $false)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $valentia.fileEncode
     )
@@ -2887,22 +2887,22 @@ function New-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(Position  = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.")]
+        [Parameter(Position  = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Specify IpAddress or NetBIOS name for deploy target clients.")]
         [string[]]$DeployClients,
 
-        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input filename to output DeployClients")]
+        [Parameter(Position = 1, mandatory = $true, HelpMessage = "Input filename to output DeployClients")]
         [string]$FileName,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Specify folder path to deploy group. defailt is Deploygroup branchpath")]
         [string]$DeployGroupsFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "If you want to add item to exist file.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "If you want to add item to exist file.")]
         [switch]$Add,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "If you want to popup confirm message when file created.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "If you want to popup confirm message when file created.")]
         [switch]$Confirm,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "If you want to Show file information when operation executed.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "If you want to Show file information when operation executed.")]
         [switch]$PassThru
     )
 
@@ -2994,10 +2994,10 @@ function Show-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Input branch folder to show.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Input branch folder to show.")]
         [ValentiaBranchPath[]]$Branches = ([ValentiaBranchPath]::Deploygroup),
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Use if you want to search directory recursibly.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Use if you want to search directory recursibly.")]
         [switch]$recurse
      )
  
@@ -3078,10 +3078,10 @@ function Disable-ValentiaEnhancedIESecutiry
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Registry key for Admin.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Registry key for Admin.")]
         [string]$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}",
     
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Registry key for User.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Registry key for User.")]
         [string]$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
     )
 
@@ -3534,7 +3534,7 @@ function Set-ValentiaLocation
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Select branch deploy folder to change directory.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Select branch deploy folder to change directory.")]
         [ValentiaBranchPath]$BranchPath
     )
 
@@ -3605,10 +3605,10 @@ function New-ValentiaLog
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Path to LogFolder.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Path to LogFolder.")]
         [string]$LogFolder = $(Join-Path $valentia.Log.path (Get-Date).ToString("yyyyMMdd")),
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Name of LogFile.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Name of LogFile.")]
         [string]$LogFile = "$($valentia.Log.name)_$((Get-Date).ToString("yyyyMMdd_HHmmss"))_$([Guid]::NewGuid().ToString())$($valentia.Log.extension)"
     )
 
@@ -3646,22 +3646,22 @@ function Out-ValentiaResult
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Diagnostics.Stopwatch]$StopWatch,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [string]$Cmdlet,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string]$TaskFileName = "",
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [string[]]$DeployGroups,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$SkipException,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$Quiet
     )
 
@@ -3702,40 +3702,40 @@ filter OutValentiaModuleLogHost
     [CmdletBinding(DefaultParameterSetName = "message")]
     param
     (
-        [parameter(mandatory = 0, position  = 0, valuefromPipeline = 1, ValuefromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 0, valuefromPipeline = 1, ValuefromPipelineByPropertyName = 1)]
         [string]$logmessage,
 
-        [parameter(mandatory = 0, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [string]$logfile = $valentia.log.fullpath,
 
-        [parameter(mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "message")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "message")]
         [switch]$message,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "showdata")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "showdata")]
         [switch]$showdata,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "hidedata")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "hidedata")]
         [switch]$hidedata,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "hidedataAsString")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "hidedataAsString")]
         [switch]$hidedataAsString,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "warning")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "warning")]
         [switch]$warning,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "verbosing")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "verbosing")]
         [switch]$verbosing,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "error")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "error")]
         [switch]$error,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "result")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "result")]
         [switch]$result,
 
-        [parameter(mandatory = 0, position  = 3, ParameterSetName = "resultAppend")]
+        [parameter(mandatory = $false, position  = 3, ParameterSetName = "resultAppend")]
         [switch]$resultAppend
     )
 
@@ -3797,10 +3797,10 @@ function OutValentiaResultLog
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Collections.Specialized.OrderedDictionary]$CommandResult,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string]$removeProperty = "Result",
 
         [bool]$Append = $false
@@ -3838,10 +3838,10 @@ function WriteValentiaResultHost
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$quiet,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Collections.Specialized.OrderedDictionary]$CommandResult
     )
 
@@ -3880,10 +3880,10 @@ function Push-ValentiaCurrentContextToTask
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [ScriptBlock]$ScriptBlock,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string]$TaskFileName
     )
 
@@ -3940,22 +3940,22 @@ function Set-ValentiaInvokationPrerequisites
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Diagnostics.Stopwatch]$StopWatch,
 
-        [Parameter(Position = 0, Mandatory = 1)]
+        [Parameter(Position = 0, mandatory = $true)]
         [string[]]$DeployGroups,
 
-        [Parameter(Position = 1, Mandatory = 0)]
+        [Parameter(Position = 1, mandatory = $false)]
         [string]$TaskFileName,
 
-        [Parameter(Position = 2, Mandatory = 0)]
+        [Parameter(Position = 2, mandatory = $false)]
         [ScriptBlock]$ScriptBlock,
 
-        [Parameter(Position = 3, Mandatory = 0)]
+        [Parameter(Position = 3, mandatory = $false)]
         [string]$DeployFolder,
 
-        [Parameter(Position = 4, Mandatory = 0)]
+        [Parameter(Position = 4, mandatory = $false)]
         [string[]]$TaskParameter
     )
     
@@ -4035,23 +4035,23 @@ function Show-ValentiaPromptForChoice
     param
     (
         # input prompt items with array. second index is for help message.
-        [parameter(mandatory = 0, position = 0)]
+        [parameter(mandatory = $false, position = 0)]
         [string[]]$questions = $valentia.promptForChoice.questions,
 
         # input title message showing when prompt.
-        [parameter(mandatory = 0, position = 1)]
+        [parameter(mandatory = $false, position = 1)]
         [string[]]$title = $valentia.promptForChoice.title,
                 
         # input message showing when prompt.
-        [parameter(mandatory = 0, position = 2)]
+        [parameter(mandatory = $false, position = 2)]
         [string]$message = $valentia.promptForChoice.message,
 
         # input additional message showing under message.
-        [parameter(mandatory = 0, position = 3)]
+        [parameter(mandatory = $false, position = 3)]
         [string]$additionalMessage = $valentia.promptForChoice.additionalMessage,
         
         # input Index default selected when prompt.
-        [parameter(mandatory = 0, position = 4)]
+        [parameter(mandatory = $false, position = 4)]
         [int]$defaultIndex = $valentia.promptForChoice.defaultIndex
     )
 
@@ -4331,19 +4331,19 @@ function Remove-ValentiaScheduledTask
     [CmdletBinding(DefaultParameterSetName="TaskName")]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
         [string]$taskName,
     
-        [parameter(Mandatory = 0, Position  = 1, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position  = 1, ParameterSetName = "TaskName", ValueFrompipelineByPropertyName = 1)]
         [string]$taskPath = "\",
 
-        [parameter(Mandatory = 0, Position  = 1, ParameterSetName = "CimTask", ValueFrompipeline = 1)]
+        [parameter(mandatory = $false, Position  = 1, ParameterSetName = "CimTask", ValueFrompipeline = 1)]
         [CimInstance[]]$InputObject,
 
-        [parameter(Mandatory = 0,　Position  = 2)]
+        [parameter(mandatory = $false,　Position  = 2)]
         [bool]$RemoveEmptyFolder = $false,
 
-        [parameter(Mandatory = 0,　Position  = 3)]
+        [parameter(mandatory = $false,　Position  = 3)]
         [bool]$Force = $false
     )
 
@@ -4600,60 +4600,60 @@ function Set-ValentiaScheduledTask
     [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
-        [parameter(Mandatory = 0, Position  = 0)]
+        [parameter(mandatory = $false, Position  = 0)]
         [string]$Execute,
 
-        [parameter(Mandatory = 0, Position  = 1)]
+        [parameter(mandatory = $false, Position  = 1)]
         [string]$Argument = "",
     
-        [parameter(Mandatory = 0, Position  = 2)]
+        [parameter(mandatory = $false, Position  = 2)]
         [string]$WorkingDirectory = "",
 
-        [parameter(Mandatory = 1, Position  = 3)]
+        [parameter(mandatory = $true, Position  = 3)]
         [string]$TaskName,
     
-        [parameter(Mandatory = 0, Position  = 4)]
+        [parameter(mandatory = $false, Position  = 4)]
         [string]$TaskPath = "\",
 
-        [parameter(Mandatory = 0, Position  = 5)]
+        [parameter(mandatory = $false, Position  = 5)]
         [datetime[]]$ScheduledAt,
 
-        [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
+        [parameter(mandatory = $false, Position  = 6, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledTimeSpan = ([TimeSpan]::FromHours(1)),
 
-        [parameter(Mandatory = 0, Position  = 7, parameterSetName = "ScheduledDuration")]
+        [parameter(mandatory = $false, Position  = 7, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledDuration = [TimeSpan]::MaxValue,
 
-        [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Daily")]
+        [parameter(mandatory = $false, Position  = 8, parameterSetName = "Daily")]
         [bool]$Daily = $false,
 
-        [parameter(Mandatory = 0, Position  = 9, parameterSetName = "Once")]
+        [parameter(mandatory = $false, Position  = 9, parameterSetName = "Once")]
         [bool]$Once = $false,
 
-        [parameter(Mandatory = 0, Position  = 10)]
+        [parameter(mandatory = $false, Position  = 10)]
         [string]$Description,
 
-        [parameter(Mandatory = 0, Position  = 11)]
+        [parameter(mandatory = $false, Position  = 11)]
         [PScredential]$Credential = $null,
 
-        [parameter(Mandatory = 0, Position  = 12)]
+        [parameter(mandatory = $false, Position  = 12)]
         [bool]$Disable = $true,
 
-        [parameter(Mandatory = 0, Position  = 13)]
+        [parameter(mandatory = $false, Position  = 13)]
         [bool]$Hidden = $true,
 
-        [parameter(Mandatory = 0, Position  = 14)]
+        [parameter(mandatory = $false, Position  = 14)]
         [TimeSpan]$ExecutionTimeLimit = ([TimeSpan]::FromDays(3)),
 
-        [parameter(Mandatory = 0,Position  = 15)]
+        [parameter(mandatory = $false,Position  = 15)]
         [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
         [string]$Compatibility = "Win8",
 
-        [parameter(Mandatory = 0,Position  = 16)]
+        [parameter(mandatory = $false,Position  = 16)]
         [ValidateSet("Highest", "Limited")]
         [string]$Runlevel = "Limited",
 
-        [parameter(Mandatory = 0,　Position  = 17)]
+        [parameter(mandatory = $false,　Position  = 17)]
         [bool]$Force = $false
     )
 
@@ -4992,56 +4992,56 @@ function Test-ValentiaScheduledTask
     [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0)]
+        [parameter(mandatory = $true, Position  = 0)]
         [string]$TaskName,
     
-        [parameter(Mandatory = 0, Position  = 1)]
+        [parameter(mandatory = $false, Position  = 1)]
         [string]$TaskPath = "\",
 
-        [parameter(Mandatory = 0, Position  = 2)]
+        [parameter(mandatory = $false, Position  = 2)]
         [string]$Execute,
 
-        [parameter(Mandatory = 0, Position  = 3)]
+        [parameter(mandatory = $false, Position  = 3)]
         [string]$Argument,
     
-        [parameter(Mandatory = 0, Position  = 4)]
+        [parameter(mandatory = $false, Position  = 4)]
         [string]$WorkingDirectory,
 
-        [parameter(Mandatory = 0, Position  = 5)]
+        [parameter(mandatory = $false, Position  = 5)]
         [datetime[]]$ScheduledAt,
 
-        [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
+        [parameter(mandatory = $false, Position  = 6, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledTimeSpan,
 
-        [parameter(Mandatory = 0, Position  = 7, parameterSetName = "ScheduledDuration")]
+        [parameter(mandatory = $false, Position  = 7, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledDuration,
 
-        [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Daily")]
+        [parameter(mandatory = $false, Position  = 8, parameterSetName = "Daily")]
         [bool]$Daily = $false,
 
-        [parameter(Mandatory = 0, Position  = 9, parameterSetName = "Once")]
+        [parameter(mandatory = $false, Position  = 9, parameterSetName = "Once")]
         [bool]$Once = $false,
 
-        [parameter(Mandatory = 0, Position  = 10)]
+        [parameter(mandatory = $false, Position  = 10)]
         [string]$Description,
 
-        [parameter(Mandatory = 0, Position  = 11)]
+        [parameter(mandatory = $false, Position  = 11)]
         [PScredential]$Credential,
 
-        [parameter(Mandatory = 0, Position  = 12)]
+        [parameter(mandatory = $false, Position  = 12)]
         [bool]$Disable,
 
-        [parameter(Mandatory = 0, Position  = 13)]
+        [parameter(mandatory = $false, Position  = 13)]
         [bool]$Hidden,
 
-        [parameter(Mandatory = 0, Position  = 14)]
+        [parameter(mandatory = $false, Position  = 14)]
         [TimeSpan]$ExecutionTimeLimit = [TimeSpan]::FromDays(3),
 
-        [parameter(Mandatory = 0,Position  = 15)]
+        [parameter(mandatory = $false,Position  = 15)]
         [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
         [string]$Compatibility,
 
-        [parameter(Mandatory = 0,Position  = 16)]
+        [parameter(mandatory = $false,Position  = 16)]
         [ValidateSet("Highest", "Limited")]
         [string]$Runlevel
     )
@@ -5489,22 +5489,22 @@ function Invoke-ValentiaSed
     [CmdletBinding()]
     param
     (
-        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [string]$path,
 
-        [parameter(position = 1, mandatory = 1, ValueFromPipeline = 1,ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 1, mandatory = $true, ValueFromPipeline = 1,ValueFromPipelineByPropertyName = 1)]
         [string]$searchPattern,
 
-        [parameter(position = 2, mandatory = 1,ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 2, mandatory = $true,ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [string]$replaceWith,
 
-        [parameter(position = 3, mandatory = 0)]
+        [parameter(position = 3, mandatory = $false)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
-        [parameter(position = 4, mandatory = 0)]
+        [parameter(position = 4, mandatory = $false)]
         [switch]$overWrite,
 
-        [parameter(position = 5, mandatory = 0)]
+        [parameter(position = 5, mandatory = $false)]
         [switch]$compress
     )
 
@@ -5578,7 +5578,7 @@ function Get-ValentiaSymbolicLink
     [cmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('FullName')]
         [String[]]$Path
     )
@@ -5734,7 +5734,7 @@ function Remove-ValentiaSymbolicLink
     [cmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('FullName')]
         [String[]]$Path
     )
@@ -5878,18 +5878,18 @@ function Set-ValentiaSymbolicLink
     [cmdletBinding(DefaultParameterSetName = "ForceFile")]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('TargetPath')]
         [Alias('FullName')]
         [String[]]$Path,
 
-        [parameter(Mandatory = 1, Position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 1, ValueFromPipelineByPropertyName = 1)]
         [String[]]$SymbolicPath,
 
-        [parameter(Mandatory = 0, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceFile")]
+        [parameter(mandatory = $false, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceFile")]
         [bool]$ForceFile = $false,
 
-        [parameter(Mandatory = 0, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceDirectory")]
+        [parameter(mandatory = $false, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceDirectory")]
         [bool]$ForceDirectory = $false
     )
     
@@ -6044,7 +6044,7 @@ function Test-ValentiaSymbolicLink
     [cmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('FullName')]
         [String]$Path
     )
@@ -6096,23 +6096,23 @@ function ConvertTo-ValentiaTask
     param
     (
         # Path to PowerShell Script .ps1 you want to convert into Task
-        [Parameter(Position = 0, Mandatory = 1, ParameterSetName = "File")]
+        [Parameter(Position = 0, mandatory = $true, ParameterSetName = "File")]
         [string]$inputFilePath,
     
         # Path to PowerShell Script .ps1 you want to convert into Task
-        [Parameter(Position = 1, Mandatory = 0, ParameterSetName = "File")]
+        [Parameter(Position = 1, mandatory = $false, ParameterSetName = "File")]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
         # Script Block to Convert into Task
-        [Parameter(Position = 0, Mandatory = 1, ParameterSetName = "Script")]
+        [Parameter(Position = 0, mandatory = $true, ParameterSetName = "Script")]
         [scriptBlock]$scriptBlock,
 
         # Task Name you want to set
-        [Parameter(Position = 1, Mandatory = 1)]
+        [Parameter(Position = 1, mandatory = $true)]
         [string]$taskName,
 
         # Path to output Task
-        [Parameter(Position = 2, Mandatory = 1)]
+        [Parameter(Position = 2, mandatory = $true)]
         [string]$outputFilePath
     )
 
@@ -6203,10 +6203,10 @@ function Get-ValentiaTask
     [CmdletBinding()]  
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input TaskName you want to set and not dupricated.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input TaskName you want to set and not dupricated.")]
         [string]$Name = $null,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Write ScriptBlock Action to execute with this task.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Write ScriptBlock Action to execute with this task.")]
         [scriptblock]$Action = $null
     )
 
@@ -6324,13 +6324,13 @@ function New-ValentiaOSUser
     [CmdletBinding()]
     param
     (
-        [parameter(position  = 0, mandatory = 0, HelpMessage = "PSCredential for New OS User setup.")]
+        [parameter(position  = 0, mandatory = $false, HelpMessage = "PSCredential for New OS User setup.")]
         [PSCredential]$credential = (Get-Credential -Credential $valentia.users.deployUser),
 
-        [parameter(position  = 1, mandatory = 0, HelpMessage = "User account belonging UserGroup.")]
+        [parameter(position  = 1, mandatory = $false, HelpMessage = "User account belonging UserGroup.")]
         [string]$Group = $valentia.group.Name,
 
-        [parameter(position  = 2, mandatory = 0, HelpMessage = "User flag bit to set.")]
+        [parameter(position  = 2, mandatory = $false, HelpMessage = "User flag bit to set.")]
         [string]$UserFlag = $valentia.group.userFlag
     )
 
@@ -6459,13 +6459,13 @@ function New-ValentiaZipPairs
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0, Position = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [PSObject[]]$first,
  
-        [parameter(Mandatory = 0, Position = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position = 1, ValueFromPipelineByPropertyName = 1)]
         [PSObject[]]$second,
 
-        [parameter(Mandatory = 0, Position = 2, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position = 2, ValueFromPipelineByPropertyName = 1)]
         [scriptBlock]$resultSelector
     )
 
@@ -6614,13 +6614,13 @@ function Set-ValentiaHostName
     [CmdletBinding()]  
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "set usage for the host.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "set usage for the host.")]
         [string]$HostUsage,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set Prefix IpString for hostname if required.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set Prefix IpString for hostname if required.")]
         [string]$PrefixIpString = $valentia.prefic.ipstring,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Set this switch to check whatif.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Set this switch to check whatif.")]
         [switch]$WhatIf
     )
 
@@ -6730,10 +6730,10 @@ function Enable-ValentiaWsManTrustedHosts
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Specify TrustedHosts to allow.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Specify TrustedHosts to allow.")]
         [string]$TrustedHosts,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Specify path to WSMan TrustedHosts.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Specify path to WSMan TrustedHosts.")]
         [string]$TrustedHostsPath = "WSman:localhost\client\TrustedHosts"
     )
 
@@ -6780,10 +6780,10 @@ function Set-ValentiaWsManMaxMemoryPerShellMB
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input MaxMemoryPerShellMB. 0 will be unlimited.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input MaxMemoryPerShellMB. 0 will be unlimited.")]
         [int]$MaxMemoryPerShellMB,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set WSMan Path.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set WSMan Path.")]
         [string]$MaxMemoryPerShellMBPath = "WSMan:\localhost\Shell\MaxMemoryPerShellMB"
     )
 
@@ -6829,10 +6829,10 @@ function Set-ValentiaWsManMaxProccessesPerShell
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input MaxProccessesPerShell value.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input MaxProccessesPerShell value.")]
         [int]$MaxProccessesPerShell,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set path to WSMan MaxProccessesPerShell.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set path to WSMan MaxProccessesPerShell.")]
         [string]$MaxProccessesPerShellPath = "WSMan:\localhost\Shell\MaxProcessesPerShell"
     )
     
@@ -6878,10 +6878,10 @@ function Set-ValentiaWsManMaxShellsPerUser
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input ShellsPerUser count.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input ShellsPerUser count.")]
         [int]$ShellsPerUser,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set path to WSMan MaxShellsPerUser.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set path to WSMan MaxShellsPerUser.")]
         [string]$MaxShellsPerUserPath = "WSMan:\localhost\Shell\MaxShellsPerUser"
     )
     
@@ -6910,15 +6910,15 @@ function Set-ValetntiaWSManConfiguration
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
         [ValidateNotNullOrEmpty()]
         [int]$ShellsPerUser = $valentia.wsman.MaxShellsPerUser,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Configure WSMan MaxShellsPerUser to prevent error 'The WS-Management service cannot process the request. This user is allowed a maximum number of xx concurrent shells, which has been exceeded.'")]
         [ValidateNotNullOrEmpty()]
         [int]$MaxMemoryPerShellMB = $valentia.wsman.MaxMemoryPerShellMB,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Configure WSMan MaxProccessesPerShell to improve performance")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Configure WSMan MaxProccessesPerShell to improve performance")]
         [ValidateNotNullOrEmpty()]
         [int]$MaxProccessesPerShell = $valentia.wsman.MaxProccessesPerShell
     )
@@ -6992,38 +6992,38 @@ function Invoke-Valentia
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string[]]$DeployGroups,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "TaskFileName", HelpMessage = "Move to Brach folder you sat taskfile, then input TaskFileName. exclusive with ScriptBlock.")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "TaskFileName", HelpMessage = "Move to Brach folder you sat taskfile, then input TaskFileName. exclusive with ScriptBlock.")]
         [ValidateNotNullOrEmpty()]
         [string]$TaskFileName,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "SctriptBlock", HelpMessage = "Input Script Block {hogehoge} you want to execute with this commandlet. exclusive with TaskFileName")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "SctriptBlock", HelpMessage = "Input Script Block {hogehoge} you want to execute with this commandlet. exclusive with TaskFileName")]
         [ValidateNotNullOrEmpty()]
         [ScriptBlock]$ScriptBlock,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
         [ValidateNotNullOrEmpty()]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input parameter pass into task's arg[0....x].values")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input parameter pass into task's arg[0....x].values")]
         [ValidateNotNullOrEmpty()]
         [hashtable]$TaskParameter,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Hide execution progress.")]
         [switch]$Quiet,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Select Authenticateion for Credential.")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication = $valentia.Authentication,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Select SSL is use or not.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Select SSL is use or not.")]
         [switch]$UseSSL = $valentia.UseSSL,
 
-        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 8, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 
@@ -7142,25 +7142,25 @@ function Invoke-ValentiaCommand
     [CmdletBinding(DefaultParameterSetName = "All")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, ParameterSetName = "Default", ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input Session")]
+        [Parameter(Position = 0, mandatory = $true, ParameterSetName = "Default", ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input Session")]
         [string[]]$ComputerNames,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "Default", ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input ScriptBlock. ex) Get-ChildItem, Get-NetAdaptor | where MTUSize -gt 1400")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "Default", ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input ScriptBlock. ex) Get-ChildItem, Get-NetAdaptor | where MTUSize -gt 1400")]
         [ScriptBlock]$ScriptToRun,
 
-        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input PSCredential for Remote Command execution.")]
+        [Parameter(Position = 2, mandatory = $true, HelpMessage = "Input PSCredential for Remote Command execution.")]
         [System.Management.Automation.PSCredential]$Credential,
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [hashtable]$TaskParameter,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input Authentication for credential.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Input Authentication for credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input SSL is use or not.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input SSL is use or not.")]
         [bool]$UseSSL,
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
         [bool]$SkipException
     )
 
@@ -7212,25 +7212,25 @@ function Invoke-ValentiaJobProcess
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string[]]$ComputerNames = $valentia.Result.DeployMembers,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [scriptBlock]$ScriptToRun = $valentia.Result.ScriptTorun,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [PSCredential]$Credential,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [hashtable]$TaskParameter,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$UseSSL,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$SkipException
     )
 
@@ -7298,10 +7298,10 @@ function Receive-ValentiaResult
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input list<job> to recieve result of each job.")]
+        [Parameter(Position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1, HelpMessage = "Input list<job> to recieve result of each job.")]
         [System.Collections.Generic.List[System.Management.Automation.Job]]$listJob,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
         [bool]$SkipException
     )
 
@@ -7416,38 +7416,38 @@ function Invoke-ValentiaAsync
     [CmdletBinding(DefaultParameterSetName = "TaskFileName")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string[]]$DeployGroups,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "TaskFileName", HelpMessage = "Move to Brach folder you sat taskfile, then input TaskFileName. exclusive with ScriptBlock.")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "TaskFileName", HelpMessage = "Move to Brach folder you sat taskfile, then input TaskFileName. exclusive with ScriptBlock.")]
         [ValidateNotNullOrEmpty()]
         [string]$TaskFileName,
 
-        [Parameter(Position = 1, Mandatory = 1, ParameterSetName = "SctriptBlock", HelpMessage = "Input Script Block {hogehoge} you want to execute with this commandlet. exclusive with TaskFileName")]
+        [Parameter(Position = 1, mandatory = $true, ParameterSetName = "SctriptBlock", HelpMessage = "Input Script Block {hogehoge} you want to execute with this commandlet. exclusive with TaskFileName")]
         [ValidateNotNullOrEmpty()]
         [ScriptBlock]$ScriptBlock,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Usually automatically sat to DeployGroup Folder. No need to modify.")]
         [ValidateNotNullOrEmpty()]
         [string]$DeployFolder = (Join-Path $script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input parameter pass into task's arg[0....x].Values")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input parameter pass into task's arg[0....x].Values")]
         [ValidateNotNullOrEmpty()]
         [hashtable]$TaskParameter,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Hide execution progress.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Hide execution progress.")]
         [switch]$Quiet,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Select Authenticateion for Credential.")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Select Authenticateion for Credential.")]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication = $valentia.Authentication,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Select SSL is use or not.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Select SSL is use or not.")]
         [switch]$UseSSL = $valentia.UseSSL,
 
-        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 8, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 
@@ -7564,25 +7564,25 @@ function Invoke-ValentiaAsyncCommand
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position  = 0, Mandatory = 1, HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
+        [Parameter(Position  = 0, mandatory = $true, HelpMessage = "Runspace Poll required to set one or more, easy to create by New-ValentiaRunSpacePool.")]
         [System.Management.Automation.Runspaces.RunspacePool]$RunspacePool,
         
-        [Parameter(Position  = 1, Mandatory = 1, HelpMessage = "The scriptblock to be executed to the Remote host.")]
+        [Parameter(Position  = 1, mandatory = $true, HelpMessage = "The scriptblock to be executed to the Remote host.")]
         [HashTable]$ScriptToRunHash,
         
-        [Parameter(Position  = 2, Mandatory = 1, HelpMessage = "Target Computers to be execute.")]
+        [Parameter(Position  = 2, mandatory = $true, HelpMessage = "Target Computers to be execute.")]
         [string[]]$DeployMembers,
         
-        [Parameter(Position  = 3, Mandatory = 1, HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
+        [Parameter(Position  = 3, mandatory = $true, HelpMessage = "Remote Login PSCredentail for PS Remoting. (Get-Credential format)")]
         [HashTable]$CredentialHash,
 
-        [Parameter(Position  = 4, Mandatory = 1, HelpMessage = "Input parameter pass into task's arg[0....x].")]
+        [Parameter(Position  = 4, mandatory = $true, HelpMessage = "Input parameter pass into task's arg[0....x].")]
         [HashTable]$TaskParameterHash,
 
-        [Parameter(Position  = 5, Mandatory = 1, HelpMessage = "Input Authentication for credential.")]
+        [Parameter(Position  = 5, mandatory = $true, HelpMessage = "Input Authentication for credential.")]
         [HashTable]$AuthenticationHash,
 
-        [Parameter(Position  = 6, Mandatory = 1, HelpMessage = "Select SSL is use or not.")]
+        [Parameter(Position  = 6, mandatory = $true, HelpMessage = "Select SSL is use or not.")]
         [HashTable]$UseSSLHash
     )
 
@@ -7682,28 +7682,28 @@ function Invoke-ValentiaRunspaceProcess
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string[]]$ComputerNames = $valentia.Result.DeployMembers,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [scriptBlock]$ScriptToRun = $valentia.Result.ScriptTorun,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [PSCredential]$Credential,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [hashtable]$TaskParameter,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$UseSSL,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$SkipException,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [bool]$quiet
     )
 
@@ -7794,13 +7794,13 @@ function Receive-ValentiaAsyncResults
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
         [System.Collections.Generic.List[AsyncPipeline]]$AsyncPipelines,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Hide execution progress.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Hide execution progress.")]
         [bool]$quiet,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input Skip ErrorActionPreferenceOption.")]
         [bool]$SkipException
     )
     
@@ -7897,7 +7897,7 @@ function Receive-ValentiaAsyncStatus
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
         [System.Collections.Generic.List[AsyncPipeline]]
         $Pipelines
     )
@@ -7927,19 +7927,19 @@ function Invoke-ValentiaAsyncPipeline
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [scriptBlock]$ScriptBlock,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [PSCredential]$Credential,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [hashtable]$TaskParameter,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Management.Automation.Runspaces.AuthenticationMechanism]$Authentication,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$UseSSL
     )
 
@@ -7974,7 +7974,7 @@ function Watch-ValentiaAsyncPipelineStatus
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "An array of Async Pipeline objects, returned by Invoke-ValentiaAsync.")]
         [System.Collections.Generic.List[AsyncPipeline]]$AsyncPipelines
     )
 
@@ -8078,10 +8078,10 @@ function New-ValentiaRunSpacePool
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position =0, Mandatory = 0, HelpMessage = "Defines the minium number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
+        [Parameter(Position =0, mandatory = $false, HelpMessage = "Defines the minium number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
         [int]$minPoolSize = $valentia.runspace.pool.minSize,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Defines the maximum number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Defines the maximum number of pipelines that can be concurrently (asynchronously) executed on the pool.")]
         [int]$maxPoolSize = $valentia.runspace.pool.maxSize
     )
 
@@ -8134,7 +8134,7 @@ function Remove-ValentiaRunSpacePool
     [Cmdletbinding()]
     Param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Specify RunSpace Pool to close and dispose.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Specify RunSpace Pool to close and dispose.")]
         [System.Management.Automation.Runspaces.RunspacePool]$Pool = $valentia.runspace.pool.instance
     )
 
@@ -8196,13 +8196,13 @@ function Invoke-ValentiaDownload
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input Client SourcePath to be downloaded.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input Client SourcePath to be downloaded.")]
         [String]$SourcePath,
 
-        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input Server Destination Folder to save download items.")]
+        [Parameter(Position = 1, mandatory = $true, HelpMessage = "Input Server Destination Folder to save download items.")]
         [string]$DestinationFolder = $null, 
 
-        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 2, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string]$DeployGroups,
 
         [Parameter(position = 3, ParameterSetName = "File", HelpMessage = "Set this switch to execute command for File. exclusive with Directory Switch.")]
@@ -8211,19 +8211,19 @@ function Invoke-ValentiaDownload
         [Parameter(position = 3, ParameterSetName = "Directory", HelpMessage = "Set this switch to execute command for Directory. exclusive with File Switch.")]
         [switch]$Directory,
 
-        [Parameter(position = 4, Mandatory = 0, HelpMessage = "Set this switch to execute command as Async (Job).")]
+        [Parameter(position = 4, mandatory = $false, HelpMessage = "Set this switch to execute command as Async (Job).")]
         [switch]$Async = $false,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Set this switch if you want to Force download. This will smbmap with source folder and Copy-Item -Force. (default is BitTransfer)")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Set this switch if you want to Force download. This will smbmap with source folder and Copy-Item -Force. (default is BitTransfer)")]
         [switch]$force = $false,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false,
 
-        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 8, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential)
     )
 
@@ -8625,26 +8625,26 @@ function Ping-ValentiaGroupAsync
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, ValueFromPipeLine = 1, ValueFromPipeLineByPropertyName = 1, HelpMessage = "Input target computer name or ipaddress to test ping.")]
+        [Parameter(Position = 0, mandatory = $true, ValueFromPipeLine = 1, ValueFromPipeLineByPropertyName = 1, HelpMessage = "Input target computer name or ipaddress to test ping.")]
         [string[]]$HostNameOrAddresses,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input timeout ms wait for the responce answer.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Input timeout ms wait for the responce answer.")]
         [ValidateNotNullOrEmpty()]
         [int]$Timeout = $valentia.ping.timeout,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input buffer size for the data size send/recieve with ICMP send.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input buffer size for the data size send/recieve with ICMP send.")]
         [ValidateNotNullOrEmpty()]
         [byte[]]$Buffer = $valentia.ping.buffer,
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input ttl for the ping option.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input ttl for the ping option.")]
         [ValidateNotNullOrEmpty()]
         [int]$Ttl = $valentia.ping.pingOption.ttl,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input dontFragment for the ping option.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Input dontFragment for the ping option.")]
         [ValidateNotNullOrEmpty()]
         [bool]$dontFragment = $valentia.ping.pingOption.dontfragment,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Change return type to bool only.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Change return type to bool only.")]
         [ValidateNotNullOrEmpty()]
         [switch]$quiet
     )
@@ -8746,19 +8746,19 @@ function Watch-ValentiaPingAsyncReplyStatus
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, position  = 0)]
+        [parameter(mandatory = $true, position  = 0)]
         [ValidateNotNullOrEmpty()]
         [string[]]$deploygroups,
 
-        [parameter(Mandatory = 1, position  = 1)]
+        [parameter(mandatory = $true, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [bool]$DesiredStatus = $true,
 
-        [parameter(Mandatory = 0, position  = 2)]
+        [parameter(mandatory = $false, position  = 2)]
         [ValidateNotNullOrEmpty()]
         [int]$sleepSec = 1,
 
-        [parameter(Mandatory = 0, position  = 3)]
+        [parameter(mandatory = $false, position  = 3)]
         [ValidateNotNullOrEmpty()]
         [int]$limitCount = 100
     )
@@ -8870,28 +8870,28 @@ function Invoke-ValentiaSync
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input Deploy Server Source Folder Sync to Client PC.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input Deploy Server Source Folder Sync to Client PC.")]
         [string]$SourceFolder, 
 
-        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input Client Destination Folder Sync with Desploy Server.")]
+        [Parameter(Position = 1, mandatory = $true, HelpMessage = "Input Client Destination Folder Sync with Desploy Server.")]
         [String]$DestinationFolder,
 
-        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 2, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string]$DeployGroups,
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed.")]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input fastCopy.exe location folder if changed.")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Input fastCopy.exe location folder if changed.")]
         [string]$FastCopyFolder = $valentia.fastcopy.folder,
         
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Input fastCopy.exe name if changed.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Input fastCopy.exe name if changed.")]
         [string]$FastcopyExe =  $valentia.fastcopy.exe
     )
 
@@ -9152,31 +9152,31 @@ function Invoke-ValentiaUpload
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input Deploy Server SourcePath to be uploaded.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input Deploy Server SourcePath to be uploaded.")]
         [string]$SourcePath, 
 
-        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input Clinet DestinationPath to save upload items.")]
+        [Parameter(Position = 1, mandatory = $true, HelpMessage = "Input Clinet DestinationPath to save upload items.")]
         [String]$DestinationPath = $null,
 
-        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 2, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string]$DeployGroups,
 
-        [Parameter(position = 3, Mandatory = 0, ParameterSetName = "File", HelpMessage = "Set this switch to execute command for File. exclusive with Directory Switch.")]
+        [Parameter(position = 3, mandatory = $false, ParameterSetName = "File", HelpMessage = "Set this switch to execute command for File. exclusive with Directory Switch.")]
         [switch]$File = $null,
 
-        [Parameter(position = 3, Mandatory = 0, ParameterSetName = "Directory", HelpMessage = "Set this switch to execute command for Directory. exclusive with File Switch.")]
+        [Parameter(position = 3, mandatory = $false, ParameterSetName = "Directory", HelpMessage = "Set this switch to execute command for Directory. exclusive with File Switch.")]
         [switch]$Directory,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Set this switch to execute command as Async (Job).")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Set this switch to execute command as Async (Job).")]
         [switch]$Async = $false,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 
@@ -9525,16 +9525,16 @@ function Invoke-ValentiaUploadList
         [Parameter(Position = 1, Mandatory, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string]$DeployGroups,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Set this switch to execute command as Async (Job).")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Set this switch to execute command as Async (Job).")]
         [switch]$Async = $false,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 

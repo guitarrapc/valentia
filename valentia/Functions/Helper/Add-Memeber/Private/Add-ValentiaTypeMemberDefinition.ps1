@@ -5,21 +5,21 @@ function Add-ValentiaTypeMemberDefinition
     [CmdletBinding()]
     param
     (
-        [Parameter(mandatory = 1, position = 0)]
+        [Parameter(mandatory = $true, position = 0)]
         [string]$MemberDefinition,
 
-        [Parameter(mandatory = 1, position = 1)]
+        [Parameter(mandatory = $true, position = 1)]
         [string]$NameSpace,
 
-        [Parameter(mandatory = 0, position = 2)]
+        [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
-        [Parameter(mandatory = 0, position = 3)]
+        [Parameter(mandatory = $false, position = 3)]
         [ValidateNotNullOrEmpty()]
         [string[]]$UsingNameSpace,
 
-        [Parameter(mandatory = 0, position = 4)]
+        [Parameter(mandatory = $false, position = 4)]
         [switch]$PassThru
     )
 

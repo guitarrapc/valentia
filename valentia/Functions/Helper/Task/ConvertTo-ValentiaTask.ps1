@@ -30,23 +30,23 @@ function ConvertTo-ValentiaTask
     param
     (
         # Path to PowerShell Script .ps1 you want to convert into Task
-        [Parameter(Position = 0, Mandatory = 1, ParameterSetName = "File")]
+        [Parameter(Position = 0, mandatory = $true, ParameterSetName = "File")]
         [string]$inputFilePath,
     
         # Path to PowerShell Script .ps1 you want to convert into Task
-        [Parameter(Position = 1, Mandatory = 0, ParameterSetName = "File")]
+        [Parameter(Position = 1, mandatory = $false, ParameterSetName = "File")]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
         # Script Block to Convert into Task
-        [Parameter(Position = 0, Mandatory = 1, ParameterSetName = "Script")]
+        [Parameter(Position = 0, mandatory = $true, ParameterSetName = "Script")]
         [scriptBlock]$scriptBlock,
 
         # Task Name you want to set
-        [Parameter(Position = 1, Mandatory = 1)]
+        [Parameter(Position = 1, mandatory = $true)]
         [string]$taskName,
 
         # Path to output Task
-        [Parameter(Position = 2, Mandatory = 1)]
+        [Parameter(Position = 2, mandatory = $true)]
         [string]$outputFilePath
     )
 

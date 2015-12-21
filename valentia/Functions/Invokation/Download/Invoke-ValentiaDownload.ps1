@@ -37,13 +37,13 @@ function Invoke-ValentiaDownload
     [CmdletBinding(DefaultParameterSetName = "File")]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input Client SourcePath to be downloaded.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input Client SourcePath to be downloaded.")]
         [String]$SourcePath,
 
-        [Parameter(Position = 1, Mandatory = 1, HelpMessage = "Input Server Destination Folder to save download items.")]
+        [Parameter(Position = 1, mandatory = $true, HelpMessage = "Input Server Destination Folder to save download items.")]
         [string]$DestinationFolder = $null, 
 
-        [Parameter(Position = 2, Mandatory = 1, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
+        [Parameter(Position = 2, mandatory = $true, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string]$DeployGroups,
 
         [Parameter(position = 3, ParameterSetName = "File", HelpMessage = "Set this switch to execute command for File. exclusive with Directory Switch.")]
@@ -52,19 +52,19 @@ function Invoke-ValentiaDownload
         [Parameter(position = 3, ParameterSetName = "Directory", HelpMessage = "Set this switch to execute command for Directory. exclusive with File Switch.")]
         [switch]$Directory,
 
-        [Parameter(position = 4, Mandatory = 0, HelpMessage = "Set this switch to execute command as Async (Job).")]
+        [Parameter(position = 4, mandatory = $false, HelpMessage = "Set this switch to execute command as Async (Job).")]
         [switch]$Async = $false,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 6, Mandatory = 0, HelpMessage = "Set this switch if you want to Force download. This will smbmap with source folder and Copy-Item -Force. (default is BitTransfer)")]
+        [Parameter(Position = 6, mandatory = $false, HelpMessage = "Set this switch if you want to Force download. This will smbmap with source folder and Copy-Item -Force. (default is BitTransfer)")]
         [switch]$force = $false,
 
-        [Parameter(Position = 7, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 7, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false,
 
-        [Parameter(Position = 8, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 8, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential)
     )
 

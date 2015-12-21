@@ -8,10 +8,10 @@ function WriteValentiaResultHost
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$quiet,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Collections.Specialized.OrderedDictionary]$CommandResult
     )
 

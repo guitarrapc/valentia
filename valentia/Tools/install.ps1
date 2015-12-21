@@ -71,7 +71,7 @@ Function Test-ModulePath
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1)]
+        [Parameter(Position = 0, mandatory = $true)]
         [string]$modulepath        
     )
  
@@ -93,7 +93,7 @@ Function Get-ModuleName
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1)]
+        [Parameter(Position = 0, mandatory = $true)]
         [string]$path
     )
 
@@ -117,26 +117,26 @@ function Copy-ItemEX
 {
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName =1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName =1)]
         [alias('PSParentPath')]
         [string]$Path,
 
-        [parameter(Mandatory = 1, Position  = 1, ValueFromPipelineByPropertyName =1)]
+        [parameter(mandatory = $true, Position  = 1, ValueFromPipelineByPropertyName =1)]
         [string]$Destination,
 
-        [parameter(Mandatory = 0, Position  = 2, ValueFromPipelineByPropertyName =1)]
+        [parameter(mandatory = $false, Position  = 2, ValueFromPipelineByPropertyName =1)]
         [string[]]$Targets,
 
-        [parameter(Mandatory = 0, Position  = 3, ValueFromPipelineByPropertyName =1)]
+        [parameter(mandatory = $false, Position  = 3, ValueFromPipelineByPropertyName =1)]
         [string[]]$Excludes,
 
-        [parameter(Mandatory = 0, Position  = 4, ValueFromPipelineByPropertyName =1)]
+        [parameter(mandatory = $false, Position  = 4, ValueFromPipelineByPropertyName =1)]
         [Switch]$Recurse,
 
-        [parameter(Mandatory = 0, Position  = 5)]
+        [parameter(mandatory = $false, Position  = 5)]
         [switch]$Force,
 
-        [parameter(Mandatory = 0, Position  = 6)]
+        [parameter(mandatory = $false, Position  = 6)]
         [switch]$WhatIf
     )
 
@@ -299,10 +299,10 @@ Function Import-ModuleEX
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0)]
+        [parameter(mandatory = $true, position = 0)]
         [string]$ModuleName,
 
-        [parameter(mandatory = 1, position = 0)]
+        [parameter(mandatory = $true, position = 0)]
         [string]$ModulePath
     )
 
@@ -316,14 +316,14 @@ Function Set-DefaultConfig
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0)]
+        [parameter(mandatory = $true, position = 0)]
         [validateScript({Test-Path $_})]
         [string]$defaultConfigPath,
 
-        [parameter(mandatory = 1, position = 1)]
+        [parameter(mandatory = $true, position = 1)]
         [string]$ExportConfigDir,
 
-        [parameter(mandatory = 1, position = 2)]
+        [parameter(mandatory = $true, position = 2)]
         [string]$ExportConfigFile,
 
         [switch]$force
@@ -361,11 +361,11 @@ Function Move-OriginalDefaultConfig
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0)]
+        [parameter(mandatory = $true, position = 0)]
         [validateScript({Test-Path $_})]
         [string]$defaultConfigPath,
 
-        [parameter(mandatory = 1, position = 1)]
+        [parameter(mandatory = $true, position = 1)]
         [string]$ExportConfigDir
     )
 
@@ -385,23 +385,23 @@ function Show-PromptForChoice
     param
     (
         # input prompt items with array. second index is for help message.
-        [parameter(mandatory = 0, position = 0)]
+        [parameter(mandatory = $false, position = 0)]
         [string[]]$questions = @('Yes', 'No'),
 
         # input title message showing when prompt.
-        [parameter(mandatory = 0, position = 1)]
+        [parameter(mandatory = $false, position = 1)]
         [string[]]$title = "PSModulePath not contains Documents directory.",
                 
         # input message showing when prompt.
-        [parameter(mandatory = 0, position = 2)]
+        [parameter(mandatory = $false, position = 2)]
         [string]$message = "Please select PSmodulePath to install valentia.",
 
         # input additional message showing under message.
-        [parameter(mandatory = 0, position = 3)]
+        [parameter(mandatory = $false, position = 3)]
         [string]$additionalMessage = $null,
         
         # input Index default selected when prompt.
-        [parameter(mandatory = 0, position = 4)]
+        [parameter(mandatory = $false, position = 4)]
         [int]$defaultIndex = 0
     )
    

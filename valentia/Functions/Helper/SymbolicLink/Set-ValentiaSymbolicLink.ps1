@@ -40,18 +40,18 @@ function Set-ValentiaSymbolicLink
     [cmdletBinding(DefaultParameterSetName = "ForceFile")]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline =1, ValueFromPipelineByPropertyName = 1)]
         [Alias('TargetPath')]
         [Alias('FullName')]
         [String[]]$Path,
 
-        [parameter(Mandatory = 1, Position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 1, ValueFromPipelineByPropertyName = 1)]
         [String[]]$SymbolicPath,
 
-        [parameter(Mandatory = 0, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceFile")]
+        [parameter(mandatory = $false, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceFile")]
         [bool]$ForceFile = $false,
 
-        [parameter(Mandatory = 0, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceDirectory")]
+        [parameter(mandatory = $false, Position  = 2, ValueFromPipelineByPropertyName = 1, ParameterSetName = "ForceDirectory")]
         [bool]$ForceDirectory = $false
     )
     

@@ -20,10 +20,10 @@ function Push-ValentiaCurrentContextToTask
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [ScriptBlock]$ScriptBlock,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string]$TaskFileName
     )
 

@@ -51,16 +51,16 @@ function Invoke-ValentiaUploadList
         [Parameter(Position = 1, Mandatory, HelpMessage = "Input target of deploy clients as [DeployGroup filename you sat at deploygroup Folder] or [ipaddress].")]
         [string]$DeployGroups,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input DeployGroup Folder path if changed from default.")]
         [string]$DeployFolder = (Join-Path $Script:valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Set this switch to execute command as Async (Job).")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Set this switch to execute command as Async (Job).")]
         [switch]$Async = $false,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input PSCredential to use for wsman.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Input PSCredential to use for wsman.")]
         [PSCredential]$Credential = (Get-ValentiaCredential),
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Return success result even if there are error.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Return success result even if there are error.")]
         [bool]$SkipException = $false
     )
 

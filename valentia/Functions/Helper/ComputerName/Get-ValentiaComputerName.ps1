@@ -5,10 +5,10 @@ function Get-ValentiaComputerName
     [CmdletBinding(DefaultParameterSetName = 'Registry')]
     param
     (
-        [parameter(Mandatory = 0, Position  = 0, ParameterSetName = "Registry")]
+        [parameter(mandatory = $false, Position  = 0, ParameterSetName = "Registry")]
         [switch]$Registry,
 
-        [parameter(Mandatory = 0, Position  = 0, ParameterSetName = "DotNet")]
+        [parameter(mandatory = $false, Position  = 0, ParameterSetName = "DotNet")]
         [switch]$DotNet
     )
    

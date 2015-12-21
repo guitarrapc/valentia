@@ -7,14 +7,14 @@ function Rename-ValentiaComputerName
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [validateLength(1,15)]
         [string]$NewComputerName,
 
-        [parameter(Mandatory = 0, Position  = 1)]
+        [parameter(mandatory = $false, Position  = 1)]
         [switch]$Force,
 
-        [parameter(Mandatory = 0, Position  = 2)]
+        [parameter(mandatory = $false, Position  = 2)]
         [switch]$PassThru = $false
     )
    

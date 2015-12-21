@@ -25,13 +25,13 @@ function Set-ValentiaHostName
     [CmdletBinding()]  
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "set usage for the host.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "set usage for the host.")]
         [string]$HostUsage,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set Prefix IpString for hostname if required.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set Prefix IpString for hostname if required.")]
         [string]$PrefixIpString = $valentia.prefic.ipstring,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Set this switch to check whatif.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Set this switch to check whatif.")]
         [switch]$WhatIf
     )
 

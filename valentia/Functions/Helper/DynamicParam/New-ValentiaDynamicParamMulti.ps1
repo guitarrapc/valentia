@@ -85,7 +85,7 @@ function New-ValentiaDynamicParamMulti
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0, valueFromPipeline = 1, valueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position = 0, valueFromPipeline = 1, valueFromPipelineByPropertyName = 1)]
         [hashtable[]]$dynamicParams
     )
 
@@ -213,7 +213,7 @@ function New-ValentiaDynamicParamList
     param
     (
         [parameter(
-            mandatory = 1,
+            mandatory = $true,
             position = 0,
             valueFromPipeline = 1,
             valueFromPipelineByPropertyName = 1)]
@@ -276,7 +276,7 @@ function Sort-ValentiaDynamicParamHashTable
     param
     (
         [parameter(
-            mandatory = 1,
+            mandatory = $true,
             position = 0,
             valueFromPipeline = 1,
             valueFromPipelineByPropertyName = 1)]

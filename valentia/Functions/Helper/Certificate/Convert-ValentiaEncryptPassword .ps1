@@ -6,15 +6,15 @@ function Convert-ValentiaEncryptPassword
 {
     param
     (
-        [parameter(mandatory = 1, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]$Credential, 
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$thumbprint = $valentia.certificate.Encrypt.ThumbPrint, 
 
-        [parameter(mandatory = 0, position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, position  = 1, ValueFromPipelineByPropertyName = 1)]
         [ValidateNotNullOrEmpty()]
         [string]$certPath = $valentia.certificate.Encrypt.CertPath
     )

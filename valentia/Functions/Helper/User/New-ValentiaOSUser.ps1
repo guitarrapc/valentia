@@ -79,13 +79,13 @@ function New-ValentiaOSUser
     [CmdletBinding()]
     param
     (
-        [parameter(position  = 0, mandatory = 0, HelpMessage = "PSCredential for New OS User setup.")]
+        [parameter(position  = 0, mandatory = $false, HelpMessage = "PSCredential for New OS User setup.")]
         [PSCredential]$credential = (Get-Credential -Credential $valentia.users.deployUser),
 
-        [parameter(position  = 1, mandatory = 0, HelpMessage = "User account belonging UserGroup.")]
+        [parameter(position  = 1, mandatory = $false, HelpMessage = "User account belonging UserGroup.")]
         [string]$Group = $valentia.group.Name,
 
-        [parameter(position  = 2, mandatory = 0, HelpMessage = "User flag bit to set.")]
+        [parameter(position  = 2, mandatory = $false, HelpMessage = "User flag bit to set.")]
         [string]$UserFlag = $valentia.group.userFlag
     )
 

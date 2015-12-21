@@ -24,10 +24,10 @@ function Set-ValentiaWsManMaxShellsPerUser
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input ShellsPerUser count.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input ShellsPerUser count.")]
         [int]$ShellsPerUser,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set path to WSMan MaxShellsPerUser.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set path to WSMan MaxShellsPerUser.")]
         [string]$MaxShellsPerUserPath = "WSMan:\localhost\Shell\MaxShellsPerUser"
     )
     

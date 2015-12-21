@@ -15,13 +15,13 @@ function Backup-ValentiaConfig
     param
     (
         [parameter(
-            mandatory = 0,
+            mandatory = $false,
             position = 0)]
         [System.String]
         $configPath = (Join-Path $Valentia.appdataconfig.root $Valentia.appdataconfig.file),
 
         [parameter(
-            mandatory = 0,
+            mandatory = $false,
             position = 1)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
         $encoding = $Valentia.fileEncode

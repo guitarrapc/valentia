@@ -6,26 +6,26 @@ function GetDesiredRule
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = 1)]
+        [Parameter(mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$Path,
 
-        [Parameter(Mandatory = 1)]
+        [Parameter(mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$Account,
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.FileSystemRights]$Rights = "ReadAndExecute",
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [System.Security.AccessControl.AccessControlType]$Access = "Allow",
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [Bool]$Inherit = $false,
 
-        [Parameter(Mandatory = 0)]
+        [Parameter(mandatory = $false)]
         [Bool]$Recurse = $false
     )
 

@@ -24,7 +24,7 @@ function Get-ValentiaFileEncoding
     [CmdletBinding()]
     param
     (
-        [parameter(mandatory = 1, position = 0)]
+        [parameter(mandatory = $true, position = 0)]
         [string]$path
     )
 

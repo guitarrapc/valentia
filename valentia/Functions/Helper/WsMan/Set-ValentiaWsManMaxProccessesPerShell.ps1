@@ -24,10 +24,10 @@ function Set-ValentiaWsManMaxProccessesPerShell
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, HelpMessage = "Input MaxProccessesPerShell value.")]
+        [Parameter(Position = 0, mandatory = $true, HelpMessage = "Input MaxProccessesPerShell value.")]
         [int]$MaxProccessesPerShell,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Set path to WSMan MaxProccessesPerShell.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Set path to WSMan MaxProccessesPerShell.")]
         [string]$MaxProccessesPerShellPath = "WSMan:\localhost\Shell\MaxProcessesPerShell"
     )
     

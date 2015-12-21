@@ -129,60 +129,60 @@ function Set-ValentiaScheduledTask
     [CmdletBinding(DefaultParameterSetName = "ScheduledDuration")]
     param
     (
-        [parameter(Mandatory = 0, Position  = 0)]
+        [parameter(mandatory = $false, Position  = 0)]
         [string]$Execute,
 
-        [parameter(Mandatory = 0, Position  = 1)]
+        [parameter(mandatory = $false, Position  = 1)]
         [string]$Argument = "",
     
-        [parameter(Mandatory = 0, Position  = 2)]
+        [parameter(mandatory = $false, Position  = 2)]
         [string]$WorkingDirectory = "",
 
-        [parameter(Mandatory = 1, Position  = 3)]
+        [parameter(mandatory = $true, Position  = 3)]
         [string]$TaskName,
     
-        [parameter(Mandatory = 0, Position  = 4)]
+        [parameter(mandatory = $false, Position  = 4)]
         [string]$TaskPath = "\",
 
-        [parameter(Mandatory = 0, Position  = 5)]
+        [parameter(mandatory = $false, Position  = 5)]
         [datetime[]]$ScheduledAt,
 
-        [parameter(Mandatory = 0, Position  = 6, parameterSetName = "ScheduledDuration")]
+        [parameter(mandatory = $false, Position  = 6, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledTimeSpan = ([TimeSpan]::FromHours(1)),
 
-        [parameter(Mandatory = 0, Position  = 7, parameterSetName = "ScheduledDuration")]
+        [parameter(mandatory = $false, Position  = 7, parameterSetName = "ScheduledDuration")]
         [TimeSpan[]]$ScheduledDuration = [TimeSpan]::MaxValue,
 
-        [parameter(Mandatory = 0, Position  = 8, parameterSetName = "Daily")]
+        [parameter(mandatory = $false, Position  = 8, parameterSetName = "Daily")]
         [bool]$Daily = $false,
 
-        [parameter(Mandatory = 0, Position  = 9, parameterSetName = "Once")]
+        [parameter(mandatory = $false, Position  = 9, parameterSetName = "Once")]
         [bool]$Once = $false,
 
-        [parameter(Mandatory = 0, Position  = 10)]
+        [parameter(mandatory = $false, Position  = 10)]
         [string]$Description,
 
-        [parameter(Mandatory = 0, Position  = 11)]
+        [parameter(mandatory = $false, Position  = 11)]
         [PScredential]$Credential = $null,
 
-        [parameter(Mandatory = 0, Position  = 12)]
+        [parameter(mandatory = $false, Position  = 12)]
         [bool]$Disable = $true,
 
-        [parameter(Mandatory = 0, Position  = 13)]
+        [parameter(mandatory = $false, Position  = 13)]
         [bool]$Hidden = $true,
 
-        [parameter(Mandatory = 0, Position  = 14)]
+        [parameter(mandatory = $false, Position  = 14)]
         [TimeSpan]$ExecutionTimeLimit = ([TimeSpan]::FromDays(3)),
 
-        [parameter(Mandatory = 0,Position  = 15)]
+        [parameter(mandatory = $false,Position  = 15)]
         [ValidateSet("At", "Win8", "Win7", "Vista", "V1")]
         [string]$Compatibility = "Win8",
 
-        [parameter(Mandatory = 0,Position  = 16)]
+        [parameter(mandatory = $false,Position  = 16)]
         [ValidateSet("Highest", "Limited")]
         [string]$Runlevel = "Limited",
 
-        [parameter(Mandatory = 0,　Position  = 17)]
+        [parameter(mandatory = $false,　Position  = 17)]
         [bool]$Force = $false
     )
 

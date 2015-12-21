@@ -33,20 +33,20 @@ function Invoke-ValentiaDeployGroupRemark
     [CmdletBinding()]
     param
     (
-        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [Alias("IPAddress", "HostName")]
         [string[]]$remarkIPAddresses,
 
-        [parameter(position = 1, mandatory = 0,ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 1, mandatory = $false,ValueFromPipelineByPropertyName = 1)]
         [string]$Path = (Join-Path $valentia.RootPath ([ValentiaBranchPath]::Deploygroup)),
 
-        [parameter(position = 2, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 2, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [bool]$Recurse = $true,
 
-        [parameter(position = 3, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 3, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [switch]$overWrite,
 
-        [parameter(position = 4, mandatory = 0, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 4, mandatory = $false, ValueFromPipelineByPropertyName = 1)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode
     )
 

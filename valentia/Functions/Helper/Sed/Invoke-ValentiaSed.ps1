@@ -28,22 +28,22 @@ function Invoke-ValentiaSed
     [CmdletBinding()]
     param
     (
-        [parameter(position = 0, mandatory = 1, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 0, mandatory = $true, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [string]$path,
 
-        [parameter(position = 1, mandatory = 1, ValueFromPipeline = 1,ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 1, mandatory = $true, ValueFromPipeline = 1,ValueFromPipelineByPropertyName = 1)]
         [string]$searchPattern,
 
-        [parameter(position = 2, mandatory = 1,ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(position = 2, mandatory = $true,ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [string]$replaceWith,
 
-        [parameter(position = 3, mandatory = 0)]
+        [parameter(position = 3, mandatory = $false)]
         [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $valentia.fileEncode,
 
-        [parameter(position = 4, mandatory = 0)]
+        [parameter(position = 4, mandatory = $false)]
         [switch]$overWrite,
 
-        [parameter(position = 5, mandatory = 0)]
+        [parameter(position = 5, mandatory = $false)]
         [switch]$compress
     )
 

@@ -8,22 +8,22 @@ function Out-ValentiaResult
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [System.Diagnostics.Stopwatch]$StopWatch,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [string]$Cmdlet,
 
-        [parameter(Mandatory = 0)]
+        [parameter(mandatory = $false)]
         [string]$TaskFileName = "",
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [string[]]$DeployGroups,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$SkipException,
 
-        [parameter(Mandatory = 1)]
+        [parameter(mandatory = $true)]
         [bool]$Quiet
     )
 

@@ -23,10 +23,10 @@ function Show-ValentiaGroup
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 0, HelpMessage = "Input branch folder to show.")]
+        [Parameter(Position = 0, mandatory = $false, HelpMessage = "Input branch folder to show.")]
         [ValentiaBranchPath[]]$Branches = ([ValentiaBranchPath]::Deploygroup),
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Use if you want to search directory recursibly.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Use if you want to search directory recursibly.")]
         [switch]$recurse
      )
  

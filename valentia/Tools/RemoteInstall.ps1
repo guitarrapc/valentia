@@ -103,7 +103,7 @@ function New-ZipExtract
         [parameter(mandatory, position = 0, valuefrompipeline, valuefrompipelinebypropertyname)]
         [string]$source,
 
-        [parameter(mandatory = 0, position = 1, valuefrompipeline, valuefrompipelinebypropertyname)]
+        [parameter(mandatory = $false, position = 1, valuefrompipeline, valuefrompipelinebypropertyname)]
         [string]$destination
     )
 

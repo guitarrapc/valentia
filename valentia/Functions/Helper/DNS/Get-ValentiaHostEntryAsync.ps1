@@ -34,10 +34,10 @@ function Get-ValentiaHostEntryAsync
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = 1, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName = 1)]
         [string[]]$HostNameOrAddress,
 
-        [parameter(Mandatory = 0, Position  = 1, ValueFromPipelineByPropertyName = 1)]
+        [parameter(mandatory = $false, Position  = 1, ValueFromPipelineByPropertyName = 1)]
         [bool]$SkipException = $false
     )
 

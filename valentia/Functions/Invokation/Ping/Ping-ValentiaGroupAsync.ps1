@@ -25,26 +25,26 @@ function Ping-ValentiaGroupAsync
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, Mandatory = 1, ValueFromPipeLine = 1, ValueFromPipeLineByPropertyName = 1, HelpMessage = "Input target computer name or ipaddress to test ping.")]
+        [Parameter(Position = 0, mandatory = $true, ValueFromPipeLine = 1, ValueFromPipeLineByPropertyName = 1, HelpMessage = "Input target computer name or ipaddress to test ping.")]
         [string[]]$HostNameOrAddresses,
 
-        [Parameter(Position = 1, Mandatory = 0, HelpMessage = "Input timeout ms wait for the responce answer.")]
+        [Parameter(Position = 1, mandatory = $false, HelpMessage = "Input timeout ms wait for the responce answer.")]
         [ValidateNotNullOrEmpty()]
         [int]$Timeout = $valentia.ping.timeout,
 
-        [Parameter(Position = 2, Mandatory = 0, HelpMessage = "Input buffer size for the data size send/recieve with ICMP send.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input buffer size for the data size send/recieve with ICMP send.")]
         [ValidateNotNullOrEmpty()]
         [byte[]]$Buffer = $valentia.ping.buffer,
 
-        [Parameter(Position = 3, Mandatory = 0, HelpMessage = "Input ttl for the ping option.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input ttl for the ping option.")]
         [ValidateNotNullOrEmpty()]
         [int]$Ttl = $valentia.ping.pingOption.ttl,
 
-        [Parameter(Position = 4, Mandatory = 0, HelpMessage = "Input dontFragment for the ping option.")]
+        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Input dontFragment for the ping option.")]
         [ValidateNotNullOrEmpty()]
         [bool]$dontFragment = $valentia.ping.pingOption.dontfragment,
 
-        [Parameter(Position = 5, Mandatory = 0, HelpMessage = "Change return type to bool only.")]
+        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Change return type to bool only.")]
         [ValidateNotNullOrEmpty()]
         [switch]$quiet
     )
