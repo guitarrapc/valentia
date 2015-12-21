@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "valentia", "valentia\valentia.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "valentia", "valentia\valentia.csproj", "{93FE075D-69DC-4F62-8A1A-D29042748E95}"
 EndProject
-Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "valentia.Tests", "valentia.Tests\valentia.Tests.pssproj", "{30C4ACB4-1985-476E-BD48-BAA6C91B0317}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "valentia.Tests", "valentia.Tests\valentia.Tests.csproj", "{DDC72702-64E5-4EF8-A9E8-461777B7304D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,15 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{30C4ACB4-1985-476E-BD48-BAA6C91B0317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30C4ACB4-1985-476E-BD48-BAA6C91B0317}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30C4ACB4-1985-476E-BD48-BAA6C91B0317}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30C4ACB4-1985-476E-BD48-BAA6C91B0317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93FE075D-69DC-4F62-8A1A-D29042748E95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93FE075D-69DC-4F62-8A1A-D29042748E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93FE075D-69DC-4F62-8A1A-D29042748E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93FE075D-69DC-4F62-8A1A-D29042748E95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC72702-64E5-4EF8-A9E8-461777B7304D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC72702-64E5-4EF8-A9E8-461777B7304D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC72702-64E5-4EF8-A9E8-461777B7304D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC72702-64E5-4EF8-A9E8-461777B7304D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

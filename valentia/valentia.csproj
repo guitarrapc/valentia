@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{93FE075D-69DC-4F62-8A1A-D29042748E95}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>valentia</RootNamespace>
+    <AssemblyName>valentia</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CS\CreateSymLink.cs" />
+    <Compile Include="CS\CredRead.cs" />
+    <Compile Include="CS\CredWrite.cs" />
+    <Compile Include="CS\GetSymLink.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\valentia-config.ps1" />
+    <Content Include="Example\Deployment\Application\execute\execute.ps1" />
+    <Content Include="Example\Deployment\Application\task-GetProcess.ps1" />
+    <Content Include="Example\Deployment\Application\Task-InstallChocolatey.ps1" />
+    <Content Include="Example\Deployment\Deploygroup\localhost.ps1" />
+    <Content Include="Example\Deployment\Upload\test.txt" />
+    <Content Include="Functions\Helper\ACL\Get-ValentiaACL.ps1" />
+    <Content Include="Functions\Helper\ACL\Private\GetDesiredRule.ps1" />
+    <Content Include="Functions\Helper\ACL\Private\IsDesiredRuleAndCurrentRuleSame.ps1" />
+    <Content Include="Functions\Helper\ACL\Set-ValentiaACL.ps1" />
+    <Content Include="Functions\Helper\ACL\Test-ValentiaACL.ps1" />
+    <Content Include="Functions\Helper\Add-Memeber\Private\Add-ValentiaTypeMemberDefinition.ps1" />
+    <Content Include="Functions\Helper\Certificate\Convert-ValentiaDecryptPassword .ps1" />
+    <Content Include="Functions\Helper\Certificate\Convert-ValentiaEncryptPassword .ps1" />
+    <Content Include="Functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />
+    <Content Include="Functions\Helper\Certificate\Export-ValentiaCertificatePFX.ps1" />
+    <Content Include="Functions\Helper\Certificate\Get-ValentiaCertificateFromCert.ps1" />
+    <Content Include="Functions\Helper\Certificate\Import-ValentiaCertificate.ps1" />
+    <Content Include="Functions\Helper\Certificate\Import-ValentiaCertificatePFX.ps1" />
+    <Content Include="Functions\Helper\Certificate\Remove-ValentiaCertificate.ps1" />
+    <Content Include="Functions\Helper\Certificate\Remove-ValentiaCertificatePFX.ps1" />
+    <Content Include="Functions\Helper\Certificate\Show-ValentiaCertificate.ps1" />
+    <Content Include="Functions\Helper\CleanupVariables\Invoke-ValentiaClean.ps1" />
+    <Content Include="Functions\Helper\CleanupVariables\Invoke-ValentiaCleanResult.ps1" />
+    <Content Include="Functions\Helper\ComputerName\Get-ValentiaComputerName.ps1" />
+    <Content Include="Functions\Helper\ComputerName\Rename-ValentiaComputerName.ps1" />
+    <Content Include="Functions\Helper\Config\Backup-valentiaConfig.ps1" />
+    <Content Include="Functions\Helper\Config\Edit-ValentiaConfig.ps1" />
+    <Content Include="Functions\Helper\Config\Reset-ValentiaConfig.ps1" />
+    <Content Include="Functions\Helper\Config\Show-ValentiaConfig.ps1" />
+    <Content Include="Functions\Helper\Credential\Get-ValentiaCredential.ps1" />
+    <Content Include="Functions\Helper\Credential\Set-ValentiaCredential.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateReg.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKey.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Add-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Enable-ValentiaCredSSP.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateReg.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKey.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Get-ValentiaCredSSPDelegateRegKeyProperty.ps1" />
+    <Content Include="Functions\Helper\CredSSP\Private\Remove-ValentiaCredSSPDelegateRegKey.ps1" />
+    <Content Include="Functions\Helper\DNS\Get-ValentiaHostEntryAsync.ps1" />
+    <Content Include="Functions\Helper\DynamicParam\New-ValentiaDynamicParamMulti.ps1" />
+    <Content Include="Functions\Helper\Encoding\Get-ValentiaFileEncoding.ps1" />
+    <Content Include="Functions\Helper\FireWall\Firewall\New-ValentiaPSRemotingFirewallRule.ps1" />
+    <Content Include="Functions\Helper\Folder\New-ValentiaFolder.ps1" />
+    <Content Include="Functions\Helper\Group\Get-ValentiaGroup.ps1" />
+    <Content Include="Functions\Helper\Group\Invoke-ValentiaDeployGroupRemark.ps1" />
+    <Content Include="Functions\Helper\Group\Invoke-ValentiaDeployGroupUnremark.ps1" />
+    <Content Include="Functions\Helper\Group\New-ValentiaGroup.ps1" />
+    <Content Include="Functions\Helper\Group\Show-ValentiaGroup.ps1" />
+    <Content Include="Functions\Helper\HostOutput\Write-ValentiaVerboseDebug.ps1" />
+    <Content Include="Functions\Helper\IE\Private\Disable-ValentiaEnhancedIESecutiry.ps1" />
+    <Content Include="Functions\Helper\Initialize\Initialize-ValentiaEnvironment.ps1" />
+    <Content Include="Functions\Helper\Location\Set-ValentiaLocation.ps1" />
+    <Content Include="Functions\Helper\Log\New-ValentiaLog.ps1" />
+    <Content Include="Functions\Helper\Log\Out-ValentiaResult.ps1" />
+    <Content Include="Functions\Helper\Log\Private\OutValentiaModuleLogHost.ps1" />
+    <Content Include="Functions\Helper\Log\Private\OutValentiaResultLog.ps1" />
+    <Content Include="Functions\Helper\Log\Private\WriteValentiaResultHost.ps1" />
+    <Content Include="Functions\Helper\Prerequisites\Private\Push-ValentiaCurrentContextToTask.ps1" />
+    <Content Include="Functions\Helper\Prerequisites\Private\Set-ValentiaInvokationPrerequisites.ps1" />
+    <Content Include="Functions\Helper\PromptForChoice\Show-ValentiaPromptForChoice.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Disable-ValentiaScheduledTaskLogSetting.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Enable-ValentiaScheduledTaskLogSetting.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Remove-ValentiaScheduledTask.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Remove-ValentiaScheduledTaskEmptyDirectoryPath.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Set-ValentiaScheduledTask.ps1" />
+    <Content Include="Functions\Helper\ScheduledTask\Test-ValentiaScheduledTask.ps1" />
+    <Content Include="Functions\Helper\Sed\Invoke-ValentiaSed.ps1" />
+    <Content Include="Functions\Helper\SymbolicLink\Get-ValentiaSymbolicLink.ps1" />
+    <Content Include="Functions\Helper\SymbolicLink\Remove-ValentiaSymbolicLink.ps1" />
+    <Content Include="Functions\Helper\SymbolicLink\Set-ValentiaSymbolicLink.ps1" />
+    <Content Include="Functions\Helper\SymbolicLink\Test-ValentiaSymbolicLink.ps1" />
+    <Content Include="Functions\Helper\Task\ConvertTo-ValentiaTask.ps1" />
+    <Content Include="Functions\Helper\Task\Get-ValentiaTask.ps1" />
+    <Content Include="Functions\Helper\User\New-ValentiaOSUser.ps1" />
+    <Content Include="Functions\Helper\Utils\New-ValentiaZpPairs.ps1" />
+    <Content Include="Functions\Helper\Windows\Get-ValentiaRebootRequiredStatus.ps1" />
+    <Content Include="Functions\Helper\Windows\Private\Test-ValentiaPowerShellElevated.ps1" />
+    <Content Include="Functions\Helper\Windows\Set-ValentiaHostName.ps1" />
+    <Content Include="Functions\Helper\WsMan\Enable-WsManTrustedHosts.ps1" />
+    <Content Include="Functions\Helper\WsMan\Set-ValentiaWsManMaxMemoryPerShellMB.ps1" />
+    <Content Include="Functions\Helper\WsMan\Set-ValentiaWsManMaxProccessesPerShell.ps1" />
+    <Content Include="Functions\Helper\WsMan\Set-ValentiaWsManMaxShellsPerUser.ps1" />
+    <Content Include="Functions\Helper\WsMan\Set-ValetntiaWSManConfiguration.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\Job\Invoke-Valentia.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaCommand.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\Job\Private\Invoke-ValentiaJobProcess.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\Job\Private\Receive-ValentiaResult.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Invoke-ValentiaAsync.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Invoke-ValentiaAsyncPipeline.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\AsyncPipeline\Watch-ValentiaAsyncPipelineStatus.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaAsyncCommand.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\Invoke-ValentiaRunspaceProcess.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\Receive-ValentiaAsyncResults.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\Receive-ValentiaAsyncStatus.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\RunSpacePool\New-ValentiaRunSpacePool.ps1" />
+    <Content Include="Functions\Invokation\CommandExecution\RunSpacePool\Private\RunSpacePool\Remove-ValentiaRunSpacePool.ps1" />
+    <Content Include="Functions\Invokation\Download\Invoke-ValentiaDownload.ps1" />
+    <Content Include="Functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1" />
+    <Content Include="Functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1" />
+    <Content Include="Functions\Invokation\Sync\Invoke-ValentiaSync.ps1" />
+    <Content Include="Functions\Invokation\Upload\Invoke-ValentiaUpload.ps1" />
+    <Content Include="Functions\Invokation\Upload\Invoke-ValentiaUploadList.ps1" />
+    <Content Include="Tools\build.ps1" />
+    <Content Include="Tools\install.ps1" />
+    <Content Include="Tools\RemoteInstall.ps1" />
+    <Content Include="Type.ps1" />
+    <Content Include="Type\Type.ps1" />
+    <Content Include="valentia.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Example\Deployment\Application\task-GetProcess.bat" />
+    <None Include="Example\Deployment\Application\Task-InstallChocolatey.bat" />
+    <None Include="Example\Deployment\Upload\test.csv" />
+    <None Include="Example\readme.md" />
+    <None Include="Functions\readme.md" />
+    <None Include="Tools\install.bat" />
+    <None Include="valentia.psd1" />
+    <None Include="valentia.psm1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
