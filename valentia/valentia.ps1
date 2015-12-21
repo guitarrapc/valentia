@@ -1490,7 +1490,11 @@ function Get-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic,
+
+        [Parameter(mandatory = $false, position = 2)]
+        [ValidateNotNullOrEmpty()]
+        [string]$AsUserName = ""
     )
  
     try
@@ -1516,7 +1520,14 @@ function Get-ValentiaCredential
         {
             $private:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
             $private:cred = $critCred.GetCredential()
-            $private:username = $cred.UserName
+            if ("" -eq $AsUserName)
+            {
+                $private:username = $cred.UserName
+            }
+            else
+            {
+                $private:username = $AsUserName
+            }
             $private:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
             $cred = $null
             $credentialObject = New-Object System.Management.Automation.PSCredential $username, $securePassword

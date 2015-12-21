@@ -40,10 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CS\CreateSymLink.cs" />
-    <Compile Include="CS\CredRead.cs" />
-    <Compile Include="CS\CredWrite.cs" />
-    <Compile Include="CS\GetSymLink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +163,9 @@
     <None Include="Tools\install.bat" />
     <None Include="valentia.psd1" />
     <None Include="valentia.psm1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CS\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
