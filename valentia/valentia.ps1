@@ -1551,6 +1551,56 @@ function Get-ValentiaCredential
 
 #Requires -Version 3.0
 
+function Remove-ValentiaCredential
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(mandatory = $false, position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TargetName = $valentia.name,
+
+        [Parameter(mandatory = $false, position = 1)]
+        [ValidateNotNullOrEmpty()]
+        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+    )
+ 
+    try
+    {
+        $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+        $private:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
+        $private:sig = Get-Content -Path $CredReadCS -Raw
+
+        $private:addType = @{
+            MemberDefinition = $sig
+            Namespace        = "Advapi32"
+            Name             = "Util"
+        }
+        Add-ValentiaTypeMemberDefinition @addType -PassThru `
+        | select -First 1 `
+        | %{
+            $CredentialType = $_.AssemblyQualifiedName -as [type]
+            $private:typeFullName = $_.FullName
+        }
+
+        $private:nCredPtr= New-Object IntPtr
+        if ($CredentialType::CredDelete($TargetName, $Type.value__, 0))
+        {
+        }
+        else
+        {
+            throw "No credentials found in Windows Credential Manager for TargetName: '{0}' with Type '{1}'" -f $TargetName, $Type
+        }
+    }
+    catch
+    {
+        throw $_
+    }
+}
+# file loaded from path : \functions\Helper\Credential\Remove-ValentiaCredential.ps1
+
+#Requires -Version 3.0
+
 function Set-ValentiaCredential
 {
     [CmdletBinding()]
@@ -1619,6 +1669,34 @@ function Set-ValentiaCredential
     }
 }
 # file loaded from path : \functions\Helper\Credential\Set-ValentiaCredential.ps1
+
+#Requires -Version 3.0
+
+function Test-ValentiaCredential
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(mandatory = $false, position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TargetName = $valentia.name,
+
+        [Parameter(mandatory = $false, position = 1)]
+        [ValidateNotNullOrEmpty()]
+        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+    )
+ 
+    try
+    {
+        $result = Get-ValentiaCredential -TargetName $targetName
+        return $true;
+    }
+    catch
+    {
+        return $false;
+    }
+}
+# file loaded from path : \functions\Helper\Credential\Test-ValentiaCredential.ps1
 
 #Requires -Version 3.0
 
@@ -8631,8 +8709,10 @@ Ping-ValentiaGroupAsync production-hoge.ps1
 --------------------------------------------
 Ping production-hoge.ps1 from deploy group branch path
 #>
+
 function Ping-ValentiaGroupAsync
 {
+    [OutputType([PingEx.PingResponse[]])]
     [CmdletBinding()]
     param
     (
@@ -8643,86 +8723,36 @@ function Ping-ValentiaGroupAsync
         [ValidateNotNullOrEmpty()]
         [int]$Timeout = $valentia.ping.timeout,
 
-        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input buffer size for the data size send/recieve with ICMP send.")]
+        [Parameter(Position = 2, mandatory = $false, HelpMessage = "Input timeout ms wait for the responce answer.")]
         [ValidateNotNullOrEmpty()]
-        [byte[]]$Buffer = $valentia.ping.buffer,
+        [int]$DnsTimeout = $valentia.ping.timeout,
 
-        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Input ttl for the ping option.")]
-        [ValidateNotNullOrEmpty()]
-        [int]$Ttl = $valentia.ping.pingOption.ttl,
-
-        [Parameter(Position = 4, mandatory = $false, HelpMessage = "Input dontFragment for the ping option.")]
-        [ValidateNotNullOrEmpty()]
-        [bool]$dontFragment = $valentia.ping.pingOption.dontfragment,
-
-        [Parameter(Position = 5, mandatory = $false, HelpMessage = "Change return type to bool only.")]
+        [Parameter(Position = 3, mandatory = $false, HelpMessage = "Change return type to bool only.")]
         [ValidateNotNullOrEmpty()]
         [switch]$quiet
     )
 
     begin
     {
-        # Preference
-        $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-
-        # new object for event and job
-        $pingOptions = New-Object Net.NetworkInformation.PingOptions($Ttl, $dontFragment)
-        $tasks = New-Object System.Collections.Generic.List[PSCustomObject]
-        $output = New-Object System.Collections.Generic.List[PSCustomObject]
+        $list = New-Object System.Collections.Generic.List["string"];
     }
 
     process
     {
-        foreach ($hostNameOrAddress in $HostNameOrAddresses)
-        {
-            $ping  = New-Object System.Net.NetworkInformation.Ping
-
-            ("Execute SendPingAsync to host '{0}'." -f $hostNameOrAddress) | Write-ValentiaVerboseDebug
-            $PingReply = $ping.SendPingAsync($hostNameOrAddress, $timeout, $buffer, $pingOptions)
-
-            $task = [PSCustomObject]@{
-                HostNameOrAddress = $hostNameOrAddress
-                Task              = $PingReply
-                Ping              = $ping}
-            $tasks.Add($task)
-        }
+        $target = (Get-ValentiaGroup -DeployGroup $HostNameOrAddresses);
+        foreach ($item in $target){ $list.Add($item); }
     }
 
     end
     {
-        "WaitAll for Task PingReply have been completed." | Write-ValentiaVerboseDebug
-        [System.Threading.Tasks.Task]::WaitAll($tasks.Task)
-        
-        foreach ($task in $tasks)
+        if ($quiet)
         {
-            try
-            {
-                [System.Net.NetworkInformation.PingReply]$result = $task.Task.Result
-
-                if (-not ($PSBoundParameters.ContainsKey("quiet") -and $quiet))
-                {
-                        [PSCustomObject]@{
-                        Id                 = $task.Task.Id
-                        HostNameOrAddress  = $task.HostNameOrAddress
-                        Status             = $result.Status
-                        IsSuccess          = $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-                        RoundtripTime      = $result.RoundtripTime
-                    }
-                }
-                else
-                {
-                    $result.Status -eq [Net.NetworkInformation.IPStatus]::Success
-                }
-            }
-            finally
-            {
-                "Dispose Ping Object" | Write-ValentiaVerboseDebug
-                if ($null -ne $task){ $task.Ping.Dispose() }
-            
-                "Dispose PingReply Object" | Write-ValentiaVerboseDebug
-                if ($null -ne $task){ $task.Task.Dispose() }
-            }
+            [PingEx.NetworkInformationExtensions]::PingAsync($list, [TimeSpan]::FromMilliseconds($Timeout), [TimeSpan]::FromMilliseconds($DnsTimeout)).Result.Status;
         }
+        else
+        {
+            [PingEx.NetworkInformationExtensions]::PingAsync($list, [TimeSpan]::FromMilliseconds($Timeout), [TimeSpan]::FromMilliseconds($DnsTimeout)).Result;
+        }        
     }
 }
 # file loaded from path : \functions\Invokation\Ping\Ping-ValentiaGroupAsync.ps1

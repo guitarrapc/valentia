@@ -212,6 +212,13 @@ $valentia.context = New-Object System.Collections.Stack
 $typePath = Join-Path $valentia.modulePath $valentia.combineTemptype
 if (Test-Path $typePath){ . $typePath }
 
+# Load C# Class for PingAsync
+$private:csPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+$private:pingAsyncCs = Join-Path $csPath PingAsync.cs -Resolve
+$private:source = Get-Content -Path $pingAsyncCs -Raw
+$asm = "System", "System.Net", "System.Linq", "System.Threading.Tasks", "System.Net.NetworkInformation"
+Add-Type -TypeDefinition $source -ReferencedAssemblies $asm;
+
 # contains default configuration path
 $valentia.originalconfig = [ordered]@{
     root     = Join-Path $valentia.modulePath '\config'

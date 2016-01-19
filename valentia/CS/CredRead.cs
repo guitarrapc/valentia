@@ -90,7 +90,7 @@ public class CriticalCredentialHandle : Microsoft.Win32.SafeHandles.CriticalHand
             throw new InvalidOperationException("Invalid CriticalHandle!");
         }
     }
- 
+
     override protected bool ReleaseHandle()
     {
         if (!IsInvalid)
@@ -108,3 +108,6 @@ public static extern bool CredRead(string target, CRED_TYPE type, int reservedFl
  
 [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
 public static extern bool CredFree([In] IntPtr cred);
+
+[DllImport("Advapi32.dll", EntryPoint = "CredDeleteW", CharSet = CharSet.Unicode, SetLastError = true)]
+public static extern bool CredDelete(string target, CRED_TYPE type, int reservedFlag);
