@@ -9,15 +9,13 @@ Let's start install valentia.
 
 You have 2 choice to install valentia.
 
-### 1. Install through [NuGet](https://www.nuget.org/packages/valentia/). 
+### 1. [PowerShellGet](https://www.powershellgallery.com/packages/valentia).
 
-Open Visual Studio and run below in package manager.
+Run following command with PowerShell v5 or PackageManagement environment.
 
+```powershell
+Install-Module -Name valentia
 ```
-Install-Package valentia
-```
-
-This will set package content and also copy valentia to module folder.
 
 ### 2. Open PowerShell or Command prompt, paste the text below and press Enter.
 
@@ -35,7 +33,7 @@ $env:USERPROFILE\Documents\WindowsPowerShell\Modules\valentia
 
 # Automate Module Import with PowerShell v3
 
-While valentia sat in standard Module Path, you don't need to import manually. 
+While valentia sat in standard Module Path, you don't need to import manually.
 valentia will automatically loaded into PowerShell session.
 
 ### Manually import valentia module

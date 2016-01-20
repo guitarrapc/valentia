@@ -7,15 +7,13 @@ valentia を用いることで遠隔サーバー操作が格段に容易にな�
 
 valentia のインストールは、2種類用意しています。
 
-### 1. [NuGet](https://www.nuget.org/packages/valentia/). から
+### 1. [PowerShellGet](https://www.powershellgallery.com/packages/valentia). から
 
-Visual Studio を開き、Package Manager で以下のコマンドを実行してください。
+PowerShell v5 や PackageManagement が入った環境で、以下を実行してください。
 
+```powershell
+Install-Module -Name valentia
 ```
-Install-Package valentia
-```
-パッケージContext と共に、valentia をモジュールパスにインストールしてくれます。
-
 
 
 ### 2. 'PowerShell' か 'コマンドプロンプト' を開き、 ↓のコマンドを貼り付けてエンターキーを押す
