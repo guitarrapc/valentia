@@ -1333,27 +1333,38 @@ function Backup-ValentiaConfig
    Backup-ValentiaConfig
 #>
 
+    [OutputType([void])]
     [CmdletBinding()]
     param
     (
-        [parameter(
-            mandatory = $false,
-            position = 0)]
-        [System.String]
-        $configPath = (Join-Path $Valentia.appdataconfig.root $Valentia.appdataconfig.file),
+        [parameter(mandatory = $false, position = 0)]
+        [string]$configPath = "",
 
-        [parameter(
-            mandatory = $false,
-            position = 1)]
-        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]
-        $encoding = $Valentia.fileEncode
+        [parameter(mandatory = $false, position = 1)]
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $Valentia.fileEncode
     )
+
+    if (($configPath -eq "") -or (-not (Test-Path $configPath)))
+    {
+        if (Test-Path (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file))
+        {
+            $configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
+            $rootPath = $valentia.appdataconfig.root
+            $fileName = $valentia.appdataconfig.file
+        }
+        elseif (Test-Path (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file))
+        {
+            $configPath = (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file)
+            $rootPath = $valentia.originalconfig.root
+            $fileName = $valentia.originalconfig.file
+        }
+    }
 
     if (Test-Path $configPath)
     {
         $private:datePrefix = ([System.DateTime]::Now).ToString($valentia.log.dateformat)
-        $private:backupConfigName = $datePrefix + "_" + $Valentia.appdataconfig.file
-        $private:backupConfigPath = Join-Path $Valentia.appdataconfig.root $backupConfigName
+        $private:backupConfigName = $datePrefix + "_" + $fileName
+        $private:backupConfigPath = Join-Path $rootPath $backupConfigName
 
         Write-Verbose ("Backing up config file '{0}' => '{1}'." -f $configPath, $backupConfigPath)
         Get-Content -Path $configPath -Encoding $encoding -Raw | Out-File -FilePath $backupConfigPath -Encoding $encoding -Force 
@@ -1378,15 +1389,28 @@ function Backup-ValentiaConfig
 #>
 function Edit-ValentiaConfig
 {
+    [OutputType([void])]
     [CmdletBinding()]
     param
     (
         [parameter(mandatory = $false, position = 0)]
-        [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
+        [string]$configPath = "",
 
         [parameter(mandatory = $false, position = 1)]
         [switch]$NoProfile
     )
+
+    if (($configPath -eq "") -or (-not (Test-Path $configPath)))
+    {
+        if (Test-Path (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file))
+        {
+            $configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
+        }
+        elseif (Test-Path (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file))
+        {
+            $configPath = (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file)
+        }
+    }
 
     if (Test-Path $configPath)
     {
@@ -1403,7 +1427,6 @@ function Edit-ValentiaConfig
     {
         ("Could not found configuration file '{0}'." -f $configPath) | Write-ValentiaVerboseDebug
     }
-
 }
 
 # file loaded from path : \functions\Helper\Config\Edit-ValentiaConfig.ps1
@@ -1420,15 +1443,28 @@ function Edit-ValentiaConfig
 #>
 function Reset-ValentiaConfig
 {
+    [OutputType([void])]
     [CmdletBinding()]
     param
     (
         [parameter(mandatory = $false, position = 0)]
-        [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
+        [string]$configPath = "",
 
         [parameter(mandatory = $false, position = 1)]
-        [switch]$NoProfile
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $Valentia.fileEncode
     )
+
+    if (($configPath -eq "") -or (-not (Test-Path $configPath)))
+    {
+        if (Test-Path (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file))
+        {
+            $configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
+        }
+        elseif (Test-Path (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file))
+        {
+            $configPath = (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file)
+        }
+    }
 
     if (Test-Path $configPath)
     {
@@ -1455,15 +1491,28 @@ function Reset-ValentiaConfig
 #>
 function Show-ValentiaConfig
 {
+    [OutputType([string[]])]
     [CmdletBinding()]
     param
     (
         [parameter(mandatory = $false, position = 0)]
-        [string]$configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file),
+        [string]$configPath = "",
 
         [parameter(mandatory = $false, position = 1)]
-        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = "default"
+        [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]$encoding = $Valentia.fileEncode
     )
+
+    if (($configPath -eq "") -or (-not (Test-Path $configPath)))
+    {
+        if (Test-Path (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file))
+        {
+            $configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
+        }
+        elseif (Test-Path (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file))
+        {
+            $configPath = (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file)
+        }
+    }
 
     if (Test-Path $configPath)
     {
