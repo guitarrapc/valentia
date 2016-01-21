@@ -12,10 +12,10 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '0.5.2.1'
+ModuleVersion = '0.5.2.2'
 
 # ID used to uniquely identify this module
-GUID = 'c55e4579-0deb-4912-8635-40dc80ab694a'
+GUID = 'ea621e5d-3a0f-4507-8362-bd3a0e7782b9'
 
 # Author of this module
 Author = 'guitarrapc'
