@@ -44,9 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CS\CreateSymLink.cs" />
+    <Compile Include="CS\SymbolicLink.cs" />
     <Compile Include="CS\CredentialManager.cs" />
-    <Compile Include="CS\GetSymLink.cs" />
     <Compile Include="CS\PingAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -62,7 +61,6 @@
     <Content Include="Functions\Helper\ACL\Private\IsDesiredRuleAndCurrentRuleSame.ps1" />
     <Content Include="Functions\Helper\ACL\Set-ValentiaACL.ps1" />
     <Content Include="Functions\Helper\ACL\Test-ValentiaACL.ps1" />
-    <Content Include="Functions\Helper\Add-Memeber\Private\Add-ValentiaTypeMemberDefinition.ps1" />
     <Content Include="Functions\Helper\Certificate\Convert-ValentiaDecryptPassword .ps1" />
     <Content Include="Functions\Helper\Certificate\Convert-ValentiaEncryptPassword .ps1" />
     <Content Include="Functions\Helper\Certificate\Export-ValentiaCertificate.ps1" />

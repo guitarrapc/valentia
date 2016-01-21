@@ -1,4 +1,4 @@
-﻿#Requires -Version 3.0
+﻿Tags#Requires -Version 3.0
 
 Write-Verbose 'Loading valentia.psm1'
 
@@ -213,19 +213,31 @@ $typePath = Join-Path $valentia.modulePath $valentia.combineTemptype
 if (Test-Path $typePath){ . $typePath }
 
 #region Load C# Class
-$private:csPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
 
-# 1. Valentia.CS.PingAsync
-$private:pingAsyncCs = Join-Path $csPath PingAsync.cs -Resolve
-$private:pingAsyncSource = Get-Content -Path $pingAsyncCs -Raw
-$asm = "System", "System.Net", "System.Linq", "System.Threading.Tasks", "System.Net.NetworkInformation"
-Add-Type -TypeDefinition $pingAsyncSource -ReferencedAssemblies $asm;
-
-# 2. Valentia.CS.CredentialManager
-$private:credentialCs = Join-Path $csPath CredentialManager.cs -Resolve
-$private:credentialSource = Get-Content -Path $credentialCs -Raw
-$asm = "System", "System.ComponentModel", "System.Management.Automation", "System.Runtime.InteropServices"
-Add-Type -TypeDefinition $credentialSource -ReferencedAssemblies $asm;
+$valentia.CSharpPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+$valentia.CSharpParams = @(
+    @{
+        # 1. Valentia.CS.PingAsync
+        File = "PingAsync.cs"
+        Assembly = "System", "System.Net", "System.Linq", "System.Threading.Tasks", "System.Net.NetworkInformation"
+    },
+    @{
+        # 2. Valentia.CS.CredentialManager
+        File = "CredentialManager.cs"
+        Assembly = "System", "System.ComponentModel", "System.Management.Automation", "System.Runtime.InteropServices"
+    },
+    @{
+        # 3. Valentia.CS.SymbolicLink
+        File = "SymbolicLink.cs"
+        Assembly = "System", "System.ComponentModel","System.Runtime.InteropServices"
+    }
+)
+foreach ($item in $valentia.CSharpParams.GetEnumerator())
+{
+    $private:csFullPath = Join-Path $valentia.CSharpPath $item.File -Resolve
+    $private:csSource = Get-Content -Path $csFullPath -Raw
+    Add-Type -TypeDefinition $csSource -ReferencedAssemblies $item.Assembly;
+}
 
 #endregion
 

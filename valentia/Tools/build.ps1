@@ -39,7 +39,7 @@ $valentia.combineTempfunction = '{0}.ps1' -f $valentia.name
 $valentia.combineTemptype = 'Type.ps1'
 $valentia.fileEncode = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
 
-$valentia.moduleVersion = "0.5.1"
+$valentia.moduleVersion = "0.5.2"
 $valentia.description = "PowerShell Remote deployment library for Windows Servers";
 $valentia.copyright = "28/June/2013 -"
 $valentia.RequiredModules = @()
@@ -200,6 +200,9 @@ $script:moduleManufest = @{
     FunctionsToExport = $valentia.functionToExport
     VariablesToExport = $valentia.variableToExport;
     AliasesToExport = $valentia.AliasesToExport;
+    ProjectUri = "https://github.com/guitarrapc/valentia"
+    LicenseUri = "https://github.com/guitarrapc/valentia/blob/master/LICENSE"
+    Tags = "RemoteManagement", "Orchestration", "Credential", "SymbolicLink"
 }
 
 New-ModuleManifest @moduleManufest

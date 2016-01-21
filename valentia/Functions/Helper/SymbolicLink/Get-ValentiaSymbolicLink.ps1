@@ -35,68 +35,9 @@ function Get-ValentiaSymbolicLink
         [String[]]$Path
     )
     
-    process
-    {
-        try
-        {
-            $Path `
-            | %{
-                if ($file = IsFile -Path $_)
-                {
-                    if (IsFileReparsePoint -Path $file.FullName)
-                    {
-                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
-                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
-                        $symTarget = $SymbolicLinkGet::GetSymbolicLinkTarget($file.FullName)
-                        Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
-                        return $file
-                    }
-                }
-                elseif ($directory = IsDirectory -Path $_)
-                {
-                    if (IsDirectoryReparsePoint -Path $directory.FullName)
-                    {
-                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
-                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
-                        $symTarget = $SymbolicLinkGet::GetSymbolicLinkTarget($directory.FullName)
-                        Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
-                        return $directory
-                    }
-                }
-            }
-        }
-        catch
-        {
-            throw $_
-        }
-    }    
-
     begin
     {
         $private:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
-
-        try
-        {
-            $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-            $private:SymbolicCS = Join-Path $CSPath GetSymLink.cs -Resolve
-            $private:sig = Get-Content -Path $SymbolicCS -Raw
-
-            $private:addType = @{
-                MemberDefinition = $sig
-                Namespace        = "Valentia"
-                Name             = "SymbolicLinkGet"
-                UsingNameSpace   = "System.Text", "Microsoft.Win32.SafeHandles", "System.ComponentModel"
-            }
-            Add-ValentiaTypeMemberDefinition @addType -PassThru `
-            | select -First 1 `
-            | %{
-                $SymbolicLinkGet = $_.AssemblyQualifiedName -as [type]
-            }
-        }
-        catch
-        {
-            # catch Exception and ignore it
-        }
 
         function IsFile ([string]$Path)
         {
@@ -150,4 +91,40 @@ function Get-ValentiaSymbolicLink
             }
         }
     }
+
+    process
+    {
+        try
+        {
+            $Path `
+            | %{
+                if ($file = IsFile -Path $_)
+                {
+                    if (IsFileReparsePoint -Path $file.FullName)
+                    {
+                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
+                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
+                        $symTarget = [Valentia.CS.SymbolicLink]::GetSymbolicLinkTarget($file.FullName)
+                        Add-Member -InputObject $file -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
+                        return $file
+                    }
+                }
+                elseif ($directory = IsDirectory -Path $_)
+                {
+                    if (IsDirectoryReparsePoint -Path $directory.FullName)
+                    {
+                        # [Valentia.SymbolicLinkGet]::GetSymbolicLinkTarget()
+                        # [System.Type]::GetType($typeQualifiedName)::GetSymbolicLinkTarget()
+                        $symTarget = [Valentia.CS.SymbolicLink]::GetSymbolicLinkTarget($directory.FullName)
+                        Add-Member -InputObject $directory -MemberType NoteProperty -Name SymbolicPath -Value $symTarget -Force
+                        return $directory
+                    }
+                }
+            }
+        }
+        catch
+        {
+            throw $_
+        }
+    }    
 }

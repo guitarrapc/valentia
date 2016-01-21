@@ -31,15 +31,18 @@ function Test-ValentiaSymbolicLink
         [String]$Path
     )
     
-    process
-    {
-        $result = Get-ValentiaSymbolicLink -Path $Path
-        if ($null -eq $result){ return $false }
-        return $true
-    }
-
     begin
     {
         $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
+    }
+
+    process
+    {
+        $result = Get-ValentiaSymbolicLink -Path $Path
+        if ($null -eq $result)
+        {
+            return $false
+        }
+        return $true
     }
 }

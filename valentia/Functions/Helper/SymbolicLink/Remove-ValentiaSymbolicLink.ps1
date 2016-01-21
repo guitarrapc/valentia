@@ -36,34 +36,6 @@ function Remove-ValentiaSymbolicLink
         [String[]]$Path
     )
     
-    process
-    {
-        try
-        {
-            $Path `
-            | %{
-                if ($file = IsFile -Path $_)
-                {
-                    if (IsFileReparsePoint -Path $file)
-                    {
-                        RemoveFileReparsePoint -Path $file
-                    }
-                }
-                elseif ($directory = IsDirectory -Path $_)
-                {
-                    if (IsDirectoryReparsePoint -Path $directory)
-                    {
-                        RemoveDirectoryReparsePoint -Path $directory
-                    }
-                }           
-            }
-        }
-        catch
-        {
-            throw $_
-        }
-    }    
-
     begin
     {
         $script:ErrorActionPreference = $valentia.preference.ErrorActionPreference.custom
@@ -130,4 +102,32 @@ function Remove-ValentiaSymbolicLink
             [System.IO.Directory]::Delete($Path.FullName)
         }
     }
+
+    process
+    {
+        try
+        {
+            $Path `
+            | %{
+                if ($file = IsFile -Path $_)
+                {
+                    if (IsFileReparsePoint -Path $file)
+                    {
+                        RemoveFileReparsePoint -Path $file
+                    }
+                }
+                elseif ($directory = IsDirectory -Path $_)
+                {
+                    if (IsDirectoryReparsePoint -Path $directory)
+                    {
+                        RemoveDirectoryReparsePoint -Path $directory
+                    }
+                }           
+            }
+        }
+        catch
+        {
+            throw $_
+        }
+    }    
 }
