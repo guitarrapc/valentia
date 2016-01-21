@@ -15,7 +15,7 @@
 ModuleVersion = '0.5.2.1'
 
 # ID used to uniquely identify this module
-GUID = 'd25c308c-9d5f-42c7-979f-d48515e693f8'
+GUID = 'c55e4579-0deb-4912-8635-40dc80ab694a'
 
 # Author of this module
 Author = 'guitarrapc'

@@ -24,13 +24,7 @@ function Backup-ValentiaConfig
 
     if (($configPath -eq "") -or (-not (Test-Path $configPath)))
     {
-        if (Test-Path (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file))
-        {
-            $configPath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
-            $rootPath = $valentia.appdataconfig.root
-            $fileName = $valentia.appdataconfig.file
-        }
-        elseif (Test-Path (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file))
+        if (Test-Path (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file))
         {
             $configPath = (Join-Path $valentia.originalconfig.root $valentia.originalconfig.file)
             $rootPath = $valentia.originalconfig.root

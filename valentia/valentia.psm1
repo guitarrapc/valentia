@@ -37,7 +37,6 @@ function Import-ValentiaConfiguration
         [string]$NewConfigFilePath = (Join-Path $valentia.appdataconfig.root $valentia.appdataconfig.file)
     )
 
-    # Installation time will call here
     if (Test-Path $OriginalConfigFilePath -pathType Leaf)
     {
         try 
@@ -50,22 +49,6 @@ function Import-ValentiaConfiguration
         catch 
         {
             throw ('Error Loading Configuration from {0}: ' -f $OriginalConfigFilePath) + $_
-        }
-    }
-
-    # Import time will call here
-    if (Test-Path $NewConfigFilePath -pathType Leaf) 
-    {
-        try 
-        {        
-            Write-Verbose $valeWarningMessages.warn_load_currentConfigurationOrDefault
-            $config = Get-CurrentConfigurationOrDefault
-            . $NewConfigFilePath
-            return
-        } 
-        catch 
-        {
-            throw ('Error Loading Configuration from {0}: ' -f $NewConfigFilePath) + $_
         }
     }
 }
@@ -85,31 +68,6 @@ function Get-CurrentConfigurationOrDefault
     else 
     {
         return $valentia.config_default
-    }
-}
-
-function Import-ValentiaModules
-{
- 
-    [CmdletBinding()]
-    param
-    (
-    )
-
-    $currentConfig = $valentia.context.Peek().config
-    if ($currentConfig.modules)
-    {
-        $currentConfig.modules | ForEach-Object { 
-            Resolve-Path $_ | ForEach-Object { 
-                "Loading module: $_"
-                $module = Import-Module $_ -passthru -DisableNameChecking -global:$global
-                if (!$module) 
-                {
-                    throw ($msgs.error_loading_module -f $_.Name)
-                }
-            }
-        }
-        '' # blank line for next entry
     }
 }
 
@@ -474,7 +432,6 @@ if (Test-Path $outputPath){ . $outputPath }
 
 #-- Loading External Configuration --#
 
-Import-ValentiaModules
 Import-ValentiaConfiguration
 Invoke-ValentiaCleanResult
 
