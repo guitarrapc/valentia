@@ -212,7 +212,8 @@ $valentia.context = New-Object System.Collections.Stack
 $typePath = Join-Path $valentia.modulePath $valentia.combineTemptype
 if (Test-Path $typePath){ . $typePath }
 
-# Load C# Class for PingAsync
+# Load C# Class
+# 1. PingEx.PingAsync
 $private:csPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
 $private:pingAsyncCs = Join-Path $csPath PingAsync.cs -Resolve
 $private:source = Get-Content -Path $pingAsyncCs -Raw

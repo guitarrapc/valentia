@@ -2,6 +2,7 @@
 
 function Set-ValentiaCredential
 {
+    [OutputType([bool])]
     [CmdletBinding()]
     param
     (

@@ -2,6 +2,7 @@
 
 function Get-ValentiaCredential
 {
+    [OutputType([PSCredential])]
     [CmdletBinding()]
     param
     (

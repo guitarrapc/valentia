@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace PingEx
+namespace Valentia.CS
 {
     public class DnsResponse
     {

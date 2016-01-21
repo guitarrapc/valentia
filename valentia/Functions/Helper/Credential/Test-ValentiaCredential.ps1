@@ -2,6 +2,7 @@
 
 function Test-ValentiaCredential
 {
+    [OutputType([bool])]
     [CmdletBinding()]
     param
     (

@@ -2,6 +2,7 @@
 
 function Remove-ValentiaCredential
 {
+    [OutputType([void])]
     [CmdletBinding()]
     param
     (
@@ -16,24 +17,8 @@ function Remove-ValentiaCredential
  
     try
     {
-        $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-        $private:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
-        $private:sig = Get-Content -Path $CredReadCS -Raw
-
-        $private:addType = @{
-            MemberDefinition = $sig
-            Namespace        = "Advapi32"
-            Name             = "Util"
-        }
-        Add-ValentiaTypeMemberDefinition @addType -PassThru `
-        | select -First 1 `
-        | %{
-            $CredentialType = $_.AssemblyQualifiedName -as [type]
-            $private:typeFullName = $_.FullName
-        }
-
         $private:nCredPtr= New-Object IntPtr
-        if ($CredentialType::CredDelete($TargetName, $Type.value__, 0))
+        if ([Valentia.CS.NativeMethods]::CredDelete($TargetName, $Type.value__, 0))
         {
         }
         else

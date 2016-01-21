@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="CS\CreateSymLink.cs" />
     <Compile Include="CS\CredRead.cs" />
-    <Compile Include="CS\CredWrite.cs" />
     <Compile Include="CS\GetSymLink.cs" />
     <Compile Include="CS\PingAsync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

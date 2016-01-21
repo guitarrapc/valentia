@@ -23,7 +23,7 @@ Ping production-hoge.ps1 from deploy group branch path
 
 function Ping-ValentiaGroupAsync
 {
-    [OutputType([PingEx.PingResponse[]])]
+    [OutputType([Valentia.CS.PingResponse[]])]
     [CmdletBinding()]
     param
     (
@@ -58,11 +58,11 @@ function Ping-ValentiaGroupAsync
     {
         if ($quiet)
         {
-            [PingEx.NetworkInformationExtensions]::PingAsync($list, [TimeSpan]::FromMilliseconds($Timeout), [TimeSpan]::FromMilliseconds($DnsTimeout)).Result.Status;
+            [Valentia.CS.NetworkInformationExtensions]::PingAsync($list, [TimeSpan]::FromMilliseconds($Timeout), [TimeSpan]::FromMilliseconds($DnsTimeout)).Result.Status;
         }
         else
         {
-            [PingEx.NetworkInformationExtensions]::PingAsync($list, [TimeSpan]::FromMilliseconds($Timeout), [TimeSpan]::FromMilliseconds($DnsTimeout)).Result;
+            [Valentia.CS.NetworkInformationExtensions]::PingAsync($list, [TimeSpan]::FromMilliseconds($Timeout), [TimeSpan]::FromMilliseconds($DnsTimeout)).Result;
         }        
     }
 }
