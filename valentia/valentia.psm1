@@ -1,4 +1,4 @@
-﻿Tags#Requires -Version 3.0
+﻿#Requires -Version 3.0
 
 Write-Verbose 'Loading valentia.psm1'
 
