@@ -71,6 +71,31 @@ function Get-CurrentConfigurationOrDefault
     }
 }
 
+function Import-ValentiaModules
+{
+ 
+    [CmdletBinding()]
+    param
+    (
+    )
+
+    $currentConfig = $valentia.context.Peek().config
+    if ($currentConfig.modules)
+    {
+        $currentConfig.modules | ForEach-Object { 
+            Resolve-Path $_ | ForEach-Object { 
+                "Loading module: $_"
+                $module = Import-Module $_ -passthru -DisableNameChecking -global:$global
+                if (!$module) 
+                {
+                    throw ($msgs.error_loading_module -f $_.Name)
+                }
+            }
+        }
+        '' # blank line for next entry
+    }
+}
+
 #-- Private Loading Module Parameters --#
 
 # Setup Messages to be loaded
