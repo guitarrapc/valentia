@@ -200,11 +200,14 @@ $script:moduleManufest = @{
     FunctionsToExport = $valentia.functionToExport
     VariablesToExport = $valentia.variableToExport;
     AliasesToExport = $valentia.AliasesToExport;
-    ProjectUri = "https://github.com/guitarrapc/valentia"
-    LicenseUri = "https://github.com/guitarrapc/valentia/blob/master/LICENSE"
-    Tags = "RemoteManagement", "Orchestration", "Credential", "SymbolicLink"
 }
 
+if ($PSVersionTable.PSVersion.Major -ge 5)
+{
+    $moduleManufest.ProjectUri = "https://github.com/guitarrapc/valentia"
+    $moduleManufest.LicenseUri = "https://github.com/guitarrapc/valentia/blob/master/LICENSE"
+    $moduleManufest.Tags = "RemoteManagement", "Orchestration", "Credential", "SymbolicLink"
+}
 New-ModuleManifest @moduleManufest
 
 # As Installer place on ModuleName\Tools.
