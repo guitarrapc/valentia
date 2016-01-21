@@ -12,10 +12,10 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '0.5.1'
+ModuleVersion = '0.5.2'
 
 # ID used to uniquely identify this module
-GUID = '44fe63e0-8fde-491a-844b-37b186ff4f52'
+GUID = '3799d25a-33df-4eee-8117-8730e7063dd9'
 
 # Author of this module
 Author = 'guitarrapc'
@@ -126,13 +126,13 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = 'RemoteManagement', 'Orchestration', 'Credential', 'SymbolicLink'
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/guitarrapc/valentia/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/guitarrapc/valentia'
 
         # A URL to an icon representing this module.
         # IconUri = ''
