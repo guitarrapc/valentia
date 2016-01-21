@@ -12,16 +12,8 @@ function Test-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+        [Valentia.CS.CredType]$Type = [Valentia.CS.CredType]::Generic
     )
  
-    try
-    {
-        $result = Get-ValentiaCredential -TargetName $targetName
-        return $true;
-    }
-    catch
-    {
-        return $false;
-    }
+    [Valentia.CS.CredentialManager]::Exists($TargetName, $Type);
 }

@@ -1540,62 +1540,14 @@ function Get-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic,
+        [Valentia.CS.CredType]$Type = [Valentia.CS.CredType]::Generic,
 
         [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
         [string]$AsUserName = ""
     )
- 
-    try
-    {
-        $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-        $private:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
-        $private:sig = Get-Content -Path $CredReadCS -Raw
-
-        $private:addType = @{
-            MemberDefinition = $sig
-            Namespace        = "Advapi32"
-            Name             = "Util"
-        }
-        Add-ValentiaTypeMemberDefinition @addType -PassThru `
-        | select -First 1 `
-        | %{
-            $CredentialType = $_.AssemblyQualifiedName -as [type]
-            $private:typeFullName = $_.FullName
-        }
-
-        $private:nCredPtr= New-Object IntPtr
-        if ($CredentialType::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
-        {
-            $private:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
-            $private:cred = $critCred.GetCredential()
-            if ("" -eq $AsUserName)
-            {
-                $private:username = $cred.UserName
-            }
-            else
-            {
-                $private:username = $AsUserName
-            }
-            $private:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
-            $cred = $null
-            $credentialObject = New-Object System.Management.Automation.PSCredential $username, $securePassword
-            if ($null -eq $credentialObject)
-            {
-                throw "Null Credential found from Credential Manager exception!! Make sure your credential is set with TArgetName : '{0}'" -f $TargetName
-            }
-            return $credentialObject
-        }
-        else
-        {
-            throw "No credentials found in Windows Credential Manager for TargetName: '{0}' with Type '{1}'" -f $TargetName, $Type
-        }
-    }
-    catch
-    {
-        throw $_
-    }
+    
+    return [Valentia.CS.CredentialManager]::Read($TargetName, $Type, $AsUserName);
 }
 # file loaded from path : \functions\Helper\Credential\Get-ValentiaCredential.ps1
 
@@ -1613,24 +1565,10 @@ function Remove-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+        [Valentia.CS.CredType]$Type = [Valentia.CS.CredType]::Generic
     )
  
-    try
-    {
-        $private:nCredPtr= New-Object IntPtr
-        if ([Valentia.CS.NativeMethods]::CredDelete($TargetName, $Type.value__, 0))
-        {
-        }
-        else
-        {
-            throw "No credentials found in Windows Credential Manager for TargetName: '{0}' with Type '{1}'" -f $TargetName, $Type
-        }
-    }
-    catch
-    {
-        throw $_
-    }
+    [Valentia.CS.CredentialManager]::Remove($TargetName, $Type);
 }
 # file loaded from path : \functions\Helper\Credential\Remove-ValentiaCredential.ps1
 
@@ -1638,7 +1576,7 @@ function Remove-ValentiaCredential
 
 function Set-ValentiaCredential
 {
-    [OutputType([bool])]
+    [OutputType([void])]
     [CmdletBinding()]
     param
     (
@@ -1648,61 +1586,14 @@ function Set-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [System.Management.Automation.PSCredential]$Credential,
+        [System.Management.Automation.PSCredential]$Credential = (Get-Credential -User $valentia.Users.DeployUser -Message "Input password to be save."),
 
         [Parameter(mandatory = $false, position = 2)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+        [Valentia.CS.CredType]$Type = [Valentia.CS.CredType]::Generic
     )
-
-    Set-StrictMode -Version latest
-
-    $private:CSPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
-    $private:CredWriteCS = Join-Path $CSPath CredWrite.cs -Resolve
-    $private:sig = Get-Content -Path $CredWriteCS -Raw
-
-    if ($null -eq $Credential)
-    {
-        $Credential  = (Get-Credential -user $valentia.users.DeployUser -Message ("Input {0} Password to be save." -f $valentia.users.DeployUser))
-    }
-
-    $private:domain = $Credential.GetNetworkCredential().Domain
-    $private:user = $Credential.GetNetworkCredential().UserName
-    $private:password = $Credential.GetNetworkCredential().Password
-    switch ([String]::IsNullOrWhiteSpace($domain))
-    {
-        $true   {$userName = $user}
-        $false  {$userName = $domain, $user -join "\"}
-    }
-
-    $private:addType = @{
-        MemberDefinition = $sig
-        Namespace        = "Advapi32"
-        Name             = "Util"
-    }
-    $private:typeName = Add-ValentiaTypeMemberDefinition @addType -PassThru
-    $private:typeFullName = $typeName.FullName | select -Last  1
-    $CredentialType = ($typeName.AssemblyQualifiedName | select -First 1) -as [type]
     
-    $private:cred = New-Object $typeFullName
-    $cred.flags = 0
-    $cred.type = $Type.value__
-    $cred.targetName = [System.Runtime.InteropServices.Marshal]::StringToCoTaskMemUni($TargetName)
-    $cred.userName = [System.Runtime.InteropServices.Marshal]::StringToCoTaskMemUni($userName)
-    $cred.attributeCount = 0
-    $cred.persist = 2
-    $cred.credentialBlobSize = [System.Text.Encoding]::Unicode.GetBytes($password).length
-    $cred.credentialBlob = [System.Runtime.InteropServices.Marshal]::StringToCoTaskMemUni($password)
-    $private:result = $CredentialType::CredWrite([ref]$cred,0)
-
-    if ($true -eq $result)
-    {
-        return $true
-    }
-    else
-    {
-        return $false
-    }
+    [Valentia.CS.CredentialManager]::Write($TargetName, $Credential, $Type)
 }
 # file loaded from path : \functions\Helper\Credential\Set-ValentiaCredential.ps1
 
@@ -1720,18 +1611,10 @@ function Test-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+        [Valentia.CS.CredType]$Type = [Valentia.CS.CredType]::Generic
     )
  
-    try
-    {
-        $result = Get-ValentiaCredential -TargetName $targetName
-        return $true;
-    }
-    catch
-    {
-        return $false;
-    }
+    [Valentia.CS.CredentialManager]::Exists($TargetName, $Type);
 }
 # file loaded from path : \functions\Helper\Credential\Test-ValentiaCredential.ps1
 

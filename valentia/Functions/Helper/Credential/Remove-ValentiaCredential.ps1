@@ -12,22 +12,8 @@ function Remove-ValentiaCredential
 
         [Parameter(mandatory = $false, position = 1)]
         [ValidateNotNullOrEmpty()]
-        [ValentiaWindowsCredentialManagerType]$Type = [ValentiaWindowsCredentialManagerType]::Generic
+        [Valentia.CS.CredType]$Type = [Valentia.CS.CredType]::Generic
     )
  
-    try
-    {
-        $private:nCredPtr= New-Object IntPtr
-        if ([Valentia.CS.NativeMethods]::CredDelete($TargetName, $Type.value__, 0))
-        {
-        }
-        else
-        {
-            throw "No credentials found in Windows Credential Manager for TargetName: '{0}' with Type '{1}'" -f $TargetName, $Type
-        }
-    }
-    catch
-    {
-        throw $_
-    }
+    [Valentia.CS.CredentialManager]::Remove($TargetName, $Type);
 }

@@ -212,13 +212,22 @@ $valentia.context = New-Object System.Collections.Stack
 $typePath = Join-Path $valentia.modulePath $valentia.combineTemptype
 if (Test-Path $typePath){ . $typePath }
 
-# Load C# Class
-# 1. PingEx.PingAsync
+#region Load C# Class
 $private:csPath = Join-Path $valentia.modulePath $valentia.cSharpPath -Resolve
+
+# 1. Valentia.CS.PingAsync
 $private:pingAsyncCs = Join-Path $csPath PingAsync.cs -Resolve
-$private:source = Get-Content -Path $pingAsyncCs -Raw
+$private:pingAsyncSource = Get-Content -Path $pingAsyncCs -Raw
 $asm = "System", "System.Net", "System.Linq", "System.Threading.Tasks", "System.Net.NetworkInformation"
-Add-Type -TypeDefinition $source -ReferencedAssemblies $asm;
+Add-Type -TypeDefinition $pingAsyncSource -ReferencedAssemblies $asm;
+
+# 2. Valentia.CS.CredentialManager
+$private:credentialCs = Join-Path $csPath CredentialManager.cs -Resolve
+$private:credentialSource = Get-Content -Path $credentialCs -Raw
+$asm = "System", "System.ComponentModel", "System.Management.Automation", "System.Runtime.InteropServices"
+Add-Type -TypeDefinition $credentialSource -ReferencedAssemblies $asm;
+
+#endregion
 
 # contains default configuration path
 $valentia.originalconfig = [ordered]@{
