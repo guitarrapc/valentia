@@ -8604,7 +8604,7 @@ function Watch-ValentiaPingAsyncReplyStatus
         [ValidateNotNullOrEmpty()]
         [string[]]$deploygroups,
 
-        [parameter(mandatory = $true, position  = 1)]
+        [parameter(mandatory = $false, position  = 1)]
         [ValidateNotNullOrEmpty()]
         [bool]$DesiredStatus = $true,
 
@@ -8617,29 +8617,37 @@ function Watch-ValentiaPingAsyncReplyStatus
         [int]$limitCount = 100
     )
 
+    begin
+    {
+        $start = Get-Date
+        $sw = New-Object System.Diagnostics.Stopwatch
+        $sw.Start()
+
+        $ipaddress = New-Object 'System.Collections.Generic.List[IPAddress]'
+        Get-ValentiaGroup -DeployGroups $deploygroups | %{$ipaddress.Add($_)}
+    }
+
     process
     {
         $i = 0
         while ($true)
         {
-            $date = Get-Date
-            $hash = pingAsync -HostNameOrAddresses $ipaddress `
-            | %{
-                Add-Member -InputObject $_ -MemberType NoteProperty -Name Date -Value $date -Force -PassThru
-            }
+            $hash = Ping-ValentiaGroupAsync -HostNameOrAddresses $ipaddress `
+            | %{ Add-Member -InputObject $_ -MemberType NoteProperty -Name Date -Value ([DateTime]::Now) -Force -PassThru }
         
             Write-Verbose ("Filtering status as '{0}'" -f $DesiredStatus)
             $hash `
             | where IsSuccess -eq $DesiredStatus `
-            | where HostNameOrAddress -in $ipaddress.IPAddressToString `
-            | %{$result = $ipaddress.Remove($_.HostNameOrAddress)
+            | where IPAddress -in $ipaddress.IPAddressToString `
+            | %{
+                $result = $ipaddress.Remove($_.IPAddress)
                 if ($result -eq $false)
                 {
-                    throw "failed to remove ipaddress '{0}' from list" -f $_.HostNameOrAddress
+                    throw "failed to remove ipaddress '{0}' from list" -f $_.IPAddress
                 }
                 else
                 {
-                    Write-Host ("ipaddress '{0}' turned to be DesiredStatus '{1}'" -f "$($_.HostNameOrAddress -join ', ')", $DesiredStatus) -ForegroundColor Green
+                    Write-Host ("ipaddress '{0}' turned to be DesiredStatus '{1}'" -f "$($_.IPAddress -join ', ')", $DesiredStatus) -ForegroundColor Green
                 }
             }
 
@@ -8647,7 +8655,7 @@ function Watch-ValentiaPingAsyncReplyStatus
 
             if ($count -eq 0)
             {
-                Write-Host ("HostnameOrAddress '{0}' IsSuccess : '{1}'. break monitoring" -f $($hash.HostNameOrAddress -join ", "), $DesiredStatus) -ForegroundColor Cyan
+                Write-Host ("HostnameOrAddress '{0}' IsSuccess : '{1}'. break monitoring" -f $($hash.IPAddress -join ", "), $DesiredStatus) -ForegroundColor Cyan
                 $hash
                 break;
             }
@@ -8673,16 +8681,6 @@ function Watch-ValentiaPingAsyncReplyStatus
         Write-Host ("Start Time  : {0}" -f $start) -ForegroundColor Cyan
         Write-Host ("End   Time  : {0}" -f $end) -ForegroundColor Cyan
         Write-Host ("Total Watch : {0}sec" -f $sw.Elapsed.TotalSeconds) -ForegroundColor Cyan
-    }
-
-    begin
-    {
-        $start = Get-Date
-        $sw = New-Object System.Diagnostics.Stopwatch
-        $sw.Start()
-
-        $ipaddress = New-Object 'System.Collections.Generic.List[ipaddress]'
-        Get-ValentiaGroup -DeployGroups $deploygroups | %{$ipaddress.Add($_)}
     }
 }
 # file loaded from path : \functions\Invokation\Ping\Watch-ValentiaPingAsyncReplyStatus.ps1
