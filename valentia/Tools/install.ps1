@@ -1,25 +1,16 @@
 ﻿#Requires -Version 2.0
-
-# Windows 7 and later is requires.
-
 function Main
 {
     [CmdletBinding()]
     Param
     (
-        [string]$Modulepath = (GetModulePath),
-        
-        [bool]$Renew = $false,
-
-        [switch]$Force = $false,
-
-        [switch]$Whatif = $false
+        [string]$Modulepath
     )
 
     $ErrorActionPreference = "Stop"
     $path = [System.IO.Directory]::GetParent((Split-Path (Resolve-Path -Path $PSCommandPath) -Parent))
     $moduleName = Get-ModuleName -path $path
-    $moduleFullPath = Join-Path $modulepath $moduleName
+    $moduleFullPath = Join-Path $Modulepath $moduleName
 
     Write-Verbose ("Checking Module Root Path '{0}' is exist not not." -f $modulepath)
     if(-not(Test-ModulePath -modulepath $modulepath))
@@ -28,54 +19,37 @@ function Main
         New-Item -Path $modulepath -ItemType directory -Force > $null
     }
 
-    # Remove Existing
-    if($reNew -and (Test-ModulePath -modulepath $moduleFullPath))
-    {
-        Write-Warning ("'{0}' already exist. Removing Existing modules." -f $moduleFullPath)
-        Remove-Item -Path $moduleFullPath -Recurse -Force
-    }
-
     try
     {
+        Write-Verbose ("Checking Module Path '{0}' is exist not not." -f $moduleFullPath)
+        if(Test-ModulePath -modulepath $moduleFullPath)
+        {
+            Write-Warning ("'{0}' already exist. Escape from creating module Directory." -f $moduleFullPath)
+            Remove-Item -Path $moduleFullPath -Recurse -Force
+        }
+
         # Copy Module
         Write-Host ("Copying module '{0}' to Module path '{1}'." -f $moduleName, $moduleFullPath) -ForegroundColor Cyan
-        Copy-ItemEX -path $path -destination $moduleFullPath -Targets * -Recurse -Force 
-        exit 0
+        Copy-Item -path $path -destination $moduleFullPath -Recurse -Force
+
+        # Import Module
+        Write-Host ("Importing Module '{0}'" -f $moduleName) -ForegroundColor cyan
+        Import-Module -Name $moduleName
     }
     catch
     {
         exit 1
     }
-}
-
-function GetModulePath
-{
-    $ModulePath = $env:PSModulePath -split ";" | where {$_ -like ("{0}*" -f [environment]::GetFolderPath("MyDocuments"))}
-    if (($ModulePath | measure).count -eq 1){ return $ModulePath }
-    if (($ModulePath | measure).count -eq 0)
-    {
-        $answer = Read-Host -Prompt "PSModulePath detected as not include Documents path. Please input path to install valentia."
-        if (-not (Test-Path $answer)){ throw New-Object New-Object System.IO.FileNotFoundException ("Specified Path not found exception!!", $answer) }
-        return $answer
-    }
-
-    if (($ModulePath | measure).count -gt 1)
-    {
-        $param = @{
-            title = "PSModulePath contains more than 2 Documents directory."
-            message = "Please select which PSmodulePath to install valentia."
-            questions = $ModulePath
-        }
-        return Show-PromptForChoice @param
-    }
+    exit 0
 }
 
 Function Test-ModulePath
 {
+    [OutputType([bool])]
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, mandatory = $true)]
+        [Parameter(Position = 0, Mandatory = 1)]
         [string]$modulepath        
     )
  
@@ -93,11 +67,11 @@ Function Test-ModulePath
 
 Function Get-ModuleName
 {
-
+    [OutputType([string])]
     [CmdletBinding()]
     param
     (
-        [Parameter(Position = 0, mandatory = $true)]
+        [Parameter(Position = 0, Mandatory = 1)]
         [string]$path
     )
 
@@ -116,186 +90,17 @@ Function Get-ModuleName
     }
 }
 
-
-function Copy-ItemEX
+function Test-ElavateOrNot
 {
-    param
-    (
-        [parameter(mandatory = $true, Position  = 0, ValueFromPipeline = 1, ValueFromPipelineByPropertyName =1)]
-        [alias('PSParentPath')]
-        [string]$Path,
-
-        [parameter(mandatory = $true, Position  = 1, ValueFromPipelineByPropertyName =1)]
-        [string]$Destination,
-
-        [parameter(mandatory = $false, Position  = 2, ValueFromPipelineByPropertyName =1)]
-        [string[]]$Targets,
-
-        [parameter(mandatory = $false, Position  = 3, ValueFromPipelineByPropertyName =1)]
-        [string[]]$Excludes,
-
-        [parameter(mandatory = $false, Position  = 4, ValueFromPipelineByPropertyName =1)]
-        [Switch]$Recurse,
-
-        [parameter(mandatory = $false, Position  = 5)]
-        [switch]$Force,
-
-        [parameter(mandatory = $false, Position  = 6)]
-        [switch]$WhatIf
-    )
-
-    process
-    {
-        # Test Path
-        if (-not (Test-Path $Path)){throw 'Path not found Exception!!'}
-
-        # Get Filter Item Path as List<Tuple<string>,<string>,<string>>
-        $filterPath = GetTargetsFiles -Path $Path -Targets $Targets -Recurse:$isRecurse -Force:$Force
-
-        # Remove Exclude Item from Filter Item
-        $excludePath = GetExcludeFiles -Path $filterPath -Excludes $Excludes
-
-        # Execute Copy, confirmation and WhatIf can be use.
-        CopyItemEX  -Path $excludePath -RootPath $Path -Destination $Destination -Force:$isForce -WhatIf:$isWhatIf
-    }
-
-    begin
-    {
-        $isRecurse = $PSBoundParameters.ContainsKey('Recurse')
-        $isForce = $PSBoundParameters.ContainsKey('Force')
-        $isWhatIf = $PSBoundParameters.ContainsKey('WhatIf')
-
-        function GetTargetsFiles
-        {
-            [CmdletBinding()]
-            param
-            (
-                [string]$Path,
-
-                [string[]]$Targets,
-
-                [bool]$Recurse,
-
-                [bool]$Force
-            )
-
-            # fullName, DirectoryName, Name
-            $list = New-Object 'System.Collections.Generic.List[Tuple[string,string,string]]'
-            $base = Get-ChildItem $Path -Recurse:$Recurse -Force:$Force
-
-            if (($Targets | measure).count -ne 0)
-            {
-                foreach($target in $Targets)
-                {
-                    $base `
-                    | where Name -like $target `
-                    | %{
-                        if ($_ -is [System.IO.FileInfo])
-                        {
-                            $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.DirectoryName, $_.Name)
-                        }
-                        elseif ($_ -is [System.IO.DirectoryInfo])
-                        {
-                            $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.PSParentPath, $_.Name)
-                        }
-                        else
-                        {
-                            throw "Type '{0}' not imprement Exception!!" -f $_.GetType().FullName
-                        }
-                        $list.Add($tuple)
-                    }
-                }
-            }
-            else
-            {
-                $base `
-                | %{
-                    if ($_ -is [System.IO.FileInfo])
-                    {
-                        $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.DirectoryName, $_.Name)
-                    }
-                    elseif ($_ -is [System.IO.DirectoryInfo])
-                    {
-                        $tuple = New-Object 'System.Tuple[[string], [string], [string]]' ($_.FullName, $_.PSParentPath, $_.Name)
-                    }
-                    else
-                    {
-                        throw "Type '{0}' not imprement Exception!!" -f $_.GetType().FullName
-                    }
-                    $list.Add($tuple)
-                }
-            }
-            
-            return $list
-        }
-
-        function GetExcludeFiles
-        {
-            param
-            (
-                [System.Collections.Generic.List[Tuple[string,string,string]]]$Path,
-
-                [string[]]$Excludes
-            )
-
-            if (($Excludes | measure).count -ne 0)
-            {
-                Foreach ($exclude in $Excludes)
-                {
-                    # name not like $exclude
-                    $Path | where Item3 -notlike $exclude
-                }
-            }
-            else
-            {
-                $Path
-            }
-
-        }
-
-        function CopyItemEX
-        {
-            [cmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
-            param
-            (
-                [System.Collections.Generic.List[Tuple[string,string,string]]]$Path,
-
-                [string]$RootPath,
-
-                [string]$Destination,
-
-                [bool]$Force
-            )
-
-            begin
-            {
-                # remove default bound "Force"
-                $PSBoundParameters.Remove('Force') > $null
-            }
-
-            process
-            {
-                # convert to regex format
-                $root = $RootPath.Replace('Microsoft.PowerShell.Core\FileSystem::','').Replace('\', '\\')
-
-                $Path `
-                | %{
-                    # create destination DirectoryName
-                    $directoryName = Join-Path $Destination ($_.Item2 -split $root | select -Last 1)
-                    [PSCustomObject]@{
-                        Path = $_.Item1
-                        DirectoryName = $directoryName
-                        Destination = Join-Path $directoryName $_.Item3
-                }} `
-                | where {$Force -or $PSCmdlet.ShouldProcess($_.Path, ('Copy Item to {0}' -f $_.Destination))} `
-                | %{
-                    Write-Verbose ("Copying '{0}' to '{1}'." -f $_.Path, $_.Destination)
-                    New-Item -Path $_.DirectoryName -ItemType Directory -Force > $null
-                    Copy-Item -Path $_.Path -Destination $_.Destination -Force
-                }
-            }
-        }
-    }
+    $user = [Security.Principal.WindowsIdentity]::GetCurrent();
+    return (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator);
 }
 
-Main -Renew $true -Force
+if (! (Test-ElavateOrNot))
+{
+    Write-Host -Object "管理者で起動してください" -ForegroundColor Red;
+    exit 1;
+}
+
+$modulePath = "$env:ProgramFiles\WindowsPowerShell\Modules"
+Main -Modulepath $modulePath
