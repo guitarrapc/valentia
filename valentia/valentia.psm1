@@ -207,7 +207,7 @@ $valentia.CSharpParams = @(
     @{
         # 2. Valentia.CS.CredentialManager
         File = "CredentialManager.cs"
-        Assembly = "System", "System.ComponentModel", "System.Management.Automation", "System.Runtime.InteropServices"
+        Assembly = "System", "System.Linq", "System.ComponentModel", "System.Management.Automation", "System.Runtime.InteropServices"
     },
     @{
         # 3. Valentia.CS.SymbolicLink

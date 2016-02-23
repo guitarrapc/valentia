@@ -39,7 +39,7 @@ $valentia.combineTempfunction = '{0}.ps1' -f $valentia.name
 $valentia.combineTemptype = 'Type.ps1'
 $valentia.fileEncode = [Microsoft.PowerShell.Commands.FileSystemCmdletProviderEncoding]'utf8'
 
-$valentia.moduleVersion = "0.5.2.4"
+$valentia.moduleVersion = "0.5.3.0"
 $valentia.description = "PowerShell Remote deployment library for Windows Servers";
 $valentia.copyright = "28/June/2013 -"
 $valentia.RequiredModules = @()
@@ -102,6 +102,7 @@ $valentia.functionToExport = @(
 
         # Credential
         "Get-ValentiaCredential",
+        "Find-ValentiaCredential",
         "Remove-ValentiaCredential", 
         "Set-ValentiaCredential", 
         "Test-ValentiaCredential",
